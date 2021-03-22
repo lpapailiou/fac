@@ -1,5 +1,10 @@
 /**
     Grammar definition FAC by Lena Papailiou
+
+    updates:
+    - moved tokens to jlang.flex
+    - restructured so optional spaces will not require 'empty token'
+
  */
 
 // ==================       DEFINITION STRUCTURE       ================== //
