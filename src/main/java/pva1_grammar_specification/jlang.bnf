@@ -1,0 +1,200 @@
+/**
+    Grammar definition FAC by Lena Papailiou
+ */
+
+// ==================       DEFINITION STRUCTURE       ================== //
+
+//      1) grammar definition in bnf syntax
+//      2) lexical definition in flex syntax
+
+
+// ==================       SYNTACTICAL DEFINITIONS       ================== //
+// start symbol for file scope. this is a one-file-language (classes not implemented)
+<S> 	        ::= <FILE>
+
+// file structure definition. a file must have a 'main call', with optional variable and function definitions. the order is given by the grammar
+<FILE> 	        ::= <MAINCALL> <NL_SPACE> <REP_FUNDEF>
+                    | <REP_VARDEF> <NL_SPACE> <MAINCALL>
+                    | <REP_VARDEF> <NL_SPACE> <MAINCALL> <NL_SPACE> <REP_FUNDEF>
+
+// main call. at runtime, code within the main function should be executed java-like
+<MAINCALL> 	    ::= <MAIN> <BL> <BR> <OPT_SPACE> <CBL> <OPT_NL_SPACE> <REP_STRUCT> <CBR> <OPT_NL_SPACE>
+
+// variable definitions
+<REP_VARDEF> 	::= <VARDEF>
+                    | <VARDEF> <REP_VARDEF>
+<VARDEF> 	    ::= <BOOLVARDEF>
+                    | <NUMVARDEF>
+                    | <STRVARDEF>
+<STRVARDEF> 	::= <STRTYPE> <SPACE> <STR> <SPACE> <EQUAL> <SPACE> <W> <STOP>
+<NUMVARDEF> 	::= <NUMTYPE> <SPACE> <STR> <SPACE> <EQUAL> <SPACE> <N> <STOP>
+<BOOLVARDEF> 	::= <BOOLTYPE> <SPACE> <STR> <SPACE> <EQUAL> <SPACE> <BOOL> <STOP>
+
+// variable assignments
+<ASSIGN> 	    ::= <STR> <SPACE> <ASSGN_N> <OPT_SPACE> <CALC> <STOP>
+                    | <STR> <SPACE> <ASSGN_N> <OPT_SPACE> <N> <STOP>
+                    | <STR> <SPACE> <ASSGN_N> <OPT_SPACE> <STR> <STOP>
+                    | <STR> <SPACE> <ASSGN_W> <OPT_SPACE> <CONCAT> <STOP>
+                    | <STR> <SPACE> <ASSGN_W> <OPT_SPACE> <W> <STOP>
+                    | <STR> <SPACE> <EQUAL> <OPT_SPACE> <BOOL> <STOP>
+                    | <STR> <SPACE> <EQUAL> <OPT_SPACE> <EXPR> <STOP>
+                    | <STR> <SPACE> <EQUAL> <OPT_SPACE> <FUNCALL> <STOP>    // assign result of function
+
+// string concatenation
+<CONCAT> 	    ::= <W_STR> <OPT_SPACE> <PLUS> <OPT_SPACE> <CONCAT>
+                    | <W_STR> <OPT_SPACE> <PLUS> <OPT_SPACE> <W_STR>
+
+// arithmetic expressions. brackets are optional, mul/div has precedence over plus/minus
+<CALC> 	        ::= <CALC_MUL>
+                    | <BL> <CALC_MUL> <BR>
+                    | <CALC> <OPT_SPACE> <PLUS_OPERATOR> <OPT_SPACE> <CALC_MUL>
+<CALC_MUL>      ::= <CALC_ELEMENT>
+                    | <BL> <CALC_MUL> <BR>
+                    | <CALC_MUL> <OPT_SPACE> <MUL_OPERATOR> <OPT_SPACE> <CALC_ELEMENT>
+<CALC_ELEMENT>  ::= <N_STR>
+                    | <BL> <CALC> <BR>
+                    | <BL> <CALC_ELEMENT> <BR>
+<PLUS_OPERATOR> ::= <PLUS>
+                    | <MINUS>
+<MUL_OPERATOR>  ::= <MUL>
+                    | <DIV>
+
+// boolean expressions. brackets are mandatory, no precedence order needed
+<EXPR> 	        ::= <BL> <BOOL_STR> <BR>
+                    | <BL> <BOOL_STR> <OPT_SPACE> <EV> <OPT_SPACE> <BOOL_STR> <BR>
+                    | <BL> <BOOL_STR> <OPT_SPACE> <EV> <OPT_SPACE> <EXPR> <BR>
+                    | <BL> <CALC> <OPT_SPACE> <COMP_N> <OPT_SPACE> <N_STR> <BR>
+                    | <BL> <EXPR> <OPT_SPACE> <EV> <OPT_SPACE> <BOOL_STR> <BR>
+                    | <BL> <N_STR> <OPT_SPACE> <COMP_N> <OPT_SPACE> <CALC> <BR>
+                    | <BL> <N_STR> <OPT_SPACE> <COMP_N> <OPT_SPACE> <N_STR> <BR>
+                    | <BL> <W_STR> <OPT_SPACE> <COMP> <OPT_SPACE> <W_STR> <BR>
+
+// function definitions. a function must have parameters and must return a string, number or boolean
+<REP_PARAMDEF> 	::= <PARAMDEF>
+                    | <PARAMDEF> <COMMA> <OPT_SPACE> <REP_PARAMDEF>
+<PARAMDEF> 	    ::= <TYPEWORD> <SPACE> <STR>
+<REP_FUNDEF> 	::= <FUNDEF>
+                    | <FUNDEF> <REP_FUNDEF>
+<FUNDEF> 	    ::= <DEF> <SPACE> <TYPEWORD> <SPACE> <STR> <BL> <REP_PARAMDEF> <BR> <SPACE> <CBL> <OPT_NL_SPACE> <REP_STRUCT> <RET> <CBR> <OPT_NL_SPACE>
+<PARAM> 	    ::= <TYPE>
+                    | <TYPE> <COMMA> <SPACE> <PARAM>
+<FUNCALL> 	    ::= <STR> <BL> <PARAM> <BR>
+
+// this function should print the content of the variable to the console when called
+<PRINTCALL> 	::= <PRINT> <BL> <TYPE> <BR> <STOP>
+
+// structures (variable definitions and assignments, if-else, while, ...)
+<REP_STRUCT> 	::= <STRUCT>
+                    | <STRUCT> <REP_STRUCT>
+<STRUCT> 	    ::= <ASSIGN>
+                    | <PRINTCALL>
+                    | <VARDEF>
+                    | <IF> <OPT_SPACE> <EXPR> <OPT_SPACE> <CBL> <OPT_NL_SPACE> <REP_STRUCT> <CBR> <OPT_NL_SPACE>
+                    | <IF> <OPT_SPACE> <EXPR> <OPT_SPACE> <CBL> <OPT_NL_SPACE> <REP_STRUCT> <CBR> <OPT_SPACE> <ELSE> <OPT_SPACE> <CBL> <OPT_NL_SPACE> <REP_STRUCT> <CBR> <OPT_NL_SPACE>
+                    | <WHILE> <OPT_SPACE> <EXPR> <OPT_SPACE> <CBL> <OPT_NL_SPACE> <REP_STRUCT> <CBR> <OPT_NL_SPACE>
+
+// --------------------- helper structures ---------------------
+
+// assignment operators for numbers and strings
+<ASSGN_N> 	    ::= <EQUAL>
+                    | <PLUSEQ>
+                    | <MINEQ>
+                    | <DIVEQ>
+                    | <MULEQ>
+<ASSGN_W> 	    ::= <EQUAL>
+                    | <PLUSEQ>
+// comparators for strings/booleans and number comparisons
+<COMP> 	        ::= <EQ>
+                    | <NEQ>
+<COMP_N> 	    ::= <COMP>
+                    | <GREATER>
+                    | <GREQ>
+                    | <LEQ>
+                    | <LESS>
+
+// and / or / comparisons
+<EV> 	        ::= <AND>
+                    | <COMP>
+                    | <OR>
+// helper constructs
+<RET> 	        ::= <RETURN> <SPACE> <TYPE> <STOP>
+
+// the type words ('boolean', 'number', 'string')
+<TYPEWORD> 	    ::= <BOOLTYPE>
+                    | <NUMTYPE>
+                    | <STRTYPE>
+
+// boolean, number, string or variable
+<TYPE> 	        ::= <BOOL>
+                    | <N>
+                    | <STR>
+                    | <W>
+
+// number or variable
+<N_STR> 	    ::= <N>
+                    | <STR>
+// string or variable
+<W_STR> 	    ::= <STR>
+                    | <W>
+// boolean or variable
+<BOOL_STR> 	    ::= <BOOL>
+                    | <STR>
+
+// ==================       LEXICAL DEFINITIONS       ================== //
+
+// reserved words
+STRTYPE = string
+BOOLTYPE = boolean
+NUMTYPE = number
+BOOL = true | false
+RETURN = return
+WHILE = while
+IF = if
+ELSE = else
+DEF = def
+MAIN = main
+PRINT = print
+
+// special characters / terminals
+APO = \'
+BL = \(
+BR = \)
+CBL = \{
+CBR = }
+COMMA = ,
+SEMICOLON = ;
+EQUAL = =
+EXCL = \!
+LESS = \<
+GREATER = >
+PLUS = \+
+MINUS = -
+MUL = \*
+DIV = \/
+ND = &
+RR = \|
+EQ = ==
+NEQ = \!=
+GREQ = >=
+LEQ = <=
+AND = &&
+OR = \|\|
+PLUSEQ = \+=
+MINEQ = -=
+MULEQ = \*=
+DIVEQ = \/=
+
+// character classes for numbers and strings
+N = -?[0-9]\d*(\.\d+)?                  // decimal/int number, positive or negative
+STR = [a-z_]+                           // variables
+W = '[a-z_]+'                           // strings
+
+SPACE = [ \t\f]+                        // one or more spaces
+OPT_SPACE = [ \t\f]*                    // optional spaces
+NL_SPACE = [ \t\f\r\n]+                 // newline or spaces
+OPT_NL_SPACE = [ \t\f\r\n]*             // newline or spaces or nothing
+
+STOP = ;[ \t\f\r\n]*                    // stop token
+
+ERR = \^                                // fallback
+

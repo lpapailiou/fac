@@ -1,0 +1,29 @@
+string h = 'o';
+string e = 'p';
+number j = 4;
+string g = 'g';
+string d = 'o';
+
+// comment
+
+main() {
+    m = ((2 - b) * ((r - _) * 9));
+}
+
+def boolean o(string t) {
+    j = '_';
+    return s;
+}
+
+def string y(boolean b) {
+    while (s == r) {
+        print(2);
+    }
+    x = c;
+    return q;
+}
+
+def number i(boolean y, number z, boolean c, boolean f) {
+    n = (s == k);
+    return b;
+}
