@@ -2,15 +2,10 @@
     Grammar definition FAC by Lena Papailiou
 
     updates:
-    - moved tokens to jlang.flex
+    - moved lexical definitions / tokens to jlang.flex
     - restructured so optional spaces will not require 'empty token'
 
  */
-
-// ==================       DEFINITION STRUCTURE       ================== //
-
-//      1) grammar definition in bnf syntax
-//      2) lexical definition in flex syntax
 
 
 // ==================       SYNTACTICAL DEFINITIONS       ================== //
