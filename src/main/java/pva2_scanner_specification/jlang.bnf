@@ -35,7 +35,7 @@
 <VARDEF> 	    ::= <BOOLVARDEF>
                     | <NUMVARDEF>
                     | <STRVARDEF>
-<STRVARDEF> 	::= <STRTYPE> <SPACE> <VAR> <SPACE> <EQUAL> <SPACE> <W> <STOP>
+<STRVARDEF> 	::= <STRTYPE> <SPACE> <VAR> <SPACE> <EQUAL> <SPACE> <WSTR> <STOP>
 <NUMVARDEF> 	::= <NUMTYPE> <SPACE> <VAR> <SPACE> <EQUAL> <SPACE> <N> <STOP>
 <BOOLVARDEF> 	::= <BOOLTYPE> <SPACE> <VAR> <SPACE> <EQUAL> <SPACE> <BOOL> <STOP>
 
@@ -56,10 +56,10 @@
                     | <VAR> <SPACE> <ASSGN_STR> <CONCAT> <STOP>
                     | <VAR> <ASSGN_STR> <SPACE> <CONCAT> <STOP>
                     | <VAR>  <ASSGN_STR> <CONCAT> <STOP>
-                    | <VAR> <SPACE> <ASSGN_STR> <SPACE> <W> <STOP>
-                    | <VAR> <SPACE> <ASSGN_STR> <W> <STOP>
-                    | <VAR> <ASSGN_STR> <SPACE> <W> <STOP>
-                    | <VAR> <ASSGN_STR> <W> <STOP>
+                    | <VAR> <SPACE> <ASSGN_STR> <SPACE> <STR> <STOP>
+                    | <VAR> <SPACE> <ASSGN_STR> <STR> <STOP>
+                    | <VAR> <ASSGN_STR> <SPACE> <STR> <STOP>
+                    | <VAR> <ASSGN_STR> <STR> <STOP>
                     | <VAR> <SPACE> <EQUAL> <SPACE> <BOOL> <STOP>
                     | <VAR> <SPACE> <EQUAL> <BOOL> <STOP>
                     | <VAR> <EQUAL> <SPACE> <BOOL> <STOP>
