@@ -4,6 +4,8 @@
     updates:
     - moved lexical definitions / tokens to jlang.flex
     - restructured so optional spaces will not require 'empty token'
+    - changed "W" to "STR"
+    - changed "STR" to "VAR"
 
  */
 
@@ -33,53 +35,53 @@
 <VARDEF> 	    ::= <BOOLVARDEF>
                     | <NUMVARDEF>
                     | <STRVARDEF>
-<STRVARDEF> 	::= <STRTYPE> <SPACE> <STR> <SPACE> <EQUAL> <SPACE> <W> <STOP>
-<NUMVARDEF> 	::= <NUMTYPE> <SPACE> <STR> <SPACE> <EQUAL> <SPACE> <N> <STOP>
-<BOOLVARDEF> 	::= <BOOLTYPE> <SPACE> <STR> <SPACE> <EQUAL> <SPACE> <BOOL> <STOP>
+<STRVARDEF> 	::= <STRTYPE> <SPACE> <VAR> <SPACE> <EQUAL> <SPACE> <W> <STOP>
+<NUMVARDEF> 	::= <NUMTYPE> <SPACE> <VAR> <SPACE> <EQUAL> <SPACE> <N> <STOP>
+<BOOLVARDEF> 	::= <BOOLTYPE> <SPACE> <VAR> <SPACE> <EQUAL> <SPACE> <BOOL> <STOP>
 
 // variable assignments
-<ASSIGN> 	    ::= <STR> <SPACE> <ASSGN_N> <SPACE> <CALC> <STOP>
-                    | <STR> <SPACE> <ASSGN_N> <CALC> <STOP>
-                    | <STR> <ASSGN_N> <SPACE> <CALC> <STOP>
-                    | <STR> <ASSGN_N> <CALC> <STOP>
-                    | <STR> <SPACE> <ASSGN_N> <SPACE> <N> <STOP>
-                    | <STR> <SPACE> <ASSGN_N> <N> <STOP>
-                    | <STR> <ASSGN_N> <SPACE> <N> <STOP>
-                    | <STR> <ASSGN_N> <N> <STOP>
-                    | <STR> <SPACE> <ASSGN_N> <SPACE> <STR> <STOP>
-                    | <STR> <SPACE> <ASSGN_N> <STR> <STOP>
-                    | <STR> <ASSGN_N> <SPACE> <STR> <STOP>
-                    | <STR> <ASSGN_N> <STR> <STOP>
-                    | <STR> <SPACE> <ASSGN_W> <SPACE> <CONCAT> <STOP>
-                    | <STR> <SPACE> <ASSGN_W> <CONCAT> <STOP>
-                    | <STR> <ASSGN_W> <SPACE> <CONCAT> <STOP>
-                    | <STR>  <ASSGN_W> <CONCAT> <STOP>
-                    | <STR> <SPACE> <ASSGN_W> <SPACE> <W> <STOP>
-                    | <STR> <SPACE> <ASSGN_W> <W> <STOP>
-                    | <STR> <ASSGN_W> <SPACE> <W> <STOP>
-                    | <STR> <ASSGN_W> <W> <STOP>
-                    | <STR> <SPACE> <EQUAL> <SPACE> <BOOL> <STOP>
-                    | <STR> <SPACE> <EQUAL> <BOOL> <STOP>
-                    | <STR> <EQUAL> <SPACE> <BOOL> <STOP>
-                    | <STR> <EQUAL> <BOOL> <STOP>
-                    | <STR> <SPACE> <EQUAL> <SPACE> <EXPR> <STOP>
-                    | <STR> <SPACE> <EQUAL> <EXPR> <STOP>
-                    | <STR> <EQUAL> <SPACE> <EXPR> <STOP>
-                    | <STR> <EQUAL> <EXPR> <STOP>
-                    | <STR> <SPACE> <EQUAL> <SPACE> <FUNCALL> <STOP>    // assign result of function
-                    | <STR> <SPACE> <EQUAL> <FUNCALL> <STOP>
-                    | <STR> <EQUAL> <SPACE> <FUNCALL> <STOP>
-                    | <STR> <EQUAL> <FUNCALL> <STOP>
+<ASSIGN> 	    ::= <VAR> <SPACE> <ASSGN_N> <SPACE> <CALC> <STOP>
+                    | <VAR> <SPACE> <ASSGN_N> <CALC> <STOP>
+                    | <VAR> <ASSGN_N> <SPACE> <CALC> <STOP>
+                    | <VAR> <ASSGN_N> <CALC> <STOP>
+                    | <VAR> <SPACE> <ASSGN_N> <SPACE> <N> <STOP>
+                    | <VAR> <SPACE> <ASSGN_N> <N> <STOP>
+                    | <VAR> <ASSGN_N> <SPACE> <N> <STOP>
+                    | <VAR> <ASSGN_N> <N> <STOP>
+                    | <VAR> <SPACE> <ASSGN_N> <SPACE> <VAR> <STOP>
+                    | <VAR> <SPACE> <ASSGN_N> <VAR> <STOP>
+                    | <VAR> <ASSGN_N> <SPACE> <VAR> <STOP>
+                    | <VAR> <ASSGN_N> <VAR> <STOP>
+                    | <VAR> <SPACE> <ASSGN_STR> <SPACE> <CONCAT> <STOP>
+                    | <VAR> <SPACE> <ASSGN_STR> <CONCAT> <STOP>
+                    | <VAR> <ASSGN_STR> <SPACE> <CONCAT> <STOP>
+                    | <VAR>  <ASSGN_STR> <CONCAT> <STOP>
+                    | <VAR> <SPACE> <ASSGN_STR> <SPACE> <W> <STOP>
+                    | <VAR> <SPACE> <ASSGN_STR> <W> <STOP>
+                    | <VAR> <ASSGN_STR> <SPACE> <W> <STOP>
+                    | <VAR> <ASSGN_STR> <W> <STOP>
+                    | <VAR> <SPACE> <EQUAL> <SPACE> <BOOL> <STOP>
+                    | <VAR> <SPACE> <EQUAL> <BOOL> <STOP>
+                    | <VAR> <EQUAL> <SPACE> <BOOL> <STOP>
+                    | <VAR> <EQUAL> <BOOL> <STOP>
+                    | <VAR> <SPACE> <EQUAL> <SPACE> <EXPR> <STOP>
+                    | <VAR> <SPACE> <EQUAL> <EXPR> <STOP>
+                    | <VAR> <EQUAL> <SPACE> <EXPR> <STOP>
+                    | <VAR> <EQUAL> <EXPR> <STOP>
+                    | <VAR> <SPACE> <EQUAL> <SPACE> <FUNCALL> <STOP>    // assign result of function
+                    | <VAR> <SPACE> <EQUAL> <FUNCALL> <STOP>
+                    | <VAR> <EQUAL> <SPACE> <FUNCALL> <STOP>
+                    | <VAR> <EQUAL> <FUNCALL> <STOP>
 
 // string concatenation
-<CONCAT> 	    ::= <W_STR> <SPACE> <PLUS> <SPACE> <CONCAT>
-                    | <W_STR> <SPACE> <PLUS> <CONCAT>
-                    | <W_STR> <PLUS> <SPACE> <CONCAT>
-                    | <W_STR> <PLUS><CONCAT>
-                    | <W_STR> <SPACE> <PLUS> <SPACE> <W_STR>
-                    | <W_STR> <SPACE> <PLUS> <W_STR>
-                    | <W_STR> <PLUS> <SPACE> <W_STR>
-                    | <W_STR> <PLUS> <W_STR>
+<CONCAT> 	    ::= <STR_VAR> <SPACE> <PLUS> <SPACE> <CONCAT>
+                    | <STR_VAR> <SPACE> <PLUS> <CONCAT>
+                    | <STR_VAR> <PLUS> <SPACE> <CONCAT>
+                    | <STR_VAR> <PLUS><CONCAT>
+                    | <STR_VAR> <SPACE> <PLUS> <SPACE> <STR_VAR>
+                    | <STR_VAR> <SPACE> <PLUS> <STR_VAR>
+                    | <STR_VAR> <PLUS> <SPACE> <STR_VAR>
+                    | <STR_VAR> <PLUS> <STR_VAR>
 
 // arithmetic expressions. brackets are optional, mul/div has precedence over plus/minus
 <CALC> 	        ::= <CALC_MUL>
@@ -94,7 +96,7 @@
                     | <CALC_MUL> <SPACE> <MUL_OPERATOR> <CALC_ELEMENT>
                     | <CALC_MUL> <MUL_OPERATOR> <SPACE> <CALC_ELEMENT>
                     | <CALC_MUL> <MUL_OPERATOR> <CALC_ELEMENT>
-<CALC_ELEMENT>  ::= <N_STR>
+<CALC_ELEMENT>  ::= <N_VAR>
                     | <BL> <CALC> <BR>
                     | <BL> <CALC_ELEMENT> <BR>
 <PLUS_OPERATOR> ::= <PLUS>
@@ -103,50 +105,50 @@
                     | <DIV>
 
 // boolean expressions. brackets are mandatory, no precedence order needed
-<EXPR> 	        ::= <BL> <BOOL_STR> <BR>
-                    | <BL> <BOOL_STR> <SPACE> <EV> <SPACE> <BOOL_STR> <BR>
-                    | <BL> <BOOL_STR> <SPACE> <EV> <BOOL_STR> <BR>
-                    | <BL> <BOOL_STR> <EV> <SPACE> <BOOL_STR> <BR>
-                    | <BL> <BOOL_STR> <EV> <BOOL_STR> <BR>
-                    | <BL> <BOOL_STR> <SPACE> <EV> <SPACE> <EXPR> <BR>
-                    | <BL> <BOOL_STR> <SPACE> <EV> <EXPR> <BR>
-                    | <BL> <BOOL_STR> <EV> <SPACE> <EXPR> <BR>
-                    | <BL> <BOOL_STR> <EV> <EXPR> <BR>
-                    | <BL> <CALC> <SPACE> <COMP_N> <SPACE> <N_STR> <BR>
-                    | <BL> <CALC> <SPACE> <COMP_N> <N_STR> <BR>
-                    | <BL> <CALC> <COMP_N> <SPACE> <N_STR> <BR>
-                    | <BL> <CALC> <COMP_N> <N_STR> <BR>
-                    | <BL> <EXPR> <SPACE> <EV> <SPACE> <BOOL_STR> <BR>
-                    | <BL> <EXPR> <SPACE> <EV> <BOOL_STR> <BR>
-                    | <BL> <EXPR> <EV> <SPACE> <BOOL_STR> <BR>
-                    | <BL> <EXPR> <EV> <BOOL_STR> <BR>
-                    | <BL> <N_STR> <SPACE> <COMP_N> <SPACE> <CALC> <BR>
-                    | <BL> <N_STR> <SPACE> <COMP_N> <CALC> <BR>
-                    | <BL> <N_STR> <COMP_N> <SPACE> <CALC> <BR>
-                    | <BL> <N_STR> <COMP_N> <CALC> <BR>
-                    | <BL> <N_STR> <SPACE> <COMP_N> <SPACE> <N_STR> <BR>
-                    | <BL> <N_STR> <SPACE> <COMP_N> <N_STR> <BR>
-                    | <BL> <N_STR> <COMP_N> <SPACE> <N_STR> <BR>
-                    | <BL> <N_STR> <COMP_N> <N_STR> <BR>
-                    | <BL> <W_STR> <SPACE> <COMP> <SPACE> <W_STR> <BR>
-                    | <BL> <W_STR> <SPACE> <COMP> <W_STR> <BR>
-                    | <BL> <W_STR> <COMP> <SPACE> <W_STR> <BR>
-                    | <BL> <W_STR> <COMP> <W_STR> <BR>
+<EXPR> 	        ::= <BL> <BOOL_VAR> <BR>
+                    | <BL> <BOOL_VAR> <SPACE> <EV> <SPACE> <BOOL_VAR> <BR>
+                    | <BL> <BOOL_VAR> <SPACE> <EV> <BOOL_VAR> <BR>
+                    | <BL> <BOOL_VAR> <EV> <SPACE> <BOOL_VAR> <BR>
+                    | <BL> <BOOL_VAR> <EV> <BOOL_VAR> <BR>
+                    | <BL> <BOOL_VAR> <SPACE> <EV> <SPACE> <EXPR> <BR>
+                    | <BL> <BOOL_VAR> <SPACE> <EV> <EXPR> <BR>
+                    | <BL> <BOOL_VAR> <EV> <SPACE> <EXPR> <BR>
+                    | <BL> <BOOL_VAR> <EV> <EXPR> <BR>
+                    | <BL> <CALC> <SPACE> <COMP_N> <SPACE> <N_Var> <BR>
+                    | <BL> <CALC> <SPACE> <COMP_N> <N_Var> <BR>
+                    | <BL> <CALC> <COMP_N> <SPACE> <N_Var> <BR>
+                    | <BL> <CALC> <COMP_N> <N_Var> <BR>
+                    | <BL> <EXPR> <SPACE> <EV> <SPACE> <BOOL_VAR> <BR>
+                    | <BL> <EXPR> <SPACE> <EV> <BOOL_VAR> <BR>
+                    | <BL> <EXPR> <EV> <SPACE> <BOOL_VAR> <BR>
+                    | <BL> <EXPR> <EV> <BOOL_VAR> <BR>
+                    | <BL> <N_Var> <SPACE> <COMP_N> <SPACE> <CALC> <BR>
+                    | <BL> <N_Var> <SPACE> <COMP_N> <CALC> <BR>
+                    | <BL> <N_Var> <COMP_N> <SPACE> <CALC> <BR>
+                    | <BL> <N_Var> <COMP_N> <CALC> <BR>
+                    | <BL> <N_Var> <SPACE> <COMP_N> <SPACE> <N_Var> <BR>
+                    | <BL> <N_Var> <SPACE> <COMP_N> <N_Var> <BR>
+                    | <BL> <N_Var> <COMP_N> <SPACE> <N_Var> <BR>
+                    | <BL> <N_Var> <COMP_N> <N_Var> <BR>
+                    | <BL> <STR_VAR> <SPACE> <COMP> <SPACE> <STR_VAR> <BR>
+                    | <BL> <STR_VAR> <SPACE> <COMP> <STR_VAR> <BR>
+                    | <BL> <STR_VAR> <COMP> <SPACE> <STR_VAR> <BR>
+                    | <BL> <STR_VAR> <COMP> <STR_VAR> <BR>
 
 // function definitions. a function must have parameters and must return a string, number or boolean
 <REP_PARAMDEF> 	::= <PARAMDEF>
                     | <PARAMDEF> <COMMA> <SPACE> <REP_PARAMDEF>
                     | <PARAMDEF> <COMMA> <REP_PARAMDEF>
-<PARAMDEF> 	    ::= <TYPEWORD> <SPACE> <STR>
+<PARAMDEF> 	    ::= <TYPEWORD> <SPACE> <VAR>
 <REP_FUNDEF> 	::= <FUNDEF>
                     | <FUNDEF> <REP_FUNDEF>
-<FUNDEF> 	    ::= <DEF> <SPACE> <TYPEWORD> <SPACE> <STR> <BL> <REP_PARAMDEF> <BR> <SPACE> <CBL> <NWL_SPACE> <REP_STRUCT> <RET> <CBR> <NWL_SPACE>
-                    | <DEF> <SPACE> <TYPEWORD> <SPACE> <STR> <BL> <REP_PARAMDEF> <BR> <SPACE> <CBL> <NWL_SPACE> <REP_STRUCT> <RET> <CBR>
-                    | <DEF> <SPACE> <TYPEWORD> <SPACE> <STR> <BL> <REP_PARAMDEF> <BR> <SPACE> <CBL> <REP_STRUCT> <RET> <CBR> <NWL_SPACE>
-                    | <DEF> <SPACE> <TYPEWORD> <SPACE> <STR> <BL> <REP_PARAMDEF> <BR> <SPACE> <CBL> <REP_STRUCT> <RET> <CBR>
+<FUNDEF> 	    ::= <DEF> <SPACE> <TYPEWORD> <SPACE> <VAR> <BL> <REP_PARAMDEF> <BR> <SPACE> <CBL> <NWL_SPACE> <REP_STRUCT> <RET> <CBR> <NWL_SPACE>
+                    | <DEF> <SPACE> <TYPEWORD> <SPACE> <VAR> <BL> <REP_PARAMDEF> <BR> <SPACE> <CBL> <NWL_SPACE> <REP_STRUCT> <RET> <CBR>
+                    | <DEF> <SPACE> <TYPEWORD> <SPACE> <VAR> <BL> <REP_PARAMDEF> <BR> <SPACE> <CBL> <REP_STRUCT> <RET> <CBR> <NWL_SPACE>
+                    | <DEF> <SPACE> <TYPEWORD> <SPACE> <VAR> <BL> <REP_PARAMDEF> <BR> <SPACE> <CBL> <REP_STRUCT> <RET> <CBR>
 <PARAM> 	    ::= <TYPE>
                     | <TYPE> <COMMA> <SPACE> <PARAM>
-<FUNCALL> 	    ::= <STR> <BL> <PARAM> <BR>
+<FUNCALL> 	    ::= <VAR> <BL> <PARAM> <BR>
 
 // this function should print the content of the variable to the console when called
 <PRINTCALL> 	::= <PRINT> <BL> <TYPE> <BR> <STOP>
@@ -190,7 +192,7 @@
                     | <MINEQ>
                     | <DIVEQ>
                     | <MULEQ>
-<ASSGN_W> 	    ::= <EQUAL>
+<ASSGN_STR> 	::= <EQUAL>
                     | <PLUSEQ>
 // comparators for strings/booleans and number comparisons
 <COMP> 	        ::= <EQ>
@@ -216,19 +218,19 @@
 // boolean, number, string or variable
 <TYPE> 	        ::= <BOOL>
                     | <N>
+                    | <VAR>
                     | <STR>
-                    | <W>
 
 // number or variable
-<N_STR> 	    ::= <N>
-                    | <STR>
+<N_VAR> 	    ::= <N>
+                    | <VAR>
 // string or variable
-<W_STR> 	    ::= <STR>
-                    | <W>
-// boolean or variable
-<BOOL_STR> 	    ::= <BOOL>
+<STR_VAR> 	    ::= <VAR>
                     | <STR>
-
+// boolean or variable
+<BOOL_VAR> 	    ::= <BOOL>
+                    | <VAR>
+// newline or spae
 <NWL_SPACE> 	::= <NL_SPACE>
                     | <SPACE>
 

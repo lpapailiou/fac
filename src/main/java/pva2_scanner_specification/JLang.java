@@ -955,7 +955,7 @@ public class JLang {
             // fall through
           case 61: break;
           case 19:
-            { collectToken("STR");
+            { collectToken("VAR");
             }
             // fall through
           case 62: break;
@@ -990,7 +990,7 @@ public class JLang {
             // fall through
           case 68: break;
           case 26:
-            { collectToken("W");
+            { collectToken("STR");
             }
             // fall through
           case 69: break;

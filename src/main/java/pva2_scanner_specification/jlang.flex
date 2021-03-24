@@ -175,8 +175,8 @@ STOP = ;[ \t\f\r\n]*                    // stop token
 
 // character classes for numbers and strings
 N = -?[0-9]\d*(\.\d+)?                  // decimal/int number, positive or negative
-STR = [a-z_]+                           // variables
-W = '[a-z0-9_\,\.\(\)\;\:\/\+\-\*\/ \s\t\f\r\n]*'   // strings
+VAR = [a-z_]+                           // variables
+STR = '[a-z0-9_\,\.\(\)\;\:\/\+\-\*\/ \s\t\f\r\n]*'   // strings
 
 NL_SPACE = [ \t\f\r\n]+                 // newline or spaces
 SPACE = [ \t\f]+                        // one or more spaces
@@ -237,8 +237,8 @@ ERR = [^]                               // fallback
 
 // character classes for numbers and strings
 {N}                               { collectToken("N"); }
+{VAR}                             { collectToken("VAR"); }
 {STR}                             { collectToken("STR"); }
-{W}                               { collectToken("W"); }
 
 // whitespace
 {SPACE}                           { collectToken("SPACE"); }
