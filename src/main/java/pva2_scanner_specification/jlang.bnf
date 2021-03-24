@@ -6,6 +6,7 @@
     - restructured so optional spaces will not require 'empty token'
     - changed "W" to "STR"
     - changed "STR" to "VAR"
+    - changed "N" to "NUM"
 
  */
 
@@ -40,18 +41,18 @@
 <BOOLVARDEF> 	::= <BOOLTYPE> <SPACE> <VAR> <SPACE> <EQUAL> <SPACE> <BOOL> <STOP>
 
 // variable assignments
-<ASSIGN> 	    ::= <VAR> <SPACE> <ASSGN_N> <SPACE> <CALC> <STOP>
-                    | <VAR> <SPACE> <ASSGN_N> <CALC> <STOP>
-                    | <VAR> <ASSGN_N> <SPACE> <CALC> <STOP>
-                    | <VAR> <ASSGN_N> <CALC> <STOP>
-                    | <VAR> <SPACE> <ASSGN_N> <SPACE> <N> <STOP>
-                    | <VAR> <SPACE> <ASSGN_N> <N> <STOP>
-                    | <VAR> <ASSGN_N> <SPACE> <N> <STOP>
-                    | <VAR> <ASSGN_N> <N> <STOP>
-                    | <VAR> <SPACE> <ASSGN_N> <SPACE> <VAR> <STOP>
-                    | <VAR> <SPACE> <ASSGN_N> <VAR> <STOP>
-                    | <VAR> <ASSGN_N> <SPACE> <VAR> <STOP>
-                    | <VAR> <ASSGN_N> <VAR> <STOP>
+<ASSIGN> 	    ::= <VAR> <SPACE> <ASSGN_NUM> <SPACE> <CALC> <STOP>
+                    | <VAR> <SPACE> <ASSGN_NUM> <CALC> <STOP>
+                    | <VAR> <ASSGN_NUM> <SPACE> <CALC> <STOP>
+                    | <VAR> <ASSGN_NUM> <CALC> <STOP>
+                    | <VAR> <SPACE> <ASSGN_NUM> <SPACE> <NUM> <STOP>
+                    | <VAR> <SPACE> <ASSGN_NUM> <NUM> <STOP>
+                    | <VAR> <ASSGN_NUM> <SPACE> <NUM> <STOP>
+                    | <VAR> <ASSGN_NUM> <NUM> <STOP>
+                    | <VAR> <SPACE> <ASSGN_NUM> <SPACE> <VAR> <STOP>
+                    | <VAR> <SPACE> <ASSGN_NUM> <VAR> <STOP>
+                    | <VAR> <ASSGN_NUM> <SPACE> <VAR> <STOP>
+                    | <VAR> <ASSGN_NUM> <VAR> <STOP>
                     | <VAR> <SPACE> <ASSGN_STR> <SPACE> <CONCAT> <STOP>
                     | <VAR> <SPACE> <ASSGN_STR> <CONCAT> <STOP>
                     | <VAR> <ASSGN_STR> <SPACE> <CONCAT> <STOP>
@@ -96,7 +97,7 @@
                     | <CALC_MUL> <SPACE> <MUL_OPERATOR> <CALC_ELEMENT>
                     | <CALC_MUL> <MUL_OPERATOR> <SPACE> <CALC_ELEMENT>
                     | <CALC_MUL> <MUL_OPERATOR> <CALC_ELEMENT>
-<CALC_ELEMENT>  ::= <N_VAR>
+<CALC_ELEMENT>  ::= <NUM_VAR>
                     | <BL> <CALC> <BR>
                     | <BL> <CALC_ELEMENT> <BR>
 <PLUS_OPERATOR> ::= <PLUS>
@@ -114,22 +115,22 @@
                     | <BL> <BOOL_VAR> <SPACE> <EV> <EXPR> <BR>
                     | <BL> <BOOL_VAR> <EV> <SPACE> <EXPR> <BR>
                     | <BL> <BOOL_VAR> <EV> <EXPR> <BR>
-                    | <BL> <CALC> <SPACE> <COMP_N> <SPACE> <N_VAR> <BR>
-                    | <BL> <CALC> <SPACE> <COMP_N> <N_VAR> <BR>
-                    | <BL> <CALC> <COMP_N> <SPACE> <N_VAR> <BR>
-                    | <BL> <CALC> <COMP_N> <N_VAR> <BR>
+                    | <BL> <CALC> <SPACE> <COMP_NUM> <SPACE> <NUM_VAR> <BR>
+                    | <BL> <CALC> <SPACE> <COMP_NUM> <NUM_VAR> <BR>
+                    | <BL> <CALC> <COMP_NUM> <SPACE> <NUM_VAR> <BR>
+                    | <BL> <CALC> <COMP_NUM> <NUM_VAR> <BR>
                     | <BL> <EXPR> <SPACE> <EV> <SPACE> <BOOL_VAR> <BR>
                     | <BL> <EXPR> <SPACE> <EV> <BOOL_VAR> <BR>
                     | <BL> <EXPR> <EV> <SPACE> <BOOL_VAR> <BR>
                     | <BL> <EXPR> <EV> <BOOL_VAR> <BR>
-                    | <BL> <N_VAR> <SPACE> <COMP_N> <SPACE> <CALC> <BR>
-                    | <BL> <N_VAR> <SPACE> <COMP_N> <CALC> <BR>
-                    | <BL> <N_VAR> <COMP_N> <SPACE> <CALC> <BR>
-                    | <BL> <N_VAR> <COMP_N> <CALC> <BR>
-                    | <BL> <N_VAR> <SPACE> <COMP_N> <SPACE> <N_VAR> <BR>
-                    | <BL> <N_VAR> <SPACE> <COMP_N> <N_VAR> <BR>
-                    | <BL> <N_VAR> <COMP_N> <SPACE> <N_VAR> <BR>
-                    | <BL> <N_VAR> <COMP_N> <N_VAR> <BR>
+                    | <BL> <NUM_VAR> <SPACE> <COMP_NUM> <SPACE> <CALC> <BR>
+                    | <BL> <NUM_VAR> <SPACE> <COMP_NUM> <CALC> <BR>
+                    | <BL> <NUM_VAR> <COMP_NUM> <SPACE> <CALC> <BR>
+                    | <BL> <NUM_VAR> <COMP_NUM> <CALC> <BR>
+                    | <BL> <NUM_VAR> <SPACE> <COMP_NUM> <SPACE> <NUM_VAR> <BR>
+                    | <BL> <NUM_VAR> <SPACE> <COMP_NUM> <NUM_VAR> <BR>
+                    | <BL> <NUM_VAR> <COMP_NUM> <SPACE> <NUM_VAR> <BR>
+                    | <BL> <NUM_VAR> <COMP_NUM> <NUM_VAR> <BR>
                     | <BL> <STR_VAR> <SPACE> <COMP> <SPACE> <STR_VAR> <BR>
                     | <BL> <STR_VAR> <SPACE> <COMP> <STR_VAR> <BR>
                     | <BL> <STR_VAR> <COMP> <SPACE> <STR_VAR> <BR>
@@ -187,7 +188,7 @@
 // --------------------- helper structures ---------------------
 
 // assignment operators for numbers and strings
-<ASSGN_N> 	    ::= <EQUAL>
+<ASSGN_NUM> 	::= <EQUAL>
                     | <PLUSEQ>
                     | <MINEQ>
                     | <DIVEQ>
@@ -197,7 +198,7 @@
 // comparators for strings/booleans and number comparisons
 <COMP> 	        ::= <EQ>
                     | <NEQ>
-<COMP_N> 	    ::= <COMP>
+<COMP_NUM> 	    ::= <COMP>
                     | <GREATER>
                     | <GREQ>
                     | <LEQ>
@@ -217,12 +218,12 @@
 
 // boolean, number, string or variable
 <TYPE> 	        ::= <BOOL>
-                    | <N>
+                    | <NUM>
                     | <VAR>
                     | <STR>
 
 // number or variable
-<N_VAR> 	    ::= <N>
+<NUM_VAR> 	    ::= <NUM>
                     | <VAR>
 // string or variable
 <STR_VAR> 	    ::= <VAR>

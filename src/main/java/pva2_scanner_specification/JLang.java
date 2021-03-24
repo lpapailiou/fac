@@ -930,7 +930,7 @@ public class JLang {
             // fall through
           case 56: break;
           case 14:
-            { collectToken("N");
+            { collectToken("NUM");
             }
             // fall through
           case 57: break;

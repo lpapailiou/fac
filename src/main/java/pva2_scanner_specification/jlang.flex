@@ -174,7 +174,7 @@ DIVEQ = \/=
 STOP = ;[ \t\f\r\n]*                    // stop token
 
 // character classes for numbers and strings
-N = -?[0-9]\d*(\.\d+)?                  // decimal/int number, positive or negative
+NUM = -?[0-9]\d*(\.\d+)?                // decimal/int number, positive or negative
 VAR = [a-z_]+                           // variables
 STR = '[a-z0-9_\,\.\(\)\;\:\/\+\-\*\/ \s\t\f\r\n]*'   // strings
 
@@ -236,7 +236,7 @@ ERR = [^]                               // fallback
 {RR}                              { collectToken("RR"); }
 
 // character classes for numbers and strings
-{N}                               { collectToken("N"); }
+{NUM}                             { collectToken("NUM"); }
 {VAR}                             { collectToken("VAR"); }
 {STR}                             { collectToken("STR"); }
 
