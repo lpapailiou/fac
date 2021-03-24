@@ -181,7 +181,7 @@ W = '[a-z0-9_\,\.\(\)\;\:\/\+\-\*\/ \s\t\f\r\n]*'   // strings
 NL_SPACE = [ \t\f\r\n]+                 // newline or spaces
 SPACE = [ \t\f]+                        // one or more spaces
 
-ERR = \^                                // fallback
+ERR = [^]                               // fallback
 
 %%
 
