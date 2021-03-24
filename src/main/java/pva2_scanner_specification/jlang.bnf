@@ -114,22 +114,22 @@
                     | <BL> <BOOL_VAR> <SPACE> <EV> <EXPR> <BR>
                     | <BL> <BOOL_VAR> <EV> <SPACE> <EXPR> <BR>
                     | <BL> <BOOL_VAR> <EV> <EXPR> <BR>
-                    | <BL> <CALC> <SPACE> <COMP_N> <SPACE> <N_Var> <BR>
-                    | <BL> <CALC> <SPACE> <COMP_N> <N_Var> <BR>
-                    | <BL> <CALC> <COMP_N> <SPACE> <N_Var> <BR>
-                    | <BL> <CALC> <COMP_N> <N_Var> <BR>
+                    | <BL> <CALC> <SPACE> <COMP_N> <SPACE> <N_VAR> <BR>
+                    | <BL> <CALC> <SPACE> <COMP_N> <N_VAR> <BR>
+                    | <BL> <CALC> <COMP_N> <SPACE> <N_VAR> <BR>
+                    | <BL> <CALC> <COMP_N> <N_VAR> <BR>
                     | <BL> <EXPR> <SPACE> <EV> <SPACE> <BOOL_VAR> <BR>
                     | <BL> <EXPR> <SPACE> <EV> <BOOL_VAR> <BR>
                     | <BL> <EXPR> <EV> <SPACE> <BOOL_VAR> <BR>
                     | <BL> <EXPR> <EV> <BOOL_VAR> <BR>
-                    | <BL> <N_Var> <SPACE> <COMP_N> <SPACE> <CALC> <BR>
-                    | <BL> <N_Var> <SPACE> <COMP_N> <CALC> <BR>
-                    | <BL> <N_Var> <COMP_N> <SPACE> <CALC> <BR>
-                    | <BL> <N_Var> <COMP_N> <CALC> <BR>
-                    | <BL> <N_Var> <SPACE> <COMP_N> <SPACE> <N_Var> <BR>
-                    | <BL> <N_Var> <SPACE> <COMP_N> <N_Var> <BR>
-                    | <BL> <N_Var> <COMP_N> <SPACE> <N_Var> <BR>
-                    | <BL> <N_Var> <COMP_N> <N_Var> <BR>
+                    | <BL> <N_VAR> <SPACE> <COMP_N> <SPACE> <CALC> <BR>
+                    | <BL> <N_VAR> <SPACE> <COMP_N> <CALC> <BR>
+                    | <BL> <N_VAR> <COMP_N> <SPACE> <CALC> <BR>
+                    | <BL> <N_VAR> <COMP_N> <CALC> <BR>
+                    | <BL> <N_VAR> <SPACE> <COMP_N> <SPACE> <N_VAR> <BR>
+                    | <BL> <N_VAR> <SPACE> <COMP_N> <N_VAR> <BR>
+                    | <BL> <N_VAR> <COMP_N> <SPACE> <N_VAR> <BR>
+                    | <BL> <N_VAR> <COMP_N> <N_VAR> <BR>
                     | <BL> <STR_VAR> <SPACE> <COMP> <SPACE> <STR_VAR> <BR>
                     | <BL> <STR_VAR> <SPACE> <COMP> <STR_VAR> <BR>
                     | <BL> <STR_VAR> <COMP> <SPACE> <STR_VAR> <BR>
