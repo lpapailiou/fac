@@ -2,7 +2,7 @@
     Grammar definition FAC by Lena Papailiou
 
     updates:
-    - moved lexical definitions / tokens to jlang.flex
+    - moved lexical definitions / tokens to jscanner.flex
     - restructured so optional spaces will not require 'empty token'
     - changed "W" to "STR"
     - changed "STR" to "VAR"

@@ -1,0 +1,141 @@
+package pva3_parser_specification;
+/* Simple +/-/* expression language; parser evaluates constant expressions on the fly*/
+import java_cup.runtime.*;
+// java -jar java-cup-11b.jar -interface -destdir src/main/java/pva3_parser_specification/ -parser JParser src/main/java/pva3_parser_specification/jparser.cup
+parser code {:
+
+    JScanner s;
+    JParser(JScanner s) {
+        this.s = s;
+    }
+:}
+
+/* define how to connect to the scanner! */
+//init with {: s.init(); :};
+scan with {: return s.getNextToken(); :};
+
+/* Terminals (tokens returned by the scanner). */
+terminal            STRTYPE, BOOLTYPE, NUMTYPE, RETURN, WHILE, IF, ELSE, DEF, MAIN, PRINT,
+                    BL, BR, CBL, CBR, COMMA, EQUAL, LESS, GREATER, PLUS, MINUS, MUL, DIV, EQ, NEQ, GREQ, LEQ, AND, OR, PLUSEQ, MINEQ, MULEQ, DIVEQ,
+                    STOP,
+                    VAR,
+                    NL_SPACE, SPACE;
+terminal Boolean    BOOL;
+terminal Double     NUM;
+terminal String     STR;
+
+/* Non terminals */
+non terminal            S, FILE, MAINCALL, REP_VARDEF, VARDEF, ASSIGN, TYPE,
+                        REP_PARAMDEF, TYPEDEF, REP_FUNDEF, FUNDEF, PARAM, FUNCALL, PRINTCALL, REP_STMT, STMT,
+                        RET;
+
+non terminal Program    program;
+non terminal List<Decl> decllist;
+non terminal Decl       decl;
+non terminal List<Stmt> stmtlist;
+non terminal List<Expr.Identifier> identlist;
+non terminal Stmt       stmt;
+non terminal Expr       expr;
+non terminal Cond       cond;
+non terminal Boolean    EXPR, BOOL_VAL;
+non terminal Double     CALC, CALC_MUL, NUM_VAL;      // used to store evaluated subexpressions
+non terminal String     CONCAT, STR_VAL;
+
+/* Precedences */
+precedence left PLUS, MINUS;
+precedence left MUL, DIV;
+
+/* The grammar rules */
+
+program         ::=  decllist:d stmtlist:s                                  {: RESULT = new Program(d, s); :}
+                    ;
+decllist        ::=  decl:d decllist:dl                                     {: dl.add(d); RESULT = dl; :}
+                    | /* empty decllist */                                  {: RESULT = new LinkedList<Decl>(); :}
+                    ;
+stmtlist        ::= stmtlist:sl stmt:s                                      {: sl.add(s); RESULT = sl; :}
+                    | /* empty stmtlist */                                  {: RESULT = new LinkedList<Stmt>(); :}
+                    ;
+decl            ::= TYPE VAR:i identlist:il  STOP                    {: il.add(0,Expr.ident(ixleft,i,ixright));
+                                                                               RESULT = new Decl(il); :}
+                    ;
+identlist       ::= identlist:il COMMA IDENT:i                              {: il.add(Expr.ident(ixleft,i,ixright)); RESULT = il; :}
+                    | /* empty identlist*/                                  {: RESULT = new LinkedList<Expr.Identifier>(); :}
+                    ;
+
+TYPE ::= STRTYPE
+         | NUMTYPE
+         | BOOLTYPE
+         ;
+
+VARDEF 	    ::= STRTYPE SPACE VAR:e1 EQUAL STR:e2 STOP                      {: e1 = e2; :}
+                    | NUMTYPE SPACE VAR:e1 EQUAL NUM:e2 STOP                {: e1 = e2; :}
+                    | BOOLTYPE SPACE VAR:e1 EQUAL BOOL:e2 STOP              {: e1 = e2; :}
+                    ;
+
+// variable assignments
+ASSIGN 	    ::= VAR:e1 EQUAL BOOL_VAL:e2 STOP                           {: e1 = e2; :}
+
+                    | VAR:e1 EQUAL NUM_VAL:e2 STOP                      {: e1 = e2; :}
+                    | VAR:e1 PLUSEQ NUM_VAL:e2 STOP                     {: e1 += e2; :}
+                    | VAR:e1 MINEQ NUM_VAL:e2 STOP                      {: e1 -= e2; :}
+                    | VAR:e1 DIVEQ NUM_VAL:e2 STOP                      {: e1 /= e2; :}
+                    | VAR:e1 MULEQ NUM_VAL:e2 STOP                      {: e1 *= e2; :}
+
+                    | VAR:e1 EQUAL STR_VAL:e2 STOP                      {: e1 = e2; :}
+                    | VAR:e1 PLUSEQ STR_VAL:e2 STOP                     {: e1 += e2; :}
+                    ;
+
+// string concatenation
+CONCAT 	        ::= STR_VAL:e1 PLUS STR_VAL:e2                              {: RESULT = e1 + e2; :}
+                    ;
+
+// arithmetic expressions. brackets are optional, mul/div has precedence over plus/minus
+CALC 	        ::= CALC_MUL:e                                              {: RESULT = e; :}
+                    | CALC:e1 PLUS CALC_MUL:e2                              {: RESULT = e1 + e2; :}
+                    | CALC:e1 MINUS CALC_MUL:e2                             {: RESULT = e1 - e2; :}
+                    ;
+CALC_MUL      ::= NUM_VAL:e                                                 {: RESULT = e; :}
+                    | BL CALC_MUL:e BR                                      {: RESULT = e; :}
+                    | CALC_MUL:e1 MUL NUM_VAL:e2                            {: RESULT = e1 * e2; :}
+                    | CALC_MUL:e1 DIV NUM_VAL:e2                            {: RESULT = e1 / e2; :}
+                    ;
+
+// boolean expressions. brackets are mandatory, no precedence order needed
+EXPR 	        ::= BL VAR:e BR                                           {: RESULT = e; :}
+                    | BL BOOL_VAL:e1 AND BOOL_VAL:e2 BR                        {: RESULT = e1 && e2; :}
+                    | BL BOOL_VAL:e1 OR BOOL_VAL:e2 BR                         {: RESULT = e1 || e2; :}
+                    | BL BOOL_VAL:e1 EQ BOOL_VAL:e2 BR                         {: RESULT = e1 == e2; :}
+                    | BL BOOL_VAL:e1 NEQ BOOL_VAL:e2 BR                        {: RESULT = e1 != e2; :}
+
+                    | BL NUM_VAL:e1 EQ NUM_VAL:e2 BR                           {: RESULT = e1 == e2; :}
+                    | BL NUM_VAL:e1 NEQ NUM_VAL:e2 BR                          {: RESULT = e1 != e2; :}
+                    | BL NUM_VAL:e1 GREATER NUM_VAL:e2 BR                      {: RESULT = e1 > e2; :}
+                    | BL NUM_VAL:e1 GREQ NUM_VAL:e2 BR                         {: RESULT = e1 >= e2; :}
+                    | BL NUM_VAL:e1 LEQ NUM_VAL:e2 BR                          {: RESULT = e1 <= e2; :}
+                    | BL NUM_VAL:e1 LESS NUM_VAL:e2 BR                         {: RESULT = e1 < e2; :}
+
+                    | BL STR_VAL:e1 EQ STR_VAL:e2 BR                           {: RESULT = e1 == e2; :}
+                    | BL STR_VAL:e1 NEQ STR_VAL:e2 BR                          {: RESULT = e1 != e2; :}
+                    ;
+
+// --------------------- helper structures ---------------------
+// return
+RET 	        ::= RETURN SPACE NUM_VAL:r STOP                                 {: RESULT = r; :}
+                    | RETURN SPACE BOOL_VAL:r STOP                              {: RESULT = r; :}
+                    | RETURN SPACE STR_VAL:r STOP                               {: RESULT = r; :}
+                    ;
+
+// values
+NUM_VAL  ::= VAR:n                                                              {: RESULT = n; :}
+                    | BL CALC:n BR                                              {: RESULT = n; :}
+                    | BL NUM_VAL:n BR                                           {: RESULT = n; :}
+                    | NUM:n                                                     {: RESULT = n; :}
+                    ;
+BOOL_VAL  ::= VAR:b                                                             {: RESULT = b; :}
+                    | EXPR:b                                                    {: RESULT = b; :}
+                    | BOOL:b                                                    {: RESULT = b; :}
+                    ;
+STR_VAL  ::= VAR:str                                                            {: RESULT = str; :}
+                    | CONCAT:str                                                {: RESULT = str; :}
+                    | STR:str                                                   {: RESULT = str; :}
+                    ;
