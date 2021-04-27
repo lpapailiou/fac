@@ -1,0 +1,44 @@
+
+
+
+
+FUNDEF 	    ::=       DEF TYPEDEF BL REP_PARAMDEF BR CBL REP_STMT RET CBR                     {: System.out.println("FUNDEF"); :}
+                    ;
+PARAM 	        ::= TYPE                                                        {: System.out.println("PARAM"); :}
+                    | TYPE COMMA PARAM                                    {: System.out.println("PARAM"); :}
+                    ;
+FUNCALL 	    ::= VAR BL PARAM BR                    {: System.out.println("FUNCALL"); :}
+                    ;
+
+// this function should print the content of the variable to the console when called
+PRINTCALL 	    ::= PRINT BL TYPE BR STOP                    {: System.out.println("PRINTCALL"); :}
+                    ;
+
+// structures (variable definitions and assignments, if-else, while, ...)
+
+
+
+
+
+
+
+
+
+
+// return
+RET 	        ::= RETURN NUM_VAL:r STOP                                       {: RESULT = r; :}
+                    | RETURN BOOL_VAL:r STOP                                    {: RESULT = r; :}
+                    | RETURN STR_VAL:r STOP                                     {: RESULT = r; :}
+                    ;
+
+
+
+
+
+
+TYPE ::= STRTYPE
+         | NUMTYPE
+         | BOOLTYPE
+         ;
+
+

@@ -1,5 +1,8 @@
-package pva3_parser_specification;
+package scanner;
 import java.util.ArrayList;
+import java_cup.runtime.Symbol;
+import java_cup.runtime.ComplexSymbolFactory;
+import java_cup.runtime.ComplexSymbolFactory.Location;import parser.sym;
 
 %%
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -7,7 +10,8 @@ import java.util.ArrayList;
 
 %public
 %class JScanner
-
+%cup
+%implements sym
 %unicode
 %standalone
 %char
@@ -18,6 +22,12 @@ import java.util.ArrayList;
 // user code definition
 %{
   private ArrayList<Token> tokenList = new ArrayList<>();
+  ComplexSymbolFactory symbolFactory;
+
+  public JScanner(java.io.Reader in, ComplexSymbolFactory sf){
+    this(in);
+ 	symbolFactory = sf;
+  }
 
   public JScanner(String filename) {
       System.out.println("start reading file " + filename + "...\n");
@@ -43,7 +53,7 @@ import java.util.ArrayList;
           try {
             java.io.FileInputStream stream = new java.io.FileInputStream(argv[i]);
             this.zzReader = new java.io.InputStreamReader(stream, encodingName);
-            while ( !this.zzAtEOF ) this.yylex();
+            while ( !this.zzAtEOF ) this.next_token();
           }
           catch (java.io.FileNotFoundException e) {
             System.out.println("File not found : \""+argv[i]+"\"");
@@ -64,10 +74,10 @@ import java.util.ArrayList;
       return null;
   }
 
-  private int collectToken(String token) {
+  private Symbol collectToken(String token) {
       tokenList.add(new Token(token, yytext()));
       consolePrint(token);
-      return 0;
+      return null;
   }
 
   private void consolePrint(String value) {
@@ -122,8 +132,22 @@ import java.util.ArrayList;
           this.value = value;
       }
   }
+  private Symbol symbol(String name, int sym) {
+        return symbolFactory.newSymbol(name, sym, null);
+    }
+
+    private Symbol symbol(String name, int sym, Object val) {
+        return symbolFactory.newSymbol(name, sym, val);
+    }
+    private Symbol symbol(String name, int sym, Object val,int buflength) {
+        return symbolFactory.newSymbol(name, sym, val);
+    }
 
 %}
+
+%eofval{
+     return symbolFactory.newSymbol("EOF", sym.EOF, null);
+%eofval}
 
 %eof{
     System.out.println("\n\n...end of file reached at line " + yyline + ", column " + yycolumn + ".\n");
@@ -143,9 +167,7 @@ NUM = -?[0-9]\d*(\.\d+)?                // decimal/int number, positive or negat
 VAR = [a-z_]+                           // variables
 STR = '[a-z0-9_\,\.\(\)\;\:\/\+\-\*\/ \s\t\f\r\n]*'   // strings
 
-NL_SPACE = [ \t\f\r\n]+                 // newline or spaces
-SPACE = [ \t\f]+                        // one or more spaces
-OPT_SPACE = [ \t\f]*                    // optional space
+WHITESPACE = [ \t\f\r\n]+               // newline or spaces
 
 ERR = [^]                               // fallback
 
@@ -171,31 +193,31 @@ main                              { return collectToken("MAIN"); }
 print                             { return collectToken("PRINT"); }
 
 // stop
-;[ \t\f\r\n]*                     { return collectToken("STOP"); }
+;                                 { return collectToken("STOP"); }
 
 // special characters / terminals
-{OPT_SPACE}=={OPT_SPACE}          { return collectToken("EQ"); }
-{OPT_SPACE}\!={OPT_SPACE}         { return collectToken("NEQ"); }
-{OPT_SPACE}>={OPT_SPACE}          { return collectToken("GREQ"); }
-{OPT_SPACE}\<={OPT_SPACE}         { return collectToken("LEQ"); }
-{OPT_SPACE}&&{OPT_SPACE}          { return collectToken("AND"); }
-{OPT_SPACE}\|\|{OPT_SPACE}        { return collectToken("OR"); }
-{OPT_SPACE}\+={OPT_SPACE}         { return collectToken("PLUSEQ"); }
-{OPT_SPACE}-={OPT_SPACE}          { return collectToken("MINEQ"); }
-{OPT_SPACE}\*={OPT_SPACE}         { return collectToken("MULEQ"); }
-{OPT_SPACE}\/={OPT_SPACE}         { return collectToken("MULEQ"); }
+==                                { return collectToken("EQ"); }
+\!=                               { return collectToken("NEQ"); }
+>=                                { return collectToken("GREQ"); }
+\<=                               { return collectToken("LEQ"); }
+&&                                { return collectToken("AND"); }
+\|\|                              { return collectToken("OR"); }
+\+=                               { return collectToken("PLUSEQ"); }
+-=                                { return collectToken("MINEQ"); }
+\*=                               { return collectToken("MULEQ"); }
+\/=                               { return collectToken("MULEQ"); }
 \(                                { return collectToken("BL"); }
 \)                                { return collectToken("BR"); }
 \{                                { return collectToken("CBL"); }
 \}                                { return collectToken("CBR"); }
 ,                                 { return collectToken("COMMA"); }
-{OPT_SPACE}={OPT_SPACE}           { return collectToken("EQUAL"); }
-{OPT_SPACE}\<{OPT_SPACE}          { return collectToken("LESS"); }
-{OPT_SPACE}>{OPT_SPACE}           { return collectToken("GREATER"); }
-{OPT_SPACE}\+{OPT_SPACE}          { return collectToken("PLUS"); }
-{OPT_SPACE}-{OPT_SPACE}           { return collectToken("MINUS"); }
-{OPT_SPACE}\*{OPT_SPACE}          { return collectToken("MUL"); }
-{OPT_SPACE}\/{OPT_SPACE}          { return collectToken("DIV"); }
+=                                 { return collectToken("EQUAL"); }
+\<                                { return collectToken("LESS"); }
+>                                 { return collectToken("GREATER"); }
+\+                                { return collectToken("PLUS"); }
+-                                 { return collectToken("MINUS"); }
+\*                                { return collectToken("MUL"); }
+\/                                { return collectToken("DIV"); }
 
 // character classes for numbers and strings
 {NUM}                             { return collectToken("NUM"); }
@@ -203,8 +225,7 @@ print                             { return collectToken("PRINT"); }
 {STR}                             { return collectToken("STR"); }
 
 // whitespace
-{SPACE}                           { return collectToken("SPACE"); }
-{NL_SPACE}                        { return collectToken("NL_SPACE"); }
+{WHITESPACE}                      { /* ignore */ }
 
 // error fallback
 {ERR}                             { throw new Error("Illegal character <"+ yytext()+">"); }
