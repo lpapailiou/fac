@@ -2,7 +2,8 @@ package scanner;
 import java.util.ArrayList;
 import java_cup.runtime.Symbol;
 import java_cup.runtime.ComplexSymbolFactory;
-import java_cup.runtime.ComplexSymbolFactory.Location;import parser.sym;
+import java_cup.runtime.ComplexSymbolFactory.Location;
+import parser.JSymbol;
 
 %%
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -11,9 +12,8 @@ import java_cup.runtime.ComplexSymbolFactory.Location;import parser.sym;
 %public
 %class JScanner
 %cup
-%implements sym
+%implements JSymbol
 %unicode
-%standalone
 %char
 %line
 %column
@@ -21,132 +21,62 @@ import java_cup.runtime.ComplexSymbolFactory.Location;import parser.sym;
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // user code definition
 %{
-  private ArrayList<Token> tokenList = new ArrayList<>();
-  ComplexSymbolFactory symbolFactory;
+  private ArrayList<Symbol> symbols = new ArrayList<>();
+  private ComplexSymbolFactory symbolFactory;
 
-  public JScanner(java.io.Reader in, ComplexSymbolFactory sf){
-    this(in);
- 	symbolFactory = sf;
-  }
-
-  public JScanner(String filename) {
-      System.out.println("start reading file " + filename + "...\n");
-      String[] argv = new String[] {filename};
-      if (argv.length == 0) {
-        System.out.println("Usage : java JScanner [ --encoding <name> ] <inputfile(s)>");
-      }
-      else {
-        int firstFilePos = 0;
-        String encodingName = "UTF-8";
-        if (argv[0].equals("--encoding")) {
-          firstFilePos = 2;
-          encodingName = argv[1];
-          try {
-            // Side-effect: is encodingName valid?
-            java.nio.charset.Charset.forName(encodingName);
-          } catch (Exception e) {
-            System.out.println("Invalid encoding '" + encodingName + "'");
-            return;
-          }
-        }
-        for (int i = firstFilePos; i < argv.length; i++) {
-          try {
-            java.io.FileInputStream stream = new java.io.FileInputStream(argv[i]);
-            this.zzReader = new java.io.InputStreamReader(stream, encodingName);
-            while ( !this.zzAtEOF ) this.next_token();
-          }
-          catch (java.io.FileNotFoundException e) {
-            System.out.println("File not found : \""+argv[i]+"\"");
-          }
-          catch (java.io.IOException e) {
-            System.out.println("IO error scanning file \""+argv[i]+"\"");
-            System.out.println(e);
-          }
-          catch (Exception e) {
-            System.out.println("Unexpected exception:");
-            e.printStackTrace();
-          }
-        }
-      }
-  }
-
-  public String getNextToken() {
-      return null;
-  }
-
-  private Symbol collectToken(String token) {
-      tokenList.add(new Token(token, yytext()));
-      consolePrint(token);
-      return null;
+  private Symbol collectToken(int token) {
+      Symbol symbol = symbol(yytext(), token, yytext());
+      symbols.add(symbol);
+      consolePrint(yytext());
+      System.out.println(symbol.toString());
+      return symbol;
   }
 
   private void consolePrint(String value) {
       System.out.println("token {" + value + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".");
   }
 
-  public ArrayList<Token> getTokenList() {
-      return tokenList;
-  }
-
-  public ArrayList<String> getTokens() {
-      ArrayList<String> list = new ArrayList<>();
-      for (Token token : tokenList) {
-          list.add(token.name);
-      }
-      return list;
-  }
-
-  public ArrayList<Object> getValues() {
-      ArrayList<Object> list = new ArrayList<>();
-        for (Token token : tokenList) {
-            list.add(token.value);
-        }
-        return list;
-  }
-
   public void printTokens() {
       System.out.println("\n***** TOKENS *****\n");
-      ArrayList<String> tokens = getTokens();
-      for (int i = 0; i < tokens.size(); i++) {
-          String token = tokens.get(i);
-          if (i < tokens.size()-1) {
-              token += ", ";
+      for (int i = 0; i < symbols.size(); i++) {
+          String str = symbols.get(0).toString().split(" ")[1];
+          if (i < symbols.size()-1) {
+              str += ", ";
           }
-          System.out.print(token);
+          System.out.print(str);
       }
+      System.out.println();
   }
 
   public void printValues() {
         System.out.println("\n***** File content *****\n");
-        ArrayList<Object> values = getValues();
-        for (Object obj : values) {
-            System.out.print(obj);
-        }
-    }
-
-  static class Token {
-      String name;
-      Object value;
-      Token(String name, Object value) {
-          this.name = name;
-          this.value = value;
-      }
-  }
-  private Symbol symbol(String name, int sym) {
-        return symbolFactory.newSymbol(name, sym, null);
+        for (int i = 0; i < symbols.size(); i++) {
+              String str = symbols.get(0).value.toString();
+              if (i < symbols.size()-1) {
+                  str += ", ";
+              }
+              System.out.print(str);
+          }
+        System.out.println();
     }
 
     private Symbol symbol(String name, int sym, Object val) {
-        return symbolFactory.newSymbol(name, sym, val);
+        Location left = new Location(yyline+1,(int)yycolumn+1,(int)yychar);
+        Location right= new Location(yyline+1,(int)(yycolumn+yylength()), (int)(yychar+yylength()));
+        return symbolFactory.newSymbol(name, sym, left, right, val);
     }
-    private Symbol symbol(String name, int sym, Object val,int buflength) {
-        return symbolFactory.newSymbol(name, sym, val);
+    private void error(String message) {
+      System.out.println("Error at line "+(yyline+1)+", column "+(yycolumn+1)+" : "+message);
     }
 
 %}
 
+%init{
+    symbolFactory = new ComplexSymbolFactory();
+%init}
+
 %eofval{
-     return symbolFactory.newSymbol("EOF", sym.EOF, null);
+     return symbolFactory.newSymbol("EOF", JSymbol.EOF, null);
 %eofval}
 
 %eof{
@@ -180,49 +110,48 @@ ERR = [^]                               // fallback
 {COMMENT}                         { /* ignore */ }
 
 // reserved words
-string                            { return collectToken("STRTYPE"); }
-boolean                           { return collectToken("BOOLTYPE"); }
-number                            { return collectToken("NUMTYPE"); }
-{BOOL}                            { return collectToken("BOOL"); }
-return                            { return collectToken("RETURN"); }
-while                             { return collectToken("WHILE"); }
-if                                { return collectToken("IF"); }
-else                              { return collectToken("IF"); }
-def                               { return collectToken("DEF"); }
-main                              { return collectToken("MAIN"); }
-print                             { return collectToken("PRINT"); }
+string                            { return collectToken(STRTYPE); }
+boolean                           { return collectToken(BOOLTYPE); }
+number                            { return collectToken(NUMTYPE); }
+{BOOL}                            { return collectToken(BOOL); }
+return                            { return collectToken(RETURN); }
+while                             { return collectToken(WHILE); }
+if                                { return collectToken(IF); }
+else                              { return collectToken(ELSE); }
+def                               { return collectToken(DEF); }
+print                             { return collectToken(PRINT); }
 
 // stop
-;                                 { return collectToken("STOP"); }
+;                                 { return collectToken(STOP); }
 
 // special characters / terminals
-==                                { return collectToken("EQ"); }
-\!=                               { return collectToken("NEQ"); }
->=                                { return collectToken("GREQ"); }
-\<=                               { return collectToken("LEQ"); }
-&&                                { return collectToken("AND"); }
-\|\|                              { return collectToken("OR"); }
-\+=                               { return collectToken("PLUSEQ"); }
--=                                { return collectToken("MINEQ"); }
-\*=                               { return collectToken("MULEQ"); }
-\/=                               { return collectToken("MULEQ"); }
-\(                                { return collectToken("BL"); }
-\)                                { return collectToken("BR"); }
-\{                                { return collectToken("CBL"); }
-\}                                { return collectToken("CBR"); }
-,                                 { return collectToken("COMMA"); }
-=                                 { return collectToken("EQUAL"); }
-\<                                { return collectToken("LESS"); }
->                                 { return collectToken("GREATER"); }
-\+                                { return collectToken("PLUS"); }
--                                 { return collectToken("MINUS"); }
-\*                                { return collectToken("MUL"); }
-\/                                { return collectToken("DIV"); }
+==                                { return collectToken(EQ); }
+\!=                               { return collectToken(NEQ); }
+>=                                { return collectToken(GREQ); }
+\<=                               { return collectToken(LEQ); }
+&&                                { return collectToken(AND); }
+\|\|                              { return collectToken(OR); }
+\+=                               { return collectToken(PLUSEQ); }
+-=                                { return collectToken(MINEQ); }
+\*=                               { return collectToken(MULEQ); }
+\/=                               { return collectToken(DIVEQ); }
+\(                                { return collectToken(BL); }
+\)                                { return collectToken(BR); }
+\{                                { return collectToken(CBL); }
+\}                                { return collectToken(CBR); }
+,                                 { return collectToken(COMMA); }
+=                                 { return collectToken(EQUAL); }
+\<                                { return collectToken(LESS); }
+>                                 { return collectToken(GREATER); }
+\+                                { return collectToken(PLUS); }
+-                                 { return collectToken(MINUS); }
+\*                                { return collectToken(MUL); }
+\/                                { return collectToken(DIV); }
 
 // character classes for numbers and strings
-{NUM}                             { return collectToken("NUM"); }
-{VAR}                             { return collectToken("VAR"); }
-{STR}                             { return collectToken("STR"); }
+{NUM}                             { return collectToken(NUM); }
+{VAR}                             { return collectToken(VAR); }
+{STR}                             { return collectToken(STR); }
 
 // whitespace
 {WHITESPACE}                      { /* ignore */ }

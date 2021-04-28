@@ -1,32 +1,26 @@
-/*package parser;*/
-import java_cup.runtime.*;
+package parser;
+import parser.util.Declaration;
+import parser.util.Program;
 import scanner.JScanner;
 import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.ArrayList;
 /* Simple +/-/* expression language; parser evaluates constant expressions on the fly*/
 //
-// java -jar java-cup-11b.jar -interface -destdir src/main/java/parser/ -parser JParser src/main/java/parser/jparser.cup
+// java -jar java-cup-11b.jar -interface -destdir src/main/java/parser/ -symbols JSymbol -parser JParser src/main/java/parser/jparser.cup
 parser code {:
-
-    JScanner s;
-    JParser(JScanner s) {
-        this.s = s;
-    }
 :}
 
 /* define how to connect to the scanner! */
 //init with {: s.init(); :};
-scan with {: return s.next_token(); :};
+scan with {: return getScanner().next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
 terminal            RETURN, WHILE, IF, ELSE, DEF, PRINT,
                     BL, BR, CBL, CBR, COMMA, STOP,
-                    EQUAL, LESS, GREATER, PLUS, MINUS, MUL, DIV, EQ, NEQ, GREQ, LEQ, AND, OR, PLUSEQ, MINEQ, MULEQ, DIVEQ,
-                    VAR;
-terminal Boolean    BOOL, BOOLTYPE;
-terminal Double     NUM, NUMTYPE;
-terminal String     STR, STRTYPE;
+                    EQUAL, LESS, GREATER, PLUS, MINUS, MUL, DIV, EQ, NEQ, GREQ, LEQ, AND, OR, PLUSEQ, MINEQ, MULEQ, DIVEQ;
+terminal String     STR, STRTYPE, NUM, NUMTYPE, BOOL, BOOLTYPE, VAR;
 
 /* Non terminals */
 non terminal        ASSIGN, TYPE,
@@ -35,7 +29,7 @@ non terminal        ASSIGN, TYPE,
 
 non terminal Program    program;
 non terminal List<Object> stmtlist;
-non terminal HashMap<Object, Object> decllist;
+non terminal List<Declaration> decllist;
 non terminal Boolean    COND, BOOL_VAL;
 non terminal Double     EXPR, CALC_MUL, NUM_VAL;      // used to store evaluated subexpressions
 non terminal String     CONCAT, STR_VAL;
@@ -45,7 +39,7 @@ precedence left PLUS, MINUS;
 precedence left MUL, DIV;
 
 /* The grammar rules */
-
+start with program;
 // --------------------- helper structures ---------------------
 program         ::=  decllist:d stmtlist:s                                  {: RESULT = new Program(d, s); :}
                     ;
@@ -53,66 +47,8 @@ program         ::=  decllist:d stmtlist:s                                  {: R
 stmtlist        ::= stmtlist:sl STMT:s                                      {: sl.add(s); RESULT = sl; :}
                     | /* empty stmtlist */                                  {: RESULT = new LinkedList<Object>(); :}
                     ;
-decllist        ::=  DECL:d decllist:dl                                     {: dl.add(d); RESULT = dl; :}
-                    | /* empty decllist */                                  {: RESULT = new LinkedList<Declaration>(); :}
-                    ;
-
-
-
-STMT 	    ::= STOP                                                        {: RESULT = Stmt.empty(); :}
-                    | CBL stmtlist:sl CBR                                   {: RESULT = Stmt.compound(sl); :}
-                    | ASSIGN                                                {: System.out.println("STRUCT"); :}
-                    | DECL                                                {: System.out.println("STRUCT"); :}
-                    | IF COND:c CBL STMT:s CBR                              {: Stmt.ifthen(c, s); :}
-                    | IF COND:c CBL STMT:s1 CBR ELSE CBL STMT:s2 CBR        {: Stmt.ifthenelse(c, s1, s2); :}
-                    | WHILE COND:c CBL STMT:s CBR                           {: Stmt.whileloop(c, s); :}
-                    | PRINTCALL:p                                           {: System.out.println(p); :}
-                    ;
-
-// arithmetic expressions. brackets are optional, mul/div has precedence over plus/minus
-EXPR 	        ::= CALC_MUL:e                                              {: RESULT = e; :}
-                    | EXPR:e1 PLUS CALC_MUL:e2                              {: RESULT = e1 + e2; :}
-                    | EXPR:e1 MINUS CALC_MUL:e2                             {: RESULT = e1 - e2; :}
-                    ;
-CALC_MUL      ::= NUM_VAL:e                                                 {: RESULT = e; :}
-                    | BL CALC_MUL:e BR                                      {: RESULT = e; :}
-                    | CALC_MUL:e1 MUL NUM_VAL:e2                            {: RESULT = e1 * e2; :}
-                    | CALC_MUL:e1 DIV NUM_VAL:e2                            {: RESULT = e1 / e2; :}
-                    ;
-
-// boolean conditions. brackets are mandatory, no precedence order needed
-COND 	        ::= BL VAR:e BR                                           {: RESULT = e; :}
-                    | BL BOOL_VAL:e1 AND BOOL_VAL:e2 BR                        {: RESULT = e1 && e2; :}
-                    | BL BOOL_VAL:e1 OR BOOL_VAL:e2 BR                         {: RESULT = e1 || e2; :}
-                    | BL BOOL_VAL:e1 EQ BOOL_VAL:e2 BR                         {: RESULT = e1 == e2; :}
-                    | BL BOOL_VAL:e1 NEQ BOOL_VAL:e2 BR                        {: RESULT = e1 != e2; :}
-
-                    | BL NUM_VAL:e1 EQ NUM_VAL:e2 BR                           {: RESULT = e1 == e2; :}
-                    | BL NUM_VAL:e1 NEQ NUM_VAL:e2 BR                          {: RESULT = e1 != e2; :}
-                    | BL NUM_VAL:e1 GREATER NUM_VAL:e2 BR                      {: RESULT = e1 > e2; :}
-                    | BL NUM_VAL:e1 GREQ NUM_VAL:e2 BR                         {: RESULT = e1 >= e2; :}
-                    | BL NUM_VAL:e1 LEQ NUM_VAL:e2 BR                          {: RESULT = e1 <= e2; :}
-                    | BL NUM_VAL:e1 LESS NUM_VAL:e2 BR                         {: RESULT = e1 < e2; :}
-
-                    | BL STR_VAL:e1 EQ STR_VAL:e2 BR                           {: RESULT = e1 == e2; :}
-                    | BL STR_VAL:e1 NEQ STR_VAL:e2 BR                          {: RESULT = e1 != e2; :}
-                    ;
-
-// string concatenation
-CONCAT 	        ::= STR_VAL:e1 PLUS STR_VAL:e2                              {: RESULT = e1 + e2; :}
-                    ;
-
-// variable assignments
-ASSIGN 	    ::= VAR:e1 EQ BOOL_VAL:e2 STOP                           {: e1 == e2; :}
-
-                    | VAR:e1 EQ NUM_VAL:e2 STOP                      {: e1 == e2; :}
-                    | VAR:e1 PLUSEQ NUM_VAL:e2 STOP                     {: e1 += e2; :}
-                    | VAR:e1 MINEQ NUM_VAL:e2 STOP                      {: e1 -= e2; :}
-                    | VAR:e1 DIVEQ NUM_VAL:e2 STOP                      {: e1 /= e2; :}
-                    | VAR:e1 MULEQ NUM_VAL:e2 STOP                      {: e1 *= e2; :}
-
-                    | VAR:e1 EQ STR_VAL:e2 STOP                      {: e1 == e2; :}
-                    | VAR:e1 PLUSEQ STR_VAL:e2 STOP                     {: e1 += e2; :}
+decllist        ::=  DECL:d decllist:dl                                     {: dl.add((Declaration)d); RESULT = dl; :}
+                    | /* empty decllist */                                  {: RESULT = new ArrayList<Declaration>(); :}
                     ;
 
 DECL 	    ::= STRTYPE:t VAR:e1 EQUAL STR:e2 STOP                      {: RESULT = new Declaration(t, e1, e2); :}
@@ -120,17 +56,10 @@ DECL 	    ::= STRTYPE:t VAR:e1 EQUAL STR:e2 STOP                      {: RESULT 
                     | BOOLTYPE:t VAR:e1 EQUAL BOOL:e2 STOP                {: RESULT = new Declaration(t, e1, e2); :}
                     ;
 
-// values
-NUM_VAL  ::= VAR:n                                                              {: RESULT = Double.valueOf(n); :}
-                    | BL EXPR:n BR                                              {: RESULT = n; :}
-                    | BL NUM_VAL:n BR                                           {: RESULT = n; :}
-                    | NUM:n                                                     {: RESULT = n; :}
-                    ;
-BOOL_VAL  ::= VAR:b                                                             {: RESULT = Boolean.valueOf(b); :}
-                    | COND:b                                                    {: RESULT = b; :}
-                    | BOOL:b                                                    {: RESULT = b; :}
-                    ;
-STR_VAL  ::= VAR:str                                                            {: RESULT = str.toString(); :}
-                    | CONCAT:str                                                {: RESULT = str; :}
-                    | STR:str                                                   {: RESULT = str; :}
-                    ;
+TYPE            ::= STRTYPE:s                                                 {: RESULT = s; :}
+                     | NUMTYPE:s                            {: RESULT = s; :}
+                     | BOOLTYPE:s                                   {: RESULT = s; :}
+                     ;
+
+VAR             ::= VAR:v               {: RESULT = v; :}
+;

@@ -6,12 +6,13 @@ package scanner;
 import java.util.ArrayList;
 import java_cup.runtime.Symbol;
 import java_cup.runtime.ComplexSymbolFactory;
-import java_cup.runtime.ComplexSymbolFactory.Location;import parser.sym;
+import java_cup.runtime.ComplexSymbolFactory.Location;
+import parser.JSymbol;
 
 
 // See https://github.com/jflex-de/jflex/issues/222
 @SuppressWarnings("FallThrough")
-public class JScanner implements java_cup.runtime.Scanner, sym {
+public class JScanner implements java_cup.runtime.Scanner, JSymbol {
 
   /** This character denotes the end of file. */
   public static final int YYEOF = -1;
@@ -120,14 +121,15 @@ public class JScanner implements java_cup.runtime.Scanner, sym {
   private static final String ZZ_ACTION_PACKED_0 =
     "\1\0\1\1\1\2\3\1\1\3\1\4\1\5\1\6"+
     "\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16"+
-    "\15\17\1\20\1\1\1\21\1\22\1\23\1\0\1\24"+
-    "\1\25\1\26\1\27\3\0\1\30\1\31\1\32\4\17"+
-    "\1\33\7\17\1\34\2\0\1\2\1\12\1\17\1\35"+
-    "\11\17\1\0\1\2\1\17\1\36\4\17\1\37\3\17"+
-    "\1\40\2\17\1\41\1\17\1\42\1\43\1\44\1\45";
+    "\14\17\1\20\1\1\1\21\1\22\1\23\1\0\1\24"+
+    "\1\25\1\26\1\27\2\0\1\30\1\0\1\31\1\32"+
+    "\1\33\4\17\1\34\6\17\1\35\2\0\1\2\1\12"+
+    "\1\17\1\36\10\17\1\0\1\2\1\17\1\37\4\17"+
+    "\1\40\3\17\1\41\2\17\1\42\1\17\1\43\1\44"+
+    "\1\45\1\46";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[96];
+    int [] result = new int[94];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -155,18 +157,18 @@ public class JScanner implements java_cup.runtime.Scanner, sym {
     "\0\0\0\54\0\130\0\204\0\260\0\334\0\54\0\54"+
     "\0\u0108\0\u0134\0\54\0\u0160\0\u018c\0\u01b8\0\54\0\u01e4"+
     "\0\u0210\0\u023c\0\u0268\0\u0294\0\u02c0\0\u02ec\0\u0318\0\u0344"+
-    "\0\u0370\0\u039c\0\u03c8\0\u03f4\0\u0420\0\u044c\0\u0478\0\54"+
-    "\0\u04a4\0\54\0\54\0\54\0\334\0\54\0\54\0\54"+
-    "\0\54\0\u04d0\0\u04fc\0\u0528\0\54\0\54\0\54\0\u0554"+
-    "\0\u0580\0\u05ac\0\u05d8\0\u0268\0\u0604\0\u0630\0\u065c\0\u0688"+
-    "\0\u06b4\0\u06e0\0\u070c\0\54\0\u0738\0\u0764\0\54\0\u0528"+
-    "\0\u0790\0\u0268\0\u07bc\0\u07e8\0\u0814\0\u0840\0\u086c\0\u0898"+
-    "\0\u08c4\0\u08f0\0\u091c\0\u0948\0\u0738\0\u0974\0\u0268\0\u09a0"+
-    "\0\u09cc\0\u09f8\0\u0a24\0\u0268\0\u0a50\0\u0a7c\0\u0aa8\0\u0268"+
-    "\0\u0ad4\0\u0b00\0\u0268\0\u0b2c\0\u0268\0\u0268\0\u0268\0\u0268";
+    "\0\u0370\0\u039c\0\u03c8\0\u03f4\0\u0420\0\u044c\0\54\0\u0478"+
+    "\0\54\0\54\0\54\0\334\0\54\0\54\0\54\0\54"+
+    "\0\u04a4\0\u04d0\0\54\0\u04fc\0\54\0\54\0\54\0\u0528"+
+    "\0\u0554\0\u0580\0\u05ac\0\u0268\0\u05d8\0\u0604\0\u0630\0\u065c"+
+    "\0\u0688\0\u06b4\0\54\0\u06e0\0\u070c\0\54\0\u04fc\0\u0738"+
+    "\0\u0268\0\u0764\0\u0790\0\u07bc\0\u07e8\0\u0814\0\u0840\0\u086c"+
+    "\0\u0898\0\u08c4\0\u06e0\0\u08f0\0\u0268\0\u091c\0\u0948\0\u0974"+
+    "\0\u09a0\0\u0268\0\u09cc\0\u09f8\0\u0a24\0\u0268\0\u0a50\0\u0a7c"+
+    "\0\u0268\0\u0aa8\0\u0268\0\u0268\0\u0268\0\u0268";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[96];
+    int [] result = new int[94];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -192,43 +194,41 @@ public class JScanner implements java_cup.runtime.Scanner, sym {
     "\1\2\2\3\1\2\1\3\1\4\1\5\1\6\1\7"+
     "\1\10\1\11\1\12\1\13\1\14\1\2\1\15\1\16"+
     "\1\17\1\20\1\21\1\22\2\23\1\24\1\25\1\26"+
-    "\1\27\2\23\1\30\1\23\1\31\1\32\1\23\1\33"+
-    "\1\34\1\35\1\36\1\23\1\37\1\40\1\41\1\42"+
-    "\1\2\55\0\2\3\1\0\1\3\72\0\1\43\36\0"+
-    "\1\44\46\0\4\45\2\0\1\46\12\45\3\0\23\45"+
-    "\27\0\1\47\53\0\1\50\50\0\1\16\2\0\1\51"+
-    "\42\0\1\52\4\0\1\53\3\0\1\47\46\0\1\54"+
-    "\1\0\1\16\32\0\1\16\23\0\1\55\53\0\1\56"+
-    "\53\0\1\57\55\0\23\23\31\0\14\23\1\60\6\23"+
-    "\31\0\4\23\1\61\16\23\31\0\11\23\1\62\11\23"+
-    "\31\0\1\23\1\63\21\23\31\0\5\23\1\64\15\23"+
-    "\31\0\1\23\1\65\21\23\31\0\21\23\1\66\1\23"+
-    "\31\0\16\23\1\67\4\23\31\0\4\23\1\70\16\23"+
-    "\31\0\20\23\1\71\2\23\31\0\16\23\1\72\4\23"+
-    "\31\0\7\23\1\73\13\23\55\0\1\74\2\0\12\75"+
-    "\1\76\41\75\2\53\1\0\1\53\1\77\47\53\20\0"+
-    "\1\100\32\0\1\100\25\0\14\23\1\101\6\23\31\0"+
-    "\5\23\1\102\15\23\31\0\17\23\1\103\3\23\31\0"+
-    "\11\23\1\104\11\23\31\0\10\23\1\105\12\23\31\0"+
-    "\12\23\1\106\10\23\31\0\10\23\1\107\12\23\31\0"+
-    "\20\23\1\110\2\23\31\0\16\23\1\111\4\23\31\0"+
-    "\21\23\1\112\1\23\31\0\10\23\1\113\12\23\4\0"+
-    "\12\75\1\114\53\75\1\114\4\75\1\115\34\75\25\0"+
-    "\11\23\1\116\11\23\31\0\4\23\1\64\16\23\31\0"+
-    "\17\23\1\112\3\23\31\0\13\23\1\117\7\23\31\0"+
-    "\2\23\1\120\20\23\31\0\13\23\1\121\7\23\31\0"+
-    "\21\23\1\122\1\23\31\0\10\23\1\123\12\23\31\0"+
-    "\4\23\1\124\16\23\31\0\11\23\1\125\11\23\4\0"+
-    "\12\75\1\114\4\75\1\77\34\75\25\0\4\23\1\126"+
-    "\16\23\31\0\4\23\1\127\16\23\31\0\20\23\1\130"+
-    "\2\23\31\0\16\23\1\131\4\23\31\0\13\23\1\132"+
-    "\7\23\31\0\4\23\1\133\16\23\31\0\1\23\1\134"+
-    "\21\23\31\0\16\23\1\135\4\23\31\0\13\23\1\136"+
-    "\7\23\31\0\6\23\1\137\14\23\31\0\13\23\1\140"+
-    "\7\23\4\0";
+    "\1\27\2\23\1\30\2\23\1\31\1\23\1\32\1\33"+
+    "\1\34\1\35\1\23\1\36\1\37\1\40\1\41\1\2"+
+    "\55\0\2\3\1\0\1\3\72\0\1\42\36\0\1\43"+
+    "\46\0\4\44\2\0\1\45\12\44\3\0\23\44\27\0"+
+    "\1\46\53\0\1\47\50\0\1\16\2\0\1\50\42\0"+
+    "\1\51\4\0\1\52\3\0\1\53\46\0\1\54\1\0"+
+    "\1\16\32\0\1\16\23\0\1\55\53\0\1\56\53\0"+
+    "\1\57\55\0\23\23\31\0\14\23\1\60\6\23\31\0"+
+    "\4\23\1\61\16\23\31\0\11\23\1\62\11\23\31\0"+
+    "\1\23\1\63\21\23\31\0\5\23\1\64\15\23\31\0"+
+    "\21\23\1\65\1\23\31\0\16\23\1\66\4\23\31\0"+
+    "\4\23\1\67\16\23\31\0\20\23\1\70\2\23\31\0"+
+    "\16\23\1\71\4\23\31\0\7\23\1\72\13\23\55\0"+
+    "\1\73\2\0\12\74\1\75\41\74\2\52\1\0\1\52"+
+    "\1\76\47\52\20\0\1\77\32\0\1\77\25\0\14\23"+
+    "\1\100\6\23\31\0\5\23\1\101\15\23\31\0\17\23"+
+    "\1\102\3\23\31\0\11\23\1\103\11\23\31\0\12\23"+
+    "\1\104\10\23\31\0\10\23\1\105\12\23\31\0\20\23"+
+    "\1\106\2\23\31\0\16\23\1\107\4\23\31\0\21\23"+
+    "\1\110\1\23\31\0\10\23\1\111\12\23\4\0\12\74"+
+    "\1\112\53\74\1\112\4\74\1\113\34\74\25\0\11\23"+
+    "\1\114\11\23\31\0\4\23\1\115\16\23\31\0\17\23"+
+    "\1\110\3\23\31\0\2\23\1\116\20\23\31\0\13\23"+
+    "\1\117\7\23\31\0\21\23\1\120\1\23\31\0\10\23"+
+    "\1\121\12\23\31\0\4\23\1\122\16\23\31\0\11\23"+
+    "\1\123\11\23\4\0\12\74\1\112\4\74\1\76\34\74"+
+    "\25\0\4\23\1\124\16\23\31\0\4\23\1\125\16\23"+
+    "\31\0\20\23\1\126\2\23\31\0\16\23\1\127\4\23"+
+    "\31\0\13\23\1\130\7\23\31\0\4\23\1\131\16\23"+
+    "\31\0\1\23\1\132\21\23\31\0\16\23\1\133\4\23"+
+    "\31\0\13\23\1\134\7\23\31\0\6\23\1\135\14\23"+
+    "\31\0\13\23\1\136\7\23\4\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[2904];
+    int [] result = new int[2772];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -272,11 +272,12 @@ public class JScanner implements java_cup.runtime.Scanner, sym {
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
     "\1\0\1\11\4\1\2\11\2\1\1\11\3\1\1\11"+
-    "\20\1\1\11\1\1\3\11\1\0\4\11\3\0\3\11"+
-    "\14\1\1\11\2\0\1\11\14\1\1\0\24\1";
+    "\17\1\1\11\1\1\3\11\1\0\4\11\2\0\1\11"+
+    "\1\0\3\11\13\1\1\11\2\0\1\11\13\1\1\0"+
+    "\24\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[96];
+    int [] result = new int[94];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -352,126 +353,52 @@ public class JScanner implements java_cup.runtime.Scanner, sym {
   private boolean zzEOFDone;
 
   /* user code: */
-  private ArrayList<Token> tokenList = new ArrayList<>();
-  ComplexSymbolFactory symbolFactory;
+  private ArrayList<Symbol> symbols = new ArrayList<>();
+  private ComplexSymbolFactory symbolFactory;
 
-  public JScanner(java.io.Reader in, ComplexSymbolFactory sf){
-    this(in);
- 	symbolFactory = sf;
-  }
-
-  public JScanner(String filename) {
-      System.out.println("start reading file " + filename + "...\n");
-      String[] argv = new String[] {filename};
-      if (argv.length == 0) {
-        System.out.println("Usage : java JScanner [ --encoding <name> ] <inputfile(s)>");
-      }
-      else {
-        int firstFilePos = 0;
-        String encodingName = "UTF-8";
-        if (argv[0].equals("--encoding")) {
-          firstFilePos = 2;
-          encodingName = argv[1];
-          try {
-            // Side-effect: is encodingName valid?
-            java.nio.charset.Charset.forName(encodingName);
-          } catch (Exception e) {
-            System.out.println("Invalid encoding '" + encodingName + "'");
-            return;
-          }
-        }
-        for (int i = firstFilePos; i < argv.length; i++) {
-          try {
-            java.io.FileInputStream stream = new java.io.FileInputStream(argv[i]);
-            this.zzReader = new java.io.InputStreamReader(stream, encodingName);
-            while ( !this.zzAtEOF ) this.next_token();
-          }
-          catch (java.io.FileNotFoundException e) {
-            System.out.println("File not found : \""+argv[i]+"\"");
-          }
-          catch (java.io.IOException e) {
-            System.out.println("IO error scanning file \""+argv[i]+"\"");
-            System.out.println(e);
-          }
-          catch (Exception e) {
-            System.out.println("Unexpected exception:");
-            e.printStackTrace();
-          }
-        }
-      }
-  }
-
-  public String getNextToken() {
-      return null;
-  }
-
-  private Symbol collectToken(String token) {
-      tokenList.add(new Token(token, yytext()));
-      consolePrint(token);
-      return null;
+  private Symbol collectToken(int token) {
+      Symbol symbol = symbol(yytext(), token, yytext());
+      symbols.add(symbol);
+      consolePrint(yytext());
+      System.out.println(symbol);
+      return symbol;
   }
 
   private void consolePrint(String value) {
       System.out.println("token {" + value + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".");
   }
 
-  public ArrayList<Token> getTokenList() {
-      return tokenList;
-  }
-
-  public ArrayList<String> getTokens() {
-      ArrayList<String> list = new ArrayList<>();
-      for (Token token : tokenList) {
-          list.add(token.name);
-      }
-      return list;
-  }
-
-  public ArrayList<Object> getValues() {
-      ArrayList<Object> list = new ArrayList<>();
-        for (Token token : tokenList) {
-            list.add(token.value);
-        }
-        return list;
-  }
-
   public void printTokens() {
       System.out.println("\n***** TOKENS *****\n");
-      ArrayList<String> tokens = getTokens();
-      for (int i = 0; i < tokens.size(); i++) {
-          String token = tokens.get(i);
-          if (i < tokens.size()-1) {
-              token += ", ";
+      for (int i = 0; i < symbols.size(); i++) {
+          String str = symbols.get(0).toString().split(" ")[1];
+          if (i < symbols.size()-1) {
+              str += ", ";
           }
-          System.out.print(token);
+          System.out.print(str);
       }
+      System.out.println();
   }
 
   public void printValues() {
         System.out.println("\n***** File content *****\n");
-        ArrayList<Object> values = getValues();
-        for (Object obj : values) {
-            System.out.print(obj);
-        }
-    }
-
-  static class Token {
-      String name;
-      Object value;
-      Token(String name, Object value) {
-          this.name = name;
-          this.value = value;
-      }
-  }
-  private Symbol symbol(String name, int sym) {
-        return symbolFactory.newSymbol(name, sym, null);
+        for (int i = 0; i < symbols.size(); i++) {
+              String str = symbols.get(0).value.toString();
+              if (i < symbols.size()-1) {
+                  str += ", ";
+              }
+              System.out.print(str);
+          }
+        System.out.println();
     }
 
     private Symbol symbol(String name, int sym, Object val) {
-        return symbolFactory.newSymbol(name, sym, val);
+        Location left = new Location(yyline+1,(int)yycolumn+1,(int)yychar);
+        Location right= new Location(yyline+1,(int)(yycolumn+yylength()), (int)(yychar+yylength()));
+        return symbolFactory.newSymbol(name, sym, left, right, val);
     }
-    private Symbol symbol(String name, int sym, Object val,int buflength) {
-        return symbolFactory.newSymbol(name, sym, val);
+    private void error(String message) {
+      System.out.println("Error at line "+(yyline+1)+", column "+(yycolumn+1)+" : "+message);
     }
 
 
@@ -482,6 +409,7 @@ public class JScanner implements java_cup.runtime.Scanner, sym {
    * @param   in  the java.io.Reader to read input from.
    */
   public JScanner(java.io.Reader in) {
+      symbolFactory = new ComplexSymbolFactory();
     this.zzReader = in;
   }
 
@@ -880,7 +808,7 @@ public class JScanner implements java_cup.runtime.Scanner, sym {
       if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
         zzAtEOF = true;
             zzDoEOF();
-          {      return symbolFactory.newSymbol("EOF", sym.EOF, null);
+          {      return symbolFactory.newSymbol("EOF", JSymbol.EOF, null);
  }
       }
       else {
@@ -889,239 +817,194 @@ public class JScanner implements java_cup.runtime.Scanner, sym {
             { throw new Error("Illegal character <"+ yytext()+">");
             }
             // fall through
-          case 38: break;
+          case 39: break;
           case 2:
             { /* ignore */
             }
             // fall through
-          case 39: break;
-          case 3:
-            { return collectToken("BL");
-            }
-            // fall through
           case 40: break;
-          case 4:
-            { return collectToken("BR");
+          case 3:
+            { return collectToken(BL);
             }
             // fall through
           case 41: break;
-          case 5:
-            { return collectToken("MUL");
+          case 4:
+            { return collectToken(BR);
             }
             // fall through
           case 42: break;
-          case 6:
-            { return collectToken("PLUS");
+          case 5:
+            { return collectToken(MUL);
             }
             // fall through
           case 43: break;
-          case 7:
-            { return collectToken("COMMA");
+          case 6:
+            { return collectToken(PLUS);
             }
             // fall through
           case 44: break;
-          case 8:
-            { return collectToken("MINUS");
+          case 7:
+            { return collectToken(COMMA);
             }
             // fall through
           case 45: break;
-          case 9:
-            { return collectToken("DIV");
+          case 8:
+            { return collectToken(MINUS);
             }
             // fall through
           case 46: break;
-          case 10:
-            { return collectToken("NUM");
+          case 9:
+            { return collectToken(DIV);
             }
             // fall through
           case 47: break;
-          case 11:
-            { return collectToken("STOP");
+          case 10:
+            { return collectToken(NUM);
             }
             // fall through
           case 48: break;
-          case 12:
-            { return collectToken("LESS");
+          case 11:
+            { return collectToken(STOP);
             }
             // fall through
           case 49: break;
-          case 13:
-            { return collectToken("EQUAL");
+          case 12:
+            { return collectToken(LESS);
             }
             // fall through
           case 50: break;
-          case 14:
-            { return collectToken("GREATER");
+          case 13:
+            { return collectToken(EQUAL);
             }
             // fall through
           case 51: break;
-          case 15:
-            { return collectToken("VAR");
+          case 14:
+            { return collectToken(GREATER);
             }
             // fall through
           case 52: break;
-          case 16:
-            { return collectToken("CBL");
+          case 15:
+            { return collectToken(VAR);
             }
             // fall through
           case 53: break;
-          case 17:
-            { return collectToken("CBR");
+          case 16:
+            { return collectToken(CBL);
             }
             // fall through
           case 54: break;
-          case 18:
-            { return collectToken("NEQ");
+          case 17:
+            { return collectToken(CBR);
             }
             // fall through
           case 55: break;
-          case 19:
-            { return collectToken("AND");
+          case 18:
+            { return collectToken(NEQ);
             }
             // fall through
           case 56: break;
-          case 20:
-            { return collectToken("STR");
+          case 19:
+            { return collectToken(AND);
             }
             // fall through
           case 57: break;
-          case 21:
-            { return collectToken("MULEQ");
+          case 20:
+            { return collectToken(STR);
             }
             // fall through
           case 58: break;
-          case 22:
-            { return collectToken("PLUSEQ");
+          case 21:
+            { return collectToken(MULEQ);
             }
             // fall through
           case 59: break;
-          case 23:
-            { return collectToken("MINEQ");
+          case 22:
+            { return collectToken(PLUSEQ);
             }
             // fall through
           case 60: break;
-          case 24:
-            { return collectToken("LEQ");
+          case 23:
+            { return collectToken(MINEQ);
             }
             // fall through
           case 61: break;
-          case 25:
-            { return collectToken("EQ");
+          case 24:
+            { return collectToken(DIVEQ);
             }
             // fall through
           case 62: break;
-          case 26:
-            { return collectToken("GREQ");
+          case 25:
+            { return collectToken(LEQ);
             }
             // fall through
           case 63: break;
-          case 27:
-            { return collectToken("IF");
+          case 26:
+            { return collectToken(EQ);
             }
             // fall through
           case 64: break;
-          case 28:
-            { return collectToken("OR");
+          case 27:
+            { return collectToken(GREQ);
             }
             // fall through
           case 65: break;
-          case 29:
-            { return collectToken("DEF");
+          case 28:
+            { return collectToken(IF);
             }
             // fall through
           case 66: break;
-          case 30:
-            { return collectToken("MAIN");
+          case 29:
+            { return collectToken(OR);
             }
             // fall through
           case 67: break;
-          case 31:
-            { return collectToken("BOOL");
+          case 30:
+            { return collectToken(DEF);
             }
             // fall through
           case 68: break;
-          case 32:
-            { return collectToken("PRINT");
+          case 31:
+            { return collectToken(ELSE);
             }
             // fall through
           case 69: break;
-          case 33:
-            { return collectToken("WHILE");
+          case 32:
+            { return collectToken(BOOL);
             }
             // fall through
           case 70: break;
-          case 34:
-            { return collectToken("NUMTYPE");
+          case 33:
+            { return collectToken(PRINT);
             }
             // fall through
           case 71: break;
-          case 35:
-            { return collectToken("RETURN");
+          case 34:
+            { return collectToken(WHILE);
             }
             // fall through
           case 72: break;
-          case 36:
-            { return collectToken("STRTYPE");
+          case 35:
+            { return collectToken(NUMTYPE);
             }
             // fall through
           case 73: break;
-          case 37:
-            { return collectToken("BOOLTYPE");
+          case 36:
+            { return collectToken(RETURN);
             }
             // fall through
           case 74: break;
+          case 37:
+            { return collectToken(STRTYPE);
+            }
+            // fall through
+          case 75: break;
+          case 38:
+            { return collectToken(BOOLTYPE);
+            }
+            // fall through
+          case 76: break;
           default:
             zzScanError(ZZ_NO_MATCH);
-        }
-      }
-    }
-  }
-
-  /**
-   * Runs the scanner on input files.
-   *
-   * This is a standalone scanner, it will print any unmatched
-   * text to System.out unchanged.
-   *
-   * @param argv   the command line, contains the filenames to run
-   *               the scanner on.
-   */
-  public static void main(String[] argv) {
-    if (argv.length == 0) {
-      System.out.println("Usage : java JScanner [ --encoding <name> ] <inputfile(s)>");
-    }
-    else {
-      int firstFilePos = 0;
-      String encodingName = "UTF-8";
-      if (argv[0].equals("--encoding")) {
-        firstFilePos = 2;
-        encodingName = argv[1];
-        try {
-          // Side-effect: is encodingName valid?
-          java.nio.charset.Charset.forName(encodingName);
-        } catch (Exception e) {
-          System.out.println("Invalid encoding '" + encodingName + "'");
-          return;
-        }
-      }
-      for (int i = firstFilePos; i < argv.length; i++) {
-        JScanner scanner = null;
-        try {
-          java.io.FileInputStream stream = new java.io.FileInputStream(argv[i]);
-          java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
-          scanner = new JScanner(reader);
-          while ( !scanner.zzAtEOF ) scanner.next_token();
-        }
-        catch (java.io.FileNotFoundException e) {
-          System.out.println("File not found : \""+argv[i]+"\"");
-        }
-        catch (java.io.IOException e) {
-          System.out.println("IO error scanning file \""+argv[i]+"\"");
-          System.out.println(e);
-        }
-        catch (Exception e) {
-          System.out.println("Unexpected exception:");
-          e.printStackTrace();
         }
       }
     }

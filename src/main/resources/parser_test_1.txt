@@ -1,0 +1,2 @@
+string hasd = 'o';
+string e = 'p';

@@ -1,23 +1,25 @@
 package parser.util;
 
-public class Declaration {
+public class Declaration implements Acceptor {
 
-    private Object type;
+    private String type;
     private String identifier;
-    private Object value;
+    private String value;
 
-    public Declaration(Object type, String identifier, Object value) {
+    public Declaration(String type, String identifier, String value) {
         this.type = type;
         this.identifier = identifier;
         this.value = value;
     }
 
-    public void setValue(Object value) {
-        this.value = value;
+    @Override
+    public String toString() {
+        return type + " " + identifier + " = " + value;
     }
 
-    public Object getValue() {
-        return value;
+    @Override
+    public void accept (Visitor visitor) {
+        visitor.visit(this);
     }
 
 }

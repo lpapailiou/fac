@@ -22,6 +22,82 @@ PRINTCALL 	    ::= PRINT BL TYPE BR STOP                    {: System.out.printl
 
 
 
+STMT 	    ::= STOP                                                        {: RESULT = Stmt.empty(); :}
+                    | CBL stmtlist:sl CBR                                   {: RESULT = Stmt.compound(sl); :}
+                    | ASSIGN                                                {: System.out.println("STRUCT"); :}
+                    | DECL                                                {: System.out.println("STRUCT"); :}
+                    | IF COND:c CBL STMT:s CBR                              {: Stmt.ifthen(c, s); :}
+                    | IF COND:c CBL STMT:s1 CBR ELSE CBL STMT:s2 CBR        {: Stmt.ifthenelse(c, s1, s2); :}
+                    | WHILE COND:c CBL STMT:s CBR                           {: Stmt.whileloop(c, s); :}
+                    | PRINTCALL:p                                           {: System.out.println(p); :}
+                    ;
+
+// arithmetic expressions. brackets are optional, mul/div has precedence over plus/minus
+EXPR 	        ::= CALC_MUL:e                                              {: RESULT = e; :}
+                    | EXPR:e1 PLUS CALC_MUL:e2                              {: RESULT = e1 + e2; :}
+                    | EXPR:e1 MINUS CALC_MUL:e2                             {: RESULT = e1 - e2; :}
+                    ;
+CALC_MUL      ::= NUM_VAL:e                                                 {: RESULT = e; :}
+                    | BL CALC_MUL:e BR                                      {: RESULT = e; :}
+                    | CALC_MUL:e1 MUL NUM_VAL:e2                            {: RESULT = e1 * e2; :}
+                    | CALC_MUL:e1 DIV NUM_VAL:e2                            {: RESULT = e1 / e2; :}
+                    ;
+
+// boolean conditions. brackets are mandatory, no precedence order needed
+COND 	        ::= BL VAR:e BR                                           {: RESULT = e; :}
+                    | BL BOOL_VAL:e1 AND BOOL_VAL:e2 BR                        {: RESULT = e1 && e2; :}
+                    | BL BOOL_VAL:e1 OR BOOL_VAL:e2 BR                         {: RESULT = e1 || e2; :}
+                    | BL BOOL_VAL:e1 EQ BOOL_VAL:e2 BR                         {: RESULT = e1 == e2; :}
+                    | BL BOOL_VAL:e1 NEQ BOOL_VAL:e2 BR                        {: RESULT = e1 != e2; :}
+
+                    | BL NUM_VAL:e1 EQ NUM_VAL:e2 BR                           {: RESULT = e1 == e2; :}
+                    | BL NUM_VAL:e1 NEQ NUM_VAL:e2 BR                          {: RESULT = e1 != e2; :}
+                    | BL NUM_VAL:e1 GREATER NUM_VAL:e2 BR                      {: RESULT = e1 > e2; :}
+                    | BL NUM_VAL:e1 GREQ NUM_VAL:e2 BR                         {: RESULT = e1 >= e2; :}
+                    | BL NUM_VAL:e1 LEQ NUM_VAL:e2 BR                          {: RESULT = e1 <= e2; :}
+                    | BL NUM_VAL:e1 LESS NUM_VAL:e2 BR                         {: RESULT = e1 < e2; :}
+
+                    | BL STR_VAL:e1 EQ STR_VAL:e2 BR                           {: RESULT = e1 == e2; :}
+                    | BL STR_VAL:e1 NEQ STR_VAL:e2 BR                          {: RESULT = e1 != e2; :}
+                    ;
+
+// string concatenation
+CONCAT 	        ::= STR_VAL:e1 PLUS STR_VAL:e2                              {: RESULT = e1 + e2; :}
+                    ;
+
+// variable assignments
+ASSIGN 	    ::= VAR:e1 EQ BOOL_VAL:e2 STOP                           {: e1 == e2; :}
+
+                    | VAR:e1 EQ NUM_VAL:e2 STOP                      {: e1 == e2; :}
+                    | VAR:e1 PLUSEQ NUM_VAL:e2 STOP                     {: e1 += e2; :}
+                    | VAR:e1 MINEQ NUM_VAL:e2 STOP                      {: e1 -= e2; :}
+                    | VAR:e1 DIVEQ NUM_VAL:e2 STOP                      {: e1 /= e2; :}
+                    | VAR:e1 MULEQ NUM_VAL:e2 STOP                      {: e1 *= e2; :}
+
+                    | VAR:e1 EQ STR_VAL:e2 STOP                      {: e1 == e2; :}
+                    | VAR:e1 PLUSEQ STR_VAL:e2 STOP                     {: e1 += e2; :}
+                    ;
+
+DECL 	    ::= STRTYPE:t VAR:e1 EQUAL STR:e2 STOP                      {: RESULT = new Declaration(t, e1, e2); :}
+                    | NUMTYPE:t VAR:e1 EQUAL NUM:e2 STOP                {: RESULT = new Declaration(t, e1, e2); :}
+                    | BOOLTYPE:t VAR:e1 EQUAL BOOL:e2 STOP                {: RESULT = new Declaration(t, e1, e2); :}
+                    ;
+
+// values
+NUM_VAL  ::= VAR:n                                                              {: RESULT = Double.valueOf(n); :}
+                    | BL EXPR:n BR                                              {: RESULT = n; :}
+                    | BL NUM_VAL:n BR                                           {: RESULT = n; :}
+                    | NUM:n                                                     {: RESULT = n; :}
+                    ;
+BOOL_VAL  ::= VAR:b                                                             {: RESULT = Boolean.valueOf(b); :}
+                    | COND:b                                                    {: RESULT = b; :}
+                    | BOOL:b                                                    {: RESULT = b; :}
+                    ;
+STR_VAL  ::= VAR:str                                                            {: RESULT = str.toString(); :}
+                    | CONCAT:str                                                {: RESULT = str; :}
+                    | STR:str                                                   {: RESULT = str; :}
+                    ;
+
 
 
 
@@ -36,9 +112,6 @@ RET 	        ::= RETURN NUM_VAL:r STOP                                       {: 
 
 
 
-TYPE ::= STRTYPE
-         | NUMTYPE
-         | BOOLTYPE
-         ;
+
 
 
