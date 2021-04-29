@@ -1,2 +1,6 @@
-string hasd = 'o';
+number hasd = 123;
 string e = 'p';
+'a' + 'b';
+'x' + 'y' + 'z';
+
+

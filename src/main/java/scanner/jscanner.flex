@@ -21,43 +21,16 @@ import parser.JSymbol;
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // user code definition
 %{
-  private ArrayList<Symbol> symbols = new ArrayList<>();
-  private ComplexSymbolFactory symbolFactory;
+    private ComplexSymbolFactory symbolFactory;
 
-  private Symbol collectToken(int token) {
+    private Symbol collectToken(int token, String desc) {
       Symbol symbol = symbol(yytext(), token, yytext());
-      symbols.add(symbol);
-      consolePrint(yytext());
-      System.out.println(symbol.toString());
+      consolePrint(desc);
       return symbol;
-  }
+    }
 
-  private void consolePrint(String value) {
+    private void consolePrint(String value) {
       System.out.println("token {" + value + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".");
-  }
-
-  public void printTokens() {
-      System.out.println("\n***** TOKENS *****\n");
-      for (int i = 0; i < symbols.size(); i++) {
-          String str = symbols.get(0).toString().split(" ")[1];
-          if (i < symbols.size()-1) {
-              str += ", ";
-          }
-          System.out.print(str);
-      }
-      System.out.println();
-  }
-
-  public void printValues() {
-        System.out.println("\n***** File content *****\n");
-        for (int i = 0; i < symbols.size(); i++) {
-              String str = symbols.get(0).value.toString();
-              if (i < symbols.size()-1) {
-                  str += ", ";
-              }
-              System.out.print(str);
-          }
-        System.out.println();
     }
 
     private Symbol symbol(String name, int sym, Object val) {
@@ -110,48 +83,48 @@ ERR = [^]                               // fallback
 {COMMENT}                         { /* ignore */ }
 
 // reserved words
-string                            { return collectToken(STRTYPE); }
-boolean                           { return collectToken(BOOLTYPE); }
-number                            { return collectToken(NUMTYPE); }
-{BOOL}                            { return collectToken(BOOL); }
-return                            { return collectToken(RETURN); }
-while                             { return collectToken(WHILE); }
-if                                { return collectToken(IF); }
-else                              { return collectToken(ELSE); }
-def                               { return collectToken(DEF); }
-print                             { return collectToken(PRINT); }
+string                            { return collectToken(STRTYPE, "STRTYPE"); }
+boolean                           { return collectToken(BOOLTYPE, "BOOLTYPE"); }
+number                            { return collectToken(NUMTYPE, "NUMTYPE"); }
+{BOOL}                            { return collectToken(BOOL, "BOOLTYPE"); }
+return                            { return collectToken(RETURN, "RETURN"); }
+while                             { return collectToken(WHILE, "WHILE"); }
+if                                { return collectToken(IF, "IF"); }
+else                              { return collectToken(ELSE, "ELSE"); }
+def                               { return collectToken(DEF, "DEF"); }
+print                             { return collectToken(PRINT, "PRINT"); }
 
 // stop
-;                                 { return collectToken(STOP); }
+;                                 { return collectToken(STOP, "STOP"); }
 
 // special characters / terminals
-==                                { return collectToken(EQ); }
-\!=                               { return collectToken(NEQ); }
->=                                { return collectToken(GREQ); }
-\<=                               { return collectToken(LEQ); }
-&&                                { return collectToken(AND); }
-\|\|                              { return collectToken(OR); }
-\+=                               { return collectToken(PLUSEQ); }
--=                                { return collectToken(MINEQ); }
-\*=                               { return collectToken(MULEQ); }
-\/=                               { return collectToken(DIVEQ); }
-\(                                { return collectToken(BL); }
-\)                                { return collectToken(BR); }
-\{                                { return collectToken(CBL); }
-\}                                { return collectToken(CBR); }
-,                                 { return collectToken(COMMA); }
-=                                 { return collectToken(EQUAL); }
-\<                                { return collectToken(LESS); }
->                                 { return collectToken(GREATER); }
-\+                                { return collectToken(PLUS); }
--                                 { return collectToken(MINUS); }
-\*                                { return collectToken(MUL); }
-\/                                { return collectToken(DIV); }
+==                                { return collectToken(EQ, "EQ"); }
+\!=                               { return collectToken(NEQ, "NEQ"); }
+>=                                { return collectToken(GREQ, "GREQ"); }
+\<=                               { return collectToken(LEQ, "LEQ"); }
+&&                                { return collectToken(AND, "AND"); }
+\|\|                              { return collectToken(OR, "OR"); }
+\+=                               { return collectToken(PLUSEQ, "PLUSEQ"); }
+-=                                { return collectToken(MINEQ, "MINEQ"); }
+\*=                               { return collectToken(MULEQ, "MULEQ"); }
+\/=                               { return collectToken(DIVEQ, "DIVEQ"); }
+\(                                { return collectToken(BL, "BL"); }
+\)                                { return collectToken(BR, "BR"); }
+\{                                { return collectToken(CBL, "CBL"); }
+\}                                { return collectToken(CBR, "CBR"); }
+,                                 { return collectToken(COMMA, "COMMA"); }
+=                                 { return collectToken(EQUAL, "EQUAL"); }
+\<                                { return collectToken(LESS, "LESS"); }
+>                                 { return collectToken(GREATER, "GREATER"); }
+\+                                { return collectToken(PLUS, "PLUS"); }
+-                                 { return collectToken(MINUS, "MINUS"); }
+\*                                { return collectToken(MUL, "MUL"); }
+\/                                { return collectToken(DIV, "DIV"); }
 
 // character classes for numbers and strings
-{NUM}                             { return collectToken(NUM); }
-{VAR}                             { return collectToken(VAR); }
-{STR}                             { return collectToken(STR); }
+{NUM}                             { return collectToken(NUM, "NUM"); }
+{VAR}                             { return collectToken(VAR, "VAR"); }
+{STR}                             { return collectToken(STR, "STR"); }
 
 // whitespace
 {WHITESPACE}                      { /* ignore */ }

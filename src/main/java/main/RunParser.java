@@ -27,8 +27,6 @@ public class RunParser {
 
             System.out.println("***** PARSER RESULT *****\n\n" + reducedResult.value + "\n");
 
-            scanner.printTokens();
-            scanner.printValues();
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -13,15 +13,12 @@ public class RunScanner {
 
     public static void main(String[] args) {
         String encodingName = "UTF-8";
-        String file = Paths.get("src/main/resources/scanner_test_1.txt").toAbsolutePath().toString();
+        String file = Paths.get("src/main/resources/parser_test_1.txt").toAbsolutePath().toString();
         try (FileInputStream stream = new FileInputStream(file); InputStreamReader reader = new InputStreamReader(stream, encodingName)) {
             JScanner scanner = new JScanner(reader);
             while (!scanner.yyatEOF()) {
                 Symbol symbol = scanner.next_token();
             }
-
-            scanner.printTokens();
-            scanner.printValues();
 
         } catch (IOException e) {
             e.printStackTrace();

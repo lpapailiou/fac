@@ -1,11 +1,19 @@
 package parser;
-import parser.util.Declaration;
 import parser.util.Program;
+import parser.util.Declaration;
+import parser.util.Statement;
+import parser.util.BinaryStatement;
+
+import parser.util.BINOP.*;
+import parser.util.ASSIGN.*;
 import scanner.JScanner;
 import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
+
+
+
 /* Simple +/-/* expression language; parser evaluates constant expressions on the fly*/
 //
 // java -jar java-cup-11b.jar -interface -destdir src/main/java/parser/ -symbols JSymbol -parser JParser src/main/java/parser/jparser.cup
@@ -25,14 +33,14 @@ terminal String     STR, STRTYPE, NUM, NUMTYPE, BOOL, BOOLTYPE, VAR;
 /* Non terminals */
 non terminal        ASSIGN, TYPE,
                     REP_PARAMDEF, TYPEDEF, REP_FUNDEF, FUNDEF, PARAM, FUNCALL, PRINTCALL, REP_STMT, STMT, DECL,
-                    RET;
+                    RET,
+                    COND, BOOL_VAL, EXPR, CALC_MUL, NUM_VAL,
+                    CONCAT, STR_VAL;
 
 non terminal Program    program;
-non terminal List<Object> stmtlist;
+non terminal List<Statement> stmtlist;
 non terminal List<Declaration> decllist;
-non terminal Boolean    COND, BOOL_VAL;
-non terminal Double     EXPR, CALC_MUL, NUM_VAL;      // used to store evaluated subexpressions
-non terminal String     CONCAT, STR_VAL;
+
 
 /* Precedences */
 precedence left PLUS, MINUS;
@@ -44,22 +52,52 @@ start with program;
 program         ::=  decllist:d stmtlist:s                                  {: RESULT = new Program(d, s); :}
                     ;
 
-stmtlist        ::= stmtlist:sl STMT:s                                      {: sl.add(s); RESULT = sl; :}
-                    | /* empty stmtlist */                                  {: RESULT = new LinkedList<Object>(); :}
+stmtlist        ::= stmtlist:sl STMT:s                                      {: sl.add((Statement) s); RESULT = sl; :}
+                    | /* empty stmtlist */                                  {: RESULT = new LinkedList<Statement>(); :}
                     ;
 decllist        ::=  DECL:d decllist:dl                                     {: dl.add((Declaration)d); RESULT = dl; :}
                     | /* empty decllist */                                  {: RESULT = new ArrayList<Declaration>(); :}
                     ;
 
-DECL 	    ::= STRTYPE:t VAR:e1 EQUAL STR:e2 STOP                      {: RESULT = new Declaration(t, e1, e2); :}
-                    | NUMTYPE:t VAR:e1 EQUAL NUM:e2 STOP                {: RESULT = new Declaration(t, e1, e2); :}
-                    | BOOLTYPE:t VAR:e1 EQUAL BOOL:e2 STOP                {: RESULT = new Declaration(t, e1, e2); :}
+STMT            ::= CONCAT:st STOP                                               {: RESULT = st; :}
+                    | ASSIGN:st STOP                                               {: RESULT = st; :}
                     ;
 
-TYPE            ::= STRTYPE:s                                                 {: RESULT = s; :}
-                     | NUMTYPE:s                            {: RESULT = s; :}
-                     | BOOLTYPE:s                                   {: RESULT = s; :}
-                     ;
+// variable assignments
+ASSIGN 	    ::= VAR:e1 EQUAL BOOL_VAL:e2 STOP                           {: RESULT = (Statement) new AssignmentStatement("EQUAL", e1, e2); :}
 
-VAR             ::= VAR:v               {: RESULT = v; :}
-;
+                    | VAR:e1 EQUAL NUM_VAL:e2 STOP                      {: RESULT = (Statement) new AssignmentStatement("EQUAL", e1, e2); :}
+                    | VAR:e1 PLUSEQ NUM_VAL:e2 STOP                  {: RESULT = (Statement) new AssignmentStatement("PLUSEQ", e1, e2); :}
+                    | VAR:e1 MINEQ NUM_VAL:e2 STOP                   {: RESULT = (Statement) new AssignmentStatement("MINEQ", e1, e2); :}
+                    | VAR:e1 DIVEQ NUM_VAL:e2 STOP                   {: RESULT = (Statement) new AssignmentStatement("DIVEQ", e1, e2); :}
+                    | VAR:e1 MULEQ NUM_VAL:e2 STOP                    {: RESULT = (Statement) new AssignmentStatement("MULEQ", e1, e2); :}
+
+                    | VAR:e1 EQUAL STR_VAL:e2 STOP                      {: RESULT = (Statement) new AssignmentStatement("EQUAL", e1, e2); :}
+                    | VAR:e1 PLUSEQ STR_VAL:e2 STOP                  {: RESULT = (Statement) new AssignmentStatement("PLUSEQ", e1, e2); :}
+                    ;
+
+// string concatenation
+CONCAT 	        ::= STR_VAL:e1 PLUS STR_VAL:e2                              {: RESULT = (Statement) new BinaryStatement("CONCAT", e1, e2); :}
+                    ;
+
+// variable declaration
+DECL 	        ::= STRTYPE:t VAR:e1 EQUAL STR:e2 STOP                      {: RESULT = new Declaration(t, e1, e2); :}
+                    | NUMTYPE:t VAR:e1 EQUAL NUM:e2 STOP                    {: RESULT = new Declaration(t, e1, e2); :}
+                    | BOOLTYPE:t VAR:e1 EQUAL BOOL:e2 STOP                  {: RESULT = new Declaration(t, e1, e2); :}
+                    ;
+
+// values
+NUM_VAL  ::= VAR:n                                                              {: RESULT = n; :}
+                    | BL EXPR:n BR                                              {: RESULT = n; :}
+                    | BL NUM_VAL:n BR                                           {: RESULT = n; :}
+                    | NUM:n                                                     {: RESULT = n; :}
+                    ;
+BOOL_VAL  ::= VAR:b                                                             {: RESULT = b; :}
+                    | COND:b                                                    {: RESULT = b; :}
+                    | BOOL:b                                                    {: RESULT = b; :}
+                    ;
+STR_VAL  ::= VAR:str                                                            {: RESULT = str; :}
+                    | CONCAT:str                                                {: RESULT = str; :}
+                    | STR:str                                                   {: RESULT = str; :}
+                    ;
+

@@ -3,6 +3,10 @@ package parser.util;
 public class Statement implements Acceptor {
 
 
+    @Override
+    public String toString() {
+        return "statement";
+    }
 
     @Override
     public void accept (Visitor visitor) {

@@ -353,43 +353,16 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
   private boolean zzEOFDone;
 
   /* user code: */
-  private ArrayList<Symbol> symbols = new ArrayList<>();
-  private ComplexSymbolFactory symbolFactory;
+    private ComplexSymbolFactory symbolFactory;
 
-  private Symbol collectToken(int token) {
+    private Symbol collectToken(int token, String desc) {
       Symbol symbol = symbol(yytext(), token, yytext());
-      symbols.add(symbol);
-      consolePrint(yytext());
-      System.out.println(symbol);
+      consolePrint(desc);
       return symbol;
-  }
+    }
 
-  private void consolePrint(String value) {
+    private void consolePrint(String value) {
       System.out.println("token {" + value + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".");
-  }
-
-  public void printTokens() {
-      System.out.println("\n***** TOKENS *****\n");
-      for (int i = 0; i < symbols.size(); i++) {
-          String str = symbols.get(0).toString().split(" ")[1];
-          if (i < symbols.size()-1) {
-              str += ", ";
-          }
-          System.out.print(str);
-      }
-      System.out.println();
-  }
-
-  public void printValues() {
-        System.out.println("\n***** File content *****\n");
-        for (int i = 0; i < symbols.size(); i++) {
-              String str = symbols.get(0).value.toString();
-              if (i < symbols.size()-1) {
-                  str += ", ";
-              }
-              System.out.print(str);
-          }
-        System.out.println();
     }
 
     private Symbol symbol(String name, int sym, Object val) {
@@ -824,182 +797,182 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
             // fall through
           case 40: break;
           case 3:
-            { return collectToken(BL);
+            { return collectToken(BL, "BL");
             }
             // fall through
           case 41: break;
           case 4:
-            { return collectToken(BR);
+            { return collectToken(BR, "BR");
             }
             // fall through
           case 42: break;
           case 5:
-            { return collectToken(MUL);
+            { return collectToken(MUL, "MUL");
             }
             // fall through
           case 43: break;
           case 6:
-            { return collectToken(PLUS);
+            { return collectToken(PLUS, "PLUS");
             }
             // fall through
           case 44: break;
           case 7:
-            { return collectToken(COMMA);
+            { return collectToken(COMMA, "COMMA");
             }
             // fall through
           case 45: break;
           case 8:
-            { return collectToken(MINUS);
+            { return collectToken(MINUS, "MINUS");
             }
             // fall through
           case 46: break;
           case 9:
-            { return collectToken(DIV);
+            { return collectToken(DIV, "DIV");
             }
             // fall through
           case 47: break;
           case 10:
-            { return collectToken(NUM);
+            { return collectToken(NUM, "NUM");
             }
             // fall through
           case 48: break;
           case 11:
-            { return collectToken(STOP);
+            { return collectToken(STOP, "STOP");
             }
             // fall through
           case 49: break;
           case 12:
-            { return collectToken(LESS);
+            { return collectToken(LESS, "LESS");
             }
             // fall through
           case 50: break;
           case 13:
-            { return collectToken(EQUAL);
+            { return collectToken(EQUAL, "EQUAL");
             }
             // fall through
           case 51: break;
           case 14:
-            { return collectToken(GREATER);
+            { return collectToken(GREATER, "GREATER");
             }
             // fall through
           case 52: break;
           case 15:
-            { return collectToken(VAR);
+            { return collectToken(VAR, "VAR");
             }
             // fall through
           case 53: break;
           case 16:
-            { return collectToken(CBL);
+            { return collectToken(CBL, "CBL");
             }
             // fall through
           case 54: break;
           case 17:
-            { return collectToken(CBR);
+            { return collectToken(CBR, "CBR");
             }
             // fall through
           case 55: break;
           case 18:
-            { return collectToken(NEQ);
+            { return collectToken(NEQ, "NEQ");
             }
             // fall through
           case 56: break;
           case 19:
-            { return collectToken(AND);
+            { return collectToken(AND, "AND");
             }
             // fall through
           case 57: break;
           case 20:
-            { return collectToken(STR);
+            { return collectToken(STR, "STR");
             }
             // fall through
           case 58: break;
           case 21:
-            { return collectToken(MULEQ);
+            { return collectToken(MULEQ, "MULEQ");
             }
             // fall through
           case 59: break;
           case 22:
-            { return collectToken(PLUSEQ);
+            { return collectToken(PLUSEQ, "PLUSEQ");
             }
             // fall through
           case 60: break;
           case 23:
-            { return collectToken(MINEQ);
+            { return collectToken(MINEQ, "MINEQ");
             }
             // fall through
           case 61: break;
           case 24:
-            { return collectToken(DIVEQ);
+            { return collectToken(DIVEQ, "DIVEQ");
             }
             // fall through
           case 62: break;
           case 25:
-            { return collectToken(LEQ);
+            { return collectToken(LEQ, "LEQ");
             }
             // fall through
           case 63: break;
           case 26:
-            { return collectToken(EQ);
+            { return collectToken(EQ, "EQ");
             }
             // fall through
           case 64: break;
           case 27:
-            { return collectToken(GREQ);
+            { return collectToken(GREQ, "GREQ");
             }
             // fall through
           case 65: break;
           case 28:
-            { return collectToken(IF);
+            { return collectToken(IF, "IF");
             }
             // fall through
           case 66: break;
           case 29:
-            { return collectToken(OR);
+            { return collectToken(OR, "OR");
             }
             // fall through
           case 67: break;
           case 30:
-            { return collectToken(DEF);
+            { return collectToken(DEF, "DEF");
             }
             // fall through
           case 68: break;
           case 31:
-            { return collectToken(ELSE);
+            { return collectToken(ELSE, "ELSE");
             }
             // fall through
           case 69: break;
           case 32:
-            { return collectToken(BOOL);
+            { return collectToken(BOOL, "BOOLTYPE");
             }
             // fall through
           case 70: break;
           case 33:
-            { return collectToken(PRINT);
+            { return collectToken(PRINT, "PRINT");
             }
             // fall through
           case 71: break;
           case 34:
-            { return collectToken(WHILE);
+            { return collectToken(WHILE, "WHILE");
             }
             // fall through
           case 72: break;
           case 35:
-            { return collectToken(NUMTYPE);
+            { return collectToken(NUMTYPE, "NUMTYPE");
             }
             // fall through
           case 73: break;
           case 36:
-            { return collectToken(RETURN);
+            { return collectToken(RETURN, "RETURN");
             }
             // fall through
           case 74: break;
           case 37:
-            { return collectToken(STRTYPE);
+            { return collectToken(STRTYPE, "STRTYPE");
             }
             // fall through
           case 75: break;
           case 38:
-            { return collectToken(BOOLTYPE);
+            { return collectToken(BOOLTYPE, "BOOLTYPE");
             }
             // fall through
           case 76: break;
