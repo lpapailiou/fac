@@ -3,7 +3,7 @@ package parser.parsetree;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Program implements Acceptor {
+public class Program implements Traversable {
 
     List<Declaration> declarationList = new ArrayList<>();
     List<Statement> statementList = new ArrayList<>();
@@ -36,7 +36,7 @@ public class Program implements Acceptor {
     }
 
     @Override
-    public void accept (Visitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

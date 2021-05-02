@@ -1,5 +1,8 @@
 package parser.parsetree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PrintCallStatement extends Statement {
 
 
@@ -7,6 +10,11 @@ public class PrintCallStatement extends Statement {
 
     public PrintCallStatement(Object value) {
         this.value = value;
+    }
+
+    @Override
+    public List<Statement> getStatements() {
+        return new ArrayList<>();
     }
 
     @Override

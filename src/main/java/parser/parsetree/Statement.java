@@ -1,7 +1,6 @@
 package parser.parsetree;
 
-public class Statement implements Acceptor {
-
+public abstract class Statement implements Traversable {
 
     @Override
     public String toString() {
@@ -9,7 +8,7 @@ public class Statement implements Acceptor {
     }
 
     @Override
-    public void accept (Visitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 }

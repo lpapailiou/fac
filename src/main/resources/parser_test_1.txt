@@ -1,7 +1,7 @@
 number hasd = 123;
 variable = 1 + 2 + 3;
 hasd = 123;
-
+/*
 def string funct(number bla, string blablabla, boolean tralala, number one) {
  bla = 1;
  return bla;
@@ -30,16 +30,30 @@ b = 'b';
 
 print('end');
 
-/*
-number hasd = 123;
-string e = 'p';
+def boolean o(string t) {
+    j = '_';
+    return s;
+}
+
+def string y(boolean b) {
+    while (s == r) {
+        print(2);
+    }
+    x = c;
+    return q;
+}
+
+def number i(boolean y, number z, boolean c, boolean f) {
+    n = (s == k);
+    return b;
+}
+
 variable = 'a' + 'b';
 //var = 1 + 2;
 string e = 'p';
 sdf = 6;
 
 fun(bla);
-fun(1,2,sdf);
+fun(1,2,sdf);*/
 
 
-*/

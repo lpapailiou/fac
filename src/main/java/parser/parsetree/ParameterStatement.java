@@ -19,6 +19,11 @@ public class ParameterStatement extends Statement {
 
 
     @Override
+    public List<Statement> getStatements() {
+        return new ArrayList<>();
+    }
+
+    @Override
     public String toString() {
         String out = "";
         for (int i = 0; i < paramList.size(); i++) {

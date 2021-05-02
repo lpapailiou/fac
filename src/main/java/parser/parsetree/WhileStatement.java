@@ -9,9 +9,14 @@ public class WhileStatement extends Statement {
 
     public WhileStatement(Object condition, Object statements) {
         this.condition = condition;
-        this.statementList = ((NestedStatement) statements).getStatementList();
+        this.statementList = ((NestedStatement) statements).getStatements();
     }
 
+
+    @Override
+    public List<Statement> getStatements() {
+        return statementList;
+    }
 
     @Override
     public String toString() {

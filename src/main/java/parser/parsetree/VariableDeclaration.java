@@ -1,25 +1,32 @@
 package parser.parsetree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VariableDeclaration extends Statement implements Declaration {
 
-    private String type;
+    private Type type;
     private String identifier;
     private String value;
 
-    public VariableDeclaration(String type, String identifier, String value) {
-        this.type = type;
+    public VariableDeclaration(Object type, String identifier, String value) {
+        this.type = Type.getName(type);
         this.identifier = identifier;
         this.value = value;
     }
 
     @Override
-    public String toString() {
-        return type + " " + identifier + " = " + value + ";\n";
+    public List<Statement> getStatements() {
+        return new ArrayList<>();
     }
 
     @Override
-    public void accept (Visitor visitor) {
-        visitor.visit(this);
+    public String toString() {
+        return type.getDescription() + " " + identifier + " = " + value + ";\n";
     }
 
+    @Override
+    public String getIdentifier() {
+        return identifier;
+    }
 }

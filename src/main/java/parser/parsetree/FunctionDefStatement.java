@@ -29,6 +29,11 @@ public class FunctionDefStatement extends Statement {
 
 
     @Override
+    public List<Statement> getStatements() {
+        return statementList;
+    }
+
+    @Override
     public String toString() {
         String out = "\ndef " + type + " " + name + "(";
         for (int i = 0; i < paramDeclarationList.size(); i++) {

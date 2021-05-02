@@ -1,5 +1,8 @@
 package parser.parsetree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BinaryStatement extends Statement {
 
     Operator op;
@@ -12,6 +15,11 @@ public class BinaryStatement extends Statement {
         this.o2 = o2;
     }
 
+
+    @Override
+    public List<Statement> getStatements() {
+        return new ArrayList<>();
+    }
 
     @Override
     public String toString() {

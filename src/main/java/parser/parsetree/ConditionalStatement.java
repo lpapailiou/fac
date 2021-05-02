@@ -1,5 +1,8 @@
 package parser.parsetree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ConditionalStatement extends Statement {
 
     Operator op;
@@ -14,6 +17,18 @@ public class ConditionalStatement extends Statement {
 
     public ConditionalStatement(Object o1) {
         this.o1 = o1;
+    }
+
+    @Override
+    public List<Statement> getStatements() {
+        List<Statement> statements = new ArrayList<>();
+        if (o1 instanceof Statement) {
+            statements.add((Statement) o1);
+        }
+        if (o2 instanceof Statement) {
+            statements.add((Statement) o2);
+        }
+        return statements;
     }
 
     @Override

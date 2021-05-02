@@ -1,22 +1,35 @@
 package parser.parsetree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AssignmentStatement extends Statement {
 
     Operator op;
-    Object o1;
-    Object o2;
+    Object identifier;
+    Statement statement;
 
-    public AssignmentStatement(Object op, Object o1, Object o2) {
+    public AssignmentStatement(Object op, Object identifier, Statement statement) {
         this.op = Operator.getName(op.toString());
-        this.o1 = o1;
-        this.o2 = o2;
+        this.identifier = identifier;
+        this.statement = statement;
     }
 
 
     @Override
-    public String toString() {
-        return o1.toString() + " " + op.getOperator() + " " + o2.toString() + ";\n";
+    public List<Statement> getStatements() {
+        List<Statement> statements = new ArrayList<Statement>();
+        statements.add(statement);
+        return statements;
     }
 
+    @Override
+    public String toString() {
+        return identifier.toString() + " " + op.getOperator() + " " + statement.toString() + ";\n";
+    }
 
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

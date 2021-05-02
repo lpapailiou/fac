@@ -8,7 +8,7 @@ public interface Visitor {
 
     void visit(Program acceptor);
 
-    void visit(VariableDeclaration acceptor);
-
     void visit(Statement acceptor);
+
+    void visit(AssignmentStatement acceptor);
 }

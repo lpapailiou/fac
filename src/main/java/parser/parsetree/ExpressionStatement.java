@@ -1,6 +1,9 @@
 package parser.parsetree;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ExpressionStatement extends Statement {
 
     Operator op;
@@ -17,6 +20,18 @@ public class ExpressionStatement extends Statement {
         this.o2 = o2;
     }
 
+
+    @Override
+    public List<Statement> getStatements() {
+        List<Statement> statements = new ArrayList<>();
+        if (o1 instanceof Statement) {
+            statements.add((Statement) o1);
+        }
+        if (o1 != null && o2 instanceof Statement) {
+            statements.add((Statement) o2);
+        }
+        return statements;
+    }
 
     @Override
     public String toString() {

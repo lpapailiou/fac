@@ -9,15 +9,20 @@ public class NestedStatement extends Statement {
     List<Statement> statementList = new ArrayList<>();
 
     public NestedStatement(Object st) {
-        statementList.add((Statement) st);
+        if (st != null) {
+            statementList.add((Statement) st);
+        }
     }
 
     public NestedStatement(Object st, Object obj) {
         this(st);
-        statementList.addAll(((NestedStatement) obj).statementList);
+        if (obj != null) {
+            statementList.addAll(((NestedStatement) obj).statementList);
+        }
     }
 
-    public List<Statement> getStatementList() {
+    @Override
+    public List<Statement> getStatements() {
         return statementList;
     }
 

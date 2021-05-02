@@ -1,5 +1,8 @@
 package parser.parsetree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ParamDeclaration extends Statement {
 
     private String type;
@@ -18,6 +21,11 @@ public class ParamDeclaration extends Statement {
 
     public ParamDeclaration getNext() {
         return next;
+    }
+
+    @Override
+    public List<Statement> getStatements() {
+        return new ArrayList<>();
     }
 
     @Override
