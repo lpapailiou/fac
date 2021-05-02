@@ -47,15 +47,15 @@ precedence left MUL, DIV;           // TODO: remove
 /* The grammar rules */
 start with PROGRAM;
 
-PROGRAM         ::= STMT_LIST:s                                                             {: RESULT = new Program(s); :}
+PROGRAM         ::= STMT_LIST:s                                                             {: RESULT = Statement.prog(s); :}
                     ;
 
 STMT_LIST       ::= STMT_LIST:sl PROG_STMT:s                                                {: sl.add((Statement) s); RESULT = sl; :}
-                    | /* empty STMT_LIST */                                                 {: RESULT = new LinkedList<Statement>(); :}
+                    | /* empty STMT_LIST */                                                 {: RESULT = Statement.stmtList(); :}
                     ;
 
-NEST_STMT       ::= LOOP_STMT:st                                                            {: RESULT = new NestedStatement(st); :}
-                    | LOOP_STMT:st NEST_STMT:stList                                         {: RESULT = new NestedStatement(st, stList); :}
+NEST_STMT       ::= LOOP_STMT:st                                                            {: RESULT = Statement.nest(st); :}
+                    | LOOP_STMT:st NEST_STMT:stList                                         {: RESULT = Statement.nest(st, stList); :}
                     ;
 
 PROG_STMT       ::= STMT:st                                                                 {: RESULT = st; :}
@@ -63,7 +63,7 @@ PROG_STMT       ::= STMT:st                                                     
                     ;
 
 LOOP_STMT       ::= STMT:st                                                                 {: RESULT = st; :}
-                    | BREAK:br STOP                                                         {: RESULT = new BreakStatement(); :}
+                    | BREAK:br STOP                                                         {: RESULT = Statement.brk(); :}
                     ;
 
 STMT            ::= DECL:st                                                                 {: RESULT = st; :}
@@ -74,30 +74,30 @@ STMT            ::= DECL:st                                                     
                     | WHILE_STMT:st                                                         {: RESULT = st; :}
                     ;
 
-WHILE_STMT      ::= WHILE COND:c CBL NEST_STMT:s CBR                                        {: RESULT = new WhileStatement(c, s); :}
-                    | WHILE BL VAR:c BR CBL NEST_STMT:s CBR                                 {: RESULT = new WhileStatement(new ConditionalStatement(c), s); :}
-                    | WHILE BL BOOL:c BR CBL NEST_STMT:s CBR                                {: RESULT = new WhileStatement(new ConditionalStatement(c), s); :}
+WHILE_STMT      ::= WHILE COND:c CBL NEST_STMT:s CBR                                        {: RESULT = Statement.loop(c, s); :}
+                    | WHILE BL VAR:c BR CBL NEST_STMT:s CBR                                 {: RESULT = Statement.loop(c, s); :}
+                    | WHILE BL BOOL:c BR CBL NEST_STMT:s CBR                                {: RESULT = Statement.loop(c, s); :}
                     ;
 
-IFTHEN_STMT     ::= IF COND:c CBL NEST_STMT:s CBR                                           {: RESULT = new IfThenStatement(c, s); :}
-                    | IF BL VAR:c BR CBL NEST_STMT:s CBR                                    {: RESULT = new IfThenStatement(new ConditionalStatement(c), s); :}
-                    | IF BL BOOL:c BR CBL NEST_STMT:s CBR                                   {: RESULT = new IfThenStatement(new ConditionalStatement(c), s); :}
-                    | IF COND:c CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR              {: RESULT = new IfThenStatement(c, s1, s2); :}
-                    | IF BL VAR:c BR CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR         {: RESULT = new IfThenStatement(new ConditionalStatement(c), s1, s2); :}
-                    | IF BL BOOL:c BR CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR        {: RESULT = new IfThenStatement(new ConditionalStatement(c), s1, s2); :}
+IFTHEN_STMT     ::= IF COND:c CBL NEST_STMT:s CBR                                           {: RESULT = Statement.ifThen(c, s); :}
+                    | IF BL VAR:c BR CBL NEST_STMT:s CBR                                    {: RESULT = Statement.ifThen(c, s); :}
+                    | IF BL BOOL:c BR CBL NEST_STMT:s CBR                                   {: RESULT = Statement.ifThen(c, s); :}
+                    | IF COND:c CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR              {: RESULT = Statement.ifThen(c, s1, s2); :}
+                    | IF BL VAR:c BR CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR         {: RESULT = Statement.ifThen(c, s1, s2); :}
+                    | IF BL BOOL:c BR CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR        {: RESULT = Statement.ifThen(c, s1, s2); :}
                     ;
 
 // function definition
-FUNDEF 	        ::= DEF TYPE:t VAR:n BL PARAMDEF:p BR CBL NEST_STMT:st RET:r CBR            {: RESULT = new FunctionDefStatement(t, n, p, st, r); :}
-                    | DEF TYPE:t VAR:n BL BR CBL NEST_STMT:st RET:r CBR                     {: RESULT = new FunctionDefStatement(t, n, null, st, r); :}
+FUNDEF 	        ::= DEF TYPE:t VAR:n BL PARAMDEF:p BR CBL NEST_STMT:st RET:r CBR            {: RESULT = Statement.funDef(t, n, p, st, r); :}
+                    | DEF TYPE:t VAR:n BL BR CBL NEST_STMT:st RET:r CBR                     {: RESULT = Statement.funDef(t, n, st, r); :}
                     ;
 
-PARAMDEF 	    ::= TYPE:t VAR:v                                                            {: RESULT = new ParamDeclaration(t, v); :}
-                    | TYPE:t VAR:v COMMA PARAMDEF:p                                         {: RESULT = new ParamDeclaration(t, v, p); :}
+PARAMDEF 	    ::= TYPE:t VAR:v                                                            {: RESULT = Statement.paramDecl(t, v); :}
+                    | TYPE:t VAR:v COMMA PARAMDEF:p                                         {: RESULT = Statement.paramDecl(t, v, p); :}
                     ;
 
-PARAM 	        ::= VAL:t                                                                   {: RESULT = new ParameterStatement(t); :}
-                    | VAL:t COMMA PARAM:p                                                   {: RESULT = new ParameterStatement(t, p); :}
+PARAM 	        ::= VAL:t                                                                   {: RESULT = Statement.param(t); :}
+                    | VAL:t COMMA PARAM:p                                                   {: RESULT = Statement.param(t, p); :}
                     ;
 
 RET 	        ::= RETURN VAL:r STOP                                                       {: RESULT = r; :}
@@ -105,17 +105,17 @@ RET 	        ::= RETURN VAL:r STOP                                              
 
 
 // function calls
-FUNCALL 	    ::= VAR:n BL PARAM:p BR STOP                                                {: RESULT = new FunctionCallStatement(n, p); :}
+FUNCALL 	    ::= VAR:n BL PARAM:p BR STOP                                                {: RESULT = Statement.fun(n, p); :}
                     ;
 
-PRINTCALL 	    ::= PRINT BL EXPR:v BR STOP                                                 {: RESULT = new PrintCallStatement(v); :}
+PRINTCALL 	    ::= PRINT BL EXPR:v BR STOP                                                 {: RESULT = Statement.print(v); :}
                     ;
 
 // boolean conditions. brackets are mandatory, no precedence order needed
-COND 	        ::= BL COND:e1 COND_OP:op COND:e2 BR                                        {: RESULT = new ConditionalStatement(op,e1,e2); :}
-                    | BL COND:e1 COND_OP:op VAL:e2 BR                                       {: RESULT = new ConditionalStatement(op,e1,e2); :}
-                    | BL VAL:e1 COND_OP:op COND:e2 BR                                       {: RESULT = new ConditionalStatement(op,e1,e2); :}
-                    | BL VAL:e1 COND_OP:op VAL:e2 BR                                        {: RESULT = new ConditionalStatement(op,e1,e2); :}
+COND 	        ::= BL COND:e1 COND_OP:op COND:e2 BR                                        {: RESULT = Statement.cond(op, e1, e2); :}
+                    | BL COND:e1 COND_OP:op VAL:e2 BR                                       {: RESULT = Statement.cond(op, e1, e2); :}
+                    | BL VAL:e1 COND_OP:op COND:e2 BR                                       {: RESULT = Statement.cond(op, e1, e2); :}
+                    | BL VAL:e1 COND_OP:op VAL:e2 BR                                        {: RESULT = Statement.cond(op, e1, e2); :}
                    ;
 
 COND_OP         ::= AND:op                                                                  {: RESULT = op; :}
@@ -129,21 +129,21 @@ COND_OP         ::= AND:op                                                      
                     ;
 
 // arithmetic expressions. brackets are optional, mul/div has precedence over plus/minus
-EXPR 	        ::=  CALC_MUL:e                                                             {: RESULT = new ExpressionStatement(e); :}
-                    | EXPR:e1 PLUS VAL:e2                                                   {: RESULT = new ExpressionStatement("PLUS", e1, e2); :}
-                    | EXPR:e1 MINUS VAL:e2                                                  {: RESULT = new ExpressionStatement("MINUS", e1, e2); :}
+EXPR 	        ::=  CALC_MUL:e                                                             {: RESULT = Statement.expr(e); :}
+                    | EXPR:e1 PLUS:op VAL:e2                                                {: RESULT = Statement.expr(op, e1, e2); :}
+                    | EXPR:e1 MINUS:op VAL:e2                                               {: RESULT = Statement.expr(op, e1, e2); :}
                     ;
 
-CALC_MUL        ::= VAL:e                                                                   {: RESULT = new ExpressionStatement(e); :}
-                  | BL CALC_MUL:e BR                                                        {: RESULT = new ExpressionStatement(e); :}
-                    | CALC_MUL:e1 MUL VAL:e2                                                {: RESULT = new ExpressionStatement("MUL", e1, e2); :}
-                    | CALC_MUL:e1 DIV VAL:e2                                                {: RESULT = new ExpressionStatement("DIV", e1, e2); :}
+CALC_MUL        ::= VAL:e                                                                   {: RESULT = Statement.expr(e); :}
+                  | BL CALC_MUL:e BR                                                        {: RESULT = Statement.expr(e); :}
+                    | CALC_MUL:e1 MUL:op VAL:e2                                             {: RESULT = Statement.expr(op, e1, e2); :}
+                    | CALC_MUL:e1 DIV:op VAL:e2                                             {: RESULT = Statement.expr(op, e1, e2); :}
                     ;
 
 // variable assignments
-ASSIGN 	        ::= VAR:e1 EQUAL:op EXPR:e2 STOP                                            {: RESULT = new AssignmentStatement(op, e1, e2); :}
-                    | VAR:e1 EQUAL:op COND:e2 STOP                                          {: RESULT = new AssignmentStatement(op, e1, e2); :}
-                    | VAR:e1 ASSIGN_OP:op EXPR:e2 STOP                                      {: RESULT = new AssignmentStatement(op, e1, e2); :}
+ASSIGN 	        ::= VAR:e1 EQUAL:op EXPR:e2 STOP                                            {: RESULT = Statement.assgn(op, e1, e2); :}
+                    | VAR:e1 EQUAL:op COND:e2 STOP                                          {: RESULT = Statement.assgn(op, e1, e2); :}
+                    | VAR:e1 ASSIGN_OP:op EXPR:e2 STOP                                      {: RESULT = Statement.assgn(op, e1, e2); :}
                     ;
 
 ASSIGN_OP       ::= PLUSEQ:op                                                               {: RESULT = op; :}
@@ -153,9 +153,9 @@ ASSIGN_OP       ::= PLUSEQ:op                                                   
                     ;
 
 // variable declaration
-DECL 	        ::= STRTYPE:t VAR:e1 EQUAL STR:e2 STOP                                      {: RESULT = new VariableDeclaration(t, e1, e2); :}
-                    | NUMTYPE:t VAR:e1 EQUAL NUM:e2 STOP                                    {: RESULT = new VariableDeclaration(t, e1, e2); :}
-                    | BOOLTYPE:t VAR:e1 EQUAL BOOL:e2 STOP                                  {: RESULT = new VariableDeclaration(t, e1, e2); :}
+DECL 	        ::= STRTYPE:t VAR:e1 EQUAL STR:e2 STOP                                      {: RESULT = Statement.decl(t, e1, e2); :}
+                    | NUMTYPE:t VAR:e1 EQUAL NUM:e2 STOP                                    {: RESULT = Statement.decl(t, e1, e2); :}
+                    | BOOLTYPE:t VAR:e1 EQUAL BOOL:e2 STOP                                  {: RESULT = Statement.decl(t, e1, e2); :}
                     ;
 
 // base components

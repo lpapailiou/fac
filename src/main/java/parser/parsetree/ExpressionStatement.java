@@ -14,9 +14,9 @@ public class ExpressionStatement extends Statement {
         this.operand1 = operand1;
     }
 
-    public ExpressionStatement(String op, Object operand1, Object operand2) {
+    public ExpressionStatement(Object op, Object operand1, Object operand2) {
         this(operand1);
-        this.op = Operator.valueOf(op);
+        this.op = Operator.getName(op);
 
         this.operand2 = operand2;
     }

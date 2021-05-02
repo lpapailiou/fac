@@ -3,14 +3,13 @@ package parser.validation;
 import parser.parsetree.*;
 import parser.util.GrammarException;
 
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Validator implements Visitor {
 
-    List<Declaration> declarationList = new ArrayList<>();
+    List<Declaration> declarationScope = new ArrayList<>();
 
     @Override
     public void visit(Program acceptor) {
@@ -110,7 +109,7 @@ public class Validator implements Visitor {
     @Override
     public void visit(FunctionDefStatement acceptor) {
         List<Declaration> declarations = acceptor.getStatements().stream().filter(st -> st instanceof Declaration).map(st -> (Declaration) st).collect(Collectors.toList());
-        declarationList.removeAll(declarations);
+        declarationScope.removeAll(declarations);
     }
 
     @Override
@@ -157,17 +156,17 @@ public class Validator implements Visitor {
         if (isVariableInScope(declaration.getIdentifier())) {
             throw new GrammarException("variable identifier <" + declaration.getIdentifier() + "> is already defined!");
         } else {
-            declarationList.add(declaration);
+            declarationScope.add(declaration);
         }
     }
 
     private boolean isVariableInScope(String identifier) {
-        Declaration declaration =  declarationList.stream().filter(dec -> dec.getIdentifier().equals(identifier)).findAny().orElse(null);
+        Declaration declaration =  declarationScope.stream().filter(dec -> dec.getIdentifier().equals(identifier)).findAny().orElse(null);
         return declaration != null;
     }
 
     private Declaration getDeclaration(String identifier) {
-        Declaration declaration =  declarationList.stream().filter(dec -> dec.getIdentifier().equals(identifier)).findAny().orElse(null);
+        Declaration declaration =  declarationScope.stream().filter(dec -> dec.getIdentifier().equals(identifier)).findAny().orElse(null);
         if (declaration == null) {
             throw new GrammarException("Declaration <" + identifier + "> was never instantiated!");
         }

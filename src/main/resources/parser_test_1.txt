@@ -3,7 +3,7 @@ num = 1 + 2;
 
 boolean bolbol = true;
 bolbol = (false && true);
-bolbol = ( true < false);
+bolbol = ( 1 < 2);
 
 
 
