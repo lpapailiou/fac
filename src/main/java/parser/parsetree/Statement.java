@@ -16,6 +16,16 @@ public abstract class Statement implements Traversable {
     }
 
     public static VariableDeclaration decl(Object t, Object e1, Object e2) {
+        Type type = Type.getName(t);
+        if (e2 == null) {
+            if (type == Type.STRING) {
+                e2 = "''";
+            } else if (type == Type.NUMERIC) {
+                e2 = "0";
+            } else if (type == Type.BOOLEAN) {
+                e2 = "false";
+            }
+        }
         return new VariableDeclaration(t, e1.toString(), e2.toString());
     }
 
@@ -23,12 +33,12 @@ public abstract class Statement implements Traversable {
         return new AssignmentStatement(op, e1, (Statement) e2);
     }
 
-    public static ExpressionStatement expr(Object e1) {
-        return new ExpressionStatement(e1);
+    public static UnaryExpression expr(Object e1) {
+        return new UnaryExpression(e1);
     }
 
-    public static ExpressionStatement expr(Object op, Object e1, Object e2) {
-        return new ExpressionStatement(op, e1, e2);
+    public static BinaryExpression expr(Object op, Object e1, Object e2) {
+        return new BinaryExpression(op, e1, e2);
     }
 
     public static ConditionalStatement cond(Object op, Object e1, Object e2) {
@@ -39,16 +49,20 @@ public abstract class Statement implements Traversable {
         return new PrintCallStatement(obj);
     }
 
+    public static FunctionCallStatement fun(Object n) {
+        return new FunctionCallStatement(n);
+    }
+
     public static FunctionCallStatement fun(Object n, Object p) {
         return new FunctionCallStatement(n, p);
     }
 
-    public static ParameterStatement param(Object obj) {
-        return new ParameterStatement(obj);
+    public static ParamStatement param(Object obj) {
+        return new ParamStatement(obj);
     }
 
-    public static ParameterStatement param(Object obj, Object list) {
-        return new ParameterStatement(obj, list);
+    public static ParamStatement param(Object obj, Object list) {
+        return new ParamStatement(obj, list);
     }
 
     public static ParamDeclaration paramDecl(Object t, Object v) {
@@ -63,8 +77,16 @@ public abstract class Statement implements Traversable {
         return new FunctionDefStatement(t, n, p, st, r);
     }
 
-    public static FunctionDefStatement funDef(Object t, Object n, Object st, Object r) {
-        return new FunctionDefStatement(t, n, null, st, r);
+    public static FunctionDefStatement funDef(Object t, Object n, Object p, Object r) {
+        return new FunctionDefStatement(t, n, p, null, r);
+    }
+
+    public static FunctionDefStatement funDefEmpty(Object t, Object n, Object p, Object r) {
+        return new FunctionDefStatement(t, n, p, null, r);
+    }
+
+    public static FunctionDefStatement funDefEmpty(Object t, Object n, Object r) {
+        return new FunctionDefStatement(t, n, null, null, r);
     }
 
     public static IfThenStatement ifThen(Object c, Object obj) {
@@ -78,7 +100,7 @@ public abstract class Statement implements Traversable {
         if (!(c instanceof ConditionalStatement)) {
             c = new ConditionalStatement(c);
         }
-        return new IfThenStatement(c, obj1, obj2);
+        return new IfThenElseStatement(c, obj1, obj2);
     }
 
     public static WhileStatement loop(Object c, Object obj) {

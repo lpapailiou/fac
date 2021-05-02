@@ -7,7 +7,7 @@ import java.util.function.BiFunction;
 
 public enum Operator {
 
-    EQUAL("=", (s1, s2) -> s1),
+    EQUAL("=", null),
     AND("&&", (s1, s2) -> (Boolean.parseBoolean((String) s1) && Boolean.parseBoolean((String) s2))),
     OR("||", (s1, s2) -> (Boolean.parseBoolean((String) s1) || Boolean.parseBoolean((String) s2))),
     EQ("==", (s1, s2) -> {
@@ -33,7 +33,8 @@ public enum Operator {
     PLUS("+", (s1, s2) -> s2),
     MINUS("-", (s1, s2) -> s2),
     MUL("*", (s1, s2) -> s2),
-    DIV("/", (s1, s2) -> s2)
+    DIV("/", (s1, s2) -> s2),
+    NONE("", null)
     ;
 
 
@@ -54,7 +55,7 @@ public enum Operator {
     }
 
     public Object apply(Object a) {
-        return function.apply(a,a);
+        return a;
     }
 
     public static Operator getName(Object op) {

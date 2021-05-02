@@ -7,14 +7,31 @@ import java.util.List;
 public class FunctionCallStatement extends Statement {
 
 
-    String name;
-    List<String> parameterList;     // TODO
+    private String identifier;
+    private List<String> parameterList = new ArrayList<>();
 
-    public FunctionCallStatement(Object name, Object params) {
-        this.name = name.toString();
-        this.parameterList = ((ParameterStatement) params).paramList;
+    public FunctionCallStatement(Object identifier) {
+        this.identifier = identifier.toString();
     }
 
+    public FunctionCallStatement(Object identifier, Object params) {
+        this(identifier);
+        if (params != null) {
+            this.parameterList = Arrays.asList(params.toString().split(", "));
+        }
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public int getParamCount() {
+        return parameterList.size();
+    }
+
+    public List<String> getParameterList() {
+        return parameterList;
+    }
 
     @Override
     public List<Statement> getStatements() {
@@ -23,7 +40,7 @@ public class FunctionCallStatement extends Statement {
 
     @Override
     public String toString() {
-        String out = name + "(";
+        String out = identifier + "(";
         for (int i = 0; i < parameterList.size(); i++) {
             out += parameterList.get(i);
             if (i != parameterList.size()-1) {

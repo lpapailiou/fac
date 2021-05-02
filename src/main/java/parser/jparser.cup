@@ -22,7 +22,7 @@ terminal String     STR, STRTYPE, NUM, NUMTYPE, BOOL, BOOLTYPE, VAR;
 
 /* Non terminals */
 non terminal        TYPE, PARAM, PARAMDEF, RET,
-                    COND_OP, ASSIGN_OP,
+                    COND_OP, ASSIGN_OP, COND_VAL,
                     CALC_MUL,
                     VAL;
 
@@ -54,12 +54,12 @@ STMT_LIST       ::= STMT_LIST:sl PROG_STMT:s                                    
                     | /* empty STMT_LIST */                                                 {: RESULT = Statement.stmtList(); :}
                     ;
 
-NEST_STMT       ::= LOOP_STMT:st                                                            {: RESULT = Statement.nest(st); :}
-                    | LOOP_STMT:st NEST_STMT:stList                                         {: RESULT = Statement.nest(st, stList); :}
-                    ;
-
 PROG_STMT       ::= STMT:st                                                                 {: RESULT = st; :}
                     | FUNDEF:st                                                             {: RESULT = st; :}
+                    ;
+
+NEST_STMT       ::= LOOP_STMT:st                                                            {: RESULT = Statement.nest(st); :}
+                    | LOOP_STMT:st NEST_STMT:stList                                         {: RESULT = Statement.nest(st, stList); :}
                     ;
 
 LOOP_STMT       ::= STMT:st                                                                 {: RESULT = st; :}
@@ -68,28 +68,34 @@ LOOP_STMT       ::= STMT:st                                                     
 
 STMT            ::= DECL:st                                                                 {: RESULT = st; :}
                     | ASSIGN:st                                                             {: RESULT = st; :}
-                    | FUNCALL:st                                                            {: RESULT = st; :}
+                    | FUNCALL:st STOP                                                       {: RESULT = st; :}
                     | PRINTCALL:st                                                          {: RESULT = st; :}
                     | IFTHEN_STMT:st                                                        {: RESULT = st; :}
                     | WHILE_STMT:st                                                         {: RESULT = st; :}
                     ;
 
-WHILE_STMT      ::= WHILE COND:c CBL NEST_STMT:s CBR                                        {: RESULT = Statement.loop(c, s); :}
-                    | WHILE BL VAR:c BR CBL NEST_STMT:s CBR                                 {: RESULT = Statement.loop(c, s); :}
-                    | WHILE BL BOOL:c BR CBL NEST_STMT:s CBR                                {: RESULT = Statement.loop(c, s); :}
+WHILE_STMT      ::= WHILE COND_VAL:c CBL NEST_STMT:s CBR                                    {: RESULT = Statement.loop(c, s); :}
+                    | WHILE COND_VAL:c CBL CBR                                              {: RESULT = Statement.loop(c, null); :}
                     ;
 
-IFTHEN_STMT     ::= IF COND:c CBL NEST_STMT:s CBR                                           {: RESULT = Statement.ifThen(c, s); :}
-                    | IF BL VAR:c BR CBL NEST_STMT:s CBR                                    {: RESULT = Statement.ifThen(c, s); :}
-                    | IF BL BOOL:c BR CBL NEST_STMT:s CBR                                   {: RESULT = Statement.ifThen(c, s); :}
-                    | IF COND:c CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR              {: RESULT = Statement.ifThen(c, s1, s2); :}
-                    | IF BL VAR:c BR CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR         {: RESULT = Statement.ifThen(c, s1, s2); :}
-                    | IF BL BOOL:c BR CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR        {: RESULT = Statement.ifThen(c, s1, s2); :}
+IFTHEN_STMT     ::= IF COND_VAL:c CBL NEST_STMT:s CBR                                       {: RESULT = Statement.ifThen(c, s); :}
+                    | IF COND_VAL:c CBL CBR                                                 {: RESULT = Statement.ifThen(c, null); :}
+                    | IF COND_VAL:c CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR          {: RESULT = Statement.ifThen(c, s1, s2); :}
+                    | IF COND_VAL:c CBL CBR ELSE CBL NEST_STMT:s2 CBR                       {: RESULT = Statement.ifThen(c, null, s2); :}
+                    | IF COND_VAL:c CBL NEST_STMT:s1 CBR ELSE CBL CBR                       {: RESULT = Statement.ifThen(c, s1, null); :}
+                    | IF COND_VAL:c CBL CBR ELSE CBL CBR                                    {: RESULT = Statement.ifThen(c, null, null); :}
+                    ;
+
+COND_VAL        ::= COND:c                                                                  {: RESULT = c; :}
+                    | BL VAR:c BR                                                           {: RESULT = c; :}
+                    | BL BOOL:c BR                                                          {: RESULT = c; :}
                     ;
 
 // function definition
 FUNDEF 	        ::= DEF TYPE:t VAR:n BL PARAMDEF:p BR CBL NEST_STMT:st RET:r CBR            {: RESULT = Statement.funDef(t, n, p, st, r); :}
+                    | DEF TYPE:t VAR:n BL PARAMDEF:p BR CBL RET:r CBR                       {: RESULT = Statement.funDefEmpty(t, n, p, r); :}
                     | DEF TYPE:t VAR:n BL BR CBL NEST_STMT:st RET:r CBR                     {: RESULT = Statement.funDef(t, n, st, r); :}
+                    | DEF TYPE:t VAR:n BL BR CBL RET:r CBR                                  {: RESULT = Statement.funDefEmpty(t, n, r); :}
                     ;
 
 PARAMDEF 	    ::= TYPE:t VAR:v                                                            {: RESULT = Statement.paramDecl(t, v); :}
@@ -103,12 +109,15 @@ PARAM 	        ::= VAL:t                                                        
 RET 	        ::= RETURN VAL:r STOP                                                       {: RESULT = r; :}
                     ;
 
-
 // function calls
-FUNCALL 	    ::= VAR:n BL PARAM:p BR STOP                                                {: RESULT = Statement.fun(n, p); :}
+FUNCALL 	    ::= VAR:n BL PARAM:p BR                                                     {: RESULT = Statement.fun(n, p); :}
+                    | VAR:n BL BR                                                           {: RESULT = Statement.fun(n); :}
                     ;
 
 PRINTCALL 	    ::= PRINT BL EXPR:v BR STOP                                                 {: RESULT = Statement.print(v); :}
+                    | PRINT COND:v STOP                                                     {: RESULT = Statement.print(v); :}
+                    | PRINT BL FUNCALL:v BR STOP                                            {: RESULT = Statement.print(v); :}
+                    | PRINT BL BR STOP                                                      {: RESULT = Statement.print(null); :}
                     ;
 
 // boolean conditions. brackets are mandatory, no precedence order needed
@@ -142,8 +151,10 @@ CALC_MUL        ::= VAL:e                                                       
 
 // variable assignments
 ASSIGN 	        ::= VAR:e1 EQUAL:op EXPR:e2 STOP                                            {: RESULT = Statement.assgn(op, e1, e2); :}
+                    | VAR:e1 EQUAL:op FUNCALL:e2 STOP                                       {: RESULT = Statement.assgn(op, e1, e2); :}
                     | VAR:e1 EQUAL:op COND:e2 STOP                                          {: RESULT = Statement.assgn(op, e1, e2); :}
                     | VAR:e1 ASSIGN_OP:op EXPR:e2 STOP                                      {: RESULT = Statement.assgn(op, e1, e2); :}
+                    | VAR:e1 ASSIGN_OP:op FUNCALL:e2 STOP                                   {: RESULT = Statement.assgn(op, e1, e2); :}
                     ;
 
 ASSIGN_OP       ::= PLUSEQ:op                                                               {: RESULT = op; :}
@@ -154,8 +165,11 @@ ASSIGN_OP       ::= PLUSEQ:op                                                   
 
 // variable declaration
 DECL 	        ::= STRTYPE:t VAR:e1 EQUAL STR:e2 STOP                                      {: RESULT = Statement.decl(t, e1, e2); :}
+                    | STRTYPE:t VAR:e1 STOP                                                 {: RESULT = Statement.decl(t, e1, null); :}
                     | NUMTYPE:t VAR:e1 EQUAL NUM:e2 STOP                                    {: RESULT = Statement.decl(t, e1, e2); :}
+                    | NUMTYPE:t VAR:e1 STOP                                                 {: RESULT = Statement.decl(t, e1, null); :}
                     | BOOLTYPE:t VAR:e1 EQUAL BOOL:e2 STOP                                  {: RESULT = Statement.decl(t, e1, e2); :}
+                    | BOOLTYPE:t VAR:e1 STOP                                                {: RESULT = Statement.decl(t, e1, null); :}
                     ;
 
 // base components

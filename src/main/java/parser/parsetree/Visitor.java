@@ -1,9 +1,5 @@
 package parser.parsetree;
 
-import parser.parsetree.VariableDeclaration;
-import parser.parsetree.Program;
-import parser.parsetree.Statement;
-
 public interface Visitor {
 
     void visit(Program acceptor);
@@ -15,11 +11,9 @@ public interface Visitor {
 
     void visit(AssignmentStatement acceptor);
 
-    void visit(BinaryStatement acceptor);
+    //void visit(ConditionalStatement acceptor);
 
-    void visit(ConditionalStatement acceptor);
-
-    void visit(ExpressionStatement acceptor);
+    //void visit(BinaryExpression acceptor);
 
     void visit(FunctionCallStatement acceptor);
 
@@ -31,11 +25,11 @@ public interface Visitor {
 
     void visit(ParamDeclaration acceptor);
 
-    void visit(ParameterStatement acceptor);
+    //void visit(ParamStatement acceptor);
 
-    void visit(PrintCallStatement acceptor);
+    //void visit(PrintCallStatement acceptor);
 
-    void visit(UnaryStatement acceptor);
+    //void visit(UnaryExpression acceptor);
 
     void visit(VariableDeclaration acceptor);
 
