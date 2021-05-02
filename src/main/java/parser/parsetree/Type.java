@@ -1,12 +1,15 @@
 package parser.parsetree;
 
+import parser.util.GrammarException;
+
 import java.util.Arrays;
 
 public enum Type {
 
     STRING("string", "'[a-z0-9_\\,\\.\\(\\)\\;\\:\\/\\+\\-\\*\\/ \\s\\t\\f\\r\\n]*'"),
     NUMERIC("number", "-?[0-9]\\d*(\\.\\d+)?"),
-    BOOLEAN("boolean", "true|false");
+    BOOLEAN("boolean", "true|false"),
+    VARIABLE("var", "[a-z_]+");
 
     private final String description;
     private final String pattern;
@@ -28,7 +31,17 @@ public enum Type {
         throw new IllegalArgumentException("Type " + type.toString() + " is not available!");
     }
 
-    public boolean isOf(Object obj) {
+    public boolean accepts(Object obj) {
         return obj.toString().matches(pattern);
+    }
+
+    public static Type getType(Object obj) {
+        Type[] types = Type.values();
+        for (Type type : types) {
+            if (type.accepts(obj)) {
+                return type;
+            }
+        }
+        throw new GrammarException("Unknown type for <" + obj + ">!");
     }
 }

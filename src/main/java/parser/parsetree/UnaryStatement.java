@@ -25,5 +25,8 @@ public class UnaryStatement extends Statement {
         return op.getOperator() + " " + o1.toString();
     }       // TODO, not implemented yet
 
-
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

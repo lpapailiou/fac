@@ -35,5 +35,10 @@ public class NestedStatement extends Statement {
         return out;
     }
 
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
 
 }

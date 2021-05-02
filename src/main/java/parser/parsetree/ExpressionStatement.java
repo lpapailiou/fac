@@ -7,38 +7,55 @@ import java.util.List;
 public class ExpressionStatement extends Statement {
 
     Operator op;
-    Object o1;
-    Object o2;
+    Object operand1;
+    Object operand2;
 
-    public ExpressionStatement(Object o1) {
-        this.o1 = o1;
+    public ExpressionStatement(Object operand1) {
+        this.operand1 = operand1;
     }
 
-    public ExpressionStatement(String op, Object o1, Object o2) {
-        this(o1);
+    public ExpressionStatement(String op, Object operand1, Object operand2) {
+        this(operand1);
         this.op = Operator.valueOf(op);
-        this.o2 = o2;
+
+        this.operand2 = operand2;
     }
 
+    public Object getOperand1() {
+        return operand1;
+    }
+
+    public Object getOperand2() {
+        return operand2;
+    }
+
+    public Operator getOperator() {
+        return op;
+    }
 
     @Override
     public List<Statement> getStatements() {
         List<Statement> statements = new ArrayList<>();
-        if (o1 instanceof Statement) {
-            statements.add((Statement) o1);
+        if (operand1 instanceof Statement) {
+            statements.add((Statement) operand1);
         }
-        if (o1 != null && o2 instanceof Statement) {
-            statements.add((Statement) o2);
+        if (operand2 != null && operand2 instanceof Statement) {
+            statements.add((Statement) operand2);
         }
         return statements;
     }
 
     @Override
     public String toString() {
-        if (o2 != null) {
-            return o1.toString() + " " + op.getOperator() + " " + o2.toString();
+        if (operand2 != null) {
+            return operand1.toString() + " " + op.getOperator() + " " + operand2.toString();
         }
-        return o1.toString();
+        return operand1.toString();
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 
 }

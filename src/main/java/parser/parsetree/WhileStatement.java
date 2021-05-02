@@ -29,4 +29,9 @@ public class WhileStatement extends Statement {
 
         return  out;
     }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

@@ -21,4 +21,9 @@ public class PrintCallStatement extends Statement {
     public String toString() {
         return "print(" + value.toString() + ");\n";
     }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

@@ -50,4 +50,9 @@ public class IfThenStatement extends Statement {
         out += "}\n\n";
         return  out;
     }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

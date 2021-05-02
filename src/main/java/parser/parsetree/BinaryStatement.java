@@ -3,7 +3,7 @@ package parser.parsetree;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BinaryStatement extends Statement {
+public class BinaryStatement extends Statement {        // TODO: not implemented
 
     Operator op;
     Object o1;

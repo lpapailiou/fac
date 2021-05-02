@@ -27,10 +27,17 @@ public class FunctionDefStatement extends Statement {
 
     }
 
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 
     @Override
     public List<Statement> getStatements() {
-        return statementList;
+        List<Statement> statements = new ArrayList<>();
+        statements.addAll(paramDeclarationList);
+        statements.addAll(statementList);
+        return statements;
     }
 
     @Override

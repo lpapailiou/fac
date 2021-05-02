@@ -1,14 +1,26 @@
 package parser.parsetree;
 
+import parser.util.GrammarException;
+
 import java.util.Arrays;
 import java.util.function.BiFunction;
 
 public enum Operator {
 
-    EQUAL("=", (s1, s2) -> s2),     // TODO
-    AND("&&", (s1, s2) -> s2),
-    OR("||", (s1, s2) -> s2),
-    EQ("==", (s1, s2) -> s2),
+    EQUAL("=", (s1, s2) -> s1),
+    AND("&&", (s1, s2) -> (Boolean.parseBoolean((String) s1) && Boolean.parseBoolean((String) s2))),
+    OR("||", (s1, s2) -> (Boolean.parseBoolean((String) s1) || Boolean.parseBoolean((String) s2))),
+    EQ("==", (s1, s2) -> {
+        Type type = Type.getType(s1);
+        if (type == Type.STRING) {
+            return s1.toString().equals(s2.toString());
+        } else if (type == Type.NUMERIC) {
+            return Double.parseDouble(s1.toString()) == Double.parseDouble(s2.toString());
+        } else if (type == Type.BOOLEAN) {
+            return Boolean.parseBoolean(s1.toString()) == Boolean.parseBoolean(s2.toString());
+        }
+        throw new GrammarException("unknown operation type!");
+    }),
     NEQ("!=", (s1, s2) -> s2),
     GREATER(">", (s1, s2) -> s2),
     GREQ(">=", (s1, s2) -> s2),
@@ -35,6 +47,14 @@ public enum Operator {
 
     public String getOperator() {
         return operator;
+    }
+
+    public Object apply(Object a, Object b) {
+        return function.apply(a,b);
+    }
+
+    public Object apply(Object a) {
+        return function.apply(a,a);
     }
 
     public static Operator getName(Object op) {

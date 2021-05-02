@@ -3,14 +3,15 @@ package parser.parsetree;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParamDeclaration extends Statement {
+public class ParamDeclaration extends Statement implements Declaration {
 
-    private String type;
+    private Type type;
     private String identifier;
+    private Object value;
     private ParamDeclaration next;
 
     public ParamDeclaration(Object type, Object identifier) {
-        this.type = type.toString();
+        this.type = Type.getName(type);
         this.identifier = identifier.toString();
     }
 
@@ -30,13 +31,27 @@ public class ParamDeclaration extends Statement {
 
     @Override
     public String toString() {
-        String out = type + " " + identifier;
+        String out = type.getDescription() + " " + identifier;
         return out;
     }
 
     @Override
-    public void accept (Visitor visitor) {
+    public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 
+    @Override
+    public Type getType() {
+        return type;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    @Override
+    public Object getValue() {
+        return value;
+    }
 }

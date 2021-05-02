@@ -6,27 +6,39 @@ import java.util.List;
 public class ConditionalStatement extends Statement {
 
     Operator op;
-    Object o1;
-    Object o2;
+    Object operand1;
+    Object operand2;
 
     public ConditionalStatement(Object op, Object o1, Object o2) {
         this(o1);
-        this.o2 = o2;
+        this.operand2 = o2;
         this.op = Operator.getName(op.toString());
     }
 
     public ConditionalStatement(Object o1) {
-        this.o1 = o1;
+        this.operand1 = o1;
+    }
+
+    public Object getOperand1() {
+        return operand1;
+    }
+
+    public Object getOperand2() {
+        return operand2;
+    }
+
+    public Operator getOperator() {
+        return op;
     }
 
     @Override
     public List<Statement> getStatements() {
         List<Statement> statements = new ArrayList<>();
-        if (o1 instanceof Statement) {
-            statements.add((Statement) o1);
+        if (operand1 instanceof Statement) {
+            statements.add((Statement) operand1);
         }
-        if (o2 instanceof Statement) {
-            statements.add((Statement) o2);
+        if (operand2 instanceof Statement) {
+            statements.add((Statement) operand2);
         }
         return statements;
     }
@@ -34,9 +46,14 @@ public class ConditionalStatement extends Statement {
     @Override
     public String toString() {
         if (op != null) {
-            return "(" + o1.toString() + " " + op.getOperator() + " " + o2.toString() + ")";
+            return "(" + operand1.toString() + " " + op.getOperator() + " " + operand2.toString() + ")";
         }
-        return "(" + o1.toString() + ")";
+        return "(" + operand1.toString() + ")";
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 
 }

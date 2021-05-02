@@ -6,13 +6,17 @@ import java.util.List;
 public class AssignmentStatement extends Statement {
 
     Operator op;
-    Object identifier;
+    String identifier;
     Statement statement;
 
     public AssignmentStatement(Object op, Object identifier, Statement statement) {
         this.op = Operator.getName(op.toString());
-        this.identifier = identifier;
+        this.identifier = identifier.toString();
         this.statement = statement;
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 
 
@@ -25,7 +29,7 @@ public class AssignmentStatement extends Statement {
 
     @Override
     public String toString() {
-        return identifier.toString() + " " + op.getOperator() + " " + statement.toString() + ";\n";
+        return identifier + " " + op.getOperator() + " " + statement + ";\n";
     }
 
     @Override

@@ -2,5 +2,9 @@ package parser.parsetree;
 
 public interface Declaration {
 
-    public String getIdentifier();
+    Type getType();
+
+    String getIdentifier();
+
+    Object getValue();
 }

@@ -26,7 +26,22 @@ public class VariableDeclaration extends Statement implements Declaration {
     }
 
     @Override
+    public Type getType() {
+        return type;
+    }
+
+    @Override
     public String getIdentifier() {
         return identifier;
+    }
+
+    @Override
+    public Object getValue() {
+        return value;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 }
