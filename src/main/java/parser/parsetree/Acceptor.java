@@ -1,4 +1,4 @@
-package parser.util;
+package parser.parsetree;
 
 public interface Acceptor {
 

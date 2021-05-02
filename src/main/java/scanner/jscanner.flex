@@ -89,6 +89,7 @@ number                            { return collectToken(NUMTYPE, "NUMTYPE"); }
 {BOOL}                            { return collectToken(BOOL, "BOOLTYPE"); }
 return                            { return collectToken(RETURN, "RETURN"); }
 while                             { return collectToken(WHILE, "WHILE"); }
+break                             { return collectToken(BREAK, "BREAK"); }
 if                                { return collectToken(IF, "IF"); }
 else                              { return collectToken(ELSE, "ELSE"); }
 def                               { return collectToken(DEF, "DEF"); }

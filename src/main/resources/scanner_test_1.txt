@@ -6,10 +6,6 @@ string d = 'o';
 
 // comment
 
-main() {
-    m = ((2 - b) * ((r - _) * 9));
-}
-
 def boolean o(string t) {
     j = '_';
     return s;

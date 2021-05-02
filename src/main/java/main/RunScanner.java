@@ -1,11 +1,12 @@
 package main;
 
 
-import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.Symbol;
 import scanner.JScanner;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Paths;
 
 public class RunScanner {

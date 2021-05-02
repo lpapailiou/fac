@@ -1,11 +1,11 @@
-package parser.util;
+package parser.parsetree;
 
 public class Statement implements Acceptor {
 
 
     @Override
     public String toString() {
-        return "statement";
+        return "[statement]";
     }
 
     @Override

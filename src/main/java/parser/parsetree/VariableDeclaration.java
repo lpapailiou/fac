@@ -1,12 +1,12 @@
-package parser.util;
+package parser.parsetree;
 
-public class Declaration implements Acceptor {
+public class VariableDeclaration extends Statement implements Declaration {
 
     private String type;
     private String identifier;
     private String value;
 
-    public Declaration(String type, String identifier, String value) {
+    public VariableDeclaration(String type, String identifier, String value) {
         this.type = type;
         this.identifier = identifier;
         this.value = value;
@@ -14,7 +14,7 @@ public class Declaration implements Acceptor {
 
     @Override
     public String toString() {
-        return type + " " + identifier + " = " + value;
+        return type + " " + identifier + " = " + value + ";\n";
     }
 
     @Override
