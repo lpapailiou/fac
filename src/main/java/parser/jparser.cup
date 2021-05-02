@@ -7,157 +7,166 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
-
-
-/* Simple +/-/* expression language; parser evaluates constant expressions on the fly*/
-//
 // java -jar java-cup-11b.jar -interface -destdir src/main/java/parser/ -symbols JSymbol -parser JParser src/main/java/parser/jparser.cup
 parser code {:
-    int nestingCount;
 :}
 
 /* define how to connect to the scanner! */
-//init with {: s.init(); :};
 scan with {: return getScanner().next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal            RETURN, WHILE, IF, ELSE, DEF, PRINT,
-                    BL, BR, CBL, CBR, COMMA, STOP, BREAK,
+terminal            WHILE, IF, ELSE, DEF, PRINT, BREAK, RETURN,
+                    BL, BR, CBL, CBR, COMMA, STOP,
                     EQUAL, LESS, GREATER, PLUS, MINUS, MUL, DIV, EQ, NEQ, GREQ, LEQ, AND, OR, PLUSEQ, MINEQ, MULEQ, DIVEQ;
 terminal String     STR, STRTYPE, NUM, NUMTYPE, BOOL, BOOLTYPE, VAR;
 
 /* Non terminals */
-non terminal        ASSIGN, TYPE,
-                    FUNDEF, PARAM, FUNCALL, PRINTCALL, STMT, DECL,
-                    RET, PARAMDEF, NEST_STMT, COND_OP, ASSIGN_OP, IFTHEN_STMT,
-                    COND, EXPR, CALC_MUL, PROG_STMT, LOOP_STMT,
+non terminal        TYPE, PARAM, PARAMDEF, RET,
+                    COND_OP, ASSIGN_OP,
+                    CALC_MUL,
                     VAL;
 
-non terminal Program    program;
-non terminal List<Statement> stmtlist;
+non terminal Program                    PROGRAM;
+non terminal List<Statement>            STMT_LIST;
+non terminal Statement                  STMT, LOOP_STMT, PROG_STMT, NEST_STMT;
+non terminal AssignmentStatement        ASSIGN;
+non terminal ExpressionStatement        EXPR;
+non terminal ConditionalStatement       COND;
+non terminal FunctionCallStatement      FUNCALL;
+non terminal FunctionDefStatement       FUNDEF;
+non terminal PrintCallStatement         PRINTCALL;
+non terminal IfThenStatement            IFTHEN_STMT;
+non terminal WhileStatement             WHILE_STMT;
+non terminal VariableDeclaration        DECL;
+
 
 /* Precedences */
-precedence left PLUS, MINUS;
-precedence left MUL, DIV;
+precedence left PLUS, MINUS;        // TODO: remove
+precedence left MUL, DIV;           // TODO: remove
 
 /* The grammar rules */
-start with program;
-// --------------------- helper structures ---------------------
-program         ::=  stmtlist:s                                  {: RESULT = new Program(s); :}
+start with PROGRAM;
+
+PROGRAM         ::= STMT_LIST:s                                                             {: RESULT = new Program(s); :}
                     ;
 
-stmtlist        ::= stmtlist:sl PROG_STMT:s                                 {: if (nestingCount < 1) { sl.add((Statement) s); } RESULT = sl; :}
-                    | /* empty stmtlist */                                  {: RESULT = new LinkedList<Statement>(); :}
+STMT_LIST       ::= STMT_LIST:sl PROG_STMT:s                                                {: sl.add((Statement) s); RESULT = sl; :}
+                    | /* empty STMT_LIST */                                                 {: RESULT = new LinkedList<Statement>(); :}
                     ;
 
-NEST_STMT       ::= LOOP_STMT:st                                                 {: nestingCount++; RESULT = new NestedStatement(st); :}
-                    | LOOP_STMT:st NEST_STMT:stList                              {: RESULT = new NestedStatement(st, stList); :}
+NEST_STMT       ::= LOOP_STMT:st                                                            {: RESULT = new NestedStatement(st); :}
+                    | LOOP_STMT:st NEST_STMT:stList                                         {: RESULT = new NestedStatement(st, stList); :}
                     ;
 
-PROG_STMT       ::= STMT:st                                               {: RESULT = st; :}
-                    | FUNDEF:st                                            {: RESULT = st; :}
+PROG_STMT       ::= STMT:st                                                                 {: RESULT = st; :}
+                    | FUNDEF:st                                                             {: RESULT = st; :}
                     ;
 
-LOOP_STMT       ::= STMT:st                                               {: RESULT = st; :}
-                    | BREAK:br STOP                                            {: RESULT = new BreakStatement(); :}
+LOOP_STMT       ::= STMT:st                                                                 {: RESULT = st; :}
+                    | BREAK:br STOP                                                         {: RESULT = new BreakStatement(); :}
                     ;
 
-STMT            ::= DECL:st                                                {: RESULT = st; :}
-                    | ASSIGN:st                                                {: RESULT = st; :}
-                    | FUNCALL:st                                                {: RESULT = st; :}
-                    | PRINTCALL:st                                              {: RESULT = st; :}
-                    | IFTHEN_STMT:st                                              {: RESULT = st; :}
-                    | WHILE COND:c CBL NEST_STMT:s CBR                           {: nestingCount=0; RESULT = new WhileStatement(c, s); :}
-                    | WHILE BL VAR:c BR CBL NEST_STMT:s CBR                           {: nestingCount=0; RESULT = new WhileStatement(c, s); :}
-                    | WHILE BL BOOL:c BR CBL NEST_STMT:s CBR                           {: nestingCount=0; RESULT = new WhileStatement(c, s); :}
+STMT            ::= DECL:st                                                                 {: RESULT = st; :}
+                    | ASSIGN:st                                                             {: RESULT = st; :}
+                    | FUNCALL:st                                                            {: RESULT = st; :}
+                    | PRINTCALL:st                                                          {: RESULT = st; :}
+                    | IFTHEN_STMT:st                                                        {: RESULT = st; :}
+                    | WHILE_STMT:st                                                         {: RESULT = st; :}
                     ;
 
-IFTHEN_STMT          ::= IF COND:c CBL NEST_STMT:s CBR                              {: nestingCount=0; RESULT = new IfElseStatement(c, s); :}
-                    | IF BL VAR:c BR CBL NEST_STMT:s CBR                              {: nestingCount=0; RESULT = new IfElseStatement(new ConditionalStatement(c), s); :}
-                    | IF BL BOOL:c BR CBL NEST_STMT:s CBR                              {: nestingCount=0; RESULT = new IfElseStatement(new ConditionalStatement(c), s); :}
-                    | IF COND:c CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR        {: nestingCount=0; RESULT = new IfElseStatement(c, s1, s2); :}
-                    | IF BL VAR:c BR CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR        {: nestingCount=0; RESULT = new IfElseStatement(new ConditionalStatement(c), s1, s2); :}
-                    | IF BL BOOL:c BR CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR        {: nestingCount=0; RESULT = new IfElseStatement(new ConditionalStatement(c), s1, s2); :}
+WHILE_STMT      ::= WHILE COND:c CBL NEST_STMT:s CBR                                        {: RESULT = new WhileStatement(c, s); :}
+                    | WHILE BL VAR:c BR CBL NEST_STMT:s CBR                                 {: RESULT = new WhileStatement(new ConditionalStatement(c), s); :}
+                    | WHILE BL BOOL:c BR CBL NEST_STMT:s CBR                                {: RESULT = new WhileStatement(new ConditionalStatement(c), s); :}
                     ;
 
-// function definition and calls
-FUNDEF 	    ::=       DEF TYPE:t VAR:n BL PARAMDEF:p BR CBL NEST_STMT:st RET:r CBR   {: nestingCount=0; RESULT = new FunctionDefStatement(t, n, p, st, r); :}
-                    | DEF TYPE:t VAR:n BL BR CBL NEST_STMT:st RET:r CBR   {: nestingCount=0; RESULT = new FunctionDefStatement(t, n, null, st, r); :}
+IFTHEN_STMT     ::= IF COND:c CBL NEST_STMT:s CBR                                           {: RESULT = new IfThenStatement(c, s); :}
+                    | IF BL VAR:c BR CBL NEST_STMT:s CBR                                    {: RESULT = new IfThenStatement(new ConditionalStatement(c), s); :}
+                    | IF BL BOOL:c BR CBL NEST_STMT:s CBR                                   {: RESULT = new IfThenStatement(new ConditionalStatement(c), s); :}
+                    | IF COND:c CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR              {: RESULT = new IfThenStatement(c, s1, s2); :}
+                    | IF BL VAR:c BR CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR         {: RESULT = new IfThenStatement(new ConditionalStatement(c), s1, s2); :}
+                    | IF BL BOOL:c BR CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR        {: RESULT = new IfThenStatement(new ConditionalStatement(c), s1, s2); :}
                     ;
 
-PARAMDEF 	        ::= TYPE:t VAR:v                                      {: RESULT = new ParamDeclaration(t, v); :}
-                    | TYPE:t VAR:v COMMA PARAMDEF:p                       {: RESULT = new ParamDeclaration(t, v, p); :}
+// function definition
+FUNDEF 	        ::= DEF TYPE:t VAR:n BL PARAMDEF:p BR CBL NEST_STMT:st RET:r CBR            {: RESULT = new FunctionDefStatement(t, n, p, st, r); :}
+                    | DEF TYPE:t VAR:n BL BR CBL NEST_STMT:st RET:r CBR                     {: RESULT = new FunctionDefStatement(t, n, null, st, r); :}
                     ;
 
-PARAM 	        ::= VAL:t                                                     {: RESULT = new ParameterStatement(t); :}
-                    | VAL:t COMMA PARAM:p                                    {: RESULT = new ParameterStatement(t, p); :}
+PARAMDEF 	    ::= TYPE:t VAR:v                                                            {: RESULT = new ParamDeclaration(t, v); :}
+                    | TYPE:t VAR:v COMMA PARAMDEF:p                                         {: RESULT = new ParamDeclaration(t, v, p); :}
                     ;
 
-RET 	        ::= RETURN VAL:r STOP                                       {: RESULT = r; :}
+PARAM 	        ::= VAL:t                                                                   {: RESULT = new ParameterStatement(t); :}
+                    | VAL:t COMMA PARAM:p                                                   {: RESULT = new ParameterStatement(t, p); :}
+                    ;
+
+RET 	        ::= RETURN VAL:r STOP                                                       {: RESULT = r; :}
                     ;
 
 
 // function calls
-FUNCALL 	    ::= VAR:n BL PARAM:p BR STOP                    {: RESULT = new FunctionCallStatement(n, p); :}
+FUNCALL 	    ::= VAR:n BL PARAM:p BR STOP                                                {: RESULT = new FunctionCallStatement(n, p); :}
                     ;
-PRINTCALL 	    ::= PRINT BL EXPR:v BR STOP                    {: RESULT = new PrintCallStatement(v); :}
+
+PRINTCALL 	    ::= PRINT BL EXPR:v BR STOP                                                 {: RESULT = new PrintCallStatement(v); :}
                     ;
 
 // boolean conditions. brackets are mandatory, no precedence order needed
-COND 	        ::= BL COND:e1 COND_OP:op COND:e2 BR                        {: RESULT = new ConditionalStatement(op,e1,e2); :}
-                    | BL COND:e1 COND_OP:op VAL:e2 BR                        {: RESULT = new ConditionalStatement(op,e1,e2); :}
-                    | BL VAL:e1 COND_OP:op COND:e2 BR                        {: RESULT = new ConditionalStatement(op,e1,e2); :}
-                    | BL VAL:e1 COND_OP:op VAL:e2 BR                        {: RESULT = new ConditionalStatement(op,e1,e2); :}
-                  // | BL VAL:e BR                                           {: RESULT = new ConditionalStatement("EQUAL",e,e); :}
+COND 	        ::= BL COND:e1 COND_OP:op COND:e2 BR                                        {: RESULT = new ConditionalStatement(op,e1,e2); :}
+                    | BL COND:e1 COND_OP:op VAL:e2 BR                                       {: RESULT = new ConditionalStatement(op,e1,e2); :}
+                    | BL VAL:e1 COND_OP:op COND:e2 BR                                       {: RESULT = new ConditionalStatement(op,e1,e2); :}
+                    | BL VAL:e1 COND_OP:op VAL:e2 BR                                        {: RESULT = new ConditionalStatement(op,e1,e2); :}
                    ;
 
-COND_OP         ::= AND:op                                                 {: RESULT = op; :}
-                    | OR:op                                                 {: RESULT = op; :}
-                    | EQ:op                                                 {: RESULT = op; :}
-                    | NEQ:op                                                 {: RESULT = op; :}
-                    | GREATER:op                                                 {: RESULT = op; :}
-                    | GREQ:op                                                 {: RESULT = op; :}
-                    | LEQ:op                                                 {: RESULT = op; :}
-                    | LESS:op                                                 {: RESULT = op; :}
+COND_OP         ::= AND:op                                                                  {: RESULT = op; :}
+                    | OR:op                                                                 {: RESULT = op; :}
+                    | EQ:op                                                                 {: RESULT = op; :}
+                    | NEQ:op                                                                {: RESULT = op; :}
+                    | GREATER:op                                                            {: RESULT = op; :}
+                    | GREQ:op                                                               {: RESULT = op; :}
+                    | LEQ:op                                                                {: RESULT = op; :}
+                    | LESS:op                                                               {: RESULT = op; :}
                     ;
 
 // arithmetic expressions. brackets are optional, mul/div has precedence over plus/minus
-EXPR 	        ::=  CALC_MUL:e                                              {: RESULT = new ExpressionStatement(e); :}
-                    | EXPR:e1 PLUS VAL:e2                              {: RESULT = new ExpressionStatement("PLUS", e1, e2); :}
-                    | EXPR:e1 MINUS VAL:e2                             {: RESULT = new ExpressionStatement("MINUS", e1, e2); :}
+EXPR 	        ::=  CALC_MUL:e                                                             {: RESULT = new ExpressionStatement(e); :}
+                    | EXPR:e1 PLUS VAL:e2                                                   {: RESULT = new ExpressionStatement("PLUS", e1, e2); :}
+                    | EXPR:e1 MINUS VAL:e2                                                  {: RESULT = new ExpressionStatement("MINUS", e1, e2); :}
                     ;
-CALC_MUL      ::= VAL:e                                                  {: RESULT = new ExpressionStatement(e); :}
-                  | BL CALC_MUL:e BR                                      {: RESULT = new ExpressionStatement(e); :}
-                    | CALC_MUL:e1 MUL VAL:e2                            {: RESULT = new ExpressionStatement("MUL", e1, e2); :}
-                    | CALC_MUL:e1 DIV VAL:e2                            {: RESULT = new ExpressionStatement("DIV", e1, e2); :}
+
+CALC_MUL        ::= VAL:e                                                                   {: RESULT = new ExpressionStatement(e); :}
+                  | BL CALC_MUL:e BR                                                        {: RESULT = new ExpressionStatement(e); :}
+                    | CALC_MUL:e1 MUL VAL:e2                                                {: RESULT = new ExpressionStatement("MUL", e1, e2); :}
+                    | CALC_MUL:e1 DIV VAL:e2                                                {: RESULT = new ExpressionStatement("DIV", e1, e2); :}
                     ;
 
 // variable assignments
-ASSIGN 	        ::= VAR:e1 EQUAL:op EXPR:e2 STOP                      {: RESULT = new AssignmentStatement(op, e1, e2); :}
-                    | VAR:e1 EQUAL:op COND:e2 STOP                  {: RESULT = new AssignmentStatement(op, e1, e2); :}
-                    | VAR:e1 ASSIGN_OP:op EXPR:e2 STOP                  {: RESULT = new AssignmentStatement(op, e1, e2); :}
+ASSIGN 	        ::= VAR:e1 EQUAL:op EXPR:e2 STOP                                            {: RESULT = new AssignmentStatement(op, e1, e2); :}
+                    | VAR:e1 EQUAL:op COND:e2 STOP                                          {: RESULT = new AssignmentStatement(op, e1, e2); :}
+                    | VAR:e1 ASSIGN_OP:op EXPR:e2 STOP                                      {: RESULT = new AssignmentStatement(op, e1, e2); :}
                     ;
 
-ASSIGN_OP         ::= PLUSEQ:op                                                 {: RESULT = op; :}
-                    | MINEQ:op                                                 {: RESULT = op; :}
-                    | DIVEQ:op                                                 {: RESULT = op; :}
-                    | MULEQ:op                                                 {: RESULT = op; :}
+ASSIGN_OP       ::= PLUSEQ:op                                                               {: RESULT = op; :}
+                    | MINEQ:op                                                              {: RESULT = op; :}
+                    | DIVEQ:op                                                              {: RESULT = op; :}
+                    | MULEQ:op                                                              {: RESULT = op; :}
                     ;
 
 // variable declaration
-DECL 	        ::= STRTYPE:t VAR:e1 EQUAL STR:e2 STOP                      {: RESULT = new VariableDeclaration(t, e1, e2); :}
-                    | NUMTYPE:t VAR:e1 EQUAL NUM:e2 STOP                    {: RESULT = new VariableDeclaration(t, e1, e2); :}
-                    | BOOLTYPE:t VAR:e1 EQUAL BOOL:e2 STOP                  {: RESULT = new VariableDeclaration(t, e1, e2); :}
+DECL 	        ::= STRTYPE:t VAR:e1 EQUAL STR:e2 STOP                                      {: RESULT = new VariableDeclaration(t, e1, e2); :}
+                    | NUMTYPE:t VAR:e1 EQUAL NUM:e2 STOP                                    {: RESULT = new VariableDeclaration(t, e1, e2); :}
+                    | BOOLTYPE:t VAR:e1 EQUAL BOOL:e2 STOP                                  {: RESULT = new VariableDeclaration(t, e1, e2); :}
                     ;
 
-TYPE             ::= STRTYPE:t                                                     {: RESULT = t; :}
-                    | NUMTYPE:t                                                  {: RESULT = t; :}
-                    | BOOLTYPE:t                                                   {: RESULT = t; :}
+// base components
+TYPE            ::= STRTYPE:t                                                               {: RESULT = t; :}
+                    | NUMTYPE:t                                                             {: RESULT = t; :}
+                    | BOOLTYPE:t                                                            {: RESULT = t; :}
                     ;
 
-VAL             ::= VAR:str                                                     {: RESULT = str; :}
-                    | STR:str                                                   {: RESULT = str; :}
-                    | BOOL:b                                                    {: RESULT = b; :}
-                    | NUM:n                                                     {: RESULT = n; :}
+VAL             ::= VAR:str                                                                 {: RESULT = str; :}
+                    | STR:str                                                               {: RESULT = str; :}
+                    | BOOL:b                                                                {: RESULT = b; :}
+                    | NUM:n                                                                 {: RESULT = n; :}
                     ;
 
