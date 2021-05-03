@@ -17,6 +17,10 @@ public class IfThenStatement extends Statement {
         }
     }
 
+    public Object getCondition() {
+        return condition;
+    }
+
     @Override
     public List<Statement> getStatements() {
         List<Statement> statements = new ArrayList<>();
@@ -28,7 +32,16 @@ public class IfThenStatement extends Statement {
 
     @Override
     public String toString() {
-        String out = "\nif " + condition + " {\n";
+        String out = "\nif ";
+        boolean isCond = condition instanceof ConditionalStatement;
+        if (!isCond) {
+            out += "(";
+        }
+        out += condition;
+        if (!isCond) {
+            out += ")";
+        }
+        out += " {\n";
         if (!statementList1.isEmpty()) {
             for (Statement st : statementList1) {
                 out += "\t" + st;

@@ -8,12 +8,15 @@ public interface Visitor {
 
     void visit(Statement acceptor);
 
+    void visit(VariableDeclaration acceptor);
 
-
+    void visit(ParamDeclaration acceptor);
 
     void visit(AssignmentStatement acceptor);
 
     void visit(FunctionCallStatement acceptor);
+
+    void visit(PrintCallStatement acceptor);
 
     void visit(FunctionDefStatement acceptor);
 
@@ -21,10 +24,10 @@ public interface Visitor {
 
     void visit(IfThenElseStatement acceptor);
 
-    void visit(ParamDeclaration acceptor);
-
-    void visit(VariableDeclaration acceptor);
-
     void visit(WhileStatement acceptor);
+
+
+
+
 
 }

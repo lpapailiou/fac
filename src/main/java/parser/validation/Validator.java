@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
         - ifthen and ifthenelse-statements can have empty bodies and define local variables
         - to call a function, it must exist and the caller must match the parameter types of the callee
         - function calls can be made anywhere senseful
-        - function definitions do not allow recursions
+        - function definitions do not allow recursions (???)
         - functions must always have a return value
         - the return type of a function must equal the defined type
         - print calls allow primitives, expressions, conditionals and function calls
@@ -37,20 +37,33 @@ public class Validator implements Visitor {
 
     private List<Declaration> declarationScope = new ArrayList<>();
     private List<FunctionDefStatement> functionScope = new ArrayList<>();
-    private int whileDepth = 0;
+    protected int whileDepth = 0;
 
     @Override
     public void visit(Program acceptor) {
         traverse(acceptor);
-        System.out.println("\ndeclaration scope: ");
-        for (Declaration st : declarationScope) {
-            System.out.print("\t - " + st);
-        }
+        printDeclarations();
     }
 
     @Override
     public void visit(Statement acceptor) {
         //System.out.println("\tnot specifically checked: " + acceptor.getClass());
+    }
+
+    @Override
+    public void visit(VariableDeclaration acceptor) {
+        addDeclarationToScope(acceptor);
+
+        Type expectedType = acceptor.getType();
+        Type effectiveType = getTypeOfOperand(acceptor.getValue());
+        if (expectedType != effectiveType) {
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getStatements() + ">!");
+        }
+    }
+
+    @Override
+    public void visit(ParamDeclaration acceptor) {
+        addDeclarationToScope(acceptor);
     }
 
     @Override
@@ -66,6 +79,10 @@ public class Validator implements Visitor {
     @Override
     public void visit(FunctionCallStatement acceptor) {
         validateFunctionCall(acceptor);
+    }
+
+    @Override
+    public void visit(PrintCallStatement acceptor) {
     }
 
     @Override
@@ -93,27 +110,13 @@ public class Validator implements Visitor {
     }
 
     @Override
-    public void visit(ParamDeclaration acceptor) {
-        addDeclarationToScope(acceptor);
-    }
-
-    @Override
-    public void visit(VariableDeclaration acceptor) {
-        addDeclarationToScope(acceptor);
-
-        Type expectedType = acceptor.getType();
-        Type effectiveType = getTypeOfOperand(acceptor.getValue());
-        if (expectedType != effectiveType) {
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getStatements() + ">!");
-        }
-    }
-
-    @Override
     public void visit(WhileStatement acceptor) {
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
         removeDeclarations(acceptor);
         whileDepth--;
     }
+
+
 
     private void checkBreakStatement(Traversable parent, List<Statement> statements, boolean hold) {
         for (int i = 0; i < statements.size(); i++) {
@@ -130,19 +133,17 @@ public class Validator implements Visitor {
         }
     }
 
-    private Type getTypeOfExpression(ExpressionStatement statement) {
-        Type type = Type.NONE;
-        if (statement instanceof BinaryExpression) {
-            type = getTypeOfOperand(((BinaryExpression)statement).getOperand1());
-            Type type2 = getTypeOfOperand(((BinaryExpression)statement).getOperand2());
-            if (type != type2) {
-                throw new TypeMismatchException("Types of expression <" + statement.toString().replaceAll("\n", "") + "> do not match!");
-            }
-        } else if (statement instanceof UnaryExpression) {
-            type = getTypeOfOperand(((UnaryExpression)statement).getOperand());
+    private Type getTypeOfExpression(BinaryExpression statement) {
+        Type type = getTypeOfOperand(statement.getOperand1());
+        Type type2 = getTypeOfOperand(statement.getOperand2());
+        if (type != type2) {
+            throw new TypeMismatchException("Types of expression <" + statement.toString().replaceAll("\n", "") + "> do not match!");
         }
-
         return type;
+    }
+
+    private Type getTypeOfExpression(UnaryExpression statement) {
+        return getTypeOfOperand(statement.getOperand());
     }
 
     private Type getTypeOfCondition(ConditionalStatement statement) {
@@ -151,6 +152,7 @@ public class Validator implements Visitor {
         if (type2 == null) {
             return type1;
         }
+
         if (type1 != type2) {
             throw new TypeMismatchException("Types of conditional statement <" + statement.toString().replaceAll("\n", "") + "> do not match!");
         }
@@ -201,13 +203,12 @@ public class Validator implements Visitor {
         }
     }
 
-    private void removeDeclarations(Traversable acceptor) {
+    protected void removeDeclarations(Traversable acceptor) {
         List<Declaration> declarations = acceptor.getStatements().stream().filter(st -> st instanceof Declaration).map(st -> (Declaration) st).collect(Collectors.toList());
         declarationScope.removeAll(declarations);
     }
 
-    private void addDeclarationToScope(Declaration declaration) {
-
+    protected void addDeclarationToScope(Declaration declaration) {
         if (isVariableInScope(declaration.getIdentifier())) {
             throw new UniquenessViolationException("variable identifier <" + declaration.getIdentifier() + "> is already defined!");
         } else {
@@ -215,7 +216,7 @@ public class Validator implements Visitor {
         }
     }
 
-    private void addFunDeclarationToScope(FunctionDefStatement function) {
+    protected void addFunDeclarationToScope(FunctionDefStatement function) {
         if (isFunctionExisting(function)) {
             throw new UniquenessViolationException("Function <" + function.getType().getDescription() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> is already defined!");
         } else if (!isFunctionDefineable(function)) {
@@ -230,7 +231,7 @@ public class Validator implements Visitor {
         return definition != null;
     }
 
-    private FunctionDefStatement getFunction(String identifier, int parameterCount) {
+    protected FunctionDefStatement getFunction(String identifier, int parameterCount) {
         FunctionDefStatement definition =  functionScope.stream().filter(fun -> fun.getIdentifier().equals(identifier) && fun.getParamCount() == parameterCount).findAny().orElse(null);
         if (definition == null) {
             throw new MissingComponentException("Function <" + identifier + "> with " + parameterCount + " parameter was never defined!");
@@ -248,7 +249,7 @@ public class Validator implements Visitor {
         return declaration != null;
     }
 
-    private Declaration getDeclaration(String identifier) {
+    protected Declaration getDeclaration(String identifier) {
         Declaration declaration =  declarationScope.stream().filter(dec -> dec.getIdentifier().equals(identifier)).findAny().orElse(null);
         if (declaration == null) {
             throw new MissingComponentException("Declaration <" + identifier + "> was never instantiated!");
@@ -256,7 +257,14 @@ public class Validator implements Visitor {
         return declaration;
     }
 
-    protected void traverse(Traversable node) {
+    protected void printDeclarations() {
+        System.out.println("\ndeclaration scope: ");
+        for (Declaration st : declarationScope) {
+            System.out.print("\t - " + st);
+        }
+    }
+
+    private void traverse(Traversable node) {
         if (node != null) {
             if (node instanceof WhileStatement) {
                 whileDepth++;

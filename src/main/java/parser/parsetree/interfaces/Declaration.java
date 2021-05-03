@@ -9,4 +9,6 @@ public interface Declaration {
     String getIdentifier();
 
     Object getValue();
+
+    void setValue(Object obj);
 }

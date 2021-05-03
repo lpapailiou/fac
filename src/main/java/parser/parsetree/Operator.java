@@ -7,33 +7,47 @@ import java.util.function.BiFunction;
 
 public enum Operator {
 
-    EQUAL("=", null),
-    AND("&&", (s1, s2) -> (Boolean.parseBoolean((String) s1) && Boolean.parseBoolean((String) s2))),
-    OR("||", (s1, s2) -> (Boolean.parseBoolean((String) s1) || Boolean.parseBoolean((String) s2))),
+    EQUAL("=", (s1, s2) -> s2),
+    AND("&&", (s1, s2) -> ((Boolean) s1 && ((Boolean) s2))),
+    OR("||", (s1, s2) -> ((Boolean) s1 || ((Boolean) s2))),
     EQ("==", (s1, s2) -> {
-        Type type = Type.getTypeForValue(s1);
-        if (type == Type.STRING) {
+        if (Type.getTypeForValue(s1) == Type.STRING) {
             return s1.toString().equals(s2.toString());
-        } else if (type == Type.NUMERIC) {
-            return Double.parseDouble(s1.toString()) == Double.parseDouble(s2.toString());
-        } else if (type == Type.BOOLEAN) {
-            return Boolean.parseBoolean(s1.toString()) == Boolean.parseBoolean(s2.toString());
+        } else {
+            return s1 == s2;
         }
-        throw new TypeMismatchException("unknown operation type!");
     }),
-    NEQ("!=", (s1, s2) -> s2),
-    GREATER(">", (s1, s2) -> s2),
-    GREQ(">=", (s1, s2) -> s2),
-    LEQ("<=", (s1, s2) -> s2),
-    LESS("<", (s1, s2) -> s2),
-    PLUSEQ("+=", (s1, s2) -> s2),
-    MINEQ("-=", (s1, s2) -> s2),
-    MULEQ("*=", (s1, s2) -> s2),
-    DIVEQ("/=", (s1, s2) -> s2),
-    PLUS("+", (s1, s2) -> s2),
-    MINUS("-", (s1, s2) -> s2),
-    MUL("*", (s1, s2) -> s2),
-    DIV("/", (s1, s2) -> s2),
+    NEQ("!=", (s1, s2) -> {
+        if (Type.getTypeForValue(s1) == Type.STRING) {
+            return !s1.toString().equals(s2.toString());
+        } else {
+            return s1 != s2;
+        }
+    }),
+    GREATER(">", (s1, s2) -> Double.parseDouble(s1.toString()) > Double.parseDouble(s2.toString())),
+    GREQ(">=", (s1, s2) -> Double.parseDouble(s1.toString()) >= Double.parseDouble(s2.toString())),
+    LEQ("<=", (s1, s2) -> Double.parseDouble(s1.toString()) <= Double.parseDouble(s2.toString())),
+    LESS("<", (s1, s2) -> Double.parseDouble(s1.toString()) < Double.parseDouble(s2.toString())),
+    PLUSEQ("+=", (s1, s2) -> {
+        if (Type.getTypeForValue(s1) == Type.STRING) {
+            return "'" + (s1.toString() + (s2.toString())).replaceAll("'", "") + "'";
+        } else {
+            return Double.parseDouble(s1.toString()) + Double.parseDouble(s2.toString());
+        }
+    }),
+    MINEQ("-=", (s1, s2) -> Double.parseDouble(s1.toString()) - Double.parseDouble(s2.toString())),
+    MULEQ("*=", (s1, s2) -> Double.parseDouble(s1.toString()) * Double.parseDouble(s2.toString())),
+    DIVEQ("/=", (s1, s2) -> Double.parseDouble(s1.toString()) / Double.parseDouble(s2.toString())),
+    PLUS("+", (s1, s2) -> {
+        if (Type.getTypeForValue(s1) == Type.STRING) {
+            return "'" + (s1.toString() + (s2.toString())).replaceAll("'", "") + "'";
+        } else {
+            return Double.parseDouble(s1.toString()) + Double.parseDouble(s2.toString());
+        }
+    }),
+    MINUS("-", (s1, s2) -> Double.parseDouble(s1.toString()) - Double.parseDouble(s2.toString())),
+    MUL("*", (s1, s2) -> Double.parseDouble(s1.toString()) * Double.parseDouble(s2.toString())),
+    DIV("/", (s1, s2) -> Double.parseDouble(s1.toString()) / Double.parseDouble(s2.toString())),
     NONE("", null)
     ;
 
@@ -51,11 +65,11 @@ public enum Operator {
     }
 
     public Object apply(Object a, Object b) {
-        return function.apply(a,b);
-    }
-
-    public Object apply(Object a) {
-        return a;
+        if (Type.getTypeForValue(a) == Type.BOOLEAN) {
+            a = Boolean.parseBoolean(a.toString());
+            b = Boolean.parseBoolean(b.toString());
+        }
+        return function.apply(a, b);
     }
 
     public static Operator getName(Object op) {

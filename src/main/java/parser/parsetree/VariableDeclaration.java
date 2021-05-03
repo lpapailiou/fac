@@ -52,6 +52,11 @@ public class VariableDeclaration extends Statement implements Declaration {
     }
 
     @Override
+    public void setValue(Object obj) {
+        this.value = obj;
+    }
+
+    @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }

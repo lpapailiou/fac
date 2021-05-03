@@ -17,6 +17,9 @@ public class WhileStatement extends Statement {
         }
     }
 
+    public Object getCondition() {
+        return condition;
+    }
 
     @Override
     public List<Statement> getStatements() {
@@ -26,7 +29,17 @@ public class WhileStatement extends Statement {
     @Override
     public String toString() {
 
-        String out = "\nwhile (" + condition + ") {\n";
+        String out = "\nwhile ";
+        boolean isCond = condition instanceof ConditionalStatement;
+        if (!isCond) {
+            out += "(";
+        }
+        out += condition;
+        if (!isCond) {
+            out += ")";
+        }
+        out += " {\n";
+
         for (Statement st : statementList) {
             out+= "\t" + st;
         }

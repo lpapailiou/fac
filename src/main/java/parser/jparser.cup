@@ -41,8 +41,8 @@ non terminal VariableDeclaration        DECL;
 
 
 /* Precedences */
-precedence left PLUS, MINUS;        // TODO: remove
-precedence left MUL, DIV;           // TODO: remove
+precedence left PLUS, MINUS;        // TODO: remove?
+precedence left MUL, DIV;           // TODO: remove?
 
 /* The grammar rules */
 start with PROGRAM;
@@ -150,7 +150,7 @@ CALC_MUL        ::= VAL:e                                                       
                     ;
 
 // variable assignments
-ASSIGN 	        ::= VAR:e1 EQUAL:op EXPR:e2 STOP                                            {: RESULT = Statement.assgn(op, e1, e2); :}     // TODO: check operator mismatch
+ASSIGN 	        ::= VAR:e1 EQUAL:op EXPR:e2 STOP                                            {: RESULT = Statement.assgn(op, e1, e2); :}
                     | VAR:e1 EQUAL:op FUNCALL:e2 STOP                                       {: RESULT = Statement.assgn(op, e1, e2); :}
                     | VAR:e1 EQUAL:op COND:e2 STOP                                          {: RESULT = Statement.assgn(op, e1, e2); :}
                     | VAR:e1 ASSIGN_OP:op EXPR:e2 STOP                                      {: RESULT = Statement.assgn(op, e1, e2); :}

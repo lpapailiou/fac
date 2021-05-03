@@ -21,6 +21,10 @@ public class AssignmentStatement extends Statement {
         return identifier;
     }
 
+    public Operator getOperator() {
+        return op;
+    }
+
 
     @Override
     public List<Statement> getStatements() {

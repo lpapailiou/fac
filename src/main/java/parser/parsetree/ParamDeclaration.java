@@ -57,4 +57,9 @@ public class ParamDeclaration extends Statement implements Declaration {
     public Object getValue() {
         return value;
     }
+
+    @Override
+    public void setValue(Object obj) {
+        this.value = obj;
+    }
 }

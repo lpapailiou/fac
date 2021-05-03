@@ -1,17 +1,17 @@
-number num = 123;
-num = 1 + 2;
-boolean test = true;
-boolean bolbol = true;
-bolbol = (false && test);
-bolbol = ( 1 < 2);
 
-def boolean fun(number b) {
-return true;
+
+number one = 1;
+
+while (one < 4) {
+    one += 1;
+    if (one == 3) {
+        print('break');
+        break;
+    }
+    print(one);
 }
 
-boolean lala1 = fun(1);
-boolean x= (true && false);
-x = (true && false);
+
 
 
 
