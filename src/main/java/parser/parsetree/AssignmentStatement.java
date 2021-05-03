@@ -1,13 +1,15 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class AssignmentStatement extends Statement {
 
-    Operator op;
-    String identifier;
-    Statement statement;
+    private Operator op;
+    private String identifier;
+    private Statement statement;
 
     public AssignmentStatement(Object op, Object identifier, Statement statement) {
         this.op = Operator.getName(op.toString());

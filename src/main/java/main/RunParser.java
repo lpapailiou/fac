@@ -31,7 +31,6 @@ public class RunParser {
             System.out.println("***** PARSER RESULT *****\n\n" + reducedResult.value + "\n");
 
             Validator validator = new Validator();
-
             validator.visit((Program) reducedResult.value);
 
         } catch (IOException e) {

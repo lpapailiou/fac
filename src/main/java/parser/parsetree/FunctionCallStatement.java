@@ -1,5 +1,7 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

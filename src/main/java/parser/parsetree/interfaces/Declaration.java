@@ -1,4 +1,6 @@
-package parser.parsetree;
+package parser.parsetree.interfaces;
+
+import parser.parsetree.Type;
 
 public interface Declaration {
 

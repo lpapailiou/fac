@@ -1,5 +1,8 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Declaration;
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +14,7 @@ public class ParamDeclaration extends Statement implements Declaration {
     private ParamDeclaration next;
 
     public ParamDeclaration(Object type, Object identifier) {
-        this.type = Type.getName(type);
+        this.type = Type.getByName(type);
         this.identifier = identifier.toString();
     }
 

@@ -1,12 +1,14 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ParamStatement extends Statement {
 
-    String paramIdentifier;
-    ParamStatement next;
+    private String paramIdentifier;
+    private ParamStatement next;
 
     public ParamStatement(Object o1) {
         paramIdentifier = o1.toString();

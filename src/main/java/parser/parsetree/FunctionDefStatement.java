@@ -1,19 +1,21 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class FunctionDefStatement extends Statement {
 
 
-    Type type;
-    String identifier;
-    List<ParamDeclaration> paramDeclarationList = new ArrayList<>();
-    List<Statement> statementList = new ArrayList<>();
-    Object returnVal;
+    private Type type;
+    private String identifier;
+    private List<ParamDeclaration> paramDeclarationList = new ArrayList<>();
+    private List<Statement> statementList = new ArrayList<>();
+    private Object returnVal;
 
     public FunctionDefStatement(Object type, Object name, Object params, Object statements, Object returnVal) {
-        this.type = Type.getName(type);
+        this.type = Type.getByName(type);
         this.identifier = name.toString();
         if (params != null) {
             ParamDeclaration decl = (ParamDeclaration) params;
@@ -23,7 +25,7 @@ public class FunctionDefStatement extends Statement {
             }
         }
         if (statements != null) {
-            this.statementList.addAll(((NestedStatement) statements).statementList);
+            this.statementList.addAll(((NestedStatement) statements).getStatements());
         }
         this.returnVal = returnVal;
 
@@ -35,6 +37,10 @@ public class FunctionDefStatement extends Statement {
 
     public Type getType() {
         return type;
+    }
+
+    public Object getReturnValue() {
+        return returnVal;
     }
 
     public int getParamCount() {

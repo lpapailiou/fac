@@ -1,34 +1,43 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class NestedStatement extends Statement {
 
-    List<Statement> statementList = new ArrayList<>();
+    private Statement statement;
+    private Statement next;
 
     public NestedStatement(Object st) {
-        if (st != null) {
-            statementList.add((Statement) st);
-        }
+        statement = (Statement) st;
     }
 
     public NestedStatement(Object st, Object obj) {
         this(st);
-        if (obj != null) {
-            statementList.addAll(((NestedStatement) obj).statementList);
-        }
+        next = (Statement) obj;
     }
 
     @Override
     public List<Statement> getStatements() {
-        return statementList;
+        List<Statement> statements = new ArrayList<>();
+        statements.add(statement);
+        while (next != null) {
+            statements.add(next);
+            if (!(next instanceof BreakStatement)) {
+                next = ((NestedStatement) next).next;
+            } else {
+                next = null;
+            }
+        }
+        return statements;
     }
 
     @Override
     public String toString() {
         String out = "";
+        List<Statement> statementList = getStatements();
         for (Statement st : statementList) {
             out += st;
         }

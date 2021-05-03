@@ -1,5 +1,8 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Traversable;
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,17 +19,7 @@ public abstract class Statement implements Traversable {
     }
 
     public static VariableDeclaration decl(Object t, Object e1, Object e2) {
-        Type type = Type.getName(t);
-        if (e2 == null) {
-            if (type == Type.STRING) {
-                e2 = "''";
-            } else if (type == Type.NUMERIC) {
-                e2 = "0";
-            } else if (type == Type.BOOLEAN) {
-                e2 = "false";
-            }
-        }
-        return new VariableDeclaration(t, e1.toString(), e2.toString());
+        return new VariableDeclaration(t, e1, e2);
     }
 
     public static AssignmentStatement assgn(Object op, Object e1, Object e2) {
@@ -77,8 +70,8 @@ public abstract class Statement implements Traversable {
         return new FunctionDefStatement(t, n, p, st, r);
     }
 
-    public static FunctionDefStatement funDef(Object t, Object n, Object p, Object r) {
-        return new FunctionDefStatement(t, n, p, null, r);
+    public static FunctionDefStatement funDef(Object t, Object n, Object st, Object r) {
+        return new FunctionDefStatement(t, n, null, st, r);
     }
 
     public static FunctionDefStatement funDefEmpty(Object t, Object n, Object p, Object r) {

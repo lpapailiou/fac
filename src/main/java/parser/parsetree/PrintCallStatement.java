@@ -1,12 +1,14 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PrintCallStatement extends Statement {
 
 
-    Object value;
+    private Object value;
 
     public PrintCallStatement(Object value) {
         this.value = value;

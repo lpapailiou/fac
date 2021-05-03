@@ -1,13 +1,15 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConditionalStatement extends Statement {
 
-    Operator op;
-    Object operand1;
-    Object operand2;
+    private Operator op;
+    private Object operand1;
+    private Object operand2;
 
     public ConditionalStatement(Object op, Object o1, Object o2) {
         this(o1);

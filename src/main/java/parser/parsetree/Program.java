@@ -1,11 +1,14 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Traversable;
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Program implements Traversable {
 
-    List<Statement> statementList = new ArrayList<>();
+    private List<Statement> statementList = new ArrayList<>();
 
     public Program(List<Statement> o1) {
         this.statementList.addAll(o1);

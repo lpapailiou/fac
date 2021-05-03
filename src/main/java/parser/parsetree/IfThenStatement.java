@@ -1,5 +1,7 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,7 @@ public class IfThenStatement extends Statement {
     public IfThenStatement(Object condition, Object statementList1) {
         this.condition = condition;
         if (statementList1 != null) {
-            this.statementList1.addAll(((NestedStatement) statementList1).statementList);
+            this.statementList1.addAll(((Statement) statementList1).getStatements());
         }
     }
 

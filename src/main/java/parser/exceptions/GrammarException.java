@@ -1,4 +1,4 @@
-package parser.util;
+package parser.exceptions;
 
 public class GrammarException extends RuntimeException {
 

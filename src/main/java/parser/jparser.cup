@@ -143,14 +143,14 @@ EXPR 	        ::=  CALC_MUL:e                                                   
                     | EXPR:e1 MINUS:op VAL:e2                                               {: RESULT = Statement.expr(op, e1, e2); :}
                     ;
 
-CALC_MUL        ::= VAL:e                                                                   {: RESULT = Statement.expr(e); :}
-                  | BL CALC_MUL:e BR                                                        {: RESULT = Statement.expr(e); :}
+CALC_MUL        ::= VAL:e                                                                   {: RESULT = e; :}
+                    | BL CALC_MUL:e BR                                                      {: RESULT = e; :}
                     | CALC_MUL:e1 MUL:op VAL:e2                                             {: RESULT = Statement.expr(op, e1, e2); :}
                     | CALC_MUL:e1 DIV:op VAL:e2                                             {: RESULT = Statement.expr(op, e1, e2); :}
                     ;
 
 // variable assignments
-ASSIGN 	        ::= VAR:e1 EQUAL:op EXPR:e2 STOP                                            {: RESULT = Statement.assgn(op, e1, e2); :}
+ASSIGN 	        ::= VAR:e1 EQUAL:op EXPR:e2 STOP                                            {: RESULT = Statement.assgn(op, e1, e2); :}     // TODO: check operator mismatch
                     | VAR:e1 EQUAL:op FUNCALL:e2 STOP                                       {: RESULT = Statement.assgn(op, e1, e2); :}
                     | VAR:e1 EQUAL:op COND:e2 STOP                                          {: RESULT = Statement.assgn(op, e1, e2); :}
                     | VAR:e1 ASSIGN_OP:op EXPR:e2 STOP                                      {: RESULT = Statement.assgn(op, e1, e2); :}
@@ -164,12 +164,10 @@ ASSIGN_OP       ::= PLUSEQ:op                                                   
                     ;
 
 // variable declaration
-DECL 	        ::= STRTYPE:t VAR:e1 EQUAL STR:e2 STOP                                      {: RESULT = Statement.decl(t, e1, e2); :}
-                    | STRTYPE:t VAR:e1 STOP                                                 {: RESULT = Statement.decl(t, e1, null); :}
-                    | NUMTYPE:t VAR:e1 EQUAL NUM:e2 STOP                                    {: RESULT = Statement.decl(t, e1, e2); :}
-                    | NUMTYPE:t VAR:e1 STOP                                                 {: RESULT = Statement.decl(t, e1, null); :}
-                    | BOOLTYPE:t VAR:e1 EQUAL BOOL:e2 STOP                                  {: RESULT = Statement.decl(t, e1, e2); :}
-                    | BOOLTYPE:t VAR:e1 STOP                                                {: RESULT = Statement.decl(t, e1, null); :}
+DECL 	        ::= TYPE:t VAR:e1 STOP                                                      {: RESULT = Statement.decl(t, e1, null); :}
+                    | TYPE:t VAR:e1 EQUAL EXPR:e2 STOP                                      {: RESULT = Statement.decl(t, e1, e2); :}
+                    | TYPE:t VAR:e1 EQUAL COND:e2 STOP                                      {: RESULT = Statement.decl(t, e1, e2); :}
+                    | TYPE:t VAR:e1 EQUAL FUNCALL:e2 STOP                                   {: RESULT = Statement.decl(t, e1, e2); :}
                     ;
 
 // base components

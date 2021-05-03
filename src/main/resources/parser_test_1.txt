@@ -5,28 +5,13 @@ boolean bolbol = true;
 bolbol = (false && test);
 bolbol = ( 1 < 2);
 
-def string fun(number b, string c, boolean x) {
-return 2;
-}
-def string fun(number b, string c) {
-return 2;
+def boolean fun(number b) {
+return true;
 }
 
-print(fun('1','a'));
-
-
-
-//tata = 'b';
-
-//bolbol = sdfsdf('a','b',1,2,3,4); // TODO: add fun calls
-
-def string func(string a, string b) {
-return 0;
-}
-/*
-def string func(string x, string y) {
-return x;
-}*/
+boolean lala1 = fun(1);
+boolean x= (true && false);
+x = (true && false);
 
 
 

@@ -1,28 +1,39 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Declaration;
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class VariableDeclaration extends Statement implements Declaration {
 
     private Type type;
-    private String identifier;
-    private String value;
+    private Object identifier;
+    private Object value;
 
-    public VariableDeclaration(Object type, String identifier, String value) {
-        this.type = Type.getName(type);
+    public VariableDeclaration(Object type, Object identifier, Object value) {
+        this.type = Type.getByName(type);
         this.identifier = identifier;
-        this.value = value;
+        this.value = (value == null) ? Type.getByName(type).getDefaultValue() : value;
     }
 
     @Override
     public List<Statement> getStatements() {
-        return new ArrayList<>();
+        List<Statement> statements = new ArrayList<>();
+        if (value instanceof Statement) {
+            statements.add((Statement) value);
+        }
+        return statements;
     }
 
     @Override
     public String toString() {
-        return type.getDescription() + " " + identifier + " = " + value + ";\n";
+        String out =  type.getDescription() + " " + identifier + " = " + value;
+        if (value instanceof FunctionCallStatement) {
+            out = out.substring(0, out.length()-2);
+        }
+        return  out + ";\n";
     }
 
     @Override
@@ -32,7 +43,7 @@ public class VariableDeclaration extends Statement implements Declaration {
 
     @Override
     public String getIdentifier() {
-        return identifier;
+        return identifier.toString();
     }
 
     @Override

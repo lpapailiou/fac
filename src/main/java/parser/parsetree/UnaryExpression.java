@@ -1,13 +1,15 @@
 package parser.parsetree;
 
 
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class UnaryExpression extends ExpressionStatement {
 
-    Operator op;
-    Object operand1;
+    private Operator op;
+    private Object operand1;
 
     public UnaryExpression(Object operand1) {
         this.operand1 = operand1;

@@ -53,7 +53,7 @@ import parser.JSymbol;
 %eofval}
 
 %eof{
-    System.out.println("\n\n...end of file reached at line " + yyline + ", column " + yycolumn + ".\n");
+    System.out.println("\n...end of file reached at line " + yyline + ", column " + yycolumn + ".\n");
 %eof}
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ BOOL = true | false
 
 // character classes for numbers and strings
 NUM = -?[0-9]\d*(\.\d+)?                // decimal/int number, positive or negative
-VAR = [a-z_]+                           // variables
+VAR = [a-z_]+([0-9])*                   // variables
 STR = '[a-z0-9_\,\.\(\)\;\:\/\+\-\*\/ \s\t\f\r\n]*'   // strings
 
 WHITESPACE = [ \t\f\r\n]+               // newline or spaces

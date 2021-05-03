@@ -1,14 +1,16 @@
 package parser.parsetree;
 
 
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class BinaryExpression extends ExpressionStatement {
 
-    Operator op;
-    Object operand1;
-    Object operand2;
+    private Operator op;
+    private Object operand1;
+    private Object operand2;
 
     public BinaryExpression(Object operand1) {
         this.operand1 = operand1;

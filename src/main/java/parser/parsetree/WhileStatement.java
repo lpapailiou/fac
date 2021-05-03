@@ -1,12 +1,14 @@
 package parser.parsetree;
 
+import parser.parsetree.interfaces.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class WhileStatement extends Statement {
 
-    Object condition;
-    List<Statement> statementList = new ArrayList<>();
+    private Object condition;
+    private List<Statement> statementList = new ArrayList<>();
 
     public WhileStatement(Object condition, Object statements) {
         this.condition = condition;
