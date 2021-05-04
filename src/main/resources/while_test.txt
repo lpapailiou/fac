@@ -1,0 +1,31 @@
+
+number one = 1;
+number two = 2;
+
+while (one < 5) {
+    one += 1;
+    two = 0;
+    while(true) {
+        two+= 10;
+
+        if (two > 50) {
+            print ('break two');
+            break;
+        }
+    }
+
+    if (one == 3) {
+        print('break one');
+        break;
+    }
+
+}
+
+
+
+
+
+
+
+
+

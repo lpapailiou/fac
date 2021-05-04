@@ -9,6 +9,8 @@ import parser.exceptions.MissingComponentException;
 import parser.exceptions.TypeMismatchException;
 import parser.exceptions.UniquenessViolationException;
 
+import javax.swing.plaf.nimbus.State;
+import javax.swing.plaf.synth.SynthTabbedPaneUI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,10 +39,11 @@ public class Validator implements Visitor {
 
     private List<Declaration> declarationScope = new ArrayList<>();
     private List<FunctionDefStatement> functionScope = new ArrayList<>();
-    protected int whileDepth = 0;
+    private int whileDepth = 0;
 
     @Override
     public void visit(Program acceptor) {
+        checkBreakStatement(acceptor, acceptor.getStatements(), false);
         traverse(acceptor);
         printDeclarations();
     }
@@ -93,6 +96,7 @@ public class Validator implements Visitor {
         if (defType != retType) {
             throw new TypeMismatchException("Return type <" + retType.getDescription() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.paramTypeListAsString() + ")> does not match defined type <" + defType.getDescription() + ">!");
         }
+        checkBreakStatement(acceptor, acceptor.getStatements(), false);
         removeDeclarations(acceptor);
     }
 
@@ -113,7 +117,12 @@ public class Validator implements Visitor {
     public void visit(WhileStatement acceptor) {
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
         removeDeclarations(acceptor);
-        whileDepth--;
+        if (whileDepth > 0) {
+            whileDepth--;
+        } else {
+            throw new GrammarException("impossible break location");        // TODO: remove
+        }
+        System.out.println("while depth: " + whileDepth);
     }
 
 
@@ -121,19 +130,24 @@ public class Validator implements Visitor {
     private void checkBreakStatement(Traversable parent, List<Statement> statements, boolean hold) {
         for (int i = 0; i < statements.size(); i++) {
             if (statements.get(i) instanceof BreakStatement) {
+                System.out.println("while depth: " + whileDepth);
                 if (whileDepth <= 0) {
-                    throw new GrammarException("Break statement is not possible at position <" + parent + ">!");
+                    throw new GrammarException("Not in loop! Break statement is not possible at position <" + parent + ">!");
                 } else if (i < statements.size()-1) {
-                    throw new GrammarException("Break statement is not possible at position <" + parent + "> - unreachable code!");
+                    throw new GrammarException("Unreachable code! Break statement is not possible at position <" + parent + ">.");
                 }
                 if (!hold) {
-                    whileDepth--;
+                    if (whileDepth > 0) {
+                        whileDepth--;
+                    } else {
+                        throw new GrammarException("impossible break location");        // TODO: remove
+                    }
                 }
             }
         }
     }
 
-    private Type getTypeOfExpression(BinaryExpression statement) {
+    private Type getType(BinaryExpression statement) {
         Type type = getTypeOfOperand(statement.getOperand1());
         Type type2 = getTypeOfOperand(statement.getOperand2());
         if (type != type2) {
@@ -142,15 +156,19 @@ public class Validator implements Visitor {
         return type;
     }
 
-    private Type getTypeOfExpression(UnaryExpression statement) {
+    private Type getType(UnaryExpression statement) {
         return getTypeOfOperand(statement.getOperand());
     }
 
-    private Type getTypeOfCondition(ConditionalStatement statement) {
+    private Type getType(ConditionalStatement statement) {
         Type type1 = getTypeOfOperand(statement.getOperand1());
         Type type2 = getTypeOfOperand(statement.getOperand2());
         if (type2 == null) {
-            return type1;
+            if (Type.getTypeForValue(type1) == Type.BOOLEAN) {
+                return type1;
+            } else {
+                throw new TypeMismatchException("Type of <" + statement.getOperand1() + "> is no boolean!");
+            }
         }
 
         if (type1 != type2) {
@@ -166,20 +184,21 @@ public class Validator implements Visitor {
         return Type.BOOLEAN;
     }
 
+    private Type getType(FunctionCallStatement statement) {
+        FunctionDefStatement function = getFunction(statement.getIdentifier(), statement.getParamCount());
+        return function.getType();
+    }
+
     private Type getTypeOfOperand(Object operand) {
-        if (operand == null) {
-            return null;
-        }
         Type type;
         if (operand instanceof FunctionCallStatement) {
-            FunctionDefStatement function = getFunction(((FunctionCallStatement) operand).getIdentifier(), ((FunctionCallStatement) operand).getParamCount());
-            type = function.getType();
+            type = getType((FunctionCallStatement) operand);
         } else if (operand instanceof BinaryExpression) {
-            type = getTypeOfExpression((BinaryExpression) operand);
+            type = getType((BinaryExpression) operand);
         } else if (operand instanceof UnaryExpression) {
-            type = getTypeOfExpression((UnaryExpression) operand);
+            type = getType((UnaryExpression) operand);
         } else if (operand instanceof ConditionalStatement) {
-            type = getTypeOfCondition((ConditionalStatement) operand);
+            type = getType((ConditionalStatement) operand);
         } else {
             type = Type.getTypeForValue(operand);
             if (type == Type.VARIABLE) {
@@ -227,12 +246,12 @@ public class Validator implements Visitor {
     }
 
     private boolean isFunctionExisting(FunctionDefStatement function) {
-        FunctionDefStatement definition =  functionScope.stream().filter(fun -> fun.getIdentifier().equals(function.getIdentifier()) && fun.getType() == function.getType() && fun.paramTypeListAsString().equals(function.paramTypeListAsString())).findAny().orElse(null);
+        FunctionDefStatement definition = functionScope.stream().filter(fun -> fun.getIdentifier().equals(function.getIdentifier()) && fun.getType() == function.getType() && fun.paramTypeListAsString().equals(function.paramTypeListAsString())).findAny().orElse(null);
         return definition != null;
     }
 
     protected FunctionDefStatement getFunction(String identifier, int parameterCount) {
-        FunctionDefStatement definition =  functionScope.stream().filter(fun -> fun.getIdentifier().equals(identifier) && fun.getParamCount() == parameterCount).findAny().orElse(null);
+        FunctionDefStatement definition = functionScope.stream().filter(fun -> fun.getIdentifier().equals(identifier) && fun.getParamCount() == parameterCount).findAny().orElse(null);
         if (definition == null) {
             throw new MissingComponentException("Function <" + identifier + "> with " + parameterCount + " parameter was never defined!");
         }
@@ -240,12 +259,12 @@ public class Validator implements Visitor {
     }
 
     private boolean isFunctionDefineable(FunctionDefStatement function) {
-        FunctionDefStatement definition =  functionScope.stream().filter(fun -> fun.getIdentifier().equals(function.getIdentifier()) && (fun.getType() != function.getType() || fun.getParamCount() == function.getParamCount())).findAny().orElse(null);
+        FunctionDefStatement definition = functionScope.stream().filter(fun -> fun.getIdentifier().equals(function.getIdentifier()) && (fun.getType() != function.getType() || fun.getParamCount() == function.getParamCount())).findAny().orElse(null);
         return definition == null;
     }
 
     private boolean isVariableInScope(String identifier) {
-        Declaration declaration =  declarationScope.stream().filter(dec -> dec.getIdentifier().equals(identifier)).findAny().orElse(null);
+        Declaration declaration = declarationScope.stream().filter(dec -> dec.getIdentifier().equals(identifier)).findAny().orElse(null);
         return declaration != null;
     }
 
@@ -258,7 +277,7 @@ public class Validator implements Visitor {
     }
 
     protected void printDeclarations() {
-        System.out.println("\ndeclaration scope: ");
+        System.out.println("\ndeclaration scope after execution: ");
         for (Declaration st : declarationScope) {
             System.out.print("\t - " + st);
         }
@@ -277,7 +296,6 @@ public class Validator implements Visitor {
                 traverse(st);
             }
             if (!(node instanceof Program)) {
-                //System.out.println("VISITING NODE " + node.getClass().toString().replaceAll("class parser.parsetree.", ""));
                 node.accept(this);
             }
         }

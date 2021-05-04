@@ -19,12 +19,11 @@ public class RunParser {
 
 
         try (FileInputStream stream = new FileInputStream(file); InputStreamReader reader = new InputStreamReader(stream, encodingName)) {
-            JScanner scanner = new JScanner(reader);
-            JParser parser = new JParser(scanner);
+            JParser parser = new JParser(reader);
 
             Symbol reducedResult = null;
 
-            while (!scanner.yyatEOF()) {
+            while (!parser.yyatEOF()) {
                 reducedResult = parser.parse();
             }
 

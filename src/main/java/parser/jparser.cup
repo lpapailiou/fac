@@ -9,6 +9,12 @@ import java.util.ArrayList;
 
 // java -jar java-cup-11b.jar -interface -destdir src/main/java/parser/ -symbols JSymbol -parser JParser src/main/java/parser/jparser.cup
 parser code {:
+    public JParser(java.io.Reader in) {super(new JScanner(in));}
+    public JParser(java.io.Reader in, boolean verbose) {super(new JScanner(in, verbose));}
+
+    public boolean yyatEOF(){
+        return ((JScanner) getScanner()).yyatEOF();
+    }
 :}
 
 /* define how to connect to the scanner! */
@@ -28,7 +34,7 @@ non terminal        TYPE, PARAM, PARAMDEF, RET,
 
 non terminal Program                    PROGRAM;
 non terminal List<Statement>            STMT_LIST;
-non terminal Statement                  STMT, LOOP_STMT, PROG_STMT, NEST_STMT;
+non terminal Statement                  STMT, PROG_STMT, NEST_STMT;
 non terminal AssignmentStatement        ASSIGN;
 non terminal ExpressionStatement        EXPR;
 non terminal ConditionalStatement       COND;
@@ -40,9 +46,10 @@ non terminal WhileStatement             WHILE_STMT;
 non terminal VariableDeclaration        DECL;
 
 
-/* Precedences */
-precedence left PLUS, MINUS;        // TODO: remove?
-precedence left MUL, DIV;           // TODO: remove?
+/* Precedences
+precedence left PLUS, MINUS;        // TODO: is needed?
+precedence left MUL, DIV;           // TODO: is needed?
+*/
 
 /* The grammar rules */
 start with PROGRAM;
@@ -58,12 +65,8 @@ PROG_STMT       ::= STMT:st                                                     
                     | FUNDEF:st                                                             {: RESULT = st; :}
                     ;
 
-NEST_STMT       ::= LOOP_STMT:st                                                            {: RESULT = Statement.nest(st); :}
-                    | LOOP_STMT:st NEST_STMT:stList                                         {: RESULT = Statement.nest(st, stList); :}
-                    ;
-
-LOOP_STMT       ::= STMT:st                                                                 {: RESULT = st; :}
-                    | BREAK:br STOP                                                         {: RESULT = Statement.brk(); :}
+NEST_STMT       ::= STMT:st                                                                 {: RESULT = Statement.nest(st); :}
+                    | STMT:st NEST_STMT:stList                                              {: RESULT = Statement.nest(st, stList); :}
                     ;
 
 STMT            ::= DECL:st                                                                 {: RESULT = st; :}
@@ -72,6 +75,7 @@ STMT            ::= DECL:st                                                     
                     | PRINTCALL:st                                                          {: RESULT = st; :}
                     | IFTHEN_STMT:st                                                        {: RESULT = st; :}
                     | WHILE_STMT:st                                                         {: RESULT = st; :}
+                    | BREAK:br STOP                                                         {: RESULT = Statement.brk(); :}
                     ;
 
 WHILE_STMT      ::= WHILE COND_VAL:c CBL NEST_STMT:s CBR                                    {: RESULT = Statement.loop(c, s); :}
@@ -116,15 +120,11 @@ FUNCALL 	    ::= VAR:n BL PARAM:p BR                                            
 
 PRINTCALL 	    ::= PRINT BL EXPR:v BR STOP                                                 {: RESULT = Statement.print(v); :}
                     | PRINT COND:v STOP                                                     {: RESULT = Statement.print(v); :}
-                    | PRINT BL FUNCALL:v BR STOP                                            {: RESULT = Statement.print(v); :}
                     | PRINT BL BR STOP                                                      {: RESULT = Statement.print(null); :}
                     ;
 
 // boolean conditions. brackets are mandatory, no precedence order needed
-COND 	        ::= BL COND:e1 COND_OP:op COND:e2 BR                                        {: RESULT = Statement.cond(op, e1, e2); :}
-                    | BL COND:e1 COND_OP:op VAL:e2 BR                                       {: RESULT = Statement.cond(op, e1, e2); :}
-                    | BL VAL:e1 COND_OP:op COND:e2 BR                                       {: RESULT = Statement.cond(op, e1, e2); :}
-                    | BL VAL:e1 COND_OP:op VAL:e2 BR                                        {: RESULT = Statement.cond(op, e1, e2); :}
+COND 	        ::= BL VAL:e1 COND_OP:op VAL:e2 BR                                        {: RESULT = Statement.cond(op, e1, e2); :}
                    ;
 
 COND_OP         ::= AND:op                                                                  {: RESULT = op; :}
@@ -139,22 +139,18 @@ COND_OP         ::= AND:op                                                      
 
 // arithmetic expressions. brackets are optional, mul/div has precedence over plus/minus
 EXPR 	        ::=  CALC_MUL:e                                                             {: RESULT = Statement.expr(e); :}
-                    | EXPR:e1 PLUS:op VAL:e2                                                {: RESULT = Statement.expr(op, e1, e2); :}
-                    | EXPR:e1 MINUS:op VAL:e2                                               {: RESULT = Statement.expr(op, e1, e2); :}
+                    | EXPR:e1 PLUS:op CALC_MUL:e2                                           {: RESULT = Statement.expr(op, e1, e2); :}
+                    | EXPR:e1 MINUS:op CALC_MUL:e2                                          {: RESULT = Statement.expr(op, e1, e2); :}
                     ;
 
 CALC_MUL        ::= VAL:e                                                                   {: RESULT = e; :}
-                    | BL CALC_MUL:e BR                                                      {: RESULT = e; :}
                     | CALC_MUL:e1 MUL:op VAL:e2                                             {: RESULT = Statement.expr(op, e1, e2); :}
                     | CALC_MUL:e1 DIV:op VAL:e2                                             {: RESULT = Statement.expr(op, e1, e2); :}
                     ;
 
 // variable assignments
 ASSIGN 	        ::= VAR:e1 EQUAL:op EXPR:e2 STOP                                            {: RESULT = Statement.assgn(op, e1, e2); :}
-                    | VAR:e1 EQUAL:op FUNCALL:e2 STOP                                       {: RESULT = Statement.assgn(op, e1, e2); :}
-                    | VAR:e1 EQUAL:op COND:e2 STOP                                          {: RESULT = Statement.assgn(op, e1, e2); :}
                     | VAR:e1 ASSIGN_OP:op EXPR:e2 STOP                                      {: RESULT = Statement.assgn(op, e1, e2); :}
-                    | VAR:e1 ASSIGN_OP:op FUNCALL:e2 STOP                                   {: RESULT = Statement.assgn(op, e1, e2); :}
                     ;
 
 ASSIGN_OP       ::= PLUSEQ:op                                                               {: RESULT = op; :}
@@ -166,8 +162,6 @@ ASSIGN_OP       ::= PLUSEQ:op                                                   
 // variable declaration
 DECL 	        ::= TYPE:t VAR:e1 STOP                                                      {: RESULT = Statement.decl(t, e1, null); :}
                     | TYPE:t VAR:e1 EQUAL EXPR:e2 STOP                                      {: RESULT = Statement.decl(t, e1, e2); :}
-                    | TYPE:t VAR:e1 EQUAL COND:e2 STOP                                      {: RESULT = Statement.decl(t, e1, e2); :}
-                    | TYPE:t VAR:e1 EQUAL FUNCALL:e2 STOP                                   {: RESULT = Statement.decl(t, e1, e2); :}
                     ;
 
 // base components
@@ -180,5 +174,7 @@ VAL             ::= VAR:str                                                     
                     | STR:str                                                               {: RESULT = str; :}
                     | BOOL:b                                                                {: RESULT = b; :}
                     | NUM:n                                                                 {: RESULT = n; :}
+                    | FUNCALL:f                                                             {: RESULT = f; :}
+                    | COND:c                                                                {: RESULT = c; :}
                     ;
 

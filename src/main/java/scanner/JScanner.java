@@ -368,15 +368,23 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
 
   /* user code: */
     private ComplexSymbolFactory symbolFactory;
+    private boolean verbose = true;
 
-    private Symbol collectToken(int token, String desc) {
+    public JScanner(java.io.Reader in, boolean verbose) {
+        this(in);
+        this.verbose = verbose;
+    }
+
+    private Symbol collectToken(int token, String description) {
       Symbol symbol = symbol(yytext(), token, yytext());
-      consolePrint(desc);
+      if (verbose) {
+        consolePrint(description);
+      }
       return symbol;
     }
 
     private void consolePrint(String value) {
-      System.out.println("token {" + value + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".");
+      System.out.println("scanning token {" + value + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".");
     }
 
     private Symbol symbol(String name, int sym, Object val) {
@@ -385,7 +393,7 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
         return symbolFactory.newSymbol(name, sym, left, right, val);
     }
     private void error(String message) {
-      System.out.println("Error at line "+(yyline+1)+", column "+(yycolumn+1)+" : "+message);
+      System.out.println("Error at line " + (yyline+1) + ", column "+ (yycolumn+1) + " : "+message);
     }
 
 
@@ -397,6 +405,7 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
    */
   public JScanner(java.io.Reader in) {
       symbolFactory = new ComplexSymbolFactory();
+
     this.zzReader = in;
   }
 
@@ -642,7 +651,9 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     if (!zzEOFDone) {
       zzEOFDone = true;
     
-    System.out.println("\n...end of file reached at line " + yyline + ", column " + yycolumn + ".\n");
+    if (verbose) {
+        System.out.println("\n...end of file reached at line " + yyline + ", column " + yycolumn + ".\n");
+    }
   yyclose();    }
   }
 

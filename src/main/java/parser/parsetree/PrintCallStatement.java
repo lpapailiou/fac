@@ -14,13 +14,13 @@ public class PrintCallStatement extends Statement {
         this.value = value;
     }
 
+    public Object getValue() {
+        return value;
+    }
+
     @Override
     public List<Statement> getStatements() {
-        List<Statement> statements = new ArrayList<>();
-        if (value != null) {
-            statements.add((Statement) value);
-        }
-        return statements;
+        return new ArrayList<>();
     }
 
     @Override
@@ -30,9 +30,10 @@ public class PrintCallStatement extends Statement {
             if (value instanceof FunctionCallStatement) {
                 out = out.substring(0, out.length()-2);
             }
-            return out += ");\n";
+            out += ");\n";
+            return out;
         }
-        return "print();";
+        return "print();\n";
     }
 
     @Override

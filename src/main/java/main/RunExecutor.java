@@ -20,16 +20,17 @@ public class RunExecutor {
 
 
         try (FileInputStream stream = new FileInputStream(file); InputStreamReader reader = new InputStreamReader(stream, encodingName)) {
-            JScanner scanner = new JScanner(reader);
-            JParser parser = new JParser(scanner);
+            JParser parser = new JParser(reader, true);
 
             Symbol reducedResult = null;
 
-            while (!scanner.yyatEOF()) {
+            while (!parser.yyatEOF()) {
                 reducedResult = parser.parse();
             }
 
-            System.out.println("***** EXECUTOR RESULT *****\n\n" + reducedResult.value + "\n");
+            System.out.println("***** PARSER RESULT *****\n\n" + reducedResult.value + "\n");
+
+            System.out.println("***** EXECUTION RESULT *****\n");
 
             Executor executor = new Executor();
             executor.visit((Program) reducedResult.value);

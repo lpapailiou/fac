@@ -7,48 +7,60 @@ import java.util.function.BiFunction;
 
 public enum Operator {
 
-    EQUAL("=", (s1, s2) -> s2),
-    AND("&&", (s1, s2) -> ((Boolean) s1 && ((Boolean) s2))),
-    OR("||", (s1, s2) -> ((Boolean) s1 || ((Boolean) s2))),
-    EQ("==", (s1, s2) -> {
-        if (Type.getTypeForValue(s1) == Type.STRING) {
-            return s1.toString().equals(s2.toString());
+    EQUAL("=", (a, b) -> b),
+    AND("&&", (a, b) -> (Boolean.parseBoolean(a.toString()) && Boolean.parseBoolean(b.toString()))),
+    OR("||", (a, b) -> (Boolean.parseBoolean(a.toString()) || Boolean.parseBoolean(b.toString()))),
+    EQ("==", (a, b) -> {
+        Type type = Type.getTypeForValue(a);
+        if (type == Type.BOOLEAN) {
+            return Boolean.parseBoolean(a.toString()) == Boolean.parseBoolean(a.toString());
+        } else if (type == Type.NUMERIC) {
+            return Double.parseDouble(a.toString()) == Double.parseDouble(b.toString());
         } else {
-            return s1 == s2;
+            return a.toString().equals(b.toString());
         }
     }),
-    NEQ("!=", (s1, s2) -> {
-        if (Type.getTypeForValue(s1) == Type.STRING) {
-            return !s1.toString().equals(s2.toString());
+    NEQ("!=", (a, b) -> {
+        Type type = Type.getTypeForValue(a);
+        if (type == Type.BOOLEAN) {
+            return Boolean.parseBoolean(a.toString()) != Boolean.parseBoolean(a.toString());
+        } else if (type == Type.NUMERIC) {
+            return Double.parseDouble(a.toString()) != Double.parseDouble(b.toString());
         } else {
-            return s1 != s2;
+            return !a.toString().equals(b.toString());
         }
     }),
-    GREATER(">", (s1, s2) -> Double.parseDouble(s1.toString()) > Double.parseDouble(s2.toString())),
-    GREQ(">=", (s1, s2) -> Double.parseDouble(s1.toString()) >= Double.parseDouble(s2.toString())),
-    LEQ("<=", (s1, s2) -> Double.parseDouble(s1.toString()) <= Double.parseDouble(s2.toString())),
-    LESS("<", (s1, s2) -> Double.parseDouble(s1.toString()) < Double.parseDouble(s2.toString())),
-    PLUSEQ("+=", (s1, s2) -> {
-        if (Type.getTypeForValue(s1) == Type.STRING) {
-            return "'" + (s1.toString() + (s2.toString())).replaceAll("'", "") + "'";
+    GREATER(">", (a, b) -> Double.parseDouble(a.toString()) > Double.parseDouble(b.toString())),
+    GREQ(">=", (a, b) -> Double.parseDouble(a.toString()) >= Double.parseDouble(b.toString())),
+    LEQ("<=", (a, b) -> Double.parseDouble(a.toString()) <= Double.parseDouble(b.toString())),
+    LESS("<", (a, b) -> Double.parseDouble(a.toString()) < Double.parseDouble(b.toString())),
+    PLUSEQ("+=", (a, b) -> {
+        if (Type.getTypeForValue(a) == Type.STRING) {
+            return "'" + (a.toString() + (b.toString())).replaceAll("'", "") + "'";
         } else {
-            return Double.parseDouble(s1.toString()) + Double.parseDouble(s2.toString());
+            return Double.parseDouble(a.toString()) + Double.parseDouble(b.toString());
         }
     }),
-    MINEQ("-=", (s1, s2) -> Double.parseDouble(s1.toString()) - Double.parseDouble(s2.toString())),
-    MULEQ("*=", (s1, s2) -> Double.parseDouble(s1.toString()) * Double.parseDouble(s2.toString())),
-    DIVEQ("/=", (s1, s2) -> Double.parseDouble(s1.toString()) / Double.parseDouble(s2.toString())),
-    PLUS("+", (s1, s2) -> {
-        if (Type.getTypeForValue(s1) == Type.STRING) {
-            return "'" + (s1.toString() + (s2.toString())).replaceAll("'", "") + "'";
+    MINEQ("-=", (a, b) -> Double.parseDouble(a.toString()) - Double.parseDouble(b.toString())),
+    MULEQ("*=", (a, b) -> Double.parseDouble(a.toString()) * Double.parseDouble(b.toString())),
+    DIVEQ("/=", (a, b) -> Double.parseDouble(a.toString()) / Double.parseDouble(b.toString())),
+    PLUS("+", (a, b) -> {
+        if (Type.getTypeForValue(a) == Type.STRING) {
+            return "'" + (a.toString() + (b.toString())).replaceAll("'", "") + "'";
         } else {
-            return Double.parseDouble(s1.toString()) + Double.parseDouble(s2.toString());
+            return Double.parseDouble(a.toString()) + Double.parseDouble(b.toString());
         }
     }),
-    MINUS("-", (s1, s2) -> Double.parseDouble(s1.toString()) - Double.parseDouble(s2.toString())),
-    MUL("*", (s1, s2) -> Double.parseDouble(s1.toString()) * Double.parseDouble(s2.toString())),
-    DIV("/", (s1, s2) -> Double.parseDouble(s1.toString()) / Double.parseDouble(s2.toString())),
-    NONE("", null)
+    MINUS("-", (a, b) -> Double.parseDouble(a.toString()) - Double.parseDouble(b.toString())),
+    MUL("*", (a, b) -> Double.parseDouble(a.toString()) * Double.parseDouble(b.toString())),
+    DIV("/", (a, b) -> Double.parseDouble(a.toString()) / Double.parseDouble(b.toString())),
+    NONE("", (a, b) -> {
+        Type type = Type.getTypeForValue(a);
+        if (type == Type.BOOLEAN) {
+            return Boolean.parseBoolean(a.toString());
+        }
+        return a;
+    })
     ;
 
 
@@ -65,10 +77,6 @@ public enum Operator {
     }
 
     public Object apply(Object a, Object b) {
-        if (Type.getTypeForValue(a) == Type.BOOLEAN) {
-            a = Boolean.parseBoolean(a.toString());
-            b = Boolean.parseBoolean(b.toString());
-        }
         return function.apply(a, b);
     }
 

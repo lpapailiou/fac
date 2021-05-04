@@ -8,7 +8,7 @@ import java.util.List;
 public class NestedStatement extends Statement {
 
     private Statement statement;
-    private Statement next;
+    private NestedStatement next;
 
     public NestedStatement(Object st) {
         statement = (Statement) st;
@@ -16,7 +16,7 @@ public class NestedStatement extends Statement {
 
     public NestedStatement(Object st, Object obj) {
         this(st);
-        next = (Statement) obj;
+        next = (NestedStatement) obj;
     }
 
     @Override
@@ -24,24 +24,20 @@ public class NestedStatement extends Statement {
         List<Statement> statements = new ArrayList<>();
         statements.add(statement);
         while (next != null) {
-            statements.add(next);
-            if (!(next instanceof BreakStatement)) {
-                next = ((NestedStatement) next).next;
-            } else {
-                next = null;
-            }
+            statements.add(next.statement);
+            next = next.next;
         }
         return statements;
     }
 
     @Override
     public String toString() {
-        String out = "";
+        String out = "NESTED START: ";
         List<Statement> statementList = getStatements();
         for (Statement st : statementList) {
             out += st;
         }
-        return out;
+        return out + "NESTED END";
     }
 
     @Override

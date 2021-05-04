@@ -48,7 +48,16 @@ public class BinaryExpression extends ExpressionStatement {
 
     @Override
     public String toString() {
-        return operand1.toString() + " " + op.getOperator() + " " + operand2.toString();
+        String out = "(" + operand1.toString();
+        if (operand1 instanceof FunctionCallStatement) {
+            out = out.substring(0, out.length()-2);
+        }
+        out += " " + op.getOperator() + " " + operand2.toString();
+        if (operand2 instanceof FunctionCallStatement) {
+            out = out.substring(0, out.length()-2);
+        }
+        out += ")";
+        return out;
     }
 
     @Override

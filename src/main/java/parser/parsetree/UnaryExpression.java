@@ -8,41 +8,33 @@ import java.util.List;
 
 public class UnaryExpression extends ExpressionStatement {
 
-    private Operator op;
-    private Object operand1;
+    private Object operand;
 
-    public UnaryExpression(Object operand1) {
-        this.operand1 = operand1;
-        if (op == null) {
-            op = Operator.NONE;
-        }
-    }
-
-    public UnaryExpression(Object op, Object operand1, Object operand2) {
-        this(operand1);
-        this.op = Operator.getName(op);
+    public UnaryExpression(Object operand) {
+        this.operand = operand;
     }
 
     public Object getOperand() {
-        return operand1;
-    }
-
-    public Operator getOperator() {
-        return op;
+        return operand;
     }
 
     @Override
     public List<Statement> getStatements() {
         List<Statement> statements = new ArrayList<>();
-        if (operand1 instanceof Statement) {
-            statements.add((Statement) operand1);
+        if (operand instanceof Statement) {
+            statements.add((Statement) operand);
         }
         return statements;
     }
 
     @Override
     public String toString() {
-        return operand1.toString();
+        String out = "(" + operand.toString();
+        if (operand instanceof FunctionCallStatement) {
+            out = out.substring(0, out.length()-2);
+        }
+        out += ")";
+        return out;
     }
 
     @Override

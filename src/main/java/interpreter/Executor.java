@@ -10,7 +10,8 @@ import java.util.List;
 
 public class Executor extends Validator {
 
-    private boolean doBreak = false;
+    private int breakEvent = 0;
+    private int breakOccurred = 0;
 
     @Override
     public void visit(Program acceptor) {
@@ -51,13 +52,12 @@ public class Executor extends Validator {
 
     @Override
     public void visit(PrintCallStatement acceptor) {
-        List<Statement> statements = acceptor.getStatements();
-        if (statements.size() > 0) {
-            System.out.println("PRINTING " + getValueOfOperand(acceptor.getStatements().get(0)));
+        Statement statement = (Statement) acceptor.getValue();
+        if (statement != null) {
+            System.out.println("PRINTING " + getValueOfOperand(statement).toString().replaceAll("'", ""));
         } else {
             System.out.println("PRINTING NOTHING");
         }
-
     }
 
     @Override
@@ -77,23 +77,42 @@ public class Executor extends Validator {
 
     @Override
     public void visit(WhileStatement acceptor) {
-        removeDeclarations(acceptor);
+
     }
 
-    private Object getValueOfExpression(BinaryExpression statement) {
+    private Object getValue(BinaryExpression statement) {
         Object value1 = getValueOfOperand(statement.getOperand1());
         Object value2 = getValueOfOperand(statement.getOperand2());
+        System.out.println("binary result: " + statement.toString() + " = " + statement.getOperator().apply(value1, value2));
         return statement.getOperator().apply(value1, value2);
     }
 
-    private Object getValueOfExpression(UnaryExpression statement) {
+    private Object getValue(UnaryExpression statement) {
+        System.out.println("unary result: " + statement.toString() + " = " + getValueOfOperand(statement.getOperand()));
         return getValueOfOperand(statement.getOperand());
     }
 
-    private Object getValueOfCondition(ConditionalStatement statement) {
+    private Object getValue(ConditionalStatement statement) {
         Object value1 = getValueOfOperand(statement.getOperand1());
         Object value2 = getValueOfOperand(statement.getOperand2());
+        //System.out.println(value1 + " " + statement.getOperator().getOperator() + " " + value2 +  " = " + statement.getOperator().apply(value1, value2));
+/*
+        if (Type.getTypeForValue(s1) == Type.STRING) {
+            return s1.toString().equals(s2.toString());
+        } else {
+            return s1 == s2;
+        }*/
         return statement.getOperator().apply(value1, value2);
+    }
+
+    private Object getValue(FunctionCallStatement statement) {
+        Object value;
+        FunctionDefStatement function = getFunction(statement.getIdentifier(), statement.getParamCount());
+        value = function.getReturnValue();
+        if (Type.getTypeForValue(value) == Type.VARIABLE) {
+            value = getValueOfOperand(getDeclaration(value.toString()).getValue());
+        }
+        return value;
     }
 
     private Object getValueOfOperand(Object operand) {
@@ -102,19 +121,14 @@ public class Executor extends Validator {
         }
         Object value;
         if (operand instanceof FunctionCallStatement) {
-            FunctionDefStatement function = getFunction(((FunctionCallStatement) operand).getIdentifier(), ((FunctionCallStatement) operand).getParamCount());
-            value = function.getReturnValue();
-            if (Type.getTypeForValue(value) == Type.VARIABLE) {
-                value = getValueOfOperand(getDeclaration(value.toString()).getValue());
-            }
+            value = getValue((FunctionCallStatement) operand);
         } else if (operand instanceof BinaryExpression) {
-            value = getValueOfExpression((BinaryExpression) operand);
+            value = getValue((BinaryExpression) operand);
         } else if (operand instanceof UnaryExpression) {
-            value = getValueOfExpression((UnaryExpression) operand);
+            value = getValue((UnaryExpression) operand);
         } else if (operand instanceof ConditionalStatement) {
-            value = getValueOfCondition((ConditionalStatement) operand);
+            value = getValue((ConditionalStatement) operand);
         } else {
-            //System.out.println("op: " + operand);        // TODO
             if (Type.getTypeForValue(operand) == Type.VARIABLE) {
                 value = getDeclaration(operand.toString()).getValue();
             } else {
@@ -126,50 +140,58 @@ public class Executor extends Validator {
 
     private void traverse(Traversable node) {
         if (node != null) {
-            if (node instanceof WhileStatement) {
-                whileDepth++;
-            } else if (node instanceof FunctionDefStatement) {
+            if (node instanceof FunctionDefStatement) {
                 addFunDeclarationToScope((FunctionDefStatement) node);
             }
-            List<Statement> statements = node.getStatements();
-            boolean condition;
 
-            if (node instanceof IfThenElseStatement) {
-                condition = (Boolean) getValueOfOperand(((IfThenElseStatement) node).getCondition());
-                if (condition) {
-                    statements = ((IfThenElseStatement) node).getIfStatements();
-                } else {
-                    statements = ((IfThenElseStatement) node).getElseStatements();
-                }
-            } else if (node instanceof IfThenStatement) {
-                condition = (Boolean) getValueOfOperand(((IfThenStatement) node).getCondition());
-                System.out.println(statements.size() + " " + condition);
-                if (!condition) {
-                    statements = new ArrayList<>();
-                }
+            List<Statement> statements = getStatements(node);
+            processStatements(node, statements);
+
+            if (!(node instanceof Program)) {
+                //System.out.println("VISITING NODE " + node.getClass().toString().replaceAll("class parser.parsetree.", ""));
+                node.accept(this);
             }
+        }
+    }
 
-            if (node instanceof WhileStatement) {
-                while((Boolean) getValueOfOperand(((WhileStatement) node).getCondition()) && !doBreak) {
-                    for (Statement st : statements) {
-                        traverse(st);
-                        if (st instanceof BreakStatement) {
-                            doBreak = true;
-                        }
-                    }
-                }
+    private List<Statement> getStatements(Traversable node) {
+        List<Statement> statements = node.getStatements();
+        boolean condition;
+        if (node instanceof IfThenElseStatement) {
+            condition = (Boolean) getValueOfOperand(((IfThenElseStatement) node).getCondition());
+            if (condition) {
+                statements = ((IfThenElseStatement) node).getIfStatements();
             } else {
+                statements = ((IfThenElseStatement) node).getElseStatements();
+            }
+        } else if (node instanceof IfThenStatement) {
+            condition = (Boolean) getValueOfOperand(((IfThenStatement) node).getCondition());
+            if (!condition) {
+                statements = new ArrayList<>();
+            }
+        }
+        return statements;
+    }
+
+    private void processStatements(Traversable node, List<Statement> statements) {
+        if (node instanceof BreakStatement) {
+            breakEvent++;
+        }
+
+        if (node instanceof WhileStatement) {
+            while ((Boolean) getValueOfOperand(((WhileStatement) node).getCondition())) {
+                if (breakEvent > breakOccurred) {
+                    breakOccurred++;
+                    break;
+                }
                 for (Statement st : statements) {
                     traverse(st);
-                    if (st instanceof BreakStatement) {
-                        doBreak = true;
-                    }
                 }
+                removeDeclarations(node);
             }
-            doBreak = false;
-            if (!(node instanceof Program)) {
-                System.out.println("VISITING NODE " + node.getClass().toString().replaceAll("class parser.parsetree.", ""));
-                node.accept(this);
+        } else {
+            for (Statement st : statements) {
+                traverse(st);
             }
         }
     }

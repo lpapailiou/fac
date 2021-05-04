@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ConditionalStatement extends Statement {
 
-    private Operator op;
+    private Operator op = Operator.NONE;
     private Object operand1;
     private Object operand2;
 
@@ -47,7 +47,7 @@ public class ConditionalStatement extends Statement {
 
     @Override
     public String toString() {
-        if (op != null) {
+        if (op != Operator.NONE) {
             return "(" + operand1.toString() + " " + op.getOperator() + " " + operand2.toString() + ")";
         }
         return "(" + operand1.toString() + ")";
