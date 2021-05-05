@@ -15,7 +15,7 @@ public class RunParser {
 
     public static void main(String[] args) {
         String encodingName = "UTF-8";
-        String file = Paths.get("src/main/resources/parser_test_1.txt").toAbsolutePath().toString();
+        String file = Paths.get("src/main/resources/expressions.txt").toAbsolutePath().toString();
 
 
         try (FileInputStream stream = new FileInputStream(file); InputStreamReader reader = new InputStreamReader(stream, encodingName)) {
@@ -30,7 +30,7 @@ public class RunParser {
             System.out.println("***** PARSER RESULT *****\n\n" + reducedResult.value + "\n");
 
             Validator validator = new Validator();
-            validator.visit((Program) reducedResult.value);
+            //validator.visit((Program) reducedResult.value);
 
         } catch (IOException e) {
             e.printStackTrace();

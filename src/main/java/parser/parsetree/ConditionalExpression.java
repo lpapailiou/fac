@@ -5,19 +5,19 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConditionalStatement extends Statement {
+public class ConditionalExpression extends Statement {
 
     private Operator op = Operator.NONE;
     private Object operand1;
     private Object operand2;
 
-    public ConditionalStatement(Object op, Object o1, Object o2) {
+    public ConditionalExpression(Object op, Object o1, Object o2) {
         this(o1);
         this.operand2 = o2;
         this.op = Operator.getName(op.toString());
     }
 
-    public ConditionalStatement(Object o1) {
+    public ConditionalExpression(Object o1) {
         this.operand1 = o1;
     }
 

@@ -38,12 +38,16 @@ public abstract class Statement implements Traversable {
         return new BinaryExpression(op, e1, e2);
     }
 
-    public static ConditionalStatement cond(Object op, Object e1, Object e2) {
-        return new ConditionalStatement(op, e1, e2);
+    public static ConditionalExpression cond(Object op, Object e1, Object e2) {
+        return new ConditionalExpression(op, e1, e2);
     }
 
     public static PrintCallStatement print(Object obj) {
         return new PrintCallStatement(obj);
+    }
+
+    public static PrintCallStatement print() {
+        return new PrintCallStatement(null);
     }
 
     public static FunctionCallStatement fun(Object n) {
@@ -87,22 +91,22 @@ public abstract class Statement implements Traversable {
     }
 
     public static IfThenStatement ifThen(Object c, Object obj) {
-        if (!(c instanceof ConditionalStatement)) {
-            c = new ConditionalStatement(c);
+        if (!(c instanceof ConditionalExpression)) {
+            c = new ConditionalExpression(c);
         }
         return new IfThenStatement(c, obj);
     }
 
     public static IfThenStatement ifThen(Object c, Object obj1, Object obj2) {
-        if (!(c instanceof ConditionalStatement)) {
-            c = new ConditionalStatement(c);
+        if (!(c instanceof ConditionalExpression)) {
+            c = new ConditionalExpression(c);
         }
         return new IfThenElseStatement(c, obj1, obj2);
     }
 
     public static WhileStatement loop(Object c, Object obj) {
-        if (!(c instanceof ConditionalStatement)) {
-            c = new ConditionalStatement(c);
+        if (!(c instanceof ConditionalExpression)) {
+            c = new ConditionalExpression(c);
         }
         return new WhileStatement(c, obj);
     }

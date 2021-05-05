@@ -92,7 +92,7 @@ public class Executor extends Validator {
         return getValueOfOperand(statement.getOperand());
     }
 
-    private Object getValue(ConditionalStatement statement) {
+    private Object getValue(ConditionalExpression statement) {
         Object value1 = getValueOfOperand(statement.getOperand1());
         Object value2 = getValueOfOperand(statement.getOperand2());
         //System.out.println(value1 + " " + statement.getOperator().getOperator() + " " + value2 +  " = " + statement.getOperator().apply(value1, value2));
@@ -126,8 +126,8 @@ public class Executor extends Validator {
             value = getValue((BinaryExpression) operand);
         } else if (operand instanceof UnaryExpression) {
             value = getValue((UnaryExpression) operand);
-        } else if (operand instanceof ConditionalStatement) {
-            value = getValue((ConditionalStatement) operand);
+        } else if (operand instanceof ConditionalExpression) {
+            value = getValue((ConditionalExpression) operand);
         } else {
             if (Type.getTypeForValue(operand) == Type.VARIABLE) {
                 value = getDeclaration(operand.toString()).getValue();

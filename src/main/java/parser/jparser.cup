@@ -33,7 +33,7 @@ non terminal List<Statement>            STMT_LIST;
 non terminal Statement                  STMT, PROG_STMT, NEST_STMT;
 non terminal AssignmentStatement        ASSIGN;
 non terminal ExpressionStatement        EXPR;
-non terminal ConditionalStatement       COND;
+non terminal ConditionalExpression      COND;
 non terminal FunctionCallStatement      FUNCALL;
 non terminal FunctionDefStatement       FUNDEF;
 non terminal PrintCallStatement         PRINTCALL;
@@ -102,8 +102,8 @@ PARAMDEF 	    ::= TYPE:t VAR:v                                                  
                     | TYPE:t VAR:v COMMA PARAMDEF:p                                         {: RESULT = Statement.paramDecl(t, v, p); :}
                     ;
 
-PARAM 	        ::= VAL:t                                                                   {: RESULT = Statement.param(t); :}
-                    | VAL:t COMMA PARAM:p                                                   {: RESULT = Statement.param(t, p); :}
+PARAM 	        ::= EXPR:t                                                                  {: RESULT = Statement.param(t); :}
+                    | EXPR:t COMMA PARAM:p                                                  {: RESULT = Statement.param(t, p); :}
                     ;
 
 RET 	        ::= RETURN EXPR:r STOP                                                      {: RESULT = r; :}
@@ -116,11 +116,11 @@ FUNCALL 	    ::= VAR:n BL PARAM:p BR                                            
 
 PRINTCALL 	    ::= PRINT BL EXPR:v BR STOP                                                 {: RESULT = Statement.print(v); :}
                     | PRINT COND:v STOP                                                     {: RESULT = Statement.print(v); :}
-                    | PRINT BL BR STOP                                                      {: RESULT = Statement.print(null); :}
+                    | PRINT BL BR STOP                                                      {: RESULT = Statement.print(); :}
                     ;
 
 // boolean conditions. brackets are mandatory, no precedence order needed
-COND 	        ::= BL VAL:e1 COND_OP:op VAL:e2 BR                                        {: RESULT = Statement.cond(op, e1, e2); :}
+COND 	        ::= BL EXPR:e1 COND_OP:op EXPR:e2 BR                                        {: RESULT = Statement.cond(op, e1, e2); :}
                    ;
 
 COND_OP         ::= AND:op                                                                  {: RESULT = op; :}
@@ -145,11 +145,11 @@ CALC_MUL        ::= VAL:e                                                       
                     ;
 
 // variable assignments
-ASSIGN 	        ::= VAR:e1 EQUAL:op EXPR:e2 STOP                                            {: RESULT = Statement.assgn(op, e1, e2); :}
-                    | VAR:e1 ASSIGN_OP:op EXPR:e2 STOP                                      {: RESULT = Statement.assgn(op, e1, e2); :}
+ASSIGN 	        ::= VAR:e1 ASSIGN_OP:op EXPR:e2 STOP                                        {: RESULT = Statement.assgn(op, e1, e2); :}
                     ;
 
-ASSIGN_OP       ::= PLUSEQ:op                                                               {: RESULT = op; :}
+ASSIGN_OP       ::= EQUAL:op                                                                {: RESULT = op; :}
+                    | PLUSEQ:op                                                             {: RESULT = op; :}
                     | MINEQ:op                                                              {: RESULT = op; :}
                     | DIVEQ:op                                                              {: RESULT = op; :}
                     | MULEQ:op                                                              {: RESULT = op; :}

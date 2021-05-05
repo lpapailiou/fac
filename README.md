@@ -57,7 +57,8 @@ The token identification is implemented with regular expressions.
     \<=                               { return collectToken(LEQ, "LEQ"); }
 
 #### Comments
-Java-like comments are allowed. They will be ignored in further processing of the code.  
+Java-like comments are allowed. They will be ignored in further processing of the code - except the comment takes the 
+end of the fail, then an error will be thrown.  
 Pattern: ``"/*" [^*] ~"*/" | "/*" "*"+ "/" | "//" [^\r\n]* \r|\n|\r\n? | "/**" ( [^*] | \*+ [^/*] )* "*"+ "/"``  
 #### Whitespace
 Whitespace may consist of spaces and newlines. It will be ignored in further processing steps, but
@@ -108,6 +109,95 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
                         | DIVEQ:op                                  {: RESULT = op; :}
                         | MULEQ:op                                  {: RESULT = op; :}
                         ;
+
+#### Variable declarations
+<ul>
+<li>Variable declarations must start with a data type (string, number or boolean).</li>
+<li>The data type is followed by an identifier an an equal character.</li>
+<li>Then, a value is assigned. The value can be:
+<ul>
+<li>a string, number or boolean value according to lexical definition.</li>
+<li>another variable identifier.</li>
+<li>an arithmetic or conditional expresseion.</li>
+<li>a function call.</li>
+<li>omitted. in this case, the equal character is omitted as well and the variable will get its default value ('', 0.0 or false).</li>
+</ul></li>
+<li>The variable declaration must end with a semicolon.</li>
+<li>As the parser is context free, the data types of variable and assigned value cannot be evaluated further at this step.</li>
+</ul>
+
+    // examples
+    string x1 = 1;                      // valid (no type safety yet)
+    number y;                           // valid (variable will get default value)
+    numbery7 = (true && false);         // valid (conditional expressions can be assigned)
+    boolean 1z7 = (true && false);      // scanner fails, as variable identifier starts with a digit
+    string x8 = fun1();                 // valid (function calls can be assigned)
+    number y8 = print();                // parser fails, as print is a reserved word
+
+#### Variable assignments
+<ul>
+<li>Variable assignments share the rules of variable declarations, except:
+<ul>
+<li>the preceding data type must be omitted.</li>
+<li>a value must be assigned.</li>
+<li>arithmetic assignment operators are additionally allowed.</li>
+</ul></li>
+</ul>
+
+    // examples
+    x1 = 1;                         // valid (no type safety yet)
+    y;                              // parser fails, as a value must be assigned
+    y7 = (true && false);           // valid (conditional expressions can be assigned)
+    x8 = fun1()                     // parser fails, as semicolon is missing
+
+#### Arithmetic expressions
+<ul>
+<li>Arithmetic expressions are meant to perform numeric calculations and string concatenation. Therefore, they use specific operators (+, -, *, /).</li>
+<li>Arithmetic expressions cannot exist as isolated statement. They need to be part of a declaration or be assigned.</li>
+<li>By default, its components can be either 'raw' values, conditional expressions or function calls.</li>
+<li>Multiplication and division have precedence over addition and subtraction.</li>
+<li>Arithmetic expressions can be chained. They are - after precedence - evaluated from left to right.</li>
+<li>Arithmetic expressions must not have brackets.</li>
+<li>As arithmetic expressions group all possible values and expressions, they can be potentially assigned anywhere.</li>
+<li>Also here, data types are not evaluated any further.</li>
+</ul>
+
+    // examples
+    1 + 2                               // parser fails as expression cannot be isolated
+    x = 1 + 2 - 3;                      // valid, interpreted as ((1 + 2) - 3)
+    x = 2 * 4 + 2 / 3;                  // valid, interpreted as ((2 * 4) + (2 / 3))
+    x = fun();                          // valid (function calls can be assigned)
+    x = 'x' + 'abc';                    // valid (will result in string concatenation)
+    x = 123 + true;                     // valid (no type safety in parser)
+    x = (1 + 2);                        // parser fails, as brackets are not allowed
+
+
+#### Conditional expressions
+<ul>
+<li>Conditional expressions are quite similar to arithmetic expressions, except they must be enclosed in (round) brackets.</li>
+<li>Conditional expressions use comparing (<, <=, ==, ...) or evaluation (&&, ||) operators.</li>
+</ul>
+
+    // examples
+    x = (true || false);                // valid
+    x = (1 < 2);                        // valid
+    x = true && true;                   // parser fails, as brackets are missing
+    x = (true && true && false);        // parser fails, as round brackets must always enclose two components
+
+#### Function calls
+
+#### Print calls
+
+#### Function definitions
+
+#### Conditional statements
+
+#### While loops
+
+#### Nested statements
+
+#### Program
+
 
 <b>Conditional Statements</b>: Conditional statements must have two operands and must be nested in brackets. It is 
 possible to nest a conditional statement in another conditional statement.

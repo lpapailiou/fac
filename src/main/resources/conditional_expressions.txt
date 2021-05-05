@@ -1,0 +1,9 @@
+
+//1 + 2                               // parser fails as expression cannot be isolated
+x = 1 + 2 - 3;                      // valid, interpreted as ((1 + 2) - 3)
+x = 2 * 4 + 2 / 3;                  // valid, interpreted as ((2 * 4) + (2 / 3))
+x = true;                           // valid
+x = fun();                          // valid
+x = 'x' + 'abc';                    // valid (will result in string concatenation)
+x = 123 + true;                     // valid
+//x = (1 + 2);                        // parser fails, as brackets are not allowed

@@ -9,8 +9,6 @@ import parser.exceptions.MissingComponentException;
 import parser.exceptions.TypeMismatchException;
 import parser.exceptions.UniquenessViolationException;
 
-import javax.swing.plaf.nimbus.State;
-import javax.swing.plaf.synth.SynthTabbedPaneUI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -160,7 +158,7 @@ public class Validator implements Visitor {
         return getTypeOfOperand(statement.getOperand());
     }
 
-    private Type getType(ConditionalStatement statement) {
+    private Type getType(ConditionalExpression statement) {
         Type type1 = getTypeOfOperand(statement.getOperand1());
         Type type2 = getTypeOfOperand(statement.getOperand2());
         if (type2 == null) {
@@ -197,8 +195,8 @@ public class Validator implements Visitor {
             type = getType((BinaryExpression) operand);
         } else if (operand instanceof UnaryExpression) {
             type = getType((UnaryExpression) operand);
-        } else if (operand instanceof ConditionalStatement) {
-            type = getType((ConditionalStatement) operand);
+        } else if (operand instanceof ConditionalExpression) {
+            type = getType((ConditionalExpression) operand);
         } else {
             type = Type.getTypeForValue(operand);
             if (type == Type.VARIABLE) {
@@ -285,6 +283,7 @@ public class Validator implements Visitor {
 
     private void traverse(Traversable node) {
         if (node != null) {
+            System.out.println(node.getClass());
             if (node instanceof WhileStatement) {
                 whileDepth++;
             } else if (node instanceof FunctionDefStatement) {
