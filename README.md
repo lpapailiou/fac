@@ -8,7 +8,7 @@ The goal is to specify a new programming language, which is deterministic and ex
 	1.1 [Scope](#scope)  
 	1.2 [Lexical rules](#lexical-rules)  
 	1.3 [Syntactical rules](#syntactical-rules)  
-	1.4 [Semantic rules](#semantic-rules)  	
+	1.4 [Semantic rules](#semantic-rules)  	  
 	1.5 [Execution](#execution)    
 2. [Repository handling](#repository-handling)  
 	2.1 [Clone](#clone)   
