@@ -3,6 +3,10 @@ def number fun() {
     return 10;
 }
 
+string str = 'a';
+
+print(str + fun());
+
 /*
 print('a');
 print('a' + 'b');
@@ -14,12 +18,12 @@ print(a + a);
 print(fun());
 
 //print(fun() + fun() + fun());
-*/
+
 number x = 3 + 2 * 3 - 3 * 1;
 
 x = 1 + 2 * 3 * 4 + 2 + 2 * 6 + 8;
 print();
-
+*/
 /*
 print(x);
 print(x + 2 + 3);

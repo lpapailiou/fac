@@ -22,6 +22,10 @@ public abstract class Statement implements Traversable {
         return new VariableDeclaration(t, e1, e2);
     }
 
+    public static VariableDeclaration decl(Object t, Object e1) {
+        return new VariableDeclaration(t, e1, null);
+    }
+
     public static AssignmentStatement assgn(Object op, Object e1, Object e2) {
         return new AssignmentStatement(op, e1, (Statement) e2);
     }

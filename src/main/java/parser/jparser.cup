@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
-// java -jar java-cup-11b.jar -interface -destdir src/main/java/parser/ -symbols JSymbol -parser JParser src/main/java/parser/jparser.cup
 parser code {:
     public JParser(java.io.Reader in) {super(new JScanner(in));}
     public JParser(java.io.Reader in, boolean verbose) {super(new JScanner(in, verbose));}
@@ -110,7 +109,7 @@ PARAM 	        ::= VAL:t                                                        
                     | VAL:t COMMA PARAM:p                                                   {: RESULT = Statement.param(t, p); :}
                     ;
 
-RET 	        ::= RETURN VAL:r STOP                                                       {: RESULT = r; :}
+RET 	        ::= RETURN EXPR:r STOP                                                      {: RESULT = r; :}
                     ;
 
 // function calls
@@ -160,7 +159,7 @@ ASSIGN_OP       ::= PLUSEQ:op                                                   
                     ;
 
 // variable declaration
-DECL 	        ::= TYPE:t VAR:e1 STOP                                                      {: RESULT = Statement.decl(t, e1, null); :}
+DECL 	        ::= TYPE:t VAR:e1 STOP                                                      {: RESULT = Statement.decl(t, e1); :}
                     | TYPE:t VAR:e1 EQUAL EXPR:e2 STOP                                      {: RESULT = Statement.decl(t, e1, e2); :}
                     ;
 

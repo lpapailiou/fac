@@ -106,10 +106,7 @@ else                              { return collectToken(ELSE, "ELSE"); }
 def                               { return collectToken(DEF, "DEF"); }
 print                             { return collectToken(PRINT, "PRINT"); }
 
-// stop
-;                                 { return collectToken(STOP, "STOP"); }
-
-// special characters / terminals
+// operators
 ==                                { return collectToken(EQ, "EQ"); }
 \!=                               { return collectToken(NEQ, "NEQ"); }
 >=                                { return collectToken(GREQ, "GREQ"); }
@@ -120,11 +117,6 @@ print                             { return collectToken(PRINT, "PRINT"); }
 -=                                { return collectToken(MINEQ, "MINEQ"); }
 \*=                               { return collectToken(MULEQ, "MULEQ"); }
 \/=                               { return collectToken(DIVEQ, "DIVEQ"); }
-\(                                { return collectToken(BL, "BL"); }
-\)                                { return collectToken(BR, "BR"); }
-\{                                { return collectToken(CBL, "CBL"); }
-\}                                { return collectToken(CBR, "CBR"); }
-,                                 { return collectToken(COMMA, "COMMA"); }
 =                                 { return collectToken(EQUAL, "EQUAL"); }
 \<                                { return collectToken(LESS, "LESS"); }
 >                                 { return collectToken(GREATER, "GREATER"); }
@@ -132,6 +124,14 @@ print                             { return collectToken(PRINT, "PRINT"); }
 -                                 { return collectToken(MINUS, "MINUS"); }
 \*                                { return collectToken(MUL, "MUL"); }
 \/                                { return collectToken(DIV, "DIV"); }
+
+// special characters
+\(                                { return collectToken(BL, "BL"); }
+\)                                { return collectToken(BR, "BR"); }
+\{                                { return collectToken(CBL, "CBL"); }
+\}                                { return collectToken(CBR, "CBR"); }
+,                                 { return collectToken(COMMA, "COMMA"); }
+;                                 { return collectToken(STOP, "STOP"); }
 
 // character classes for numbers and strings
 {NUM}                             { return collectToken(NUM, "NUM"); }
