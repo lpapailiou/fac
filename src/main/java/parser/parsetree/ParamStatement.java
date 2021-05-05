@@ -7,11 +7,11 @@ import java.util.List;
 
 public class ParamStatement extends Statement {
 
-    private String paramIdentifier;
+    private Statement param;
     private ParamStatement next;
 
     public ParamStatement(Object o1) {
-        paramIdentifier = o1.toString();
+        param = (Statement) o1;
     }
 
     public ParamStatement(Object o1, Object o2) {
@@ -19,15 +19,20 @@ public class ParamStatement extends Statement {
         next = (ParamStatement) o2;
     }
 
-
     @Override
     public List<Statement> getStatements() {
-        return new ArrayList<>();
+        List<Statement> statements = new ArrayList<>();
+        statements.add(param);
+        while (next != null) {
+            statements.add(next.param);
+            next = next.next;
+        }
+        return statements;
     }
 
     @Override
     public String toString() {
-        String out = paramIdentifier;
+        String out = param.toString();
         if (next != null) {
             out += ", " + next;
         }

@@ -22,6 +22,7 @@ Our new toy language has roughly following scope:
 <li>variable declarations</li>
 <li>string concatenation</li>
 <li>arithmetic expressions</li>
+<li>conditional expressions</li>
 <li>conditional statements</li>
 <li>loops</li>
 <li>function calls</li>
@@ -185,8 +186,32 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
     x = (true && true && false);        // parser fails, as round brackets must always enclose two components
 
 #### Function calls
+<ul>
+<li>Function calls consist of an identifier, followed by an opening round bracket, parameters, a closing bracket and a semicolon.</li>
+<li>Parameters can be zero, one or multiple (comma separated) expressions.</li>
+<li>Without the semicolon, a function call can be used as value within an expression.</li>
+</ul>
+
+    // examples
+    fun1();                             // valid (no parameter)
+    //fun()                             // parser fails, as semicolon is missing
+    fun2(1 + 2 + 4);                    // valid (expression as one parameter)    
+    fun3(true && false);                // valid (condition as parameter - in this case, one set of brackets is enough)
+    fun3((true && false), 1, 'abc');    // valid (multiple parameters)
+    fun(fun());                         // valid (but probably not nice)
 
 #### Print calls
+<ul>
+<li>Print calls work the same way as function calls, except they cannot have multiple parameters.</li>
+<li>Print calls do not have any return value. They cannot be assigned to variables or be used in expressions.</li>
+</ul>
+
+    // examples
+    print();                            // valid (no parameter)
+    print(1 + 2 + 4);                   // valid (expression as one parameter)    
+    print(1 + 2 + 4, 'x');              // parser fails, as multiple parameters are not allowed
+    print(fun());                       // valid
+    x = print();                        // parser fails, as print calls cannot be used in assignments
 
 #### Function definitions
 

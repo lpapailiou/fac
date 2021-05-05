@@ -111,6 +111,7 @@ RET 	        ::= RETURN EXPR:r STOP                                             
 
 // function calls
 FUNCALL 	    ::= VAR:n BL PARAM:p BR                                                     {: RESULT = Statement.fun(n, p); :}
+                    | VAR:n COND:p                                                          {: RESULT = Statement.fun(n, p); :}
                     | VAR:n BL BR                                                           {: RESULT = Statement.fun(n); :}
                     ;
 

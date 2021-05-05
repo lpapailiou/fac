@@ -15,7 +15,7 @@ public class RunParser {
 
     public static void main(String[] args) {
         String encodingName = "UTF-8";
-        String file = Paths.get("src/main/resources/expressions.txt").toAbsolutePath().toString();
+        String file = Paths.get("src/main/resources/funcalls.txt").toAbsolutePath().toString();
 
 
         try (FileInputStream stream = new FileInputStream(file); InputStreamReader reader = new InputStreamReader(stream, encodingName)) {
