@@ -100,11 +100,11 @@ package ``src\main\java\parser``.
 The syntactical rules are designed with the Backus-Naur-notation, which allows context-free validation only. 
 
     // sample section of .cup file
-    ASSIGN 	        ::= VAR:e1 EQUAL:op EXPR:e2 STOP                {: RESULT = Statement.assgn(op, e1, e2); :}
-                        | VAR:e1 ASSIGN_OP:op EXPR:e2 STOP          {: RESULT = Statement.assgn(op, e1, e2); :}
+    ASSIGN 	        ::= VAR:e1 ASSIGN_OP:op EXPR:e2 STOP            {: RESULT = Statement.assgn(op, e1, e2); :}
                         ;
     
-    ASSIGN_OP       ::= PLUSEQ:op                                   {: RESULT = op; :}
+    ASSIGN_OP       ::= EQUAL:op                                    {: RESULT = op; :}
+                        | PLUSEQ:op                                 {: RESULT = op; :}
                         | MINEQ:op                                  {: RESULT = op; :}
                         | DIVEQ:op                                  {: RESULT = op; :}
                         | MULEQ:op                                  {: RESULT = op; :}
@@ -156,7 +156,7 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
 <li>Arithmetic expressions cannot exist as isolated statement. They need to be part of a declaration or be assigned.</li>
 <li>By default, its components can be either 'raw' values, conditional expressions or function calls.</li>
 <li>Multiplication and division have precedence over addition and subtraction.</li>
-<li>Arithmetic expressions can be chained. They are - after precedence - evaluated from left to right.</li>
+<li>Arithmetic expressions can be nested. They are - after precedence - evaluated from left to right.</li>
 <li>Arithmetic expressions must not have brackets.</li>
 <li>As arithmetic expressions group all possible values and expressions, they can be potentially assigned anywhere.</li>
 <li>Also here, data types are not evaluated any further.</li>
@@ -175,7 +175,7 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
 #### Conditional expressions
 <ul>
 <li>Conditional expressions are quite similar to arithmetic expressions, except they must be enclosed in (round) brackets.</li>
-<li>Conditional expressions use comparing (<, <=, ==, ...) or evaluation (&&, ||) operators.</li>
+<li>Conditional expressions use comparing (<, <=, ==, ...) or evaluating (&&, ||) operators.</li>
 </ul>
 
     // examples
@@ -227,11 +227,11 @@ Below, the structure of the package tree is listed for better overview.
             + java
                 + interpreter               // code execution handling
                 + main                      // samples (ready for execution)
-                + parser                    // syntactical analysis & grammatical logic
+                + parser                    // syntactical analysis & semantic logic
                     + exceptions 
-                    + parsetree                 // parse tree components
+                    + parsetree                 // parse tree components (syntax)
                         + interfaces
-                    + validation                // logical validation
+                    + validation                // semantic validation
                 + scanner                   // lexical analysis & token generation
             + resources                     // code sample files
                 + lib                       // external dependecies (jflex & cup)
@@ -242,7 +242,7 @@ To execute specific components (scanner, parser, execution), there are prepared 
 the directory ``src\main\java\main``.
 
 #### Scanner generation
-To generate a new scanner from the flex file, run following command (jflex path must be set).
+To generate a new scanner from the flex file, run following command (java path must be set).
 
     java -jar src/main/resources/lib/jflex-full-1.8.2.jar src/main/java/scanner/jscanner.flex
 
