@@ -42,10 +42,10 @@ non terminal WhileStatement             WHILE_STMT;
 non terminal VariableDeclaration        DECL;
 
 
-/* Precedences
-precedence left PLUS, MINUS;        // TODO: is needed?
-precedence left MUL, DIV;           // TODO: is needed?
-*/
+/* Precedences */
+precedence left PLUS, MINUS;        // not really required, but nice to have
+precedence left MUL, DIV;           // not really required, but nice to have
+
 
 /* The grammar rules */
 start with PROGRAM;
@@ -174,4 +174,3 @@ VAL             ::= VAR:str                                                     
                     | FUNCALL:f                                                             {: RESULT = f; :}
                     | COND:c                                                                {: RESULT = c; :}
                     ;
-

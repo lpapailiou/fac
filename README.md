@@ -16,6 +16,7 @@ The goal is to specify a new programming language, which is deterministic and ex
 	2.3 [Run](#run)  
 
 ## Language design
+In this section, the language design will be documented with its rules and a few examples. 
 ### Scope
 Our new toy language has roughly following scope:  
 <ul>
@@ -189,7 +190,7 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
 <ul>
 <li>Function calls consist of an identifier, followed by an opening round bracket, parameters, a closing bracket and a semicolon.</li>
 <li>Parameters can be zero, one or multiple (comma separated) expressions.</li>
-<li>Without the semicolon, a function call can be used as value within an expression.</li>
+<li>Without the semicolon, a function call can be used as value within an expression, as it is expected to always have a return value.</li>
 </ul>
 
     // examples
@@ -202,8 +203,9 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
 
 #### Print calls
 <ul>
-<li>Print calls work the same way as function calls, except they cannot have multiple parameters.</li>
-<li>Print calls do not have any return value. They cannot be assigned to variables or be used in expressions.</li>
+<li>Print calls work the same way as function calls, except:
+<ul><li>they cannot have multiple parameters.</li>
+<li>they do not have any return value. Therefore, they cannot be assigned to variables or be used in expressions.</li></ul></li>
 </ul>
 
     // examples
@@ -214,28 +216,84 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
     x = print();                        // parser fails, as print calls cannot be used in assignments
 
 #### Function definitions
+<ul>
+<li>Function definitions must start with the def keyword, a data type and an identifier.</li>
+<li>After the identifier, a parameter declaration list (which must be enclosed in round brackets) follows.<ul>
+<li>This declaration list can be empty or consist of one or multiple declarations.</li>
+<li>A parameter declaration consists of a data type and an identifier.</li></ul></li>
+<li>After the parameter declarations, curly brackets open and close.<ul>
+<li>The function body may contain zero, one or multiple nestable statements.</li>
+<li>Just before the curly brackets are closed, a return statement must be placed. <ul><li>The return statement consists 
+of the return keyword, a return value (an expression) and a semicolon.</li></ul></li></ul></li>
+</ul>
+
+    // examples
+    def number fun() { return 1; }      // valid (minimal example)
+    boolean fun() { return x; }         // parser fails, as def keyword is missing
+    def fun() { return 1 + 1; }         // parser fails, as data type is missing
+    def string fun() { }                // parser fails, as return keyword is missing
+    def boolean f1(string x) {          // valid
+        print(x);
+        return x;
+    }
 
 #### Conditional statements
+<ul>
+<li>Conditional statements must start with the if keyword and a conditional expression (in braces).</li>
+<li>Then, a body in curly braces follows, which can contain zero one or more statements.</li>
+<li>Optionally, an else keyword may follow, with another body as above.</li>
+</ul>
+
+    // examples
+    if (true) {}                        // valid
+    if (1 < 2) {};                      // parser fails, as no semicolon is allowed at end
+    if (false) {                        // valid
+        print('x');
+    } else {}
 
 #### While loops
+<ul>
+<li>While loops must start with the while keyword and a conditional expression (in braces).</li>
+<li>Then, a body in curly braces follows, which can contain zero one or more statements.</li>
+</ul>
 
-#### Nested statements
+    // examples
+    while (true) {}                     // valid (mut maybe not smart)
+    while false {}                      // parser fails, as conditional brackets are missing
+    while (false) {                     // parser fails, as body is not closed
+    while (false) {                     // valid
+        print('x');
+    }
+
+#### Statements
+<ul>
+<li>Statements are basically all grammatical structures, which do not require another surrounding construct to be valid:<ul>
+<li>Variable declarations</li>
+<li>Variable assignments</li>
+<li>Function calls (including print calls)</li>
+<li>Function definitions</li>
+<li>Conditional statements</li>
+<li>While loops</li>
+<li>Additionally, break statements do also count as statements. They are meant to be used within while loop bodies.</li>
+</ul></li>
+<li>Nested statements are a list of statements. This is a helper structure to fill bodes of conditional statements, while loops
+ and function definitions.</li>
+<li>Function definitions can never be nested within other statements.</li>
+<li>All 'top level' statements and function definitions will finally be added to the program statement list.</li>
+</ul>
 
 #### Program
+<ul>
+<li>The program is a container for the 'top level' list of program statements.</li>
+<li>If the parser finishes without error, the program will be the root of the generated parse tree.</li>
+</ul>
 
-
-<b>Conditional Statements</b>: Conditional statements must have two operands and must be nested in brackets. It is 
-possible to nest a conditional statement in another conditional statement.
-
-<b>If-Then Statements</b>: Curly brackets are mandatory around code blocks. 
-
-<b>While Statements</b>: Curly brackets are mandatory around code blocks. 
 ### Semantic rules
 
 
 
 ## Repository handling
-
+This section contains a few technical hints about this repository.
 ### Clone
 Clone the repository with following command.
 

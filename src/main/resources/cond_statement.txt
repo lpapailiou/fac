@@ -1,0 +1,7 @@
+
+    // examples
+    if (true) {}                        // valid
+    if (1 < 2) {};                      // parser fails, as no semicolon is allowed at end
+    if (false) {                        // valid
+    print('x');
+    } else {}
