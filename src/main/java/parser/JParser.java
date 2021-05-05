@@ -7,10 +7,7 @@ package parser;
 
 import parser.parsetree.*;
 import scanner.JScanner;
-import java.util.HashMap;
 import java.util.List;
-import java.util.LinkedList;
-import java.util.ArrayList;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.

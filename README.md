@@ -142,8 +142,9 @@ Below, the structure of the package tree is listed for better overview.
                     + parsetree                 // parse tree components
                         + interfaces
                     + validation                // logical validation
-                " scanner                   // lexical analysis & token generation
+                + scanner                   // lexical analysis & token generation
             + resources                     // code sample files
+                + lib                       // external dependecies (jflex & cup)
 
 ### Run
 #### Samples
@@ -153,9 +154,9 @@ the directory ``src\main\java\main``.
 #### Scanner generation
 To generate a new scanner from the flex file, run following command (jflex path must be set).
 
-    jflex src/main/java/scanner/jscanner.flex
+    java -jar src/main/resources/lib/jflex-full-1.8.2.jar src/main/java/scanner/jscanner.flex
 
 #### Parser generation
 To generate a new parser from the cup file, run following command (java path must be set).
 
-    java -jar java-cup-11b.jar -interface -destdir src/main/java/parser/ -symbols JSymbol -parser JParser src/main/java/parser/jparser.cup
+    java -jar src/main/resources/lib/java-cup-11b.jar -interface -destdir src/main/java/parser/ -symbols JSymbol -parser JParser src/main/java/parser/jparser.cup

@@ -2,10 +2,7 @@ package parser;
 import parser.parsetree.*;
 
 import scanner.JScanner;
-import java.util.HashMap;
 import java.util.List;
-import java.util.LinkedList;
-import java.util.ArrayList;
 
 parser code {:
     public JParser(java.io.Reader in) {super(new JScanner(in));}
