@@ -292,17 +292,17 @@ will not perform any further syntactical validations in this case.</li>
 ### Semantic rules
 So far, our toy language is defined and we have the tools to validate if a code belongs to our language or not. But at 
 this point, there is no type safety, variables can be assigned before they are declared and break statements
-are a mere decorations.  
+are a mere decoration.  
   
 The required semantic validation must now be performed by a ``Validator`` (see ``src\main\java\parser\validation``).  
-The validator will receive the parse tree from the parser and traverse it bottom-up.
+The validator will receive the parse tree from the parser and traverse it depth-first.
 
 #### Identifier scope
 <ul>
-<li>A variable must be declared before it can be used.</li>
-<li>Same rules applies to function definitions and function calls.</li>
-<li>Identifiers are valid within the same and lower levels of the parse tree, starting from the line in which they appear.</li>
-<li>Identifier declarations must be unique within their scope, except functions, which can be overloaded.</li>
+<li>A variable must be declared before it can be referenced.</li>
+<li>The same rule applies to function definitions and function calls.</li>
+<li>Identifiers are valid within the same and lower levels of the parse tree, starting from the location where they are declared.</li>
+<li>Identifiers must be unique within their scope, except for functions, which can be overloaded.</li>
 </ul>
 
     // examples
@@ -317,8 +317,8 @@ The validator will receive the parse tree from the parser and traverse it bottom
 <ul>
 <li>A variable can only assign values of the declared type.</li>
 <li>A function must return the same type as it defines as return value.</li>
-<li>If expressions are nested, the types are evaluated for every segment.</li>
-<li>If a segment of an expression is a string, the resulting type will be cast to string, if possible.</li>
+<li>If expressions are nested, the types are evaluated for every segment (assignment has least precedence).</li>
+<li>If a segment of an expression is a string, the resulting type will be cast to a string, if possible.</li>
 <li>String casting will not work within subtractions, multiplications, divisions and conditional expressions.</li>
 </ul>
 
@@ -357,7 +357,7 @@ The validator will receive the parse tree from the parser and traverse it bottom
 <ul>
 <li>The declared return type must match the effective return type.</li>
 <li>A function is identified by its identifier, return type, parameter count and parameter types. This means, overloading is possible.</li>
-<li>Overloading may occur only, if the identifier matches, the return type match and parameter count differs.</li>
+<li>Overloading may occur only, if the identifier matches, the return type matches and parameter count differs.</li>
 <li>If a caller calls a function, the callee must have according parameter count, parameter types and return type.</li>
 <li>A function can call itself, thus, recursion is allowed.</li>
 </ul>
