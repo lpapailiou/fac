@@ -1,7 +1,5 @@
 package parser.parsetree;
 
-import parser.exceptions.TypeMismatchException;
-
 import java.util.Arrays;
 import java.util.function.BiFunction;
 

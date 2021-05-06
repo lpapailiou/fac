@@ -4,7 +4,6 @@ import java_cup.runtime.Symbol;
 import parser.JParser;
 import parser.parsetree.Program;
 import parser.validation.Validator;
-import scanner.JScanner;
 
 import java.io.FileInputStream;
 import java.io.IOException;

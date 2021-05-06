@@ -5,12 +5,13 @@ import java_cup.runtime.Symbol;
 import parser.JParser;
 import parser.parsetree.Program;
 
-import java.io.*;
-import java.nio.file.Paths;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class RunConsoleExecutor {
 
@@ -26,7 +27,9 @@ public class RunConsoleExecutor {
         String code = "";
         String cache = "";
 
-        System.out.println("**** WELCOME TO JLANG **** ");
+        System.out.println("**************************************************************");
+        System.out.println("*                      WELCOME TO JLANG                      *");
+        System.out.println("**************************************************************");
         System.out.println(CONSOLE_MARKER + "... initialized & ready to code!");
 
         while (cache != null) {
@@ -35,9 +38,11 @@ public class RunConsoleExecutor {
             System.out.println(CONSOLE_MARKER);
 
             try {
-                read(code + cache);
-                code += cache;
-            } catch (Exception e) {
+                if (!cache.startsWith("//")) {
+                    read(code + cache);
+                    code += cache;
+                }
+            } catch (Exception | Error e) {
                 LOG.log(Level.WARNING, "Entered code not valid (" + e.getLocalizedMessage() + ")!");
             }
 
