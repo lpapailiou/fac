@@ -29,11 +29,10 @@ public class UnaryExpression extends ExpressionStatement {
 
     @Override
     public String toString() {
-        String out = "(" + operand.toString();
+        String out = operand.toString();
         if (operand instanceof FunctionCallStatement) {
             out = out.substring(0, out.length()-2);
         }
-        out += ")";
         return out;
     }
 

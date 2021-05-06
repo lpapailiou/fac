@@ -3,13 +3,6 @@
 def string fun(number x) {
     x += 1;
     print(x);
-    fun2(x);
-    return '' + x;
-}
-
-def string fun2(number x) {
-    x += 1;
-    print(x);
     fun(x);
     return '' + x;
 }

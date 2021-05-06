@@ -306,9 +306,9 @@ The validator will receive the parse tree from the parser and traverse it bottom
 </ul>
 
     // examples
-    number x = 1;
+    number x = 1;                       // valid
     y = x;                              // validator fails as y was not instantiated
-    def string fun(string z){
+    def string fun(string z) {          // valid
         return z;
     }
     x = z;                              // validator fails, as z is out of scope
@@ -323,36 +323,52 @@ The validator will receive the parse tree from the parser and traverse it bottom
 </ul>
 
     // examples
-    string x = 1 + 2 + 'a';             // valid (string casting)
+    string x = 1 + 2 + 'a';             // valid (nesting & string casting)
     number y = true;                    // validator fails, as boolean is assigned to number type
     x += true;                          // valid (string casting)
     x = true;                           // validator fails, string casting can only occur in binary expression
     x = 1 * 2;                          // validator fails, string casting can only occur in binary expression
+    def number fun() {                  // validator fails, as returned string is not a number
+        return 'x'; }
+
+#### Operator validation
+<ul>
+<li>In assignments, operator = can be used for all data types, += for numeric and string values, other operators (-=, *=, /=) for numeric values only.</li>
+<li>In conditional expressions, == and != may be used for all types, && and || may used for boolean values only, comparing operators (<, <=, >=, >) can be used for numeric values only.</li>
+<li>In arithmetic expressions, + is valid for numeric values or if at least one of the components is a string. All other available operators (-,*, /) are for numeric values only.</li>
+</ul>
+
+    // examples
+    string x = 'x' + 'b';               // valid
+    x = 'x' - 'b';                      // validator fails, as minus cannot be used for string concatenation
+    boolean y = (true && 1);            // validator fails, as the operator && can be used for booleans only
+    boolean z = (1 < 2);                // valid
     x = 1 * 'x';                        // validator fails, multiplication operator is not valid for strings
+
 
 #### Expressions
 <ul>
 <li>In general, both operands of a binary expression must have the same type.</li>
 <li>The only exception is string casting.</li>
-<li>In arithmetic expressions, + is valid for numeric values or if at least one of the components is a string. All other operators are for numeric values only.</li>
 <li>The resulting value of a conditional expression must always be a boolean, arithmetic expressions can evaluate to strings or numeric values.</li>
 </ul>
 
-#### Operator validation
-<ul>
-<li>In assignments, operator = can be used for all data types, += for numeric and string values, other operators (-=, *=, /=) for numeric values only.</li>
-<li>In conditional expressions, == and != may be used for all tpyes, && and || may used for boolean values only, comparing operators (<, <=, >=, >) can be used for numeric values only.</li>
-<li>In arithmetic expressions, + is valid for numeric values or if at least one of the components is a string. All other available operators (-,*, /) are for numeric values only.</li>
-</ul>
-
-#### Function calls and definitions
+#### Function calls and function definitions
 <ul>
 <li>The declared return type must match the effective return type.</li>
 <li>A function is identified by its identifier, return type, parameter count and parameter types. This means, overloading is possible.</li>
 <li>Overloading may occur only, if the identifier matches, the return type match and parameter count differs.</li>
 <li>If a caller calls a function, the callee must have according parameter count, parameter types and return type.</li>
-<li>A function can call itself, so recursion is possible.</li>
+<li>A function can call itself, thus, recursion is allowed.</li>
 </ul>
+
+    // examples
+        def number x() {                // validator fails, as 'seven' is a string
+            return 'seven'; }
+        def number y() {                // valid
+            return 0; }
+        def number z() {                // validator fails, as function y() is already defined with 0 params and same return type
+            return 1; }
 
 #### Conditional statements and while loops
 <ul>
@@ -368,11 +384,16 @@ unreachable code occurs at this place.</li>
 <li>Break statements are only allowed within while loops, and never as top-level-statement.</li>
 </ul>
 
+    // examples
+    break;                              // validator fails, as break statement is dangling outside loop
+    while(true) {                       // validator fails, as there is unreachable code
+        break; number x = 1; }
+    while(false) {                      // valid
+        break; }        
+
 ### Execution
-<ul>
-<li>At the moment, global variables and function definitions must be declared always before being referenced. Thus, declarations must be 
-placed always before callers (not like Java, where global variables and functions may be defined anywhere in a file).</li>
-</ul>
+Please note that global variables and function definitions must be declared always before being referenced. Thus, declarations must be 
+placed always before callers (not like Java, where global variables and functions may be defined anywhere in a file).
 
 ## Repository handling
 This section contains a few technical notes about this repository.
@@ -404,7 +425,70 @@ Below, the structure of the package tree is listed for better overview.
 ### Run
 #### Samples
 To execute specific components (scanner, parser, execution), there are prepared samples ready in
-the directory ``src\main\java\main``.
+the directory ``src\main\java\main``. Files with code examples can be found here: ``src\main\resources``.
+
+##### main.RunScanner
+The Scanner will take a file and tokenize its content. The output is verbose, every processed token will be
+printed accordingly to the console.
+
+    // sample output
+    scanning token {NUMTYPE}: found match <number> at line 1, column 0.
+    scanning token {VAR}: found match <one> at line 1, column 7.
+    scanning token {EQUAL}: found match <=> at line 1, column 11.
+    scanning token {NUM}: found match <1> at line 1, column 13.
+    scanning token {STOP}: found match <;> at line 1, column 14.
+    ...end of file reached at line 1, column 1.
+
+##### main.RunParser
+The parser will initialize a scanner. During processing, the parser will take token by token and validate if
+the sequence follows the syntactical definition of the grammar. If no error occurs, the parser will generate
+a parse tree.  
+As soon as the parse tree is ready, the validator will traverse the tree and check for semantic rules.  
+Additionally, it will print the interpreted code to the console.
+
+    // sample output
+    ***** PARSER RESULT *****
+    
+    number one = 1;
+    
+    while (one < 5) {
+        one += 1;
+        print('hello world');
+    }
+
+##### main.RunExecutor
+The executor is built on a validator. The process is similar to the ``RunParser`` sample, but the executor
+will additionally execute the interpreted code.
+
+    // sample output
+    ***** EXECUTION RESULT *****
+    
+    >>>>  
+    hello world
+    >>>>  
+    hello world
+    >>>>  
+    hello world
+    >>>>  
+    hello world
+
+##### main.RunConsoleExecutor
+The ``RunConsoleExecutor`` starts an executor in the console. This version is interactive. Every line of code 
+will be scanned, parsed, validated and directly be executed. If no error occurred, the next line can be 
+entered. In case of an error, the last entry will be ignored. A new line can be added to the so-far valid code.
+
+    // sample output
+    **************************************************************
+    *                      WELCOME TO JLANG                      *
+    **************************************************************
+    >  ... initialized & ready to code!
+    >  number one = 1;
+    >  
+    >  while (one < 2) {one += 1; print('hello world'); }
+    >  
+    >>>>  
+    hello world
+    >  
 
 #### Scanner generation
 To generate a new scanner from the flex file, run following command (java path must be set).

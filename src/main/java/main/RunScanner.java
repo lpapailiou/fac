@@ -19,7 +19,7 @@ public class RunScanner {
         }
 
         String encodingName = "UTF-8";
-        String baseFile = "src/main/resources/scanner_test_1.txt";
+        String baseFile = "src/main/resources/misc_test_2.txt";
 
         if (args.length > 0) {
             try {

@@ -21,7 +21,6 @@ public class Validator implements Visitor {
     public void visit(Program acceptor) {
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
         traverse(acceptor);
-        printDeclarations();
     }
 
     @Override
@@ -45,7 +44,7 @@ public class Validator implements Visitor {
         } else if (acceptor instanceof WhileStatement) {
             visit((WhileStatement) acceptor);
         } else {
-            //System.out.println("FALL-THROUGH NODE: " + acceptor.getClass() + " " + acceptor + "\n");
+            // fall through
         }
     }
 

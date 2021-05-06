@@ -32,12 +32,8 @@ public class NestedStatement extends Statement {
 
     @Override
     public String toString() {
-        String out = "NESTED START: ";
-        List<Statement> statementList = getStatements();
-        for (Statement st : statementList) {
-            out += st;
-        }
-        return out + "NESTED END";
+        String out = "";
+        return out;
     }
 
     @Override

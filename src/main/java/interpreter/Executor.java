@@ -170,7 +170,6 @@ public class Executor extends Validator {
             processStatements(node, statements);
 
             if (!(node instanceof Program)) {
-                //System.out.println("VISITING NODE " + node.getClass().toString().replaceAll("class parser.parsetree.", ""));
                 node.accept(this);
             }
         }
