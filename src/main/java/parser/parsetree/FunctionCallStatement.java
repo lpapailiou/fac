@@ -10,7 +10,7 @@ public class FunctionCallStatement extends Statement {
 
 
     private String identifier;
-    private List<String> parameterList = new ArrayList<>();
+    private List<Statement> parameterList = new ArrayList<>();
 
     public FunctionCallStatement(Object identifier) {
         this.identifier = identifier.toString();
@@ -19,7 +19,7 @@ public class FunctionCallStatement extends Statement {
     public FunctionCallStatement(Object identifier, Object params) {
         this(identifier);
         if (params != null) {
-            this.parameterList = Arrays.asList(params.toString().split(", "));
+            this.parameterList = ((ParamStatement) params).getStatements();
         }
     }
 
@@ -31,7 +31,7 @@ public class FunctionCallStatement extends Statement {
         return parameterList.size();
     }
 
-    public List<String> getParameterList() {
+    public List<Statement> getParameterList() {
         return parameterList;
     }
 

@@ -114,9 +114,8 @@ public class Validator implements Visitor {
         if (whileDepth > 0) {
             whileDepth--;
         } else {
-            throw new GrammarException("impossible break location");        // TODO: remove
+            throw new GrammarException("Too many break statements in loop <" + acceptor + ">!");
         }
-        System.out.println("while depth: " + whileDepth);
     }
 
 
@@ -124,7 +123,6 @@ public class Validator implements Visitor {
     private void checkBreakStatement(Traversable parent, List<Statement> statements, boolean hold) {
         for (int i = 0; i < statements.size(); i++) {
             if (statements.get(i) instanceof BreakStatement) {
-                System.out.println("while depth: " + whileDepth);
                 if (whileDepth <= 0) {
                     throw new GrammarException("Not in loop! Break statement is not possible at position <" + parent + ">!");
                 } else if (i < statements.size()-1) {
@@ -134,7 +132,7 @@ public class Validator implements Visitor {
                     if (whileDepth > 0) {
                         whileDepth--;
                     } else {
-                        throw new GrammarException("impossible break location");        // TODO: remove
+                        throw new GrammarException("Too many break statements in loop <" + parent + ">!");
                     }
                 }
             }
@@ -213,9 +211,8 @@ public class Validator implements Visitor {
 
     private void validateFunctionCall(FunctionCallStatement functionCall) {
         FunctionDefStatement function = getFunction(functionCall.getIdentifier(), functionCall.getParamCount());
-        List<String> callParams = functionCall.getParameterList();
+        List<Statement> callParams = functionCall.getParameterList();
         List<String> functionParams = Arrays.asList(function.paramTypeListAsString().split(", "));
-
         for (int i = 0; i < callParams.size(); i++) {
             Type caller = getTypeOfOperand(callParams.get(i));
             Type callee = Type.getByName(functionParams.get(i));

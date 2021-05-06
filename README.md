@@ -302,7 +302,7 @@ The validator will receive the parse tree from the parser and traverse it bottom
 <li>A variable must be declared before it can be used.</li>
 <li>Same rules applies to function definitions and function calls.</li>
 <li>Identifiers are valid within the same and lower levels of the parse tree.</li>
-<li>Declarations must be unique within their scope.</li>
+<li>Identifier declarations must be unique within their scope, except function definitions can be overloaded.</li>
 </ul>
  
 #### Type safety
@@ -324,12 +324,48 @@ The validator will receive the parse tree from the parser and traverse it bottom
 
 #### Operator validation
 <ul>
-<li>In assignments, operator = can be used for all data types, += for numeric and string values, other operators for numeric values only.</li>
-<li>In conditional expressions, && and || may used for boolean values only, comparing operators can be used for numeric values only.</li>
-<li>In arithmetic expressions, + is valid for numeric values or if at least one of the components is a string. All other operators are for numeric values only.</li>
+<li>In assignments, operator = can be used for all data types, += for numeric and string values, other operators (-=, *=, /=) for numeric values only.</li>
+<li>In conditional expressions, == and != may be used for all tpyes, && and || may used for boolean values only, comparing operators (<, <=, >=, >) can be used for numeric values only.</li>
+<li>In arithmetic expressions, + is valid for numeric values or if at least one of the components is a string. All other available operators (-,*, /) are for numeric values only.</li>
+</ul>
+
+#### Function calls definitions
+<ul>
+<li>The declared return type must match the effective return type.</li>
+<li>A function is identified by its identifier, return type, parameter count and parameter types. This means, overloading is possible.</li>
+<li>Overloading may occur only, if the identifier matches, the return type match and parameter count differs.</li>
+<li>If a caller calls a function, the callee must have according parameter count, parameter types and return type.</li>
+<li>A function can call itself, so recursion is possible.</li>
+</ul>
+
+#### Function calls definitions
+<ul>
+<li>The declared return type must match the effective return type.</li>
+<li>A function is identified by its identifier, return type, parameter count and parameter types. This means, overloading is possible.</li>
+<li>Overloading may occur only, if the identifier matches, the return type match and parameter count differs.</li>
+<li>If a caller calls a function, the callee must have according parameter count, parameter types and return type.</li>
+<li>A function can call itself, so recursion is possible.</li>
+</ul>
+
+#### Conditional statements
+<ul>
+<li>No specific semantic validation is required in this case.</li>
+</ul>
+
+#### While loops
+<ul>
+<li>Per while loop, one break statement is allowed.</li>
+<li>Exception: if a break loop contains an if-then-else statement, two breaks are allowed.</li>
+<li>A break must be the last statement of a statement list, but can be nested within other statement lists. Thus, a simple validation for
+unreachable code occurs at this place.</li>
+<li>Break statements are only allowed within while loops, and never as top-level-statement.</li>
 </ul>
 
 ### Execution
+<ul>
+<li>At the moment, global variables and function definitions must be declared always before referenced. Thus, declarations must be 
+placed always before callers (not like Java, where global variables and functions may be defined anywhere in a file).</li>
+</ul>
 
 ## Repository handling
 This section contains a few technical notes about this repository.
