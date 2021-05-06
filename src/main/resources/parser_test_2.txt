@@ -1,0 +1,53 @@
+string x1;
+number y1;
+boolean z1;
+
+string x2 = '';
+number y2 = 0;
+boolean z2 = false;
+
+x1 = x1+x1+1+x1+7+true;
+def string sdf() { return ''; }
+
+//string xy1 = 1 + sdf() + true * 4 - 9 / 8 + 2 + '';
+//boolean c = sdf(); //((true && false) < 1);
+boolean xxx = true + true;
+
+
+
+
+
+//string x3 = 0;        // validator fails
+//number y3 = false;      // validator fails
+//boolean z3 = '';        // validator fails
+
+//string x4 = false;    // validator fails
+//number y4 = '';    // validator fails
+//boolean z4 = 0;    // validator fails
+
+//string x5 = y1;    // validator fails
+//number y5 = z1;    // validator fails
+//boolean z5 = x1;    // validator fails
+
+//string x6 = 1 + 2;    // validator fails
+//number y6 = 1 + 2;    // validator fails
+//boolean z6 += 1 + 2;              // parser fails
+
+//string x7 = (true && false);    // validator fails
+//numbery7 = (true && false);    // validator fails
+//boolean 1z7 = (true && false);    // parser fails
+
+def string fun() { return ''; }
+
+string x8 = fun();
+//number y8 = print();      // parser fails
+//boolean z8 = while();     // parser fails
+
+//string x8 + 1;            // parser fails
+//number = f2;              // parser fails
+//boolean z8 = ;            // parser fails
+
+//x1 = 1;                         // valid (no type safety yet)
+//y;                              // parser fails, as a value must be assigned
+//y7 = (true && false);           // valid (conditional expressions can be assigned)
+//x8 = fun1()                     // parser fails, as semicolon is missing

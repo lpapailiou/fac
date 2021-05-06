@@ -1,13 +1,10 @@
 package parser.validation;
 
+import parser.exceptions.*;
 import parser.parsetree.*;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Traversable;
 import parser.parsetree.interfaces.Visitor;
-import parser.exceptions.GrammarException;
-import parser.exceptions.MissingComponentException;
-import parser.exceptions.TypeMismatchException;
-import parser.exceptions.UniquenessViolationException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,22 +12,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 /*
         -*** RULES ***-
-        - variables must be defined before they can be called (string identifier; or string identifier = 'blabla';)
-        - function calls, expressions, conditions and cannot be used to initialize variables
-        - a variable can be 'uninitialized'. in this case, it will get a default value ('' or 0 or false)
-        - variable names must be unique
-        - variable cannot be called outside the scope they were initialized in
         - functions can only be defined once
         - functions may be overridden - in this case, the type must match and the parameter count must not match
-        - an expression can have one or more values. if it has two values, both values must be of the same type
-        - a conditional statement must always have two values of the same type. they must evaluate to a boolean value
+
         - ifthen and ifthenelse-statements can have empty bodies and define local variables
         - to call a function, it must exist and the caller must match the parameter types of the callee
-        - function calls can be made anywhere senseful
+
         - function definitions do not allow recursions (???)
-        - functions must always have a return value
-        - the return type of a function must equal the defined type
-        - print calls allow primitives, expressions, conditionals and function calls
+
         - break statements are allowed in while loops only. in nested structures, there will be checks for unreachable code.
  */
 public class Validator implements Visitor {
@@ -58,7 +47,7 @@ public class Validator implements Visitor {
         Type expectedType = acceptor.getType();
         Type effectiveType = getTypeOfOperand(acceptor.getValue());
         if (expectedType != effectiveType) {
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getStatements() + ">!");
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[","").replaceAll("]","") + ">!");
         }
     }
 
@@ -72,8 +61,14 @@ public class Validator implements Visitor {
         Declaration declaration = getDeclaration(acceptor.getIdentifier());
         Type expectedType = declaration.getType();
         Type effectiveType = getTypeOfOperand(acceptor.getStatements().get(0));
+        Operator operator = acceptor.getOperator();
         if (expectedType != effectiveType) {
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getStatements() + ">!");
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[","").replaceAll("]","") + ">!");
+        } else if (expectedType != Type.NUMERIC && operator != Operator.EQUAL) {
+            if (expectedType == Type.STRING && operator == Operator.PLUSEQ) {
+                return;
+            }
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the operator <" + acceptor.getOperator().getOperator() + "> to assign value <" + acceptor.getStatements().toString().replaceAll("\\[","").replaceAll("]","") + ">!");
         }
     }
 
@@ -84,6 +79,7 @@ public class Validator implements Visitor {
 
     @Override
     public void visit(PrintCallStatement acceptor) {
+        getTypeOfOperand(acceptor.getValue());
     }
 
     @Override
@@ -145,17 +141,26 @@ public class Validator implements Visitor {
         }
     }
 
+    private Type getType(UnaryExpression statement) {
+        return getTypeOfOperand(statement.getOperand());
+    }
+
     private Type getType(BinaryExpression statement) {
         Type type = getTypeOfOperand(statement.getOperand1());
         Type type2 = getTypeOfOperand(statement.getOperand2());
+        Operator operator = statement.getOperator();
+        if (type == Type.STRING || type2 == Type.STRING) {
+            if (operator != Operator.PLUS) {
+                throw new OperatorMismatchException("Operator of expression <" + statement.getOperator().getOperator() + "> may not be used in context <" + statement.toString().replaceAll("\n", "") + ">!");
+            }
+            return Type.STRING;
+        }
         if (type != type2) {
             throw new TypeMismatchException("Types of expression <" + statement.toString().replaceAll("\n", "") + "> do not match!");
+        } if (type == Type.BOOLEAN) {
+            throw new TypeMismatchException("Types of expression <" + statement.toString().replaceAll("\n", "") + "> do not match with operator <" + operator.getOperator() + ">!");
         }
         return type;
-    }
-
-    private Type getType(UnaryExpression statement) {
-        return getTypeOfOperand(statement.getOperand());
     }
 
     private Type getType(ConditionalExpression statement) {
@@ -174,9 +179,9 @@ public class Validator implements Visitor {
         }
         Operator operator = statement.getOperator();
         if (type1 != Type.NUMERIC && (operator == Operator.GREATER || operator == Operator.GREQ || operator == Operator.LEQ || operator == Operator.LESS)) {
-            throw new GrammarException("Operator <" + operator.getOperator() + "> must not be used for non-numeric statements!");
+            throw new OperatorMismatchException("Operator <" + operator.getOperator() + "> must not be used for non-numeric statements!");
         } else if (type1 != Type.BOOLEAN && (operator == Operator.AND || operator == Operator.OR)) {
-            throw new GrammarException("Operator <" + operator.getOperator() + "> must not be used for non-boolean statements!");
+            throw new OperatorMismatchException("Operator <" + operator.getOperator() + "> must not be used for non-boolean statements!");
         }
 
         return Type.BOOLEAN;
@@ -251,7 +256,7 @@ public class Validator implements Visitor {
     protected FunctionDefStatement getFunction(String identifier, int parameterCount) {
         FunctionDefStatement definition = functionScope.stream().filter(fun -> fun.getIdentifier().equals(identifier) && fun.getParamCount() == parameterCount).findAny().orElse(null);
         if (definition == null) {
-            throw new MissingComponentException("Function <" + identifier + "> with " + parameterCount + " parameter was never defined!");
+            throw new MissingDeclarationException("Function <" + identifier + "> with " + parameterCount + " parameter was never defined!");
         }
         return definition;
     }
@@ -269,7 +274,7 @@ public class Validator implements Visitor {
     protected Declaration getDeclaration(String identifier) {
         Declaration declaration =  declarationScope.stream().filter(dec -> dec.getIdentifier().equals(identifier)).findAny().orElse(null);
         if (declaration == null) {
-            throw new MissingComponentException("Declaration <" + identifier + "> was never instantiated!");
+            throw new MissingDeclarationException("Declaration <" + identifier + "> was never instantiated!");
         }
         return declaration;
     }

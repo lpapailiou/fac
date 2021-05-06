@@ -23,7 +23,7 @@ public class RunParser {
         }
 
         String encodingName = "UTF-8";
-        String baseFile = "src/main/resources/fundef.txt";
+        String baseFile = "src/main/resources/parser_test_2.txt";
 
         if (args.length > 0) {
             try {
@@ -45,7 +45,7 @@ public class RunParser {
             System.out.println("***** PARSER RESULT *****\n\n" + reducedResult.value + "\n");
 
             Validator validator = new Validator();
-            //validator.visit((Program) reducedResult.value);
+            validator.visit((Program) reducedResult.value);
 
         } catch (IOException e) {
             e.printStackTrace();

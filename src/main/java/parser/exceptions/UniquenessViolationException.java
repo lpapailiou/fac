@@ -1,6 +1,6 @@
 package parser.exceptions;
 
-public class UniquenessViolationException extends RuntimeException {
+public class UniquenessViolationException extends GrammarException {
 
     public UniquenessViolationException(String message) {
         super(message);

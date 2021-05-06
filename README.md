@@ -79,7 +79,7 @@ Strings may contain lowercase letters, digits and a few special characters. The 
 in apostrophes.  
 Pattern: ``'[a-z0-9_\,\.\(\)\;\:\/\+\-\*\/ \s\t\f\r\n]*'``  
 #### Variable identifiers
-Variable identifiers may consist of lowercase letters and optional digits at the end.  
+Variable identifiers may consist of lowercase letters, underscores and optional digits at the end.  
 Pattern: ``[a-z_]+([0-9])*``. 
 #### Operators
 Additionally, there is quite a set of unary and binary operators.  
@@ -131,7 +131,7 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
     // examples
     string x1 = 1;                      // valid (no type safety yet)
     number y;                           // valid (variable will get default value)
-    numbery7 = (true && false);         // valid (conditional expressions can be assigned)
+    number y7 = (true && false);        // valid (conditional expressions can be assigned)
     boolean 1z7 = (true && false);      // scanner fails, as variable identifier starts with a digit
     string x8 = fun1();                 // valid (function calls can be assigned)
     number y8 = print();                // parser fails, as print is a reserved word
@@ -258,7 +258,7 @@ of the return keyword, a return value (an expression) and a semicolon.</li></ul>
 </ul>
 
     // examples
-    while (true) {}                     // valid (mut maybe not smart)
+    while (true) {}                     // valid (but maybe not smart)
     while false {}                      // parser fails, as conditional brackets are missing
     while (false) {                     // parser fails, as body is not closed
     while (false) {                     // valid
@@ -268,17 +268,18 @@ of the return keyword, a return value (an expression) and a semicolon.</li></ul>
 #### Statements
 <ul>
 <li>Statements are basically all grammatical structures, which do not require another surrounding construct to be valid:<ul>
-<li>Variable declarations</li>
-<li>Variable assignments</li>
-<li>Function calls (including print calls)</li>
-<li>Function definitions</li>
-<li>Conditional statements</li>
-<li>While loops</li>
-<li>Additionally, break statements do also count as statements. They are meant to be used within while loop bodies.</li>
-</ul></li>
-<li>Nested statements are a list of statements. This is a helper structure to fill bodes of conditional statements, while loops
+<li>variable declarations</li>
+<li>variable assignments</li>
+<li>function calls (including print calls)</li>
+<li>function definitions</li>
+<li>conditional statements</li>
+<li>while loops</li></ul></li>
+<li>Additionally, break statements do also count as statements. They are meant to be used within while loop bodies.
+As they cannot be strictly at the end of a while body (they could be nested deeper within if-then-structures), the parser
+will not perform any further syntactical validations in this case.</li>
+<li>Nested statements are a list of statements. This is a helper structure to fill bodies of conditional statements, while loops
  and function definitions.</li>
-<li>Function definitions can never be nested within other statements.</li>
+<li>Function definitions must be 'top level' statements (e.g. it is not possible to nest them in a while loop).</li>
 <li>All 'top level' statements and function definitions will finally be added to the program statement list.</li>
 </ul>
 
@@ -289,11 +290,49 @@ of the return keyword, a return value (an expression) and a semicolon.</li></ul>
 </ul>
 
 ### Semantic rules
+So far, our toy language is defined and we have the tools to validate if a code belongs to our language or not. But at 
+this point, there is no type safety, variables can be assigned before they are declared and break statements
+are a mere decorations.  
+  
+The required semantic validation must now be performed by a ``Validator`` (see ``src\main\java\parser\validation``).  
+The validator will receive the parse tree from the parser and traverse it bottom-up.
 
+#### Identifier scope
+<ul>
+<li>A variable must be declared before it can be used.</li>
+<li>Same rules applies to function definitions and function calls.</li>
+<li>Identifiers are valid within the same and lower levels of the parse tree.</li>
+<li>Declarations must be unique within their scope.</li>
+</ul>
+ 
+#### Type safety
+<ul>
+<li>A variable can only assign values of the declared type.</li>
+<li>A function must return the same type as it defines as return value.</li>
+<li>If expressions are nested, the types are evaluated for every segment.</li>
+<li>If a segment of an expression is a string, the resulting type will be cast to string, if possible.</li>
+<li>String casting will not work within multiplications or divisions and conditional expressions.</li>
+</ul>
 
+#### Expressions
+<ul>
+<li>In general, both operands of a binary expression must have the same type.</li>
+<li>The only exception is string casting.</li>
+<li>In arithmetic expressions, + is valid for numeric values or if at least one of the components is a string. All other operators are for numeric values only.</li>
+<li>The resulting value of a conditional expression must always be a boolean, arithmetic expressions can evaluate to strings or numeric values.</li>
+</ul>
+
+#### Operator validation
+<ul>
+<li>In assignments, operator = can be used for all data types, += for numeric and string values, other operators for numeric values only.</li>
+<li>In conditional expressions, && and || may used for boolean values only, comparing operators can be used for numeric values only.</li>
+<li>In arithmetic expressions, + is valid for numeric values or if at least one of the components is a string. All other operators are for numeric values only.</li>
+</ul>
+
+### Execution
 
 ## Repository handling
-This section contains a few technical hints about this repository.
+This section contains a few technical notes about this repository.
 ### Clone
 Clone the repository with following command.
 

@@ -1,6 +1,6 @@
 package parser.exceptions;
 
-public class TypeMismatchException extends RuntimeException {
+public class TypeMismatchException extends GrammarException {
 
     public TypeMismatchException(String message) {
         super(message);

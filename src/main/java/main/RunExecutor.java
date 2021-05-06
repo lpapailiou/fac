@@ -24,7 +24,7 @@ public class RunExecutor {
         }
 
         String encodingName = "UTF-8";
-        String baseFile = "src/main/resources/scanner_test_1.txt";
+        String baseFile = "src/main/resources/recursion.txt";
 
         if (args.length > 0) {
             try {

@@ -16,6 +16,13 @@ public class ParamDeclaration extends Statement implements Declaration {
     public ParamDeclaration(Object type, Object identifier) {
         this.type = Type.getByName(type);
         this.identifier = identifier.toString();
+        if (this.type == Type.BOOLEAN) {
+            value = false;
+        } else if (this.type == Type.NUMERIC) {
+            value = 0;
+        } else {
+            value = "''";
+        }
     }
 
     public ParamDeclaration(Object type, Object identifier, Object obj) {

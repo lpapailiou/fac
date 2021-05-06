@@ -9,7 +9,7 @@ public enum Type {
     STRING("string", "'[a-z0-9_\\,\\.\\(\\)\\;\\:\\/\\+\\-\\*\\/ \\s\\t\\f\\r\\n]*'", "''"),
     NUMERIC("number", "-?[0-9]\\d*(\\.\\d+)?", "0"),
     BOOLEAN("boolean", "true|false", "false"),
-    VARIABLE("var", "[a-z_]+", null),
+    VARIABLE("var", "[a-z_]+([0-9])*", null),
     NONE("none", "*", null);
 
     private final String description;

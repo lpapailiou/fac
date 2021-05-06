@@ -24,15 +24,15 @@ public class Executor extends Validator {
     }
 
     @Override
-    public void visit(VariableDeclaration acceptor) {
-        addDeclarationToScope(acceptor);
+    public void visit(VariableDeclaration acceptor) {   // ok
+        super.visit(acceptor);
         Object value = getValueOfOperand(acceptor.getValue());
         acceptor.setValue(value);
     }
 
     @Override
-    public void visit(ParamDeclaration acceptor) {
-        addDeclarationToScope(acceptor);
+    public void visit(ParamDeclaration acceptor) {  // ok
+        super.visit(acceptor);
         Object value = getValueOfOperand(acceptor.getValue());
         acceptor.setValue(value);
     }
@@ -47,7 +47,7 @@ public class Executor extends Validator {
     }
 
     @Override
-    public void visit(FunctionCallStatement acceptor) {
+    public void visit(FunctionCallStatement acceptor) { // TODO
     }
 
     @Override
