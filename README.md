@@ -114,7 +114,7 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
 #### Variable declarations
 <ul>
 <li>Variable declarations must start with a data type (string, number or boolean).</li>
-<li>The data type is followed by an identifier an an equal character.</li>
+<li>The data type is followed by an identifier and an equal character.</li>
 <li>Then, a value is assigned. The value can be:
 <ul>
 <li>a string, number or boolean value according to lexical definition.</li>
@@ -155,11 +155,11 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
 <ul>
 <li>Arithmetic expressions are meant to perform numeric calculations and string concatenation. Therefore, they use specific operators (+, -, *, /).</li>
 <li>Arithmetic expressions cannot exist as isolated statement. They need to be part of a declaration or be assigned.</li>
-<li>By default, its components can be either 'raw' values, conditional expressions or function calls.</li>
+<li>By default, their components can be either 'raw' values, conditional expressions or function calls.</li>
 <li>Multiplication and division have precedence over addition and subtraction.</li>
 <li>Arithmetic expressions can be nested. They are - after precedence - evaluated from left to right.</li>
-<li>Arithmetic expressions must not have brackets.</li>
-<li>As arithmetic expressions group all possible values and expressions, they can be potentially assigned anywhere.</li>
+<li>Arithmetic expressions must not have brackets if they are not conditional statements.</li>
+<li>As arithmetic expressions (for simplicity are abused to) group all possible values and expressions, they can be potentially assigned anywhere.</li>
 <li>Also here, data types are not evaluated any further.</li>
 </ul>
 
@@ -238,8 +238,8 @@ of the return keyword, a return value (an expression) and a semicolon.</li></ul>
 
 #### Conditional statements
 <ul>
-<li>Conditional statements must start with the if keyword and a conditional expression (in braces).</li>
-<li>Then, a body in curly braces follows, which can contain zero one or more statements.</li>
+<li>Conditional statements must start with the if keyword and a conditional expression (in round brackets).</li>
+<li>Then, a body in curly brackets follows, which can contain zero, one or more statements.</li>
 <li>Optionally, an else keyword may follow, with another body as above.</li>
 </ul>
 
@@ -252,8 +252,8 @@ of the return keyword, a return value (an expression) and a semicolon.</li></ul>
 
 #### While loops
 <ul>
-<li>While loops must start with the while keyword and a conditional expression (in braces).</li>
-<li>Then, a body in curly braces follows, which can contain zero one or more statements.</li>
+<li>While loops must start with the while keyword and a conditional expression (in round brackets).</li>
+<li>Then, a body in curly braces follows, which can contain zero, one or more statements.</li>
 </ul>
 
     // examples
