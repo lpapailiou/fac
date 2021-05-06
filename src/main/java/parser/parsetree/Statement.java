@@ -56,17 +56,17 @@ public abstract class Statement implements Traversable {
 
     public static FunctionCallStatement fun(Object n, Object p) {
         if (p instanceof ConditionalExpression) {
-            return new FunctionCallStatement(n, new ParamStatement(p));
+            return new FunctionCallStatement(n, new ParamExpression(p));
         }
         return new FunctionCallStatement(n, p);
     }
 
-    public static ParamStatement param(Object obj) {
-        return new ParamStatement(obj);
+    public static ParamExpression param(Object obj) {
+        return new ParamExpression(obj);
     }
 
-    public static ParamStatement param(Object obj, Object list) {
-        return new ParamStatement(obj, list);
+    public static ParamExpression param(Object obj, Object list) {
+        return new ParamExpression(obj, list);
     }
 
     public static ParamDeclaration paramDecl(Object t, Object v) {

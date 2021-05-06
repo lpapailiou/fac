@@ -1,5 +1,6 @@
 package parser.parsetree;
 
+import parser.exceptions.GrammarException;
 import parser.exceptions.TypeMismatchException;
 
 import java.util.Arrays;
@@ -39,7 +40,11 @@ public enum Type {
     }
 
     public boolean accepts(Object obj) {
-        return obj.toString().matches(pattern);
+        try {
+            return obj.toString().matches(pattern);
+        } catch (RuntimeException e) {
+            throw new GrammarException("No valid type for <" + obj + "> found!", e);
+        }
     }
 
     public static Type getTypeForValue(Object obj) {

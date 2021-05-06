@@ -10,18 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-/*
-        -*** RULES ***-
-        - functions can only be defined once
-        - functions may be overridden - in this case, the type must match and the parameter count must not match
 
-        - ifthen and ifthenelse-statements can have empty bodies and define local variables
-        - to call a function, it must exist and the caller must match the parameter types of the callee
-
-        - function definitions do not allow recursions (???)
-
-        - break statements are allowed in while loops only. in nested structures, there will be checks for unreachable code.
- */
 public class Validator implements Visitor {
 
     private List<Declaration> declarationScope = new ArrayList<>();
@@ -37,13 +26,32 @@ public class Validator implements Visitor {
 
     @Override
     public void visit(Statement acceptor) {
-        //System.out.println("\tnot specifically checked: " + acceptor.getClass());
+        if (acceptor instanceof VariableDeclaration) {
+            visit((VariableDeclaration) acceptor);
+        } else if (acceptor instanceof ParamDeclaration) {
+            visit((ParamDeclaration) acceptor);
+        } else if (acceptor instanceof AssignmentStatement) {
+            visit((AssignmentStatement) acceptor);
+        } else if (acceptor instanceof FunctionCallStatement) {
+            visit((FunctionCallStatement) acceptor);
+        } else if (acceptor instanceof PrintCallStatement) {
+            visit((PrintCallStatement) acceptor);
+        } else if (acceptor instanceof FunctionDefStatement) {
+            visit((FunctionDefStatement) acceptor);
+        } else if (acceptor instanceof IfThenElseStatement) {
+            visit((IfThenElseStatement) acceptor);
+        } else if (acceptor instanceof IfThenStatement) {
+            visit((IfThenStatement) acceptor);
+        } else if (acceptor instanceof WhileStatement) {
+            visit((WhileStatement) acceptor);
+        } else {
+            //System.out.println("FALL-THROUGH NODE: " + acceptor.getClass() + " " + acceptor + "\n");
+        }
     }
 
     @Override
     public void visit(VariableDeclaration acceptor) {
         addDeclarationToScope(acceptor);
-
         Type expectedType = acceptor.getType();
         Type effectiveType = getTypeOfOperand(acceptor.getValue());
         if (expectedType != effectiveType) {
@@ -62,8 +70,11 @@ public class Validator implements Visitor {
         Type expectedType = declaration.getType();
         Type effectiveType = getTypeOfOperand(acceptor.getStatements().get(0));
         Operator operator = acceptor.getOperator();
+
         if (expectedType != effectiveType) {
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[","").replaceAll("]","") + ">!");
+            if (expectedType != Type.STRING || operator == Operator.EQUAL) {
+                throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[", "").replaceAll("]", "") + ">!");
+            }
         } else if (expectedType != Type.NUMERIC && operator != Operator.EQUAL) {
             if (expectedType == Type.STRING && operator == Operator.PLUSEQ) {
                 return;
@@ -118,9 +129,7 @@ public class Validator implements Visitor {
         }
     }
 
-
-
-    private void checkBreakStatement(Traversable parent, List<Statement> statements, boolean hold) {
+    protected void checkBreakStatement(Traversable parent, List<Statement> statements, boolean hold) {
         for (int i = 0; i < statements.size(); i++) {
             if (statements.get(i) instanceof BreakStatement) {
                 if (whileDepth <= 0) {
@@ -191,6 +200,9 @@ public class Validator implements Visitor {
     }
 
     private Type getTypeOfOperand(Object operand) {
+        if (operand == null) {
+            throw new GrammarException("Operand must never be null!");
+        }
         Type type;
         if (operand instanceof FunctionCallStatement) {
             type = getType((FunctionCallStatement) operand);
@@ -235,7 +247,7 @@ public class Validator implements Visitor {
         }
     }
 
-    protected void addFunDeclarationToScope(FunctionDefStatement function) {
+    private void addFunDeclarationToScope(FunctionDefStatement function) {
         if (isFunctionExisting(function)) {
             throw new UniquenessViolationException("Function <" + function.getType().getDescription() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> is already defined!");
         } else if (!isFunctionDefineable(function)) {
@@ -277,7 +289,7 @@ public class Validator implements Visitor {
     }
 
     protected void printDeclarations() {
-        System.out.println("\ndeclaration scope after execution: ");
+        System.out.println("\ndeclaration scope after traversal: ");
         for (Declaration st : declarationScope) {
             System.out.print("\t - " + st);
         }
@@ -285,20 +297,23 @@ public class Validator implements Visitor {
 
     private void traverse(Traversable node) {
         if (node != null) {
-            System.out.println(node.getClass());
-            if (node instanceof WhileStatement) {
-                whileDepth++;
-            } else if (node instanceof FunctionDefStatement) {
-                addFunDeclarationToScope((FunctionDefStatement) node);
-            }
+            preValidation(node);
             List<Statement> statements = node.getStatements();
 
             for (Statement st : statements) {
-                traverse(st);
+                this.traverse(st);
             }
             if (!(node instanceof Program)) {
                 node.accept(this);
             }
+        }
+    }
+
+    protected void preValidation(Traversable node) {
+        if (node instanceof WhileStatement) {
+            whileDepth++;
+        } else if (node instanceof FunctionDefStatement) {
+            addFunDeclarationToScope((FunctionDefStatement) node);
         }
     }
 

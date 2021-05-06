@@ -301,9 +301,17 @@ The validator will receive the parse tree from the parser and traverse it bottom
 <ul>
 <li>A variable must be declared before it can be used.</li>
 <li>Same rules applies to function definitions and function calls.</li>
-<li>Identifiers are valid within the same and lower levels of the parse tree.</li>
-<li>Identifier declarations must be unique within their scope, except function definitions can be overloaded.</li>
+<li>Identifiers are valid within the same and lower levels of the parse tree, starting from the line in which they appear.</li>
+<li>Identifier declarations must be unique within their scope, except functions, which can be overloaded.</li>
 </ul>
+
+    // examples
+    number x = 1;
+    y = x;                              // validator fails as y was not instantiated
+    def string fun(string z){
+        return z;
+    }
+    x = z;                              // validator fails, as z is out of scope
  
 #### Type safety
 <ul>
@@ -311,8 +319,16 @@ The validator will receive the parse tree from the parser and traverse it bottom
 <li>A function must return the same type as it defines as return value.</li>
 <li>If expressions are nested, the types are evaluated for every segment.</li>
 <li>If a segment of an expression is a string, the resulting type will be cast to string, if possible.</li>
-<li>String casting will not work within multiplications or divisions and conditional expressions.</li>
+<li>String casting will not work within subtractions, multiplications, divisions and conditional expressions.</li>
 </ul>
+
+    // examples
+    string x = 1 + 2 + 'a';             // valid (string casting)
+    number y = true;                    // validator fails, as boolean is assigned to number type
+    x += true;                          // valid (string casting)
+    x = true;                           // validator fails, string casting can only occur in binary expression
+    x = 1 * 2;                          // validator fails, string casting can only occur in binary expression
+    x = 1 * 'x';                        // validator fails, multiplication operator is not valid for strings
 
 #### Expressions
 <ul>
@@ -329,7 +345,7 @@ The validator will receive the parse tree from the parser and traverse it bottom
 <li>In arithmetic expressions, + is valid for numeric values or if at least one of the components is a string. All other available operators (-,*, /) are for numeric values only.</li>
 </ul>
 
-#### Function calls definitions
+#### Function calls and definitions
 <ul>
 <li>The declared return type must match the effective return type.</li>
 <li>A function is identified by its identifier, return type, parameter count and parameter types. This means, overloading is possible.</li>
@@ -338,21 +354,12 @@ The validator will receive the parse tree from the parser and traverse it bottom
 <li>A function can call itself, so recursion is possible.</li>
 </ul>
 
-#### Function calls definitions
+#### Conditional statements and while loops
 <ul>
-<li>The declared return type must match the effective return type.</li>
-<li>A function is identified by its identifier, return type, parameter count and parameter types. This means, overloading is possible.</li>
-<li>Overloading may occur only, if the identifier matches, the return type match and parameter count differs.</li>
-<li>If a caller calls a function, the callee must have according parameter count, parameter types and return type.</li>
-<li>A function can call itself, so recursion is possible.</li>
+<li>Apart from the break statement validation, no additional semantic validation is required in this case, as the syntactical checks are sufficient.</li>
 </ul>
 
-#### Conditional statements
-<ul>
-<li>No specific semantic validation is required in this case.</li>
-</ul>
-
-#### While loops
+#### Break statements
 <ul>
 <li>Per while loop, one break statement is allowed.</li>
 <li>Exception: if a break loop contains an if-then-else statement, two breaks are allowed.</li>
@@ -363,7 +370,7 @@ unreachable code occurs at this place.</li>
 
 ### Execution
 <ul>
-<li>At the moment, global variables and function definitions must be declared always before referenced. Thus, declarations must be 
+<li>At the moment, global variables and function definitions must be declared always before being referenced. Thus, declarations must be 
 placed always before callers (not like Java, where global variables and functions may be defined anywhere in a file).</li>
 </ul>
 

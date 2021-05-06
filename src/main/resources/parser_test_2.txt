@@ -1,17 +1,22 @@
 
-while(true) {
+number global = 0;
+number num2 = 0;
 
-    if (true) {
-        if (true) {
-            break;
-        }
-        //break;
-    } else {
-        if (true) {
-                    break;
-                }
-    }
+def number fun(number x) {
+    global += 1;
+    print(x+1);
+    return x + 1;
+}
 
-    //break;
+
+fun(num2);
+
+print(fun(fun(fun(num2))));
+if(true) {
+fun(7);
+fun(7);
+fun(7);
+fun(7);
 
 }
+

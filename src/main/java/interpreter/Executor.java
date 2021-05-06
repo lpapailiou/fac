@@ -1,5 +1,6 @@
 package interpreter;
 
+import parser.exceptions.UniquenessViolationException;
 import parser.parsetree.*;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Traversable;
@@ -10,115 +11,137 @@ import java.util.List;
 
 public class Executor extends Validator {
 
+    private boolean execute = true;         // to be switched off if validation only is required
     private int breakEvent = 0;
     private int breakOccurred = 0;
 
     @Override
     public void visit(Program acceptor) {
-        traverse(acceptor);
-        printDeclarations();
+        checkBreakStatement(acceptor, acceptor.getStatements(), false);
+        if (execute) {
+            traverse(acceptor);
+            printDeclarations();
+        }
     }
 
     @Override
     public void visit(Statement acceptor) {
+        super.visit(acceptor);
     }
 
     @Override
-    public void visit(VariableDeclaration acceptor) {   // ok
+    public void visit(VariableDeclaration acceptor) {
         super.visit(acceptor);
-        Object value = getValueOfOperand(acceptor.getValue());
-        acceptor.setValue(value);
+        if (execute) {
+            Object value = getValueOfOperand(acceptor.getValue());
+            acceptor.setValue(value);
+        }
     }
 
     @Override
-    public void visit(ParamDeclaration acceptor) {  // ok
+    public void visit(ParamDeclaration acceptor) {
         super.visit(acceptor);
-        Object value = getValueOfOperand(acceptor.getValue());
-        acceptor.setValue(value);
     }
 
     @Override
     public void visit(AssignmentStatement acceptor) {
-        Declaration declaration = getDeclaration(acceptor.getIdentifier());
-        Object value1 = declaration.getValue();
-        Object value2 = getValueOfOperand(acceptor.getStatements().get(0));
-        declaration.setValue(acceptor.getOperator().apply(value1, value2));
-
+        super.visit(acceptor);
+        if (execute) {
+            Declaration declaration = getDeclaration(acceptor.getIdentifier());
+            Object value1 = declaration.getValue();
+            Object value2 = getValueOfOperand(acceptor.getStatements().get(0));
+            declaration.setValue(acceptor.getOperator().apply(value1, value2));
+        }
     }
 
     @Override
-    public void visit(FunctionCallStatement acceptor) { // TODO
+    public void visit(FunctionCallStatement acceptor) {
+        super.visit(acceptor);
+        if (execute) {
+            getValueOfOperand(acceptor);
+        }
     }
 
     @Override
     public void visit(PrintCallStatement acceptor) {
-        Statement statement = (Statement) acceptor.getValue();
-        if (statement != null) {
-            System.out.println("PRINTING " + getValueOfOperand(statement).toString().replaceAll("'", ""));
-        } else {
-            System.out.println("PRINTING NOTHING");
+        super.visit(acceptor);
+        if (execute) {
+            Statement statement = (Statement) acceptor.getValue();
+            if (statement != null) {
+                System.out.println("PRINTING " + getValueOfOperand(statement).toString().replaceAll("'", ""));
+            } else {
+                System.out.println("PRINTING NOTHING");
+            }
         }
     }
 
     @Override
     public void visit(FunctionDefStatement acceptor) {
-        removeDeclarations(acceptor);
+        super.visit(acceptor);
     }
 
     @Override
     public void visit(IfThenStatement acceptor) {
-        removeDeclarations(acceptor);
+        super.visit(acceptor);
     }
 
     @Override
     public void visit(IfThenElseStatement acceptor) {
-        removeDeclarations(acceptor);
+        super.visit(acceptor);
     }
 
     @Override
     public void visit(WhileStatement acceptor) {
-
+        super.visit(acceptor);
     }
 
     private Object getValue(BinaryExpression statement) {
         Object value1 = getValueOfOperand(statement.getOperand1());
         Object value2 = getValueOfOperand(statement.getOperand2());
-        System.out.println("binary result: " + statement.toString() + " = " + statement.getOperator().apply(value1, value2));
         return statement.getOperator().apply(value1, value2);
     }
 
     private Object getValue(UnaryExpression statement) {
-        System.out.println("unary result: " + statement.toString() + " = " + getValueOfOperand(statement.getOperand()));
         return getValueOfOperand(statement.getOperand());
     }
 
     private Object getValue(ConditionalExpression statement) {
         Object value1 = getValueOfOperand(statement.getOperand1());
-        Object value2 = getValueOfOperand(statement.getOperand2());
-        //System.out.println(value1 + " " + statement.getOperator().getOperator() + " " + value2 +  " = " + statement.getOperator().apply(value1, value2));
-/*
-        if (Type.getTypeForValue(s1) == Type.STRING) {
-            return s1.toString().equals(s2.toString());
+        Object value2;
+        if (statement.getOperand2() == null) {
+            return Boolean.parseBoolean(value1.toString());
         } else {
-            return s1 == s2;
-        }*/
+            value2 = getValueOfOperand(statement.getOperand2());
+        }
         return statement.getOperator().apply(value1, value2);
     }
 
     private Object getValue(FunctionCallStatement statement) {
-        Object value;
         FunctionDefStatement function = getFunction(statement.getIdentifier(), statement.getParamCount());
-        value = function.getReturnValue();
-        if (Type.getTypeForValue(value) == Type.VARIABLE) {
-            value = getValueOfOperand(getDeclaration(value.toString()).getValue());
+        List<Statement> callParams = statement.getParameterList();
+        List<Statement> statements = function.getStatements();
+        boolean isNested = false;
+        for (int i = 0; i < statements.size(); i++) {
+            if (statements.get(i) instanceof  ParamDeclaration) {
+                ParamDeclaration paramDeclaration = ((ParamDeclaration) statements.get(i));
+                try {
+                    addDeclarationToScope(paramDeclaration);
+                } catch (UniquenessViolationException e){
+                    isNested = true;
+                }
+                paramDeclaration.setValue(getValueOfOperand(callParams.get(i)));
+            } else {
+                this.visit(statements.get(i));
+            }
+        }
+        Object value = getValueOfOperand(function.getReturnValue());
+        if (!isNested) {
+            removeDeclarations(function);
         }
         return value;
     }
 
     private Object getValueOfOperand(Object operand) {
-        if (operand == null) {
-            return null;
-        }
         Object value;
         if (operand instanceof FunctionCallStatement) {
             value = getValue((FunctionCallStatement) operand);
@@ -140,9 +163,8 @@ public class Executor extends Validator {
 
     private void traverse(Traversable node) {
         if (node != null) {
-            if (node instanceof FunctionDefStatement) {
-                addFunDeclarationToScope((FunctionDefStatement) node);
-            }
+            preValidation(node);
+
 
             List<Statement> statements = getStatements(node);
             processStatements(node, statements);
@@ -155,30 +177,45 @@ public class Executor extends Validator {
     }
 
     private List<Statement> getStatements(Traversable node) {
-        List<Statement> statements = node.getStatements();
+        boolean switched = execute;
+        List<Statement> executableStatements = node.getStatements();
+        if (!execute) {
+            return executableStatements;
+        }
+        List<Statement> validateOnlyStatements = new ArrayList<>();
         boolean condition;
         if (node instanceof IfThenElseStatement) {
             condition = (Boolean) getValueOfOperand(((IfThenElseStatement) node).getCondition());
             if (condition) {
-                statements = ((IfThenElseStatement) node).getIfStatements();
+                executableStatements = ((IfThenElseStatement) node).getIfStatements();
+                validateOnlyStatements = ((IfThenElseStatement) node).getElseStatements();
             } else {
-                statements = ((IfThenElseStatement) node).getElseStatements();
+                executableStatements = ((IfThenElseStatement) node).getElseStatements();
+                validateOnlyStatements = ((IfThenElseStatement) node).getIfStatements();
             }
         } else if (node instanceof IfThenStatement) {
             condition = (Boolean) getValueOfOperand(((IfThenStatement) node).getCondition());
             if (!condition) {
-                statements = new ArrayList<>();
+                validateOnlyStatements = executableStatements;
+                executableStatements = new ArrayList<>();
             }
+        } else if (node instanceof FunctionDefStatement) {
+            validateOnlyStatements = executableStatements;
+            executableStatements = new ArrayList<>();
         }
-        return statements;
+
+        execute = false;
+        for (Statement st : validateOnlyStatements) {
+            traverse(st);
+        }
+        if (switched) {
+            execute = true;
+        }
+        return executableStatements;
     }
 
     private void processStatements(Traversable node, List<Statement> statements) {
-        if (node instanceof BreakStatement) {
-            breakEvent++;
-        }
-
-        if (node instanceof WhileStatement) {
+        if (node instanceof WhileStatement && execute) {
             while ((Boolean) getValueOfOperand(((WhileStatement) node).getCondition())) {
                 if (breakEvent > breakOccurred) {
                     breakOccurred++;
@@ -193,6 +230,14 @@ public class Executor extends Validator {
             for (Statement st : statements) {
                 traverse(st);
             }
+        }
+    }
+
+    @Override
+    protected void preValidation(Traversable node) {
+        super.preValidation(node);
+        if (node instanceof BreakStatement && execute) {
+            breakEvent++;
         }
     }
 

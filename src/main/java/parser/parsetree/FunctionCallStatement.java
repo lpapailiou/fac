@@ -3,7 +3,6 @@ package parser.parsetree;
 import parser.parsetree.interfaces.Visitor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class FunctionCallStatement extends Statement {
@@ -19,7 +18,7 @@ public class FunctionCallStatement extends Statement {
     public FunctionCallStatement(Object identifier, Object params) {
         this(identifier);
         if (params != null) {
-            this.parameterList = ((ParamStatement) params).getStatements();
+            this.parameterList = ((ParamExpression) params).getStatements();
         }
     }
 

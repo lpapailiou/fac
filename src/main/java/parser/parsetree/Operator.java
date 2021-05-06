@@ -35,7 +35,7 @@ public enum Operator {
     LEQ("<=", (a, b) -> Double.parseDouble(a.toString()) <= Double.parseDouble(b.toString())),
     LESS("<", (a, b) -> Double.parseDouble(a.toString()) < Double.parseDouble(b.toString())),
     PLUSEQ("+=", (a, b) -> {
-        if (Type.getTypeForValue(a) == Type.STRING) {
+        if (Type.getTypeForValue(a) == Type.STRING || Type.getTypeForValue(b) == Type.STRING) {
             return "'" + (a.toString() + (b.toString())).replaceAll("'", "") + "'";
         } else {
             return Double.parseDouble(a.toString()) + Double.parseDouble(b.toString());
@@ -45,7 +45,7 @@ public enum Operator {
     MULEQ("*=", (a, b) -> Double.parseDouble(a.toString()) * Double.parseDouble(b.toString())),
     DIVEQ("/=", (a, b) -> Double.parseDouble(a.toString()) / Double.parseDouble(b.toString())),
     PLUS("+", (a, b) -> {
-        if (Type.getTypeForValue(a) == Type.STRING) {
+        if (Type.getTypeForValue(a) == Type.STRING || Type.getTypeForValue(b) == Type.STRING) {
             return "'" + (a.toString() + (b.toString())).replaceAll("'", "") + "'";
         } else {
             return Double.parseDouble(a.toString()) + Double.parseDouble(b.toString());

@@ -5,18 +5,18 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParamStatement extends Statement {
+public class ParamExpression extends Statement {
 
     private Statement param;
-    private ParamStatement next;
+    private ParamExpression next;
 
-    public ParamStatement(Object o1) {
+    public ParamExpression(Object o1) {
         param = (Statement) o1;
     }
 
-    public ParamStatement(Object o1, Object o2) {
+    public ParamExpression(Object o1, Object o2) {
         this(o1);
-        next = (ParamStatement) o2;
+        next = (ParamExpression) o2;
     }
 
     @Override

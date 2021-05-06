@@ -55,7 +55,7 @@ public class FunctionDefStatement extends Statement {
     @Override
     public List<Statement> getStatements() {
         List<Statement> statements = new ArrayList<>();
-        statements.addAll(paramDeclarationList);        // TODO: needed?
+        statements.addAll(paramDeclarationList);
         statements.addAll(statementList);
         return statements;
     }
