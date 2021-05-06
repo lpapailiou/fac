@@ -267,7 +267,7 @@ of the return keyword, a return value (an expression) and a semicolon.</li></ul>
 #### Statements
 <ul>
 <li>Statements are basically all grammatical structures, which do not require another surrounding construct to be valid.
-They always must end with a semicolon. Implemented statements are:<ul>
+They always must end with a semicolon (if they do not end with a body in curly brackets). Implemented statements are:<ul>
 <li>variable declarations</li>
 <li>variable assignments</li>
 <li>function calls (including print calls)</li>
