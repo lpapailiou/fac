@@ -59,8 +59,7 @@ The token identification is implemented with regular expressions.
     \<=                               { return collectToken(LEQ, "LEQ"); }
 
 #### Comments
-Java-like comments are allowed. They will be ignored in further processing of the code - except the comment takes the 
-end of the fail, then an error will be thrown.  
+Java-like comments are allowed. They will be ignored in further processing of the code.
 Pattern: ``"/*" [^*] ~"*/" | "/*" "*"+ "/" | "//" [^\r\n]* \r|\n|\r\n? | "/**" ( [^*] | \*+ [^/*] )* "*"+ "/"``  
 #### Whitespace
 Whitespace may consist of spaces and newlines. It will be ignored in further processing steps, but
@@ -68,21 +67,21 @@ is initially useful to separate tokens from each other.
 Pattern: ``[ \t\f\r\n]+`` 
 #### Reserved words
 Reserved words are: ``string``, ``number``, ``boolean`` (for data types), ``while``, ``break``,
-``if``, ``else``, ``def``, ``return`` and ``print`` (for printing to the console).  
+``if``, ``else``, ``def``, ``return`` (for statements) and ``print`` (for printing to the console).  
 #### Boolean values
 Boolean values may be either ``true`` or ``false``.  
 #### Numeric values
 Numeric values will be interpreted as Double. The length will not be checked.  
 Pattern: ``-?[0-9]\d*(\.\d+)?``  
 #### String values
-Strings may contain lowercase letters, digits and a few special characters. The must be enclosed
+Strings may contain lowercase letters, digits and a few special characters. They must be enclosed
 in apostrophes.  
 Pattern: ``'[a-z0-9_\,\.\(\)\;\:\/\+\-\*\/ \s\t\f\r\n]*'``  
 #### Variable identifiers
 Variable identifiers may consist of lowercase letters, underscores and optional digits at the end.  
 Pattern: ``[a-z_]+([0-9])*``. 
 #### Operators
-Additionally, there is quite a set of unary and binary operators.  
+Additionally, there is a set of basic operators.  
 Arithmetic operators: ``+``, ``-``, ``*``, ``/``.  
 Conditional operators: ``==``, ``!=``, ``<``, ``>``, ``<=``, ``>=``.  
 Assignment operators: ``=``, ``+=``, ``-=``, ``*=``, ``/=``.  
@@ -267,7 +266,8 @@ of the return keyword, a return value (an expression) and a semicolon.</li></ul>
 
 #### Statements
 <ul>
-<li>Statements are basically all grammatical structures, which do not require another surrounding construct to be valid:<ul>
+<li>Statements are basically all grammatical structures, which do not require another surrounding construct to be valid.
+They always must end with a semicolon. Implemented statements are:<ul>
 <li>variable declarations</li>
 <li>variable assignments</li>
 <li>function calls (including print calls)</li>
