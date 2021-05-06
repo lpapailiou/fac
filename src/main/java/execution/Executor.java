@@ -1,15 +1,15 @@
-package interpreter;
+package execution;
 
 import parser.exceptions.UniquenessViolationException;
 import parser.parsetree.*;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Traversable;
-import parser.validation.Validator;
+import parser.interpreter.Interpreter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Executor extends Validator {
+public class Executor extends Interpreter {
 
     private boolean execute = true;         // to be switched off if validation only is required
     private int breakEvent = 0;

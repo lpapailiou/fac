@@ -294,8 +294,8 @@ So far, our toy language is defined and we have the tools to validate if a code 
 this point, there is no type safety, variables can be assigned before they are declared and break statements
 are a mere decoration.  
   
-The required semantic validation must now be performed by a ``Validator`` (see ``src\main\java\parser\validation``).  
-The validator will receive the parse tree from the parser and traverse it depth-first.
+The required semantic validation must now be performed by a ``Validator`` (see ``src\main\java\parser\interpreter``).  
+The interpreter will receive the parse tree from the parser and traverse it depth-first.
 
 #### Identifier scope
 <ul>
@@ -307,11 +307,11 @@ The validator will receive the parse tree from the parser and traverse it depth-
 
     // examples
     number x = 1;                       // valid
-    y = x;                              // validator fails as y was not instantiated
+    y = x;                              // interpreter fails as y was not instantiated
     def string fun(string z) {          // valid
         return z;
     }
-    x = z;                              // validator fails, as z is out of scope
+    x = z;                              // interpreter fails, as z is out of scope
  
 #### Type safety
 <ul>
@@ -324,11 +324,11 @@ The validator will receive the parse tree from the parser and traverse it depth-
 
     // examples
     string x = 1 + 2 + 'a';             // valid (nesting & string casting)
-    number y = true;                    // validator fails, as boolean is assigned to number type
+    number y = true;                    // interpreter fails, as boolean is assigned to number type
     x += true;                          // valid (string casting)
-    x = true;                           // validator fails, string casting can only occur in binary expression
-    x = 1 * 2;                          // validator fails, string casting can only occur in binary expression
-    def number fun() {                  // validator fails, as returned string is not a number
+    x = true;                           // interpreter fails, string casting can only occur in binary expression
+    x = 1 * 2;                          // interpreter fails, string casting can only occur in binary expression
+    def number fun() {                  // interpreter fails, as returned string is not a number
         return 'x'; }
 
 #### Operator validation
@@ -340,10 +340,10 @@ The validator will receive the parse tree from the parser and traverse it depth-
 
     // examples
     string x = 'x' + 'b';               // valid
-    x = 'x' - 'b';                      // validator fails, as minus cannot be used for string concatenation
-    boolean y = (true && 1);            // validator fails, as the operator && can be used for booleans only
+    x = 'x' - 'b';                      // interpreter fails, as minus cannot be used for string concatenation
+    boolean y = (true && 1);            // interpreter fails, as the operator && can be used for booleans only
     boolean z = (1 < 2);                // valid
-    x = 1 * 'x';                        // validator fails, multiplication operator is not valid for strings
+    x = 1 * 'x';                        // interpreter fails, multiplication operator is not valid for strings
 
 
 #### Expressions
@@ -363,11 +363,11 @@ The validator will receive the parse tree from the parser and traverse it depth-
 </ul>
 
     // examples
-        def number x() {                // validator fails, as 'seven' is a string
+        def number x() {                // interpreter fails, as 'seven' is a string
             return 'seven'; }
         def number y() {                // valid
             return 0; }
-        def number z() {                // validator fails, as function y() is already defined with 0 params and same return type
+        def number z() {                // interpreter fails, as function y() is already defined with 0 params and same return type
             return 1; }
 
 #### Conditional statements and while loops
@@ -385,8 +385,8 @@ unreachable code occurs at this place.</li>
 </ul>
 
     // examples
-    break;                              // validator fails, as break statement is dangling outside loop
-    while(true) {                       // validator fails, as there is unreachable code
+    break;                              // interpreter fails, as break statement is dangling outside loop
+    while(true) {                       // interpreter fails, as there is unreachable code
         break; number x = 1; }
     while(false) {                      // valid
         break; }        
@@ -411,13 +411,13 @@ Below, the structure of the package tree is listed for better overview.
     + src
         + main
             + java
-                + interpreter               // code execution handling
+                + execution               // code execution handling
                 + main                      // samples (ready for execution)
                 + parser                    // syntactical analysis & semantic logic
-                    + exceptions 
+                    + exceptions
+                    + interpreter               // semantic validation                     
                     + parsetree                 // parse tree components (syntax)
                         + interfaces
-                    + validation                // semantic validation
                 + scanner                   // lexical analysis & token generation
             + resources                     // code sample files
                 + lib                       // external dependecies (jflex & cup)
@@ -443,7 +443,7 @@ printed accordingly to the console.
 The parser will initialize a scanner. During processing, the parser will take token by token and validate if
 the sequence follows the syntactical definition of the grammar. If no error occurs, the parser will generate
 a parse tree.  
-As soon as the parse tree is ready, the validator will traverse the tree and check for semantic rules.  
+As soon as the parse tree is ready, the interpreter will traverse the tree and check for semantic rules.  
 Additionally, it will print the interpreted code to the console.
 
     // sample output
@@ -457,7 +457,7 @@ Additionally, it will print the interpreted code to the console.
     }
 
 ##### main.RunExecutor
-The executor is built on a validator. The process is similar to the ``RunParser`` sample, but the executor
+The executor is built on a interpreter. The process is similar to the ``RunParser`` sample, but the executor
 will additionally execute the interpreted code.
 
     // sample output
@@ -474,7 +474,7 @@ will additionally execute the interpreted code.
 
 ##### main.RunConsoleExecutor
 The ``RunConsoleExecutor`` starts an executor in the console. This version is interactive. Every line of code 
-will be scanned, parsed, validated and directly be executed. If no error occurred, the next line can be 
+will be scanned, parsed, interpreted and directly be executed. If no error occurred, the next line can be 
 entered. In case of an error, the last entry will be ignored. A new line can be added to the so-far valid code.
 
     // sample output

@@ -1,6 +1,6 @@
 package main;
 
-import interpreter.Executor;
+import execution.Executor;
 import java_cup.runtime.Symbol;
 import parser.JParser;
 import parser.parsetree.Program;

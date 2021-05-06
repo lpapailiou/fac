@@ -1,4 +1,4 @@
-package parser.validation;
+package parser.interpreter;
 
 import parser.exceptions.*;
 import parser.parsetree.*;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Validator implements Visitor {
+public class Interpreter implements Visitor {
 
     private List<Declaration> declarationScope = new ArrayList<>();
     private List<FunctionDefStatement> functionScope = new ArrayList<>();

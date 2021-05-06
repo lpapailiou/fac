@@ -2,8 +2,8 @@ package main;
 
 import java_cup.runtime.Symbol;
 import parser.JParser;
+import parser.interpreter.Interpreter;
 import parser.parsetree.Program;
-import parser.validation.Validator;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,8 +43,8 @@ public class RunParser {
 
             System.out.println("***** PARSER RESULT *****\n\n" + reducedResult.value + "\n");
 
-            Validator validator = new Validator();
-            validator.visit((Program) reducedResult.value);
+            Interpreter interpreter = new Interpreter();
+            interpreter.visit((Program) reducedResult.value);
 
         } catch (IOException e) {
             e.printStackTrace();
