@@ -90,7 +90,10 @@ public class Validator implements Visitor {
 
     @Override
     public void visit(PrintCallStatement acceptor) {
-        getTypeOfOperand(acceptor.getValue());
+        Object value = acceptor.getValue();
+        if (value != null) {
+            getTypeOfOperand(acceptor.getValue());
+        }
     }
 
     @Override

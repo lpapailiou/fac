@@ -20,7 +20,7 @@ public class Executor extends Validator {
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
         if (execute) {
             traverse(acceptor);
-            printDeclarations();
+            //printDeclarations();
         }
     }
 
@@ -68,9 +68,9 @@ public class Executor extends Validator {
         if (execute) {
             Statement statement = (Statement) acceptor.getValue();
             if (statement != null) {
-                System.out.println("PRINTING " + getValueOfOperand(statement).toString().replaceAll("'", ""));
+                System.out.println(">>>>  \n" + getValueOfOperand(statement).toString().replaceAll("'", ""));
             } else {
-                System.out.println("PRINTING NOTHING");
+                System.out.println(">>>>  \n");
             }
         }
     }
