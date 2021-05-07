@@ -501,7 +501,8 @@ will similarly validate and execute the interpreted code.
 ##### Console mode
 The console mode starts an executor in the console. This version is interactive. Every line of code 
 will be scanned, parsed, interpreted and directly be executed. If no error occurred, the next line can be 
-entered. In case of an error, the last entry will be ignored. A new line can be added to the so-far valid code.  
+entered. This also means, that already executed code will execute again from start.    
+In case of an error, the last entry will be ignored. A new line can be added to the so-far valid code.  
 The console mode can be escaped with -h or -q.
 
     // sample output

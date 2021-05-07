@@ -69,9 +69,9 @@ public class Executor extends Interpreter {
         if (execute) {
             Statement statement = (Statement) acceptor.getValue();
             if (statement != null) {
-                System.out.println(">>>>  \n" + getValueOfOperand(statement).toString().replaceAll("'", ""));
+                System.out.println(">>>>  " + getValueOfOperand(statement).toString().replaceAll("'", ""));
             } else {
-                System.out.println(">>>>  \n");
+                System.out.println(">>>>  ");
             }
         }
     }
