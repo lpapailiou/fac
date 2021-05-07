@@ -470,7 +470,7 @@ As soon as the parse tree is ready, the interpreter will traverse the tree and v
     }
 
 ##### main.RunExecutor
-The executor is built on a interpreter. The process is similar to the ``RunParser`` sample, but the executor
+The executor is built on a interpreter. The process is similar to the ``RunValidatedParser`` sample, but the executor
 will additionally execute the interpreted code.
 
     // sample output
