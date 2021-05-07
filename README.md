@@ -513,11 +513,8 @@ The console mode can be escaped with -h or -q.
     **************************************************************
     >  ... initialized & ready to code!                                 // from here on, user input is accepted
     >  number one = 1;
-    >  
     >  while (one < 2) {one += 1; print('hello world'); }
-    >  
-    >>>>  
-    hello world
+    >>>>  hello world
     >  
 
 #### Scanner generation
