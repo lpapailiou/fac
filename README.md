@@ -423,11 +423,24 @@ Below, the structure of the package tree is listed for better overview.
                 + lib                       // external dependecies (jflex & cup)
 
 ### Run
-#### Samples
-To execute specific components (scanner, parser, execution), there are prepared samples ready in
-the directory ``src\main\java\main``. Files with code examples can be found here: ``src\main\resources``.
+#### main.Compiler
+The main class ``Compiler`` may be run with or without options. If there are no options given, it will
+initialize the [interactive console mode](#console-mode).  
+There's also a small menu available.
 
-##### main.RunScanner
+    // output of help menu (accessed with -h)
+    Following options are available:
+        -o scan
+        -o parse
+        -o interpret
+        -o execute
+    
+    Optionally you may enter a file path after the option.
+
+If a file path succeeds the option, this specific file will be processed. Otherwise, a sample file will be run.  
+Several sample files are available in the directory ``src\main\resources``.
+
+##### Scan mode
 The Scanner will take a file and tokenize its content. The output is verbose, every processed token will be
 printed accordingly to the console.
 
@@ -439,7 +452,7 @@ printed accordingly to the console.
     scanning token {STOP}: found match <;> at line 1, column 14.
     ...end of file reached at line 1, column 1.
 
-##### main.RunParser
+##### Parse mode
 The parser will initialize a scanner. During processing, the parser will take token by token and validate if
 the sequence follows the syntactical definition of the grammar. If no error occurs, the parser will generate
 a parse tree. This means, that the syntax of the scanned code is valid.  
@@ -455,8 +468,8 @@ Additionally, it will print the parsed code to the console.
         print('hello world');
     }
     
-##### main.RunValidatedParser
-This sample will run a parser as above.
+##### Interpreter mode
+This mode will run a parser as above.
 As soon as the parse tree is ready, the interpreter will traverse the tree and validate semantic rules.  
 
     // sample output
@@ -469,9 +482,9 @@ As soon as the parse tree is ready, the interpreter will traverse the tree and v
         print('hello world');
     }
 
-##### main.RunExecutor
-The executor is built on an interpreter. The process is similar to the ``RunValidatedParser`` sample, but the executor
-will additionally execute the interpreted code.
+##### Execution mode
+The executor is built on an interpreter. The process is similar to the interpreter mode, but the executor
+will similarly validate and execute the interpreted code.
 
     // sample output
     ***** EXECUTION RESULT *****
@@ -485,16 +498,18 @@ will additionally execute the interpreted code.
     >>>>  
     hello world
 
-##### main.RunConsoleExecutor
-The ``RunConsoleExecutor`` starts an executor in the console. This version is interactive. Every line of code 
+##### Console mode
+The console mode starts an executor in the console. This version is interactive. Every line of code 
 will be scanned, parsed, interpreted and directly be executed. If no error occurred, the next line can be 
-entered. In case of an error, the last entry will be ignored. A new line can be added to the so-far valid code.
+entered. In case of an error, the last entry will be ignored. A new line can be added to the so-far valid code.  
+The console mode can be escaped with -h or -q.
 
     // sample output
+    (press -h for help or -q to quit)
     **************************************************************
     *                      WELCOME TO JLANG                      *
     **************************************************************
-    >  ... initialized & ready to code!
+    >  ... initialized & ready to code!                                 // from here on, user input is accepted
     >  number one = 1;
     >  
     >  while (one < 2) {one += 1; print('hello world'); }
