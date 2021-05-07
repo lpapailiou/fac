@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 public class Compiler {
 
+    private static final String ENCODING = "UTF-8";
     private static final Logger LOG = Logger.getLogger(String.class.getName());
     private static final Scanner SCANNER = new Scanner(System.in);
     private static Option option = Option.CONSOLE;
@@ -176,8 +177,7 @@ public class Compiler {
     }
 
     private static void executeConsoleContent(String code) throws Exception {
-        String encodingName = "UTF-8";
-        try (InputStream stream = new ByteArrayInputStream(code.getBytes()); InputStreamReader reader = new InputStreamReader(stream, encodingName)) {
+        try (InputStream stream = new ByteArrayInputStream(code.getBytes()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
             JParser parser = new JParser(reader, false);
 
             Symbol reducedResult = null;
@@ -195,8 +195,7 @@ public class Compiler {
     }
 
     private static void executeFile(String data) throws IOException {
-        String encodingName = "UTF-8";
-        try (FileInputStream stream = new FileInputStream(Paths.get(data).toAbsolutePath().toString()); InputStreamReader reader = new InputStreamReader(stream, encodingName)) {
+        try (FileInputStream stream = new FileInputStream(Paths.get(data).toAbsolutePath().toString()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
             JParser parser = new JParser(reader, true);
 
             Symbol reducedResult = null;
@@ -222,8 +221,7 @@ public class Compiler {
     }
 
     private static void interpretFile(String data) throws IOException {
-        String encodingName = "UTF-8";
-        try (FileInputStream stream = new FileInputStream(Paths.get(data).toAbsolutePath().toString()); InputStreamReader reader = new InputStreamReader(stream, encodingName)) {
+        try (FileInputStream stream = new FileInputStream(Paths.get(data).toAbsolutePath().toString()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
             JParser parser = new JParser(reader);
 
             Symbol reducedResult = null;
@@ -247,8 +245,7 @@ public class Compiler {
     }
 
     private static void parseFile(String data) throws IOException {
-        String encodingName = "UTF-8";
-        try (FileInputStream stream = new FileInputStream(Paths.get(data).toAbsolutePath().toString()); InputStreamReader reader = new InputStreamReader(stream, encodingName)) {
+        try (FileInputStream stream = new FileInputStream(Paths.get(data).toAbsolutePath().toString()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
             JParser parser = new JParser(reader);
 
             Symbol reducedResult = null;
@@ -269,8 +266,7 @@ public class Compiler {
     }
 
     private static void scanFile(String data) throws IOException {
-        String encodingName = "UTF-8";
-        try (FileInputStream stream = new FileInputStream(Paths.get(data).toAbsolutePath().toString()); InputStreamReader reader = new InputStreamReader(stream, encodingName)) {
+        try (FileInputStream stream = new FileInputStream(Paths.get(data).toAbsolutePath().toString()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
 
             JScanner scanner = new JScanner(reader);
 
