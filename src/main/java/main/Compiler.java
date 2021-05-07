@@ -41,6 +41,7 @@ public class Compiler {
                             scanFile(path);
                         }
                     } catch (IOException e) {
+                        LOG.log(Level.WARNING, "File " + path + " does not seem to be readable. The sample file " + defaultFilePath + " will be processed instead.");
                         try {
                             scanFile(defaultFilePath);
                         } catch (IOException e1) {
@@ -54,6 +55,7 @@ public class Compiler {
                             parseFile(path);
                         }
                     } catch (IOException e) {
+                        LOG.log(Level.WARNING, "File " + path + " does not seem to be readable. The sample file " + defaultFilePath + " will be processed instead.");
                         try {
                             parseFile(defaultFilePath);
                         } catch (IOException e1) {
@@ -67,6 +69,7 @@ public class Compiler {
                             interpretFile(path);
                         }
                     } catch (IOException e) {
+                        LOG.log(Level.WARNING, "File " + path + " does not seem to be readable. The sample file " + defaultFilePath + " will be processed instead.");
                         try {
                             interpretFile(defaultFilePath);
                         } catch (IOException e1) {
@@ -77,6 +80,7 @@ public class Compiler {
                 case EXECUTE:
                     try {
                         if (path != null) {
+                            LOG.log(Level.WARNING, "File " + path + " does not seem to be readable. The sample file " + defaultFilePath + " will be processed instead.");
                             executeFile(path);
                         }
                     } catch (IOException e) {
