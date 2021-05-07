@@ -437,7 +437,7 @@ There's also a small menu available.
     
     Optionally you may enter a file path after the option.
 
-If a file path succeeds the option, this specific file will be processed. Otherwise, a sample file will be run.  
+If a file path follows the option, this specific file will be processed. Otherwise, a sample file will be run.  
 Several sample files are available in the directory ``src\main\resources``.
 
 ##### Scan mode
