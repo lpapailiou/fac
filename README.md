@@ -499,9 +499,10 @@ will similarly validate and execute the interpreted code.
     hello world
 
 ##### Console mode
-The console mode starts an executor in the console. This version is interactive. Every line of code 
-will be scanned, parsed, interpreted and directly be executed. If no error occurred, the next line can be 
-entered. This also means, that already executed code will execute again from start.    
+The console mode starts an executor in the console. This version is interactive. For every entered line, the
+whole so-far valid code will be scanned, parsed, interpreted and directly be executed.  
+This also means, that (for the sake of simplicity) not nested print statements may be executed multiple times. 
+
 In case of an error, the last entry will be ignored. A new line can be added to the so-far valid code.  
 The console mode can be escaped with -h or -q.
 
