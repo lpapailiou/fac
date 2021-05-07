@@ -163,8 +163,6 @@ public class Compiler {
                 break;
             }
 
-            System.out.println(consoleMarker);
-
             try {
                 if (!cache.startsWith("//")) {
                     executeConsoleContent(code + cache);

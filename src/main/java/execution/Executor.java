@@ -166,7 +166,6 @@ public class Executor extends Interpreter {
         if (node != null) {
             preValidation(node);
 
-
             List<Statement> statements = getStatements(node);
             processStatements(node, statements);
 
