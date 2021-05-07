@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RunParser {
+public class RunValidatedParser {
 
     private static final Logger LOG = Logger.getLogger(String.class.getName());
 
@@ -42,6 +42,9 @@ public class RunParser {
             }
 
             System.out.println("***** PARSER RESULT *****\n\n" + reducedResult.value + "\n");
+
+            Interpreter interpreter = new Interpreter();
+            interpreter.visit((Program) reducedResult.value);
 
         } catch (IOException e) {
             e.printStackTrace();

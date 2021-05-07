@@ -442,9 +442,22 @@ printed accordingly to the console.
 ##### main.RunParser
 The parser will initialize a scanner. During processing, the parser will take token by token and validate if
 the sequence follows the syntactical definition of the grammar. If no error occurs, the parser will generate
-a parse tree.  
-As soon as the parse tree is ready, the interpreter will traverse the tree and check for semantic rules.  
-Additionally, it will print the interpreted code to the console.
+a parse tree. This means, that the syntax of the scanned code is valid.  
+Additionally, it will print the parsed code to the console.
+
+    // sample output
+    ***** PARSER RESULT *****
+    
+    number one = 1;
+    
+    while (one < 5) {
+        one += 1;
+        print('hello world');
+    }
+    
+##### main.RunValidatedParser
+This sample will run a parser as above.
+As soon as the parse tree is ready, the interpreter will traverse the tree and validate semantic rules.  
 
     // sample output
     ***** PARSER RESULT *****
