@@ -11,6 +11,7 @@ public class ParamDeclaration extends Statement implements Declaration {
     private Type type;
     private String identifier;
     private Object value;
+    private Object initValue;
     private ParamDeclaration next;
 
     public ParamDeclaration(Object type, Object identifier) {
@@ -23,11 +24,16 @@ public class ParamDeclaration extends Statement implements Declaration {
         } else {
             value = "''";
         }
+        initValue = value;
     }
 
     public ParamDeclaration(Object type, Object identifier, Object obj) {
         this(type, identifier);
         next = (ParamDeclaration) obj;
+    }
+
+    public void reset() {
+        value = initValue;
     }
 
     public ParamDeclaration getNext() {

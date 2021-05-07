@@ -11,11 +11,17 @@ public class VariableDeclaration extends Statement implements Declaration {
     private Type type;
     private Object identifier;
     private Object value;
+    private Object initValue;
 
     public VariableDeclaration(Object type, Object identifier, Object value) {
         this.type = Type.getByName(type);
         this.identifier = identifier;
         this.value = (value == null) ? Type.getByName(type).getDefaultValue() : value;
+        this.initValue = value;
+    }
+
+    public void reset() {
+        value = initValue;
     }
 
     @Override

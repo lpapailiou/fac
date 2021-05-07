@@ -1,3 +1,13 @@
+while(true) {
+    number one = 0;
+    one += 1;
+    print(one);
+    if (true) {
+    break;
+    } else {
+    }
+    break;
+}
 
-print();
+
 

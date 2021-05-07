@@ -377,7 +377,7 @@ The interpreter will receive the parse tree from the parser and traverse it dept
 
 #### Break statements
 <ul>
-<li>Per while loop, one break statement is allowed.</li>
+<li>Per while loop and nesting level, one break statement is allowed.</li>
 <li>Exception: if a break loop contains an if-then-else statement, two breaks are allowed.</li>
 <li>A break must be the last statement of a statement list, but can be nested within other statement lists. Thus, a simple validation for
 unreachable code occurs at this place.</li>

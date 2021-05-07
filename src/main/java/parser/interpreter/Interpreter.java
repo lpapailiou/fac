@@ -126,8 +126,6 @@ public class Interpreter implements Visitor {
         removeDeclarations(acceptor);
         if (whileDepth > 0) {
             whileDepth--;
-        } else {
-            throw new GrammarException("Too many break statements in loop <" + acceptor + ">!");
         }
     }
 

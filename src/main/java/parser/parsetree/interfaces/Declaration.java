@@ -11,4 +11,6 @@ public interface Declaration {
     Object getValue();
 
     void setValue(Object obj);
+
+    void reset();
 }

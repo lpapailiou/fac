@@ -22,7 +22,7 @@ public class RunExecutor {
         }
 
         String encodingName = "UTF-8";
-        String baseFile = "src/main/resources/hello_world.txt";
+        String baseFile = "src/main/resources/misc_test_1.txt";
 
         if (args.length > 0) {
             try {

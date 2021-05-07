@@ -33,6 +33,7 @@ public class Executor extends Interpreter {
     public void visit(VariableDeclaration acceptor) {
         super.visit(acceptor);
         if (execute) {
+            acceptor.reset();
             Object value = getValueOfOperand(acceptor.getValue());
             acceptor.setValue(value);
         }
