@@ -1,7 +1,7 @@
 package parser.parsetree;
 
-import parser.exceptions.GrammarException;
-import parser.exceptions.TypeMismatchException;
+import exceptions.GrammarException;
+import exceptions.TypeMismatchException;
 
 import java.util.Arrays;
 

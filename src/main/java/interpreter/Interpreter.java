@@ -1,6 +1,6 @@
-package parser.interpreter;
+package interpreter;
 
-import parser.exceptions.*;
+import exceptions.*;
 import parser.parsetree.*;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Traversable;

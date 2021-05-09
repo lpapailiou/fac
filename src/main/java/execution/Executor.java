@@ -1,10 +1,10 @@
 package execution;
 
-import parser.exceptions.UniquenessViolationException;
+import exceptions.UniquenessViolationException;
 import parser.parsetree.*;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Traversable;
-import parser.interpreter.Interpreter;
+import interpreter.Interpreter;
 
 import java.util.ArrayList;
 import java.util.List;

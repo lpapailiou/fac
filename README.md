@@ -414,12 +414,12 @@ Below, the structure of the package tree is listed for better overview.
     + src
         + main
             + java
-                + execution               // code execution handling
+                + exceptions                // custom exceptions
+                + execution                 // code execution handling
+                + interpreter               // semantic validation 
                 + main                      // samples (ready for execution)
-                + parser                    // syntactical analysis & semantic logic
-                    + exceptions
-                    + interpreter               // semantic validation                     
-                    + parsetree                 // parse tree components (syntax)
+                + parser                    // syntactical analysis              
+                    + parsetree                 // parse tree components
                         + interfaces
                 + scanner                   // lexical analysis & token generation
             + resources                     // code sample files

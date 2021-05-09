@@ -1,4 +1,4 @@
-package parser.exceptions;
+package exceptions;
 
 public class MissingDeclarationException extends GrammarException {
 

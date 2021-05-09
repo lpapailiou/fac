@@ -1,9 +1,12 @@
 package main;
 
+import exceptions.GrammarException;
+import exceptions.ParseException;
+import exceptions.ScanException;
 import execution.Executor;
 import java_cup.runtime.Symbol;
 import parser.JParser;
-import parser.interpreter.Interpreter;
+import interpreter.Interpreter;
 import parser.parsetree.Program;
 import scanner.JScanner;
 
@@ -172,8 +175,15 @@ public class Compiler {
                     executeConsoleContent(code + cache);
                     code += cache;
                 }
-            } catch (Exception | Error e) {
-                LOG.log(Level.WARNING, "Entered code not valid (" + e.getLocalizedMessage() + ")!");
+            } catch (Exception e) {
+                if (e instanceof GrammarException) {
+                    LOG.log(Level.WARNING, "Parsed code semantically not valid (" + e.getLocalizedMessage() + ")!");
+                } else {
+                    LOG.log(Level.WARNING, "Parsed code syntax not valid!");
+                }
+            } catch (Error e) {
+                Throwable t = new ScanException(e.getMessage(), e);
+                LOG.log(Level.WARNING, "Scanned code not valid (" + t.getLocalizedMessage() + ")!");
             }
         }
     }
@@ -208,7 +218,14 @@ public class Compiler {
                     reducedResult = parser.parse();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                if (e instanceof GrammarException) {
+                    LOG.log(Level.WARNING, "Parsed code semantically not valid (" + e.getLocalizedMessage() + ")!");
+                } else {
+                    LOG.log(Level.WARNING, "Parsed code syntax not valid!");
+                }
+            } catch (Error e) {
+                Throwable t = new ScanException(e.getMessage(), e);
+                LOG.log(Level.WARNING, "Scanned code not valid (" + t.getLocalizedMessage() + ")!");
             }
 
             System.out.println("***** PARSER RESULT *****\n\n" + reducedResult.value + "\n");
@@ -234,7 +251,14 @@ public class Compiler {
                     reducedResult = parser.parse();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                if (e instanceof GrammarException) {
+                    LOG.log(Level.WARNING, "Parsed code semantically not valid (" + e.getLocalizedMessage() + ")!");
+                } else {
+                    LOG.log(Level.WARNING, "Parsed code syntax not valid!");
+                }
+            } catch (Error e) {
+                Throwable t = new ScanException(e.getMessage(), e);
+                LOG.log(Level.WARNING, "Scanned code not valid (" + t.getLocalizedMessage() + ")!");
             }
 
             System.out.println("***** PARSER RESULT *****\n\n" + reducedResult.value + "\n");
@@ -258,7 +282,14 @@ public class Compiler {
                     reducedResult = parser.parse();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                if (e instanceof GrammarException) {
+                    LOG.log(Level.WARNING, "Parsed code semantically not valid (" + e.getLocalizedMessage() + ")!");
+                } else {
+                    LOG.log(Level.WARNING, "Parsed code syntax not valid!");
+                }
+            } catch (Error e) {
+                Throwable t = new ScanException(e.getMessage(), e);
+                LOG.log(Level.WARNING, "Scanned code not valid (" + t.getLocalizedMessage() + ")!");
             }
 
             System.out.println("***** PARSER RESULT *****\n\n" + reducedResult.value + "\n");
@@ -273,8 +304,13 @@ public class Compiler {
 
             JScanner scanner = new JScanner(reader);
 
-            while (!scanner.yyatEOF()) {
-                scanner.next_token();
+            try {
+                while (!scanner.yyatEOF()) {
+                    scanner.next_token();
+                }
+            } catch (Error e) {
+                Throwable t = new ScanException(e.getMessage(), e);
+                LOG.log(Level.WARNING, "Scanned code not valid (" + t.getLocalizedMessage() + ")!");
             }
 
         } catch (IOException e) {
