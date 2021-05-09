@@ -523,11 +523,15 @@ The console mode can be escaped with -h or -q.
     >  
 
 #### Scanner generation
-To generate a new scanner from the flex file, run following command (java path must be set).
+To generate a new scanner from the flex file, run following command (java path must be set).  
 
     java -jar src/main/resources/lib/jflex-full-1.8.2.jar src/main/java/scanner/jscanner.flex
+    
+Here's the [link to the external jflex documentation](https://jflex.de/).    
 
 #### Parser generation
-To generate a new parser from the cup file, run following command (java path must be set).
+To generate a new parser from the cup file, run following command (java path must be set).  
 
     java -jar src/main/resources/lib/java-cup-11b.jar -interface -destdir src/main/java/parser/ -symbols JSymbol -parser JParser src/main/java/parser/jparser.cup
+    
+Here's the [link to the external cup documentation](http://www2.cs.tum.edu/projects/cup/).    
