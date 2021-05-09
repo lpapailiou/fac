@@ -199,7 +199,7 @@ public class Compiler {
 
             Executor executor = new Executor();
             executor.setScriptMode(true);
-            executor.visit((Program) reducedResult.value);
+            ((Program) reducedResult.value).accept(executor);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -232,7 +232,7 @@ public class Compiler {
             System.out.println("***** EXECUTION RESULT *****\n");
 
             Executor executor = new Executor();
-            executor.visit((Program) reducedResult.value);
+            ((Program) reducedResult.value).accept(executor);
 
         } catch (IOException e) {
             throw e;
@@ -263,7 +263,7 @@ public class Compiler {
             System.out.println("***** PARSER RESULT *****\n\n" + reducedResult.value + "\n");
 
             Interpreter interpreter = new Interpreter();
-            interpreter.visit((Program) reducedResult.value);
+            ((Program) reducedResult.value).accept(interpreter);
 
         } catch (IOException e) {
             throw e;
