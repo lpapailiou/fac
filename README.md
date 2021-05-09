@@ -392,11 +392,14 @@ unreachable code occurs at this place.</li>
         break; }        
 
 ### Execution
+The execution is handled by the ``Executor``. It can be found int the 
+package ``src\main\java\execution``. It is built on an interpreter, which means that it will automatically also
+validate code semantically before execution - even if the code itself will never run (e.g. in a dead if-then-else branch). 
+  
 Please note that global variables and function definitions must be declared always before being referenced. Thus, declarations must be 
 placed always before callers (not like Java, where global variables and functions may be defined anywhere in a file).  
   
-By default, execution means that every line of code is executed. Nevertheless, the ``Executor`` can also be set to
-script mode. In this case, print statements will not be executed multiple times.
+The ``Executor`` can also be set to script mode. In this case, only the last entered statement will trigger the execution of print calls.
 
 ## Repository handling
 This section contains a few technical notes about this repository.
