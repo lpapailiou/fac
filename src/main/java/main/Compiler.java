@@ -1,7 +1,6 @@
 package main;
 
 import exceptions.GrammarException;
-import exceptions.ParseException;
 import exceptions.ScanException;
 import execution.Executor;
 import java_cup.runtime.Symbol;
