@@ -393,7 +393,10 @@ unreachable code occurs at this place.</li>
 
 ### Execution
 Please note that global variables and function definitions must be declared always before being referenced. Thus, declarations must be 
-placed always before callers (not like Java, where global variables and functions may be defined anywhere in a file).
+placed always before callers (not like Java, where global variables and functions may be defined anywhere in a file).  
+  
+By default, execution means that every line of code is executed. Nevertheless, the ``Executor`` can also be set to
+script mode. In this case, print statements will not be executed multiple times.
 
 ## Repository handling
 This section contains a few technical notes about this repository.
@@ -501,7 +504,6 @@ will similarly validate and execute the interpreted code.
 ##### Console mode
 The console mode starts an executor in the console. This version is interactive. For every entered line, the
 whole so-far valid code will be scanned, parsed, interpreted and directly be executed.  
-This also means, that (for the sake of simplicity) not nested print statements may be executed multiple times. 
 
 In case of an error, the last entry will be ignored. A new line can be added to the so-far valid code.  
 The console mode can be escaped with -h or -q.

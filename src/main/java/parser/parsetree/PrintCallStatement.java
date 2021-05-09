@@ -9,6 +9,7 @@ public class PrintCallStatement extends Statement {
 
 
     private Object value;
+    private boolean called;
 
     public PrintCallStatement(Object value) {
         this.value = value;
@@ -40,4 +41,5 @@ public class PrintCallStatement extends Statement {
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
+
 }

@@ -12,6 +12,8 @@ import java.util.List;
 public class Executor extends Interpreter {
 
     private boolean execute = true;         // to be switched off if validation only is required
+    private boolean scriptMode = false;     // will prevent print statements from being executed multiple times if not placed in functions
+    private boolean printActive = false;
     private int breakEvent = 0;
     private int breakOccurred = 0;
 
@@ -66,7 +68,7 @@ public class Executor extends Interpreter {
     @Override
     public void visit(PrintCallStatement acceptor) {
         super.visit(acceptor);
-        if (execute) {
+        if (execute  && (!scriptMode || printActive)) {
             Statement statement = (Statement) acceptor.getValue();
             if (statement != null) {
                 System.out.println(">>>>  " + getValueOfOperand(statement).toString().replaceAll("'", ""));
@@ -123,8 +125,9 @@ public class Executor extends Interpreter {
         List<Statement> statements = function.getStatements();
         boolean isNested = false;
         for (int i = 0; i < statements.size(); i++) {
-            if (statements.get(i) instanceof  ParamDeclaration) {
-                ParamDeclaration paramDeclaration = ((ParamDeclaration) statements.get(i));
+            Statement stmt = statements.get(i);
+            if (stmt instanceof  ParamDeclaration) {
+                ParamDeclaration paramDeclaration = ((ParamDeclaration) stmt);
                 try {
                     addDeclarationToScope(paramDeclaration);
                 } catch (UniquenessViolationException e){
@@ -132,7 +135,7 @@ public class Executor extends Interpreter {
                 }
                 paramDeclaration.setValue(getValueOfOperand(callParams.get(i)));
             } else {
-                this.visit(statements.get(i));
+                traverse(stmt);
             }
         }
         Object value = getValueOfOperand(function.getReturnValue());
@@ -226,8 +229,17 @@ public class Executor extends Interpreter {
                 removeDeclarations(node);
             }
         } else {
-            for (Statement st : statements) {
-                traverse(st);
+            if (node instanceof Program) {
+                for (int i = 0; i < statements.size(); i++) {
+                    if (i == statements.size()-1) {
+                        printActive = true;
+                    }
+                    traverse(statements.get(i));
+                }
+            } else {
+                for (Statement st : statements) {
+                    traverse(st);
+                }
             }
         }
     }
@@ -239,5 +251,10 @@ public class Executor extends Interpreter {
             breakEvent++;
         }
     }
+
+    public void setScriptMode(boolean scriptMode) {
+        this.scriptMode = scriptMode;
+    }
+
 
 }

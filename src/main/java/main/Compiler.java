@@ -168,7 +168,7 @@ public class Compiler {
             }
 
             try {
-                if (!cache.startsWith("//")) {
+                if (!cache.startsWith("//") && !cache.replaceAll("\\[ \\s \t\n\r]", "").equals("")) {
                     executeConsoleContent(code + cache);
                     code += cache;
                 }
@@ -189,6 +189,7 @@ public class Compiler {
             }
 
             Executor executor = new Executor();
+            executor.setScriptMode(true);
             executor.visit((Program) reducedResult.value);
 
         } catch (IOException e) {
