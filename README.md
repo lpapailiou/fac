@@ -294,7 +294,7 @@ So far, our toy language is defined and we have the tools to validate if a code 
 this point, there is no type safety, variables can be assigned before they are declared and break statements
 are a mere decoration.  
   
-The required semantic validation must now be performed by a ``Interpreter`` (see ``src\main\java\parser\interpreter``).  
+The required semantic validation must now be performed by a ``Interpreter`` (see ``src\main\java\interpreter``).  
 The interpreter will receive the parse tree from the parser and traverse it depth-first.
 
 #### Identifier scope
