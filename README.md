@@ -367,7 +367,7 @@ The interpreter will receive the parse tree from the parser and traverse it dept
             return 'seven'; }
         def number y() {                // valid
             return 0; }
-        def number z() {                // interpreter fails, as function y() is already defined with 0 params and same return type
+        def number y() {                // interpreter fails, as function y() is already defined with 0 params and same return type
             return 1; }
 
 #### Conditional statements and while loops
