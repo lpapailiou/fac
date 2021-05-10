@@ -155,6 +155,7 @@ public class Compiler {
     private static void startExecutor() {
         String consoleMarker = ">  ";
         String code = "";
+        String tmpCache = "";
 
         System.out.println("(press -h for help or -q to quit)");
         System.out.println("**************************************************************");
@@ -164,16 +165,20 @@ public class Compiler {
 
         while (true) {
             System.out.print(consoleMarker);
-            cache = SCANNER.nextLine();
-            if (cache.startsWith("-h") || cache.startsWith("-q")) {
+            tmpCache = SCANNER.nextLine();
+            if (tmpCache.startsWith("-h") || tmpCache.startsWith("-q")) {
+                cache = tmpCache;
                 break;
+            } else if (!tmpCache.replaceAll("\\[ \\s \t\n\r]", "").equals("")) {
+                if (!tmpCache.startsWith("//")) {
+                    cache += tmpCache;
+                }
+                continue;
             }
 
             try {
-                if (!cache.startsWith("//") && !cache.replaceAll("\\[ \\s \t\n\r]", "").equals("")) {
-                    executeConsoleContent(code + cache);
-                    code += cache;
-                }
+                executeConsoleContent(code + cache);
+                code += cache;
             } catch (Exception e) {
                 if (e instanceof GrammarException) {
                     LOG.log(Level.WARNING, "Parsed code semantically not valid (" + e.getLocalizedMessage() + ")!");
@@ -183,6 +188,8 @@ public class Compiler {
             } catch (Error e) {
                 Throwable t = new ScanException(e.getMessage(), e);
                 LOG.log(Level.WARNING, "Scanned code not valid (" + t.getLocalizedMessage() + ")!");
+            } finally {
+                cache = "";
             }
         }
     }

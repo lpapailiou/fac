@@ -399,7 +399,9 @@ validate code semantically before execution - even if the code itself will never
 Please note that global variables and function definitions must be declared always before being referenced. Thus, declarations must be 
 placed always before callers (not like Java, where global variables and functions may be defined anywhere in a file).  
   
-The ``Executor`` can also be set to script mode. In this case, only the last entered statement will trigger the execution of print calls.
+The ``Executor`` can also be set to script mode. In this case, only the last entered statement will trigger the execution of print calls.  
+In the console, entered code will be validated after pressing ENTER on a blank input line. This means, multiple lines
+can be entered before validating (e.g. breaks are allowed within complex statements). 
 
 ## Repository handling
 This section contains a few technical notes about this repository.
@@ -505,10 +507,10 @@ will similarly validate and execute the interpreted code.
     hello world
 
 ##### Console mode
-The console mode starts an executor in the console. This version is interactive. For every entered line, the
+The console mode starts an executor in the console. This version is interactive. For every entered code block, the
 whole so-far valid code will be scanned, parsed, interpreted and directly be executed.  
 
-In case of an error, the last entry will be ignored. A new line can be added to the so-far valid code.  
+In case of an error, the last entry will be ignored. New code can be added to the so-far valid code.  
 The console mode can be escaped with -h or -q.
 
     // sample output
