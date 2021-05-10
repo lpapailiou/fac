@@ -176,6 +176,10 @@ public class Compiler {
                 continue;
             }
 
+            if (cache.replaceAll("\\[ \\s \t\n\r]", "").equals("")) {
+                continue;
+            }
+
             try {
                 executeConsoleContent(code + cache);
                 code += cache;
