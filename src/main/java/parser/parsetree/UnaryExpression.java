@@ -1,9 +1,6 @@
 package parser.parsetree;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This is a wrapper class for unary arithmetic expressions.
  * Its instances will hold an assignment operator and an operand.
@@ -13,17 +10,30 @@ public class UnaryExpression extends ArithmeticExpression {
     private UnOp op;
     private Object operand;
 
-    public UnaryExpression(Object op, Object operand) {
+    /**
+     * This constructor will instantiate a wrapper for a binary expression.
+     * @param op the operator.
+     * @param operand the operand.
+     */
+    UnaryExpression(Object op, Object operand) {
         this.op = UnOp.getName(op);
         this.operand = operand;
     }
 
-    public Object getOperand() {
-        return operand;
-    }
-
+    /**
+     * Returns the unary operator.
+     * @return the operator.
+     */
     public UnOp getOperator() {
         return op;
+    }
+
+    /**
+     * Returns the operand.
+     * @return the operand.
+     */
+    public Object getOperand() {
+        return operand;
     }
 
     /**

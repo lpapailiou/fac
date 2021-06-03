@@ -1,8 +1,5 @@
 package parser.parsetree;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This is a wrapper class for binary conditional expressions.
  * Its instances will hold an assignment operator and two operands.
@@ -13,26 +10,40 @@ public class BinaryCondition extends ConditionalExpression {
     private Object operand1;
     private Object operand2;
 
-    public BinaryCondition(Object o1) {
+    /**
+     * This constructor will instantiate a wrapper for a binary conditional expression.
+     * @param op the operator.
+     * @param o1 the first operand.
+     * @param o2 the second operand.
+     */
+    BinaryCondition(Object op, Object o1, Object o2) {
         this.operand1 = o1;
-    }
-
-    public BinaryCondition(Object op, Object o1, Object o2) {
-        this(o1);
         this.operand2 = o2;
         this.op = BinOp.getName(op.toString());
     }
 
+    /**
+     * Returns the binary operator.
+     * @return the operator.
+     */
+    public BinOp getOperator() {
+        return op;
+    }
+
+    /**
+     * Returns the first operand.
+     * @return the first operand.
+     */
     public Object getOperand1() {
         return operand1;
     }
 
+    /**
+     * Returns the second operand.
+     * @return the second operand.
+     */
     public Object getOperand2() {
         return operand2;
-    }
-
-    public BinOp getOperator() {
-        return op;
     }
 
     /**

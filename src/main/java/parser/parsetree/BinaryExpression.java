@@ -1,9 +1,6 @@
 package parser.parsetree;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This is a wrapper class for binary arithmetic expressions.
  * Its instances will hold an assignment operator and two operands.
@@ -14,22 +11,40 @@ public class BinaryExpression extends ArithmeticExpression {
     private Object operand1;
     private Object operand2;
 
-    public BinaryExpression(Object op, Object operand1, Object operand2) {
+    /**
+     * This constructor will instantiate a wrapper for a binary expression.
+     * @param op the operator.
+     * @param operand1 the first operand.
+     * @param operand2 the second operand.
+     */
+    BinaryExpression(Object op, Object operand1, Object operand2) {
         this.op = BinOp.getName(op);
         this.operand1 = operand1;
         this.operand2 = operand2;
     }
 
+    /**
+     * Returns the binary operator.
+     * @return the operator.
+     */
+    public BinOp getOperator() {
+        return op;
+    }
+
+    /**
+     * Returns the first operand.
+     * @return the first operand.
+     */
     public Object getOperand1() {
         return operand1;
     }
 
+    /**
+     * Returns the second operand.
+     * @return the second operand.
+     */
     public Object getOperand2() {
         return operand2;
-    }
-
-    public BinOp getOperator() {
-        return op;
     }
 
     /**

@@ -102,7 +102,7 @@ public class Interpreter implements Visitor {
         Object returnValue = acceptor.getReturnStatement();
         Type retType = getTypeOfOperand(returnValue);
         if (defType != retType) {
-            throw new TypeMismatchException("Return type <" + retType.getDescription() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.argTypeListAsString() + ")> does not match defined type <" + defType.getDescription() + ">!");
+            throw new TypeMismatchException("Return type <" + retType.getDescription() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.paramTypeListAsString() + ")> does not match defined type <" + defType.getDescription() + ">!");
         }
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
         removeDeclarations(acceptor);
@@ -206,7 +206,7 @@ public class Interpreter implements Visitor {
     }
 
     private Type getType(FunctionCallStatement statement) {
-        FunctionDefStatement function = getFunction(statement.getIdentifier(), statement.getParamCount());
+        FunctionDefStatement function = getFunction(statement.getIdentifier(), statement.getArgumentCount());
         return function.getType();
     }
 
@@ -237,14 +237,14 @@ public class Interpreter implements Visitor {
     }
 
     private void validateFunctionCall(FunctionCallStatement functionCall) {
-        FunctionDefStatement function = getFunction(functionCall.getIdentifier(), functionCall.getParamCount());
+        FunctionDefStatement function = getFunction(functionCall.getIdentifier(), functionCall.getArgumentCount());
         List<Statement> callArgs = functionCall.getArgumentList();
-        List<String> functionParams = Arrays.asList(function.argTypeListAsString().split(", "));
+        List<String> functionParams = Arrays.asList(function.paramTypeListAsString().split(", "));
         for (int i = 0; i < callArgs.size(); i++) {
             Type caller = getTypeOfOperand(callArgs.get(i));
             Type callee = Type.getByName(functionParams.get(i));
             if (caller != callee) {
-                throw new GrammarException("Function parameters do not match with function <" + function.getIdentifier() + "(" + function.argTypeListAsString() + ")>!");
+                throw new GrammarException("Function parameters do not match with function <" + function.getIdentifier() + "(" + function.paramTypeListAsString() + ")>!");
             }
         }
     }
@@ -273,7 +273,7 @@ public class Interpreter implements Visitor {
     }
 
     private boolean isFunctionExisting(FunctionDefStatement function) {
-        FunctionDefStatement definition = functionScope.stream().filter(fun -> fun.getIdentifier().equals(function.getIdentifier()) && fun.getType() == function.getType() && fun.argTypeListAsString().equals(function.argTypeListAsString())).findAny().orElse(null);
+        FunctionDefStatement definition = functionScope.stream().filter(fun -> fun.getIdentifier().equals(function.getIdentifier()) && fun.getType() == function.getType() && fun.paramTypeListAsString().equals(function.paramTypeListAsString())).findAny().orElse(null);
         return definition != null;
     }
 

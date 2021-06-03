@@ -14,6 +14,12 @@ public class WhileStatement extends Statement {
     private Object condition;
     private List<Statement> statementList = new ArrayList<>();
 
+    /**
+     * This constructor will wrap a conditional expression and a statement list to represent a while statement.
+     * While the conditional statement is mandatory, nested statements are optional.
+     * @param condition the conditional expression.
+     * @param statements the statement list of the while body.
+     */
     public WhileStatement(Object condition, Object statements) {
         this.condition = condition;
         if (statements != null) {
@@ -21,10 +27,18 @@ public class WhileStatement extends Statement {
         }
     }
 
+    /**
+     * Returns the conditional expression.
+     * @return the conditional expression.
+     */
     public Object getCondition() {
         return condition;
     }
 
+    /**
+     * Returns the nested statements of the while body as statement list.
+     * @return the statement list.
+     */
     @Override
     public List<Statement> getStatements() {
         return statementList;

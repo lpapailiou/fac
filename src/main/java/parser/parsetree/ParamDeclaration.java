@@ -3,9 +3,6 @@ package parser.parsetree;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Visitor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This is a wrapper class for parameter declarations of a function body.
  * It is constructed like a linked list. The leftmost declaration points to its neighbor to the right, etc.
@@ -18,51 +15,81 @@ public class ParamDeclaration extends Statement implements Declaration {
     private Object initValue;
     private ParamDeclaration next;
 
+    /**
+     * This constructor will create a wrapper for a parameter declaration.
+     * The value of the declared parameter will be initialized to the default value of the according data type.
+     * @param type the data type of the declared parameter.
+     * @param identifier the identifier of the parameter.
+     */
     ParamDeclaration(Object type, Object identifier) {
         this.type = Type.getByName(type);
         this.identifier = identifier.toString();
-        if (this.type == Type.BOOLEAN) {
-            value = false;
-        } else if (this.type == Type.NUMERIC) {
-            value = 0;
-        } else {
-            value = "''";
-        }
+        value = Type.getByName(type).getDefaultValue();
         initValue = value;
     }
 
-    ParamDeclaration(Object type, Object identifier, Object obj) {
+    /**
+     * This constructor will create a wrapper for a parameter declaration.
+     * The value of the declared parameter will be initialized to the default value of the according data type.
+     * Additionally, the following parameter will be linked to this parameter declaration.
+     * @param type the data type of the declared parameter.
+     * @param identifier the identifier of the parameter.
+     * @param nextParam the following parameter to be set as pointer.
+     */
+    ParamDeclaration(Object type, Object identifier, Object nextParam) {
         this(type, identifier);
-        next = (ParamDeclaration) obj;
+        next = (ParamDeclaration) nextParam;
     }
 
-    public void reset() {
-        value = initValue;
-    }
-
-    public ParamDeclaration getNext() {
-        return next;
-    }
-
-
+    /**
+     * Returns the data type of this parameter declaration.
+     * @return the data type.
+     */
     @Override
     public Type getType() {
         return type;
     }
 
+    /**
+     * Returns the identifier of this parameter declaration.
+     * @return the identifier.
+     */
     @Override
     public String getIdentifier() {
         return identifier;
     }
 
+    /**
+     * Returns the value of this parameter.
+     * @return the value.
+     */
     @Override
     public Object getValue() {
         return value;
     }
 
+    /**
+     * Returns the instance of the following parameter declaration.
+     * @return the following parameter.
+     */
+    ParamDeclaration getNext() {
+        return next;
+    }
+
+    /**
+     * Allows to set a new value to this parameter.
+     * @param obj the value to set.
+     */
     @Override
     public void setValue(Object obj) {
         this.value = obj;
+    }
+
+    /**
+     * Resets the value of this parameter to the initially initialized default value.
+     */
+    public void reset() {
+        value = initValue;
     }
 
     /**
@@ -73,8 +100,7 @@ public class ParamDeclaration extends Statement implements Declaration {
      */
     @Override
     public String toString() {
-        String out = type.getDescription() + " " + identifier;
-        return out;
+        return type.getDescription() + " " + identifier;
     }
 
     /**

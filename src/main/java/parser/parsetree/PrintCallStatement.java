@@ -2,9 +2,6 @@ package parser.parsetree;
 
 import parser.parsetree.interfaces.Visitor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This is a wrapper class for print call statements.
  * An instance holds a value, which will be a chain of arguments.
@@ -14,10 +11,19 @@ public class PrintCallStatement extends Statement {
 
     private Object value;
 
+    /**
+     * This constructor will wrap an object to be printed to the console.
+     * This object can be a 'primitive', an expression or a statement, but cannot be multiple statements.
+     * @param value the value to print.
+     */
     public PrintCallStatement(Object value) {
         this.value = value;
     }
 
+    /**
+     * Returns the value to be printed to the console.
+     * @return the value to print.
+     */
     public Object getValue() {
         return value;
     }

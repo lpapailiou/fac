@@ -19,9 +19,17 @@ public class FunctionDefStatement extends Statement {
     private List<Statement> statementList = new ArrayList<>();
     private Object returnStatement;
 
-    public FunctionDefStatement(Object type, Object name, Object params, Object statements, Object returnStatement) {
+    /**
+     * This constructor will create a wrapper for a function definition.
+     * @param type the return type.
+     * @param identifier the identifier.
+     * @param params the declared parameters.
+     * @param statements the nested statements.
+     * @param returnStatement the return statement.
+     */
+    public FunctionDefStatement(Object type, Object identifier, Object params, Object statements, Object returnStatement) {
         this.type = Type.getByName(type);
-        this.identifier = name.toString();
+        this.identifier = identifier.toString();
         if (params != null) {
             ParamDeclaration decl = (ParamDeclaration) params;
             while (decl != null) {
@@ -36,22 +44,42 @@ public class FunctionDefStatement extends Statement {
 
     }
 
+    /**
+     * Returns the identifier of the function definition.
+     * @return the identifier.
+     */
     public String getIdentifier() {
         return identifier;
     }
 
+    /**
+     * Returns the return type of the function.
+     * @return the return type.
+     */
     public Type getType() {
         return type;
     }
 
+    /**
+     * Returns the return statement of the function.
+     * @return the return statement.
+     */
     public Object getReturnStatement() {
         return returnStatement;
     }
 
+    /**
+     * Returns the count of parameters of the function.
+     * @return the parameter count.
+     */
     public int getParamCount() {
         return paramDeclarationList.size();
     }
 
+    /**
+     * Returns the parameter types as concatenated string.
+     * @return the parameter list as string.
+     */
     public String paramListAsString() {
         String out = "";
         for (int i = 0; i < paramDeclarationList.size(); i++) {
@@ -63,7 +91,11 @@ public class FunctionDefStatement extends Statement {
         return out;
     }
 
-    public String argTypeListAsString() {
+    /**
+     * Returns the parameter types as concatenated string.
+     * @return the parameter type list as string.
+     */
+    public String paramTypeListAsString() {
         String out = "";
         for (int i = 0; i < paramDeclarationList.size(); i++) {
             out += paramDeclarationList.get(i).getType().getDescription();
@@ -74,6 +106,11 @@ public class FunctionDefStatement extends Statement {
         return out;
     }
 
+    /**
+     * Returns the nested statements of the function. The parameter declaration is included, the
+     * return statement is excluded.
+     * @return the parameter list.
+     */
     @Override
     public List<Statement> getStatements() {
         List<Statement> statements = new ArrayList<>();

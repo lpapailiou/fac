@@ -13,29 +13,50 @@ public class FunctionCallStatement extends Statement {
 
 
     private String identifier;
-    private List<Statement> parameterList = new ArrayList<>();
+    private List<Statement> argumentList = new ArrayList<>();
 
+    /**
+     * This constructor initializes a wrapper for a function call without arguments.
+     * @param identifier the identifier of the called function.
+     */
     public FunctionCallStatement(Object identifier) {
         this.identifier = identifier.toString();
     }
 
-    public FunctionCallStatement(Object identifier, Object params) {
+    /**
+     * This constructor initializes a wrapper for a function call with arguments.
+     * @param identifier the identifier of the called function.
+     * @param args the arguments of the function call.
+     */
+    public FunctionCallStatement(Object identifier, Object args) {
         this(identifier);
-        if (params != null) {
-            this.parameterList = ((Argument) params).getStatements();
+        if (args != null) {
+            this.argumentList = ((Argument) args).getStatements();
         }
     }
 
+    /**
+     * Returns the identifier of the called function.
+     * @return the identifier of the called function.
+     */
     public String getIdentifier() {
         return identifier;
     }
 
-    public int getParamCount() {
-        return parameterList.size();
+    /**
+     * Returns the count of arguments of the function call.
+     * @return the argument count.
+     */
+    public int getArgumentCount() {
+        return argumentList.size();
     }
 
+    /**
+     * Returns the arguments of the function call as list.
+     * @return the argument list.
+     */
     public List<Statement> getArgumentList() {
-        return parameterList;
+        return argumentList;
     }
 
     /**
@@ -47,9 +68,9 @@ public class FunctionCallStatement extends Statement {
     @Override
     public String toString() {
         String out = identifier + "(";
-        for (int i = 0; i < parameterList.size(); i++) {
-            out += parameterList.get(i);
-            if (i != parameterList.size()-1) {
+        for (int i = 0; i < argumentList.size(); i++) {
+            out += argumentList.get(i);
+            if (i != argumentList.size()-1) {
                 out += ", ";
             }
         }

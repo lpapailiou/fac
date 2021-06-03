@@ -1,10 +1,5 @@
 package parser.parsetree;
 
-import parser.parsetree.interfaces.Visitor;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This is a wrapper class for constants. A constant may be an expression or a value of any type.
  */
@@ -12,10 +7,18 @@ public class Constant extends Statement {
 
     private Object obj;
 
-    public Constant(Object o) {
+    /**
+     * This constructor will create a wrapper for one single object.
+     * @param o the object to wrap.
+     */
+    Constant(Object o) {
         this.obj = o;
     }
 
+    /**
+     * Returns the wrapped object.
+     * @return the wrapped object.
+     */
     public Object getValue() {
         return obj;
     }

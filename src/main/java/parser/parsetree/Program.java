@@ -15,10 +15,19 @@ public class Program implements Traversable {
 
     private List<Statement> statementList = new ArrayList<>();
 
-    public Program(List<Statement> o1) {
-        this.statementList.addAll(o1);
+    /**
+     * This constructor initializes the wrapper for the root of the generated parse tree.
+     * It contains the list of all top-level statements.
+     * @param statementList the list of all top-level statements.
+     */
+    public Program(List<Statement> statementList) {
+        this.statementList.addAll(statementList);
     }
 
+    /**
+     * Returns the list of top-level statements.
+     * @return the statement list.
+     */
     public List<Statement> getStatements() {
         return statementList;
     }

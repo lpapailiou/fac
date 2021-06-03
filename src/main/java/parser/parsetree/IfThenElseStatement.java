@@ -13,6 +13,14 @@ public class IfThenElseStatement extends IfThenStatement {
 
     private List<Statement> statementListElse = new ArrayList<>();
 
+    /**
+     * This constructor will wrap the contents of an if-then-else statement. It will initialize the
+     * if-then-statement as superclass first, then add the else statement list to this instance.
+     * While the conditional statement is mandatory, nested statements are optional.
+     * @param condition the conditional expression.
+     * @param statementList1 the if-then statement list.
+     * @param statementList2 the else statement list.
+     */
     IfThenElseStatement(Object condition, Object statementList1, Object statementList2) {
         super(condition, statementList1);
         if (statementList2 != null) {
@@ -20,10 +28,18 @@ public class IfThenElseStatement extends IfThenStatement {
         }
     }
 
+    /**
+     * Returns the statements of the if-then body.
+     * @return the if-then statement list.
+     */
     public List<Statement> getIfStatements() {
         return super.getStatements();
     }
 
+    /**
+     * Returns the statements of the else body.
+     * @return the else statement list.
+     */
     public List<Statement> getElseStatements() {
         List<Statement> statements = new ArrayList<>();
         if (!statementListElse.isEmpty()) {
@@ -32,6 +48,10 @@ public class IfThenElseStatement extends IfThenStatement {
         return statements;
     }
 
+    /**
+     * Returns the combined statements of the if-then and the else body.
+     * @return the complete statement list.
+     */
     @Override
     public List<Statement> getStatements() {
         List<Statement> statements = super.getStatements();

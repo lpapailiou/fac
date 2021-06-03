@@ -1,10 +1,10 @@
 package execution;
 
 import exceptions.UniquenessViolationException;
+import interpreter.Interpreter;
 import parser.parsetree.*;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Traversable;
-import interpreter.Interpreter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +130,7 @@ public class Executor extends Interpreter {
     }
 
     private Object getValue(FunctionCallStatement statement) {
-        FunctionDefStatement function = getFunction(statement.getIdentifier(), statement.getParamCount());
+        FunctionDefStatement function = getFunction(statement.getIdentifier(), statement.getArgumentCount());
         List<Statement> callParams = statement.getArgumentList();
         List<Statement> statements = function.getStatements();
         boolean isNested = false;

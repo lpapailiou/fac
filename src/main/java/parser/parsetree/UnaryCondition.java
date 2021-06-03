@@ -1,8 +1,5 @@
 package parser.parsetree;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This is a wrapper class for unary conditional expressions.
  * Its instances will hold an assignment operator and an operand.
@@ -12,17 +9,30 @@ public class UnaryCondition extends ConditionalExpression {
     private UnOp op;
     private Object operand;
 
-    public UnaryCondition(Object op, Object o) {
+    /**
+     * This constructor will instantiate a wrapper for a unary conditional expression.
+     * @param op the operator.
+     * @param o the operand.
+     */
+    UnaryCondition(Object op, Object o) {
         this.op = UnOp.getName(op.toString());
         this.operand = o;
     }
 
-    public Object getOperand() {
-        return operand;
-    }
-
+    /**
+     * Returns the unary operator.
+     * @return the operator.
+     */
     public UnOp getOperator() {
         return op;
+    }
+
+    /**
+     * Returns the operand.
+     * @return the operand.
+     */
+    public Object getOperand() {
+        return operand;
     }
 
     /**

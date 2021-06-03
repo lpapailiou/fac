@@ -3,9 +3,9 @@ package main;
 import exceptions.GrammarException;
 import exceptions.ScanException;
 import execution.Executor;
+import interpreter.Interpreter;
 import java_cup.runtime.Symbol;
 import parser.JParser;
-import interpreter.Interpreter;
 import parser.parsetree.Program;
 import scanner.JScanner;
 

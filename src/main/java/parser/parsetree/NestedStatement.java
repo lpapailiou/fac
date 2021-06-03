@@ -1,7 +1,5 @@
 package parser.parsetree;
 
-import parser.parsetree.interfaces.Visitor;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,15 +13,29 @@ public class NestedStatement extends Statement {
     private Statement statement;
     private NestedStatement next;
 
-    public NestedStatement(Object st) {
+    /**
+     * This constructor will take one statement and wrap it.
+     * @param st the statement to wrap.
+     */
+    NestedStatement(Object st) {
         statement = (Statement) st;
     }
 
-    public NestedStatement(Object st, Object obj) {
+    /**
+     * This constructor will take two statements. The first statement will be wrapped in this instance.
+     * The second statement will serve as pointer to the next statement.
+     * @param st the statement to wrap.
+     * @param nextSt the next statement to point to.
+     */
+    NestedStatement(Object st, Object nextSt) {
         this(st);
-        next = (NestedStatement) obj;
+        next = (NestedStatement) nextSt;
     }
 
+    /**
+     * Returns all chained statements as list.
+     * @return the list of nested statements.
+     */
     @Override
     public List<Statement> getStatements() {
         List<Statement> statements = new ArrayList<>();

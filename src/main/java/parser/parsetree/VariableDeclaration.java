@@ -3,9 +3,6 @@ package parser.parsetree;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Visitor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This is a wrapper class for variable declarations.
  * It holds the data type of the variable, the identifier and a value.
@@ -15,39 +12,76 @@ import java.util.List;
 public class VariableDeclaration extends Statement implements Declaration {
 
     private Type type;
-    private Object identifier;
+    private String identifier;
     private Object value;
     private Object initValue;
 
-    public VariableDeclaration(Object type, Object identifier, Object value) {
+    /**
+     * This constructor will create a wrapper for a variable declaration without initial value.
+     * The value of the declared variable will be initialized to the default value of the according data type.
+     * @param type the data type.
+     * @param identifier the identifier.
+     */
+    public VariableDeclaration(Object type, String identifier) {
         this.type = Type.getByName(type);
         this.identifier = identifier;
-        this.value = (value == null) ? Type.getByName(type).getDefaultValue() : value;
+        this.value = Type.getByName(type).getDefaultValue();
         this.initValue = value;
     }
 
-    public void reset() {
-        value = initValue;
+    /**
+     * This constructor will create a wrapper for a variable declaration.
+     * @param type the data type.
+     * @param identifier the identifier.
+     * @param value the value to be assigned initially.
+     */
+    public VariableDeclaration(Object type, String identifier, Object value) {
+        this(type, identifier);
+        this.value = value;
+        this.initValue = value;
     }
 
+    /**
+     * Returns the data type of this variable declaration.
+     * @return the data type.
+     */
     @Override
     public Type getType() {
         return type;
     }
 
+    /**
+     * Returns the identifier of this variable declaration.
+     * @return the identifier.
+     */
     @Override
     public String getIdentifier() {
-        return identifier.toString();
+        return identifier;
     }
 
+    /**
+     * Returns the value of this variable.
+     * @return the value.
+     */
     @Override
     public Object getValue() {
         return value;
     }
 
+    /**
+     * Allows to set a new value to this variable.
+     * @param obj the value to set.
+     */
     @Override
     public void setValue(Object obj) {
         this.value = obj;
+    }
+
+    /**
+     * Resets the value of this variable to the initially initialized default value.
+     */
+    public void reset() {
+        value = initValue;
     }
 
     /**

@@ -1,7 +1,5 @@
 package parser.parsetree;
 
-import parser.parsetree.interfaces.Visitor;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +17,7 @@ public class Argument extends Statement {
      * function call.
      * @param arg the argument to wrap.
      */
-    public Argument(Object arg) {
+    Argument(Object arg) {
         this.arg = (Statement) arg;
     }
 
@@ -29,7 +27,7 @@ public class Argument extends Statement {
      * @param arg the argument to wrap.
      * @param nextArg the next argument to point to.
      */
-    public Argument(Object arg, Object nextArg) {
+    Argument(Object arg, Object nextArg) {
         this(arg);
         next = (Argument) nextArg;
     }

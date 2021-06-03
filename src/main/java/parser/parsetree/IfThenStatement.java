@@ -7,13 +7,19 @@ import java.util.List;
 
 /**
  * This is a wrapper class for if-then statements.
- * It holds one condition and the statement list.
+ * It holds one condition and the statement list, and may be used as component for an if-then-else statement.
  */
 public class IfThenStatement extends Statement {
 
     protected Object condition;
     protected List<Statement> statementList1 = new ArrayList<>();
 
+    /**
+     * This constructor will wrap an if-then statement.
+     * While the conditional statement is mandatory, nested statements are optional.
+     * @param condition the conditional expression.
+     * @param statementList1 the statement list for the if-then body.
+     */
     public IfThenStatement(Object condition, Object statementList1) {
         this.condition = condition;
         if (statementList1 != null) {
@@ -21,10 +27,18 @@ public class IfThenStatement extends Statement {
         }
     }
 
+    /**
+     * Returns the conditional expression.
+     * @return the conditional expression.
+     */
     public Object getCondition() {
         return condition;
     }
 
+    /**
+     * Returns the statement list of the if-else body.
+     * @return the statement list.
+     */
     @Override
     public List<Statement> getStatements() {
         List<Statement> statements = new ArrayList<>();

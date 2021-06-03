@@ -2,9 +2,6 @@ package parser.parsetree;
 
 import parser.parsetree.interfaces.Visitor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This is a wrapper class for assignment statements.
  * Its instances will hold an assignment operator, an identifier and an assigned value.
@@ -15,20 +12,38 @@ public class AssignmentStatement extends Statement {
     private String identifier;
     private Object value;
 
+    /**
+     * This constructor will instantiate a wrapper for an assignment statement.
+     * @param op the binary operator.
+     * @param identifier the identifier of the variable.
+     * @param value the value to be assigned.
+     */
     public AssignmentStatement(Object op, Object identifier, Object value) {
         this.op = BinOp.getName(op.toString());
         this.identifier = identifier.toString();
         this.value = value;
     }
 
+    /**
+     * Returns the identifier of the variable.
+     * @return the identifier.
+     */
     public String getIdentifier() {
         return identifier;
     }
 
+    /**
+     * Returns the binary operator of this variable assignment.
+     * @return the operator.
+     */
     public BinOp getOperator() {
         return op;
     }
 
+    /**
+     * Returns the value to be assigned to the variable.
+     * @return the value.
+     */
     public Object getValue() {
         return value;
     }
