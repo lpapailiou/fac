@@ -12,6 +12,12 @@ public class PrintCallStatement extends Component {
     private Object value;
 
     /**
+     * This constructor will create an empty wrapper for a print statement.
+     */
+    public PrintCallStatement() {
+    }
+
+    /**
      * This constructor will wrap an object to be printed to the console.
      * This object can be a 'primitive', an expression or a statement, but cannot be multiple statements.
      *
