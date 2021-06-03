@@ -55,7 +55,7 @@ public class Interpreter implements Visitor {
         Type expectedType = acceptor.getType();
         Type effectiveType = getTypeOfOperand(acceptor.getValue());
         if (expectedType != effectiveType) {
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getIdentifier() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[","").replaceAll("]","") + ">!");
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getIdentifier() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[", "").replaceAll("]", "") + ">!");
         }
     }
 
@@ -79,7 +79,7 @@ public class Interpreter implements Visitor {
             if (expectedType == Type.STRING && binOp == BinOp.PLUSEQ) {
                 return;
             }
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the binOp <" + acceptor.getOperator().asString() + "> to assign value <" + acceptor.getValue().toString().replaceAll("\\[","").replaceAll("]","") + ">!");
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the binOp <" + acceptor.getOperator().asString() + "> to assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + ">!");
         }
     }
 
@@ -135,7 +135,7 @@ public class Interpreter implements Visitor {
             if (statements.get(i) instanceof BreakStatement) {
                 if (whileDepth <= 0) {
                     throw new GrammarException("Not in loop! Break statement is not possible at position <" + parent + ">!");
-                } else if (i < statements.size()-1) {
+                } else if (i < statements.size() - 1) {
                     throw new GrammarException("Unreachable code! Break statement is not possible at position <" + parent + ">.");
                 }
                 if (!hold) {
@@ -152,7 +152,7 @@ public class Interpreter implements Visitor {
     private Type getType(UnaryExpression statement) {
         Type type = getTypeOfOperand(statement.getOperand());
         UnOp op = statement.getOperator();
-        if ((op == UnOp.EXCL && type != Type.BOOLEAN)  || ((op == UnOp.MINUS || op == UnOp.INC || op == UnOp.DEC) && type != Type.NUMERIC)) {
+        if ((op == UnOp.EXCL && type != Type.BOOLEAN) || ((op == UnOp.MINUS || op == UnOp.INC || op == UnOp.DEC) && type != Type.NUMERIC)) {
             throw new OperatorMismatchException("UnOp of expression <" + statement.getOperator().asString() + "> may not be used in context <" + statement.toString().replaceAll("\n", "") + ">!");
         }
         return type;
@@ -174,7 +174,8 @@ public class Interpreter implements Visitor {
         }
         if (type != type2) {
             throw new TypeMismatchException("Types of expression <" + statement.toString().replaceAll("\n", "") + "> do not match!");
-        } if (type == Type.BOOLEAN) {
+        }
+        if (type == Type.BOOLEAN) {
             throw new TypeMismatchException("Types of expression <" + statement.toString().replaceAll("\n", "") + "> do not match with binOp <" + binOp.asString() + ">!");
         }
         return type;
@@ -296,7 +297,7 @@ public class Interpreter implements Visitor {
     }
 
     protected Declaration getDeclaration(String identifier) {
-        Declaration declaration =  declarationScope.stream().filter(dec -> dec.getIdentifier().equals(identifier)).findAny().orElse(null);
+        Declaration declaration = declarationScope.stream().filter(dec -> dec.getIdentifier().equals(identifier)).findAny().orElse(null);
         if (declaration == null) {
             throw new MissingDeclarationException("Declaration <" + identifier + "> was never instantiated!");
         }

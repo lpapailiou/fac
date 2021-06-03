@@ -145,6 +145,7 @@ public abstract class Statement implements Traversable {
      * This method will return an empty list, as no nested statements are expected or
      * the nested statements will be validated otherwise.
      * If statements are expected, this method will be overridden by the according sub class.
+     *
      * @return an empty statement list.
      */
     @Override
@@ -156,6 +157,7 @@ public abstract class Statement implements Traversable {
      * This method accepts a visitor. The visitor will then have access to this instance
      * for code validation and execution. The relevant sub classes will overwrite this
      * method, the other sub classes will be processed indirectly.
+     *
      * @param visitor the visitor to accept.
      */
     @Override

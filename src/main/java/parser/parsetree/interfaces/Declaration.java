@@ -11,24 +11,28 @@ public interface Declaration {
 
     /**
      * Returns the data type of the declared variable.
+     *
      * @return the data type
      */
     Type getType();
 
     /**
      * Returns the identifier of the declared variable.
+     *
      * @return the identifier.
      */
     String getIdentifier();
 
     /**
      * Returns the value of the declared variable.
+     *
      * @return the value.
      */
     Object getValue();
 
     /**
      * Allows to set a new value to this variable.
+     *
      * @param obj the value to set.
      */
     void setValue(Object obj);

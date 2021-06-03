@@ -68,7 +68,7 @@ public class Executor extends Interpreter {
     @Override
     public void visit(PrintCallStatement acceptor) {
         super.visit(acceptor);
-        if (execute  && (!scriptMode || printActive)) {
+        if (execute && (!scriptMode || printActive)) {
             Statement statement = (Statement) acceptor.getValue();
             if (statement != null) {
                 System.out.println(">>>>  " + getValueOfOperand(statement).toString().replaceAll("'", ""));
@@ -136,11 +136,11 @@ public class Executor extends Interpreter {
         boolean isNested = false;
         for (int i = 0; i < statements.size(); i++) {
             Statement stmt = statements.get(i);
-            if (stmt instanceof  ParamDeclaration) {
+            if (stmt instanceof ParamDeclaration) {
                 ParamDeclaration paramDeclaration = ((ParamDeclaration) stmt);
                 try {
                     addDeclarationToScope(paramDeclaration);
-                } catch (UniquenessViolationException e){
+                } catch (UniquenessViolationException e) {
                     isNested = true;
                 }
                 paramDeclaration.setValue(getValueOfOperand(callParams.get(i)));
@@ -245,7 +245,7 @@ public class Executor extends Interpreter {
         } else {
             if (node instanceof Program) {
                 for (int i = 0; i < statements.size(); i++) {
-                    if (i == statements.size()-1) {
+                    if (i == statements.size() - 1) {
                         printActive = true;
                     }
                     traverse(statements.get(i));

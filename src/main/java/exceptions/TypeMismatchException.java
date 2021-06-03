@@ -9,6 +9,7 @@ public class TypeMismatchException extends GrammarException {
 
     /**
      * Throws a generic grammar exception.
+     *
      * @param message the exception message.
      */
     public TypeMismatchException(String message) {
@@ -17,8 +18,9 @@ public class TypeMismatchException extends GrammarException {
 
     /**
      * Throws a generic grammar exception and may wrap an already thrown exception.
+     *
      * @param message the exception message.
-     * @param t the exception to wrap.
+     * @param t       the exception to wrap.
      */
     public TypeMismatchException(String message, Throwable t) {
         super(message, t);

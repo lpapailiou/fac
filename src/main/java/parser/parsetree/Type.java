@@ -36,8 +36,9 @@ public enum Type {
 
     /**
      * This constructor initializes the enum for data types.
-     * @param identifier the string marker of the data type.
-     * @param pattern the regex pattern to test for.
+     *
+     * @param identifier   the string marker of the data type.
+     * @param pattern      the regex pattern to test for.
      * @param defaultValue the default value for the data type.
      */
     Type(String identifier, String pattern, String defaultValue) {
@@ -47,28 +48,13 @@ public enum Type {
     }
 
     /**
-     * Returns the identifier for this data type.
-     * @return the identifier.
-     */
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    /**
-     * Returns the default value for this data type.
-     * @return the default value.
-     */
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    /**
      * This method will look up a defined data type by an input string of the data type identifier.
+     *
      * @param type the data type identifier as string to look for.
      * @return the enum for the searched data type.
      */
     public static Type getByName(Object type) {
-        Type result =  Arrays.stream(Type.values()).filter(t -> t.identifier.equals(type.toString())).findAny().orElseGet(null);
+        Type result = Arrays.stream(Type.values()).filter(t -> t.identifier.equals(type.toString())).findAny().orElseGet(null);
         if (result != null) {
             return result;
         }
@@ -76,21 +62,9 @@ public enum Type {
     }
 
     /**
-     * This method tests an input value with the regex pattern of this enum.
-     * @param obj the value to be tested for a matching type.
-     * @return true if the test succeeded.
-     */
-    public boolean accepts(Object obj) {
-        try {
-            return obj.toString().matches(pattern);
-        } catch (RuntimeException e) {
-            throw new GrammarException("No valid type for <" + obj + "> found!", e);
-        }
-    }
-
-    /**
      * This method tests an input value with the regex pattern of the defined data types. If the pattern matches,
      * the type is returned as enum.
+     *
      * @param obj the value to be tested for a matching type.
      * @return the data type as enum.
      */
@@ -102,5 +76,37 @@ public enum Type {
             }
         }
         throw new TypeMismatchException("Unknown type for <" + obj + ">!");
+    }
+
+    /**
+     * Returns the identifier for this data type.
+     *
+     * @return the identifier.
+     */
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    /**
+     * Returns the default value for this data type.
+     *
+     * @return the default value.
+     */
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    /**
+     * This method tests an input value with the regex pattern of this enum.
+     *
+     * @param obj the value to be tested for a matching type.
+     * @return true if the test succeeded.
+     */
+    public boolean accepts(Object obj) {
+        try {
+            return obj.toString().matches(pattern);
+        } catch (RuntimeException e) {
+            throw new GrammarException("No valid type for <" + obj + "> found!", e);
+        }
     }
 }

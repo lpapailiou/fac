@@ -12,7 +12,7 @@ public enum UnOp {
     /**
      * With this operator, a subtraction is performed.
      */
-    MINUS("-", (e) -> - Double.parseDouble(e.toString())),
+    MINUS("-", (e) -> -Double.parseDouble(e.toString())),
     /**
      * This operator will increment a numeric value by 1.
      */
@@ -31,6 +31,7 @@ public enum UnOp {
 
     /**
      * This constructor initializes the enum for unary operators.
+     *
      * @param operator the operator.
      * @param function the Function to be applied to the operand.
      */
@@ -40,20 +41,13 @@ public enum UnOp {
     }
 
     /**
-     * Returns the operator as string.
-     * @return the string representation of the operator.
-     */
-    public String asString() {
-        return operator;
-    }
-
-    /**
      * This method will look up a defined unary operator by an input string.
+     *
      * @param op the string representation of the unary operator.
      * @return the enum for the searched operator.
      */
     public static UnOp getName(Object op) {
-        UnOp result =  Arrays.stream(UnOp.values()).filter(o -> o.operator.equals(op.toString())).findAny().orElseGet(null);
+        UnOp result = Arrays.stream(UnOp.values()).filter(o -> o.operator.equals(op.toString())).findAny().orElseGet(null);
         if (result != null) {
             return result;
         }
@@ -61,7 +55,17 @@ public enum UnOp {
     }
 
     /**
+     * Returns the operator as string.
+     *
+     * @return the string representation of the operator.
+     */
+    public String asString() {
+        return operator;
+    }
+
+    /**
      * This method applies the operator to an operand. It is used for the execution of code.
+     *
      * @param e the operand.
      * @return the result of the performed operation.
      */

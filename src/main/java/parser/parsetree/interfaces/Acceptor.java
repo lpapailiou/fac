@@ -8,6 +8,7 @@ public interface Acceptor {
 
     /**
      * Accepts a visitor for further processing.
+     *
      * @param visitor the visitor class to accept.
      */
     void accept(Visitor visitor);

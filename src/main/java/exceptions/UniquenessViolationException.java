@@ -8,6 +8,7 @@ public class UniquenessViolationException extends GrammarException {
 
     /**
      * Throws a generic grammar exception.
+     *
      * @param message the exception message.
      */
     public UniquenessViolationException(String message) {
@@ -16,8 +17,9 @@ public class UniquenessViolationException extends GrammarException {
 
     /**
      * Throws a generic grammar exception and may wrap an already thrown exception.
+     *
      * @param message the exception message.
-     * @param t the exception to wrap.
+     * @param t       the exception to wrap.
      */
     public UniquenessViolationException(String message, Throwable t) {
         super(message, t);

@@ -13,6 +13,7 @@ public interface Traversable extends Acceptor {
 
     /**
      * Returns the nested statements of a parse tree component.
+     *
      * @return the list of nested statements.
      */
     List<Statement> getStatements();

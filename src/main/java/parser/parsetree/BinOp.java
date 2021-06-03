@@ -127,6 +127,7 @@ public enum BinOp {
 
     /**
      * This constructor initializes the enum for binary operators.
+     *
      * @param operator the operator.
      * @param function the BiFunction to be applied to two operands.
      */
@@ -136,20 +137,13 @@ public enum BinOp {
     }
 
     /**
-     * Returns the operator as string.
-     * @return the string representation of the operator.
-     */
-    public String asString() {
-        return operator;
-    }
-
-    /**
      * This method will look up a defined binary operator by an input string.
+     *
      * @param op the string representation of the binary operator.
      * @return the enum for the searched operator.
      */
     public static BinOp getName(Object op) {
-        BinOp result =  Arrays.stream(BinOp.values()).filter(o -> o.operator.equals(op.toString())).findAny().orElseGet(null);
+        BinOp result = Arrays.stream(BinOp.values()).filter(o -> o.operator.equals(op.toString())).findAny().orElseGet(null);
         if (result != null) {
             return result;
         }
@@ -157,7 +151,17 @@ public enum BinOp {
     }
 
     /**
+     * Returns the operator as string.
+     *
+     * @return the string representation of the operator.
+     */
+    public String asString() {
+        return operator;
+    }
+
+    /**
      * This method applies the operator to two operands. It is used for the execution of code.
+     *
      * @param a the first operand.
      * @param b the second operand.
      * @return the result of the performed operation.

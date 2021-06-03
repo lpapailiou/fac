@@ -15,6 +15,7 @@ public class NestedStatement extends Statement {
 
     /**
      * This constructor will take one statement and wrap it.
+     *
      * @param st the statement to wrap.
      */
     NestedStatement(Object st) {
@@ -24,7 +25,8 @@ public class NestedStatement extends Statement {
     /**
      * This constructor will take two statements. The first statement will be wrapped in this instance.
      * The second statement will serve as pointer to the next statement.
-     * @param st the statement to wrap.
+     *
+     * @param st     the statement to wrap.
      * @param nextSt the next statement to point to.
      */
     NestedStatement(Object st, Object nextSt) {
@@ -34,6 +36,7 @@ public class NestedStatement extends Statement {
 
     /**
      * Returns all chained statements as list.
+     *
      * @return the list of nested statements.
      */
     @Override
@@ -50,6 +53,7 @@ public class NestedStatement extends Statement {
     /**
      * This toString method provides an empty string only, as it will be overwritten
      * by the nested statements of this instance.
+     *
      * @return an empty string.
      */
     @Override
