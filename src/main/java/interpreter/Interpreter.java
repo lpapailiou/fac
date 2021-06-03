@@ -55,7 +55,7 @@ public class Interpreter implements Visitor {
         Type expectedType = acceptor.getType();
         Type effectiveType = getTypeOfOperand(acceptor.getValue());
         if (expectedType != effectiveType) {
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[","").replaceAll("]","") + ">!");
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getIdentifier() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[","").replaceAll("]","") + ">!");
         }
     }
 
@@ -73,7 +73,7 @@ public class Interpreter implements Visitor {
 
         if (expectedType != effectiveType) {
             if (expectedType != Type.STRING || binOp == BinOp.EQUAL) {
-                throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + ">!");
+                throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getIdentifier() + "> and cannot assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + ">!");
             }
         } else if (expectedType != Type.NUMERIC && binOp != BinOp.EQUAL) {
             if (expectedType == Type.STRING && binOp == BinOp.PLUSEQ) {
@@ -102,7 +102,7 @@ public class Interpreter implements Visitor {
         Object returnValue = acceptor.getReturnStatement();
         Type retType = getTypeOfOperand(returnValue);
         if (defType != retType) {
-            throw new TypeMismatchException("Return type <" + retType.getDescription() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.paramTypeListAsString() + ")> does not match defined type <" + defType.getDescription() + ">!");
+            throw new TypeMismatchException("Return type <" + retType.getIdentifier() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.paramTypeListAsString() + ")> does not match defined type <" + defType.getIdentifier() + ">!");
         }
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
         removeDeclarations(acceptor);
@@ -264,9 +264,9 @@ public class Interpreter implements Visitor {
 
     private void addFunDeclarationToScope(FunctionDefStatement function) {
         if (isFunctionExisting(function)) {
-            throw new UniquenessViolationException("Function <" + function.getType().getDescription() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> is already defined!");
+            throw new UniquenessViolationException("Function <" + function.getType().getIdentifier() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> is already defined!");
         } else if (!isFunctionDefineable(function)) {
-            throw new GrammarException("Function <" + function.getType().getDescription() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> cannot be defined as it conflicts with similar function!");
+            throw new GrammarException("Function <" + function.getType().getIdentifier() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> cannot be defined as it conflicts with similar function!");
         } else {
             functionScope.add(function);
         }

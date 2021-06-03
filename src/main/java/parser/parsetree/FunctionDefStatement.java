@@ -98,7 +98,7 @@ public class FunctionDefStatement extends Statement {
     public String paramTypeListAsString() {
         String out = "";
         for (int i = 0; i < paramDeclarationList.size(); i++) {
-            out += paramDeclarationList.get(i).getType().getDescription();
+            out += paramDeclarationList.get(i).getType().getIdentifier();
             if (i < paramDeclarationList.size()-1) {
                 out += ", ";
             }
@@ -127,7 +127,7 @@ public class FunctionDefStatement extends Statement {
      */
     @Override
     public String toString() {
-        String out = "\ndef " + type.getDescription() + " " + identifier + "(";
+        String out = "\ndef " + type.getIdentifier() + " " + identifier + "(";
         out += paramListAsString();
         out += ") {\n";
         for (Statement st: statementList) {

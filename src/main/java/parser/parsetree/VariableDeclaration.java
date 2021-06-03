@@ -92,7 +92,7 @@ public class VariableDeclaration extends Statement implements Declaration {
      */
     @Override
     public String toString() {
-        String out =  type.getDescription() + " " + identifier + " = " + value;
+        String out =  type.getIdentifier() + " " + identifier + " = " + value;
         if (value instanceof FunctionCallStatement) {
             out = out.substring(0, out.length()-2);
         }

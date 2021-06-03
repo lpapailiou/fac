@@ -100,7 +100,7 @@ public class ParamDeclaration extends Statement implements Declaration {
      */
     @Override
     public String toString() {
-        return type.getDescription() + " " + identifier;
+        return type.getIdentifier() + " " + identifier;
     }
 
     /**
