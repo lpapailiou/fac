@@ -7,12 +7,12 @@ import java.util.List;
 
 public class AssignmentStatement extends Statement {
 
-    private Operator op;
+    private BinOp op;
     private String identifier;
     private Statement statement;
 
     public AssignmentStatement(Object op, Object identifier, Statement statement) {
-        this.op = Operator.getName(op.toString());
+        this.op = BinOp.getName(op.toString());
         this.identifier = identifier.toString();
         this.statement = statement;
     }
@@ -21,7 +21,7 @@ public class AssignmentStatement extends Statement {
         return identifier;
     }
 
-    public Operator getOperator() {
+    public BinOp getOperator() {
         return op;
     }
 

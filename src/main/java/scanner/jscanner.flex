@@ -4,10 +4,9 @@ import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import parser.JSymbol;
 
-%%
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-// options
+// ************* OPTIONS *************
 
+%%
 %public
 %class JScanner
 %cup
@@ -17,12 +16,17 @@ import parser.JSymbol;
 %line
 %column
 
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-// user code definition
+// ************* CUSTOM SCANANER CODE *************
+
 %{
     private ComplexSymbolFactory symbolFactory;
     private boolean verbose = true;
 
+    /**
+   * Custom constructor to pass the verbose attribute.
+   * @param in the java.io.Reader to pass.
+   * @param verbose the verbose attribute. If true, the scanned tokens will be printed to the console.
+   */
     public JScanner(java.io.Reader in, boolean verbose) {
         this(in);
         this.verbose = verbose;
@@ -45,6 +49,7 @@ import parser.JSymbol;
         Location right= new Location(yyline+1,(int)(yycolumn+yylength()), (int)(yychar+yylength()));
         return symbolFactory.newSymbol(name, sym, left, right, val);
     }
+
     private void error(String message) {
       System.out.println("Error at line " + (yyline+1) + ", column "+ (yycolumn+1) + " : "+message);
     }
@@ -53,7 +58,6 @@ import parser.JSymbol;
 
 %init{
     symbolFactory = new ComplexSymbolFactory();
-
 %init}
 
 %eofval{
@@ -66,8 +70,7 @@ import parser.JSymbol;
     }
 %eof}
 
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-// macro definition
+// ************* MACRO DEFINITION *************
 
 // comment
 COMMENT = "/*" [^*] ~"*/" | "/*" "*"+ "/" | "//" [^\r\n]* \r|\n|\r\n? | "/**" ( [^*] | \*+ [^/*] )* "*"+ "/"
@@ -80,14 +83,13 @@ NUM = -?[0-9]\d*(\.\d+)?                // decimal/int number, positive or negat
 VAR = [a-z_]+([0-9])*                   // variables
 STR = '[a-z0-9_\,\.\(\)\;\:\/\+\-\*\/ \s\t\f\r\n]*'   // strings
 
-WHITESPACE = [ \t\f\r\n]+               // newline or spaces
+WHITESPACE = [ \t\f\r\n]*               // newline or spaces
 
 ERR = [^]                               // fallback
 
 %%
 
-// ------------------------------------------------------------------------------------------------------------------------------------------------------
-// lexical rules
+// ************* LEXICAL RULES *************
 
 // comments
 {COMMENT}                         { /* ignore */ }
@@ -123,6 +125,8 @@ print                             { return collectToken(PRINT, "PRINT"); }
 -                                 { return collectToken(MINUS, "MINUS"); }
 \*                                { return collectToken(MUL, "MUL"); }
 \/                                { return collectToken(DIV, "DIV"); }
+\%                                { return collectToken(MOD, "MOD"); }
+\!                                { return collectToken(EXCL, "EXCL"); }
 
 // special characters
 \(                                { return collectToken(BL, "BL"); }

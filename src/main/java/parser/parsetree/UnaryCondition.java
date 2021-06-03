@@ -1,19 +1,20 @@
 package parser.parsetree;
 
-
+import parser.parsetree.BinOp;
+import parser.parsetree.Statement;
 import parser.parsetree.interfaces.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UnaryExpression extends ExpressionStatement {
+public class UnaryCondition extends ConditionalStatement {
 
     private UnOp op;
     private Object operand;
 
-    public UnaryExpression(Object op, Object operand) {
-        this.op = UnOp.getName(op);
-        this.operand = operand;
+    public UnaryCondition(Object op, Object o) {
+        this.op = UnOp.getName(op.toString());
+        this.operand = o;
     }
 
     public Object getOperand() {
@@ -35,11 +36,7 @@ public class UnaryExpression extends ExpressionStatement {
 
     @Override
     public String toString() {
-        String out = op.getOperator() + operand.toString();
-        if (operand instanceof FunctionCallStatement) {
-            out = out.substring(0, out.length()-2);
-        }
-        return out;
+        return "(" + op.getOperator() + operand.toString() + ")";
     }
 
     @Override

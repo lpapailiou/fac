@@ -30,7 +30,7 @@ public class WhileStatement extends Statement {
     public String toString() {
 
         String out = "\nwhile ";
-        boolean isCond = condition instanceof ConditionalExpression;
+        boolean isCond = condition instanceof BinaryCondition;
         if (!isCond) {
             out += "(";
         }

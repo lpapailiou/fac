@@ -27,7 +27,7 @@ public class Compiler {
     private static String cache;
 
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         if (args != null) {
             cache = Arrays.toString(args).replaceAll("\\[", "").replaceAll("]", "").replaceAll(",", "");
         }
@@ -82,10 +82,10 @@ public class Compiler {
                 case EXECUTE:
                     try {
                         if (path != null) {
-                            LOG.log(Level.WARNING, "File " + path + " does not seem to be readable. The sample file " + defaultFilePath + " will be processed instead.");
                             executeFile(path);
                         }
                     } catch (IOException e) {
+                        LOG.log(Level.WARNING, "File " + path + " does not seem to be readable. The sample file " + defaultFilePath + " will be processed instead.");
                         try {
                             executeFile(defaultFilePath);
                         } catch (IOException e1) {
@@ -232,6 +232,7 @@ public class Compiler {
                     LOG.log(Level.WARNING, "Parsed code semantically not valid (" + e.getLocalizedMessage() + ")!");
                 } else {
                     LOG.log(Level.WARNING, "Parsed code syntax not valid!");
+                    e.printStackTrace();
                 }
             } catch (Error e) {
                 Throwable t = new ScanException(e.getMessage(), e);
@@ -244,6 +245,7 @@ public class Compiler {
 
             Executor executor = new Executor();
             ((Program) reducedResult.value).accept(executor);
+
 
         } catch (IOException e) {
             throw e;
@@ -275,6 +277,8 @@ public class Compiler {
 
             Interpreter interpreter = new Interpreter();
             ((Program) reducedResult.value).accept(interpreter);
+
+            System.out.println("\n***** SEMANTIC CHECK SUCCEEDED *****\n");
 
         } catch (IOException e) {
             throw e;

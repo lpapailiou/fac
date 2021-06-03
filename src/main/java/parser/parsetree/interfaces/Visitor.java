@@ -26,8 +26,4 @@ public interface Visitor {
 
     void visit(WhileStatement acceptor);
 
-
-
-
-
 }

@@ -1,4 +1,13 @@
 
+
+def number mod(number x, number y) {
+    return x % y;
+}
+
+print('modulo: ' + -mod(15,4));
+
+
+/*
 //1 + 2                               // parser fails as expression cannot be isolated
 x = 1 + 2 - 3;                      // valid, interpreted as ((1 + 2) - 3)
 x = 2 * 4 + 2 / 3;                  // valid, interpreted as ((2 * 4) + (2 / 3))
@@ -13,5 +22,5 @@ x = (true || false);                // valid
 x = (1 < 2);                        // valid
 //x = true && true;                   // parser fails, as brackets are missing
 //x = (true && true && false);        // parser fails, as round brackets must always enclose two components
-
+*/
 

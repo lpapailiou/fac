@@ -64,7 +64,7 @@ Pattern: ``"/*" [^*] ~"*/" | "/*" "*"+ "/" | "//" [^\r\n]* \r|\n|\r\n? | "/**" (
 #### Whitespace
 Whitespace may consist of spaces and newlines. It will be ignored in further processing steps, but
 is initially useful to separate tokens from each other.  
-Pattern: ``[ \t\f\r\n]+`` 
+Pattern: ``[ \t\f\r\n]*`` 
 #### Reserved words
 Reserved words are: ``string``, ``number``, ``boolean`` (for data types), ``while``, ``break``,
 ``if``, ``else``, ``def``, ``return`` (for statements) and ``print`` (for printing to the console).  
@@ -82,10 +82,11 @@ Variable identifiers may consist of lowercase letters, underscores and optional 
 Pattern: ``[a-z_]+([0-9])*``. 
 #### Operators
 Additionally, there is a set of basic operators.  
-Arithmetic operators: ``+``, ``-``, ``*``, ``/``.  
+Arithmetic operators: ``+``, ``-``, ``*``, ``/``, ``%``.  
 Conditional operators: ``==``, ``!=``, ``<``, ``>``, ``<=``, ``>=``.  
 Assignment operators: ``=``, ``+=``, ``-=``, ``*=``, ``/=``.  
 Evaluation operators: ``&&``, ``||``.
+Unary operators: ``-``, ``!``.
 #### Special characters
 Finally, there are two types of brackets: ``(``, ``)``, ``{``, ``}``, as well as the infamous comma ``,`` 
 and semicolon ``;``. 
@@ -158,7 +159,8 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
 <li>By default, their components can be either 'raw' values, conditional expressions or function calls.</li>
 <li>Multiplication and division have precedence over addition and subtraction.</li>
 <li>Arithmetic expressions can be nested. They are - after precedence - evaluated from left to right.</li>
-<li>Arithmetic expressions must not have brackets if they are not conditional statements.</li>
+<li>Unary expressions have the highest precedence.</li>
+<li>Arithmetic expressions must not have brackets.</li>
 <li>As arithmetic expressions (for simplicity are abused to) group all possible values and expressions, they can be potentially assigned anywhere.</li>
 <li>Also here, data types are not evaluated any further.</li>
 </ul>
@@ -177,6 +179,8 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
 <ul>
 <li>Conditional expressions are quite similar to arithmetic expressions, except they must be enclosed in (round) brackets.</li>
 <li>Conditional expressions use comparing (<, <=, ==, ...) or evaluating (&&, ||) operators.</li>
+<li>Conditional expressions or boolean values can be switched by exclamation marks. The exclamation marks
+cannot be placed before the outer brackets if a conditional expression is used in a if-then or while statement.</li>
 </ul>
 
     // examples
@@ -294,7 +298,7 @@ So far, our toy language is defined and we have the tools to validate if a code 
 this point, there is no type safety, variables can be assigned before they are declared and break statements
 are a mere decoration.  
   
-The required semantic validation must now be performed by a ``Interpreter`` (see ``src\main\java\interpreter``).  
+The required semantic validation must now be performed by an ``Interpreter`` (see ``src\main\java\interpreter``).  
 The interpreter will receive the parse tree from the parser and traverse it depth-first.
 
 #### Identifier scope
@@ -333,7 +337,7 @@ The interpreter will receive the parse tree from the parser and traverse it dept
 
 #### Operator validation
 <ul>
-<li>In assignments, operator = can be used for all data types, += for numeric and string values, other operators (-=, *=, /=) for numeric values only.</li>
+<li>In assignments, binOp = can be used for all data types, += for numeric and string values, other operators (-=, *=, /=) for numeric values only.</li>
 <li>In conditional expressions, == and != may be used for all types, && and || may used for boolean values only, comparing operators (<, <=, >=, >) can be used for numeric values only.</li>
 <li>In arithmetic expressions, + is valid for numeric values or if at least one of the components is a string. All other available operators (-,*, /) are for numeric values only.</li>
 </ul>
@@ -341,9 +345,9 @@ The interpreter will receive the parse tree from the parser and traverse it dept
     // examples
     string x = 'x' + 'b';               // valid
     x = 'x' - 'b';                      // interpreter fails, as minus cannot be used for string concatenation
-    boolean y = (true && 1);            // interpreter fails, as the operator && can be used for booleans only
+    boolean y = (true && 1);            // interpreter fails, as the binOp && can be used for booleans only
     boolean z = (1 < 2);                // valid
-    x = 1 * 'x';                        // interpreter fails, multiplication operator is not valid for strings
+    x = 1 * 'x';                        // interpreter fails, multiplication binOp is not valid for strings
 
 
 #### Expressions
@@ -496,15 +500,11 @@ will similarly validate and execute the interpreted code.
 
     // sample output
     ***** EXECUTION RESULT *****
-    
-    >>>>  
-    hello world
-    >>>>  
-    hello world
-    >>>>  
-    hello world
-    >>>>  
-    hello world
+  
+    >>>>  hello world
+    >>>>  hello world
+    >>>>  hello world
+    >>>>  hello world
 
 ##### Console mode
 The console mode starts an executor in the console. This version is interactive. For every entered code block, the
@@ -521,6 +521,7 @@ The console mode can be escaped with -h or -q.
     >  ... initialized & ready to code!                                 // from here on, user input is accepted
     >  number one = 1;
     >  while (one < 2) {one += 1; print('hello world'); }
+    >                                                                   // empty line triggering execution
     >>>>  hello world
     >  
 
@@ -529,11 +530,19 @@ To generate a new scanner from the flex file, run following command (java path m
 
     java -jar src/main/resources/lib/jflex-full-1.8.2.jar src/main/java/scanner/jscanner.flex
     
+Or use following maven command:
+
+    mvn jflex:generate    
+    
 Here's the [link to the external jflex documentation](https://jflex.de/).    
 
 #### Parser generation
 To generate a new parser from the cup file, run following command (java path must be set).  
 
     java -jar src/main/resources/lib/java-cup-11b.jar -interface -destdir src/main/java/parser/ -symbols JSymbol -parser JParser src/main/java/parser/jparser.cup
-    
+
+Or use following maven command:
+
+    mvn cup:generate    
+        
 Here's the [link to the external cup documentation](http://www2.cs.tum.edu/projects/cup/).    

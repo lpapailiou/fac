@@ -40,7 +40,7 @@ public class IfThenElseStatement extends IfThenStatement {
     @Override
     public String toString() {
         String out = "\nif ";
-        boolean isCond = condition instanceof ConditionalExpression;
+        boolean isCond = condition instanceof BinaryCondition;
         if (!isCond) {
             out += "(";
         }

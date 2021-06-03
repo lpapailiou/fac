@@ -68,17 +68,17 @@ public class Interpreter implements Visitor {
         Declaration declaration = getDeclaration(acceptor.getIdentifier());
         Type expectedType = declaration.getType();
         Type effectiveType = getTypeOfOperand(acceptor.getStatements().get(0));
-        Operator operator = acceptor.getOperator();
+        BinOp binOp = acceptor.getOperator();
 
         if (expectedType != effectiveType) {
-            if (expectedType != Type.STRING || operator == Operator.EQUAL) {
+            if (expectedType != Type.STRING || binOp == BinOp.EQUAL) {
                 throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[", "").replaceAll("]", "") + ">!");
             }
-        } else if (expectedType != Type.NUMERIC && operator != Operator.EQUAL) {
-            if (expectedType == Type.STRING && operator == Operator.PLUSEQ) {
+        } else if (expectedType != Type.NUMERIC && binOp != BinOp.EQUAL) {
+            if (expectedType == Type.STRING && binOp == BinOp.PLUSEQ) {
                 return;
             }
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the operator <" + acceptor.getOperator().getOperator() + "> to assign value <" + acceptor.getStatements().toString().replaceAll("\\[","").replaceAll("]","") + ">!");
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the binOp <" + acceptor.getOperator().getOperator() + "> to assign value <" + acceptor.getStatements().toString().replaceAll("\\[","").replaceAll("]","") + ">!");
         }
     }
 
@@ -149,28 +149,33 @@ public class Interpreter implements Visitor {
     }
 
     private Type getType(UnaryExpression statement) {
-        return getTypeOfOperand(statement.getOperand());
+        Type type = getTypeOfOperand(statement.getOperand());
+        UnOp op = statement.getOperator();
+        if ((op == UnOp.MINUS && type != Type.NUMERIC) || (op == UnOp.EXCL && type != Type.BOOLEAN)) {
+            throw new OperatorMismatchException("UnOp of expression <" + statement.getOperator().getOperator() + "> may not be used in context <" + statement.toString().replaceAll("\n", "") + ">!");
+        }
+        return type;
     }
 
     private Type getType(BinaryExpression statement) {
         Type type = getTypeOfOperand(statement.getOperand1());
         Type type2 = getTypeOfOperand(statement.getOperand2());
-        Operator operator = statement.getOperator();
+        BinOp binOp = statement.getOperator();
         if (type == Type.STRING || type2 == Type.STRING) {
-            if (operator != Operator.PLUS) {
-                throw new OperatorMismatchException("Operator of expression <" + statement.getOperator().getOperator() + "> may not be used in context <" + statement.toString().replaceAll("\n", "") + ">!");
+            if (binOp != BinOp.PLUS) {
+                throw new OperatorMismatchException("BinOp of expression <" + statement.getOperator().getOperator() + "> may not be used in context <" + statement.toString().replaceAll("\n", "") + ">!");
             }
             return Type.STRING;
         }
         if (type != type2) {
             throw new TypeMismatchException("Types of expression <" + statement.toString().replaceAll("\n", "") + "> do not match!");
         } if (type == Type.BOOLEAN) {
-            throw new TypeMismatchException("Types of expression <" + statement.toString().replaceAll("\n", "") + "> do not match with operator <" + operator.getOperator() + ">!");
+            throw new TypeMismatchException("Types of expression <" + statement.toString().replaceAll("\n", "") + "> do not match with binOp <" + binOp.getOperator() + ">!");
         }
         return type;
     }
 
-    private Type getType(ConditionalExpression statement) {
+    private Type getType(BinaryCondition statement) {
         Type type1 = getTypeOfOperand(statement.getOperand1());
         Type type2 = getTypeOfOperand(statement.getOperand2());
         if (type2 == null) {
@@ -184,14 +189,22 @@ public class Interpreter implements Visitor {
         if (type1 != type2) {
             throw new TypeMismatchException("Types of conditional statement <" + statement.toString().replaceAll("\n", "") + "> do not match!");
         }
-        Operator operator = statement.getOperator();
-        if (type1 != Type.NUMERIC && (operator == Operator.GREATER || operator == Operator.GREQ || operator == Operator.LEQ || operator == Operator.LESS)) {
-            throw new OperatorMismatchException("Operator <" + operator.getOperator() + "> must not be used for non-numeric statements!");
-        } else if (type1 != Type.BOOLEAN && (operator == Operator.AND || operator == Operator.OR)) {
-            throw new OperatorMismatchException("Operator <" + operator.getOperator() + "> must not be used for non-boolean statements!");
+        BinOp binOp = statement.getOperator();
+        if (type1 != Type.NUMERIC && (binOp == BinOp.GREATER || binOp == BinOp.GREQ || binOp == BinOp.LEQ || binOp == BinOp.LESS)) {
+            throw new OperatorMismatchException("BinOp <" + binOp.getOperator() + "> must not be used for non-numeric statements!");
+        } else if (type1 != Type.BOOLEAN && (binOp == BinOp.AND || binOp == BinOp.OR)) {
+            throw new OperatorMismatchException("BinOp <" + binOp.getOperator() + "> must not be used for non-boolean statements!");
         }
 
         return Type.BOOLEAN;
+    }
+
+    private Type getType(UnaryCondition statement) {
+        Type type = getTypeOfOperand(statement.getOperand());
+        if (type != Type.BOOLEAN) {
+            throw new TypeMismatchException("Types of conditional statement <" + statement.toString().replaceAll("\n", "") + "> do not match!");
+        }
+        return type;
     }
 
     private Type getType(FunctionCallStatement statement) {
@@ -210,8 +223,10 @@ public class Interpreter implements Visitor {
             type = getType((BinaryExpression) operand);
         } else if (operand instanceof UnaryExpression) {
             type = getType((UnaryExpression) operand);
-        } else if (operand instanceof ConditionalExpression) {
-            type = getType((ConditionalExpression) operand);
+        } else if (operand instanceof BinaryCondition) {
+            type = getType((BinaryCondition) operand);
+        } else if (operand instanceof UnaryCondition) {
+            type = getType((UnaryCondition) operand);
         } else {
             type = Type.getTypeForValue(operand);
             if (type == Type.VARIABLE) {

@@ -4,36 +4,54 @@ import parser.parsetree.*;
 import scanner.JScanner;
 import java.util.List;
 
+// ************* CUSTOM PARSER CODE *************
+
 parser code {:
+
+    /**
+     * Custom constructor which takes a reader. It will initialize a JScanner instance directly.
+     * @param in the java.io.Reader.
+     */
     public JParser(java.io.Reader in) {super(new JScanner(in));}
+
+    /**
+     * Custom constructor which takes a reader. It will initialize a JScanner instance directly.
+     * @param in the java.io.Reader.
+     * @param verbose a boolean to set the JScanner verbose attribute.
+     */
     public JParser(java.io.Reader in, boolean verbose) {super(new JScanner(in, verbose));}
 
+    /**
+     * This method tests if the scanner reached the end of file yet.
+     * @return true if the end of file is reached.
+     */
     public boolean yyatEOF(){
         return ((JScanner) getScanner()).yyatEOF();
     }
 :}
 
-/* define how to connect to the scanner! */
+// definition of scanner connection
 scan with {: return getScanner().next_token(); :};
 
-/* Terminals (tokens returned by the scanner). */
+// ************* TERMINAL AND NONTERMINAL DECLARATION & CONFIGURATION *************
+
+// zerminals (tokens returned by the scanner)
 terminal            WHILE, IF, ELSE, DEF, PRINT, BREAK, RETURN,
                     BL, BR, CBL, CBR, COMMA, STOP,
-                    EQUAL, LESS, GREATER, PLUS, MINUS, MUL, DIV, EQ, NEQ, GREQ, LEQ, AND, OR, PLUSEQ, MINEQ, MULEQ, DIVEQ;
+                    EQUAL, LESS, GREATER, PLUS, MINUS, MUL, DIV, EQ, NEQ, GREQ, LEQ, AND, OR, PLUSEQ, MINEQ, MULEQ, DIVEQ, MOD, EXCL;
 terminal String     STR, STRTYPE, NUM, NUMTYPE, BOOL, BOOLTYPE, VAR;
 
-/* Non terminals */
+// non terminals
 non terminal        TYPE, PARAM, PARAMDEF, RET,
                     COND_OP, ASSIGN_OP, COND_VAL,
-                    CALC_MUL,
-                    VAL;
+                    CALC_MUL, VAL;
 
 non terminal Program                    PROGRAM;
 non terminal List<Statement>            STMT_LIST;
 non terminal Statement                  STMT, PROG_STMT, NEST_STMT;
 non terminal AssignmentStatement        ASSIGN;
 non terminal ExpressionStatement        EXPR;
-non terminal ConditionalExpression      COND;
+non terminal ConditionalStatement       COND;
 non terminal FunctionCallStatement      FUNCALL;
 non terminal FunctionDefStatement       FUNDEF;
 non terminal PrintCallStatement         PRINTCALL;
@@ -41,14 +59,14 @@ non terminal IfThenStatement            IFTHEN_STMT;
 non terminal WhileStatement             WHILE_STMT;
 non terminal VariableDeclaration        DECL;
 
+// precedences - not really required, but nice to have
+precedence left PLUS, MINUS;
+precedence left MOD, MUL, DIV;
 
-/* Precedences */
-precedence left PLUS, MINUS;        // not really required, but nice to have
-precedence left MUL, DIV;           // not really required, but nice to have
-
-
-/* The grammar rules */
+// start symbol (root of parse tree)
 start with PROGRAM;
+
+// ************* SYNTACTICAL RULES *************
 
 PROGRAM         ::= STMT_LIST:s                                                             {: RESULT = Statement.prog(s); :}
                     ;
@@ -87,8 +105,7 @@ IFTHEN_STMT     ::= IF COND_VAL:c CBL NEST_STMT:s CBR                           
                     ;
 
 COND_VAL        ::= COND:c                                                                  {: RESULT = c; :}
-                    | BL VAR:c BR                                                           {: RESULT = c; :}
-                    | BL BOOL:c BR                                                          {: RESULT = c; :}
+                    | BL VAL:c BR                                                           {: RESULT = c; :}
                     ;
 
 // function definition
@@ -143,6 +160,7 @@ EXPR 	        ::=  CALC_MUL:e                                                   
 CALC_MUL        ::= VAL:e                                                                   {: RESULT = e; :}
                     | CALC_MUL:e1 MUL:op VAL:e2                                             {: RESULT = Statement.expr(op, e1, e2); :}
                     | CALC_MUL:e1 DIV:op VAL:e2                                             {: RESULT = Statement.expr(op, e1, e2); :}
+                    | CALC_MUL:e1 MOD:op VAL:e2                                             {: RESULT = Statement.expr(op, e1, e2); :}
                     ;
 
 // variable assignments
@@ -173,4 +191,6 @@ VAL             ::= VAR:str                                                     
                     | NUM:n                                                                 {: RESULT = n; :}
                     | FUNCALL:f                                                             {: RESULT = f; :}
                     | COND:c                                                                {: RESULT = c; :}
+                    | EXCL:op VAL:e                                                         {: RESULT = Statement.cond(op, e); :}
+                    | MINUS:op VAL:e                                                        {: RESULT = Statement.expr(op, e); :}
                     ;

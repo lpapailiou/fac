@@ -105,18 +105,19 @@ public class Executor extends Interpreter {
     }
 
     private Object getValue(UnaryExpression statement) {
-        return getValueOfOperand(statement.getOperand());
+        Object value = getValueOfOperand(statement.getOperand());
+        return statement.getOperator().apply(value);
     }
 
-    private Object getValue(ConditionalExpression statement) {
+    private Object getValue(BinaryCondition statement) {
         Object value1 = getValueOfOperand(statement.getOperand1());
-        Object value2;
-        if (statement.getOperand2() == null) {
-            return Boolean.parseBoolean(value1.toString());
-        } else {
-            value2 = getValueOfOperand(statement.getOperand2());
-        }
+        Object value2 = getValueOfOperand(statement.getOperand2());
         return statement.getOperator().apply(value1, value2);
+    }
+
+    private Object getValue(UnaryCondition statement) {
+        Object value = getValueOfOperand(statement.getOperand());
+        return statement.getOperator().apply(value);
     }
 
     private Object getValue(FunctionCallStatement statement) {
@@ -153,8 +154,10 @@ public class Executor extends Interpreter {
             value = getValue((BinaryExpression) operand);
         } else if (operand instanceof UnaryExpression) {
             value = getValue((UnaryExpression) operand);
-        } else if (operand instanceof ConditionalExpression) {
-            value = getValue((ConditionalExpression) operand);
+        } else if (operand instanceof BinaryCondition) {
+            value = getValue((BinaryCondition) operand);
+        } else if (operand instanceof UnaryCondition) {
+            value = getValue((UnaryCondition) operand);
         } else {
             if (Type.getTypeForValue(operand) == Type.VARIABLE) {
                 value = getDeclaration(operand.toString()).getValue();

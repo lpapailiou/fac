@@ -5,20 +5,20 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConditionalExpression extends Statement {
+public class BinaryCondition extends ConditionalStatement {
 
-    private Operator op = Operator.NONE;
+    private BinOp op;
     private Object operand1;
     private Object operand2;
 
-    public ConditionalExpression(Object op, Object o1, Object o2) {
-        this(o1);
-        this.operand2 = o2;
-        this.op = Operator.getName(op.toString());
+    public BinaryCondition(Object o1) {
+        this.operand1 = o1;
     }
 
-    public ConditionalExpression(Object o1) {
-        this.operand1 = o1;
+    public BinaryCondition(Object op, Object o1, Object o2) {
+        this(o1);
+        this.operand2 = o2;
+        this.op = BinOp.getName(op.toString());
     }
 
     public Object getOperand1() {
@@ -29,7 +29,7 @@ public class ConditionalExpression extends Statement {
         return operand2;
     }
 
-    public Operator getOperator() {
+    public BinOp getOperator() {
         return op;
     }
 
@@ -47,7 +47,7 @@ public class ConditionalExpression extends Statement {
 
     @Override
     public String toString() {
-        if (op != Operator.NONE) {
+        if (op != null) {
             return "(" + operand1.toString() + " " + op.getOperator() + " " + operand2.toString() + ")";
         }
         return "(" + operand1.toString() + ")";

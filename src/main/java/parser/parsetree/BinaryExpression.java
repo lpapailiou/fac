@@ -8,17 +8,13 @@ import java.util.List;
 
 public class BinaryExpression extends ExpressionStatement {
 
-    private Operator op;
+    private BinOp op;
     private Object operand1;
     private Object operand2;
 
-    public BinaryExpression(Object operand1) {
-        this.operand1 = operand1;
-    }
-
     public BinaryExpression(Object op, Object operand1, Object operand2) {
-        this(operand1);
-        this.op = Operator.getName(op);
+        this.op = BinOp.getName(op);
+        this.operand1 = operand1;
         this.operand2 = operand2;
     }
 
@@ -30,7 +26,7 @@ public class BinaryExpression extends ExpressionStatement {
         return operand2;
     }
 
-    public Operator getOperator() {
+    public BinOp getOperator() {
         return op;
     }
 

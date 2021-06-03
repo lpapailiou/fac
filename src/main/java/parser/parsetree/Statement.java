@@ -31,15 +31,27 @@ public abstract class Statement implements Traversable {
     }
 
     public static UnaryExpression expr(Object e1) {
-        return new UnaryExpression(e1);
+        return new UnaryExpression("", e1);
+    }
+
+    public static UnaryExpression expr(Object op, Object e1) {
+        return new UnaryExpression(op, e1);
     }
 
     public static BinaryExpression expr(Object op, Object e1, Object e2) {
         return new BinaryExpression(op, e1, e2);
     }
 
-    public static ConditionalExpression cond(Object op, Object e1, Object e2) {
-        return new ConditionalExpression(op, e1, e2);
+    public static UnaryCondition cond(Object e) {
+        return new UnaryCondition("", e);
+    }
+
+    public static UnaryCondition cond(Object op, Object e) {
+        return new UnaryCondition(op, e);
+    }
+
+    public static BinaryCondition cond(Object op, Object e1, Object e2) {
+        return new BinaryCondition(op, e1, e2);
     }
 
     public static PrintCallStatement print(Object obj) {
@@ -55,7 +67,7 @@ public abstract class Statement implements Traversable {
     }
 
     public static FunctionCallStatement fun(Object n, Object p) {
-        if (p instanceof ConditionalExpression) {
+        if (p instanceof ConditionalStatement) {
             return new FunctionCallStatement(n, new ParamExpression(p));
         }
         return new FunctionCallStatement(n, p);
@@ -94,22 +106,22 @@ public abstract class Statement implements Traversable {
     }
 
     public static IfThenStatement ifThen(Object c, Object obj) {
-        if (!(c instanceof ConditionalExpression)) {
-            c = new ConditionalExpression(c);
+        if (!(c instanceof ConditionalStatement)) {
+            c = new UnaryCondition("", c);
         }
         return new IfThenStatement(c, obj);
     }
 
     public static IfThenStatement ifThen(Object c, Object obj1, Object obj2) {
-        if (!(c instanceof ConditionalExpression)) {
-            c = new ConditionalExpression(c);
+        if (!(c instanceof ConditionalStatement)) {
+            c = new UnaryCondition("", c);
         }
         return new IfThenElseStatement(c, obj1, obj2);
     }
 
     public static WhileStatement loop(Object c, Object obj) {
-        if (!(c instanceof ConditionalExpression)) {
-            c = new ConditionalExpression(c);
+        if (!(c instanceof ConditionalStatement)) {
+            c = new UnaryCondition("", c);
         }
         return new WhileStatement(c, obj);
     }
@@ -127,7 +139,7 @@ public abstract class Statement implements Traversable {
     }
 
     public static LinkedList<Statement> stmtList() {
-        return new LinkedList<Statement>();
+        return new LinkedList<>();
     }
 
     public static Program prog(List<Statement> list) {
