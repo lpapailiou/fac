@@ -5,7 +5,7 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BinaryCondition extends ConditionalStatement {
+public class BinaryCondition extends ConditionalExpression {
 
     private BinOp op;
     private Object operand1;

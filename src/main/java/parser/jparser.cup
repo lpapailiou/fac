@@ -7,7 +7,6 @@ import java.util.List;
 // ************* CUSTOM PARSER CODE *************
 
 parser code {:
-
     /**
      * Custom constructor which takes a reader. It will initialize a JScanner instance directly.
      * @param in the java.io.Reader.

@@ -6,7 +6,7 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UnaryExpression extends ExpressionStatement {
+public class UnaryExpression extends ArithmeticExpression {
 
     private UnOp op;
     private Object operand;

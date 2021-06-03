@@ -6,7 +6,7 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BinaryExpression extends ExpressionStatement {
+public class BinaryExpression extends ArithmeticExpression {
 
     private BinOp op;
     private Object operand1;

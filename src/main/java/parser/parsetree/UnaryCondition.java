@@ -1,13 +1,11 @@
 package parser.parsetree;
 
-import parser.parsetree.BinOp;
-import parser.parsetree.Statement;
 import parser.parsetree.interfaces.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UnaryCondition extends ConditionalStatement {
+public class UnaryCondition extends ConditionalExpression {
 
     private UnOp op;
     private Object operand;

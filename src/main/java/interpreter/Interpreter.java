@@ -178,13 +178,6 @@ public class Interpreter implements Visitor {
     private Type getType(BinaryCondition statement) {
         Type type1 = getTypeOfOperand(statement.getOperand1());
         Type type2 = getTypeOfOperand(statement.getOperand2());
-        if (type2 == null) {
-            if (Type.getTypeForValue(type1) == Type.BOOLEAN) {
-                return type1;
-            } else {
-                throw new TypeMismatchException("Type of <" + statement.getOperand1() + "> is no boolean!");
-            }
-        }
 
         if (type1 != type2) {
             throw new TypeMismatchException("Types of conditional statement <" + statement.toString().replaceAll("\n", "") + "> do not match!");

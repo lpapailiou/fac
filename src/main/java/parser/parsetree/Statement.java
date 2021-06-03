@@ -67,7 +67,7 @@ public abstract class Statement implements Traversable {
     }
 
     public static FunctionCallStatement fun(Object n, Object p) {
-        if (p instanceof ConditionalStatement) {
+        if (p instanceof ConditionalExpression) {
             return new FunctionCallStatement(n, new ParamExpression(p));
         }
         return new FunctionCallStatement(n, p);
@@ -106,21 +106,21 @@ public abstract class Statement implements Traversable {
     }
 
     public static IfThenStatement ifThen(Object c, Object obj) {
-        if (!(c instanceof ConditionalStatement)) {
+        if (!(c instanceof ConditionalExpression)) {
             c = new UnaryCondition("", c);
         }
         return new IfThenStatement(c, obj);
     }
 
     public static IfThenStatement ifThen(Object c, Object obj1, Object obj2) {
-        if (!(c instanceof ConditionalStatement)) {
+        if (!(c instanceof ConditionalExpression)) {
             c = new UnaryCondition("", c);
         }
         return new IfThenElseStatement(c, obj1, obj2);
     }
 
     public static WhileStatement loop(Object c, Object obj) {
-        if (!(c instanceof ConditionalStatement)) {
+        if (!(c instanceof ConditionalExpression)) {
             c = new UnaryCondition("", c);
         }
         return new WhileStatement(c, obj);
