@@ -5,11 +5,14 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a wrapper class for print call statements.
+ * An instance holds a value, which will be a chain of arguments.
+ */
 public class PrintCallStatement extends Statement {
 
 
     private Object value;
-    private boolean called;
 
     public PrintCallStatement(Object value) {
         this.value = value;

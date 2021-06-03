@@ -3,6 +3,10 @@ package parser.parsetree;
 import java.util.Arrays;
 import java.util.function.BiFunction;
 
+/**
+ * This enum holds all available operators for binary expressions.
+ * As expressions can be executed, every operator will provide its own execution method.
+ */
 public enum BinOp {
 
     EQUAL("=", (a, b) -> b),
@@ -16,6 +20,7 @@ public enum BinOp {
     MINEQ("-=", (a, b) -> Double.parseDouble(a.toString()) - Double.parseDouble(b.toString())),
     MULEQ("*=", (a, b) -> Double.parseDouble(a.toString()) * Double.parseDouble(b.toString())),
     DIVEQ("/=", (a, b) -> Double.parseDouble(a.toString()) / Double.parseDouble(b.toString())),
+    MODEQ("%=", (a, b) -> Double.parseDouble(a.toString()) % Double.parseDouble(b.toString())),
     AND("&&", (a, b) -> (Boolean.parseBoolean(a.toString()) && Boolean.parseBoolean(b.toString()))),
     OR("||", (a, b) -> (Boolean.parseBoolean(a.toString()) || Boolean.parseBoolean(b.toString()))),
     EQ("==", (a, b) -> {

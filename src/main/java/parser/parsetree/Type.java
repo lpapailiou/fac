@@ -5,13 +5,17 @@ import exceptions.TypeMismatchException;
 
 import java.util.Arrays;
 
+/**
+ * this enum defines all available data types of this toy language.
+ * There is a type each for string, numeric and boolean values.
+ * Additionally, a type for variables is provided. It will be used as marker during code validation.
+ */
 public enum Type {
 
     STRING("string", "'[a-z0-9_\\,\\.\\(\\)\\;\\:\\/\\+\\-\\*\\/ \\s\\t\\f\\r\\n]*'", "''"),
     NUMERIC("number", "-?[0-9]\\d*(\\.\\d+)?", "0"),
     BOOLEAN("boolean", "true|false", "false"),
-    VARIABLE("var", "[a-z_]+([0-9])*", null),
-    NONE("none", "*", null);
+    VARIABLE("var", "[a-z_]+([0-9])*", null);
 
     private final String description;
     private final String pattern;

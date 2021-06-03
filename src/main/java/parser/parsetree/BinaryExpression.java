@@ -6,6 +6,10 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a wrapper class for binary arithmetic expressions.
+ * Its instances will hold an assignment operator and two operands.
+ */
 public class BinaryExpression extends ArithmeticExpression {
 
     private BinOp op;

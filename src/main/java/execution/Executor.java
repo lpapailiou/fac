@@ -109,6 +109,10 @@ public class Executor extends Interpreter {
         return statement.getOperator().apply(value);
     }
 
+    private Object getValue(Constant statement) {
+        return getValueOfOperand(statement.getValue());
+    }
+
     private Object getValue(BinaryCondition statement) {
         Object value1 = getValueOfOperand(statement.getOperand1());
         Object value2 = getValueOfOperand(statement.getOperand2());
@@ -139,7 +143,7 @@ public class Executor extends Interpreter {
                 traverse(stmt);
             }
         }
-        Object value = getValueOfOperand(function.getReturnValue());
+        Object value = getValueOfOperand(function.getReturnStatement());
         if (!isNested) {
             removeDeclarations(function);
         }
@@ -154,6 +158,8 @@ public class Executor extends Interpreter {
             value = getValue((BinaryExpression) operand);
         } else if (operand instanceof UnaryExpression) {
             value = getValue((UnaryExpression) operand);
+        } else if (operand instanceof Constant) {
+            value = getValue((Constant) operand);
         } else if (operand instanceof BinaryCondition) {
             value = getValue((BinaryCondition) operand);
         } else if (operand instanceof UnaryCondition) {

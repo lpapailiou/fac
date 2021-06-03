@@ -5,6 +5,10 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a wrapper class for if-then-else statements.
+ * It holds one condition and two statement lists, one each for the if and the else body.
+ */
 public class IfThenElseStatement extends IfThenStatement {
 
     private List<Statement> statementList2 = new ArrayList<>();

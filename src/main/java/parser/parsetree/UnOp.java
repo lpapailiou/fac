@@ -3,18 +3,16 @@ package parser.parsetree;
 import java.util.Arrays;
 import java.util.function.Function;
 
+/**
+ * This enum holds all available operators for unary expressions.
+ * As expressions can be executed, every operator will provide its own execution method.
+ */
 public enum UnOp {
 
     MINUS("-", (e) -> - Double.parseDouble(e.toString())),
-    EXCL("!", (e) -> !Boolean.parseBoolean(e.toString())),
-    NONE("", (e) -> {
-        Type type = Type.getTypeForValue(e);
-        if (type == Type.BOOLEAN) {
-            return Boolean.parseBoolean(e.toString());
-        }
-        return e;
-    })
-    ;
+    INC("++", (e) -> Double.parseDouble(e.toString()) + 1),
+    DEC("--", (e) -> Double.parseDouble(e.toString()) - 1),
+    EXCL("!", (e) -> !Boolean.parseBoolean(e.toString()));
 
     private String operator;
     private Function<Object, Object> function;

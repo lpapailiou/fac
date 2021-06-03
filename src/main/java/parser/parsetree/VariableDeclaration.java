@@ -6,6 +6,12 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a wrapper class for variable declarations.
+ * It holds the data type of the variable, the identifier and a value.
+ * During initialization, the initialized value will be stored, which will allow to run parts of the code -
+ * or the whole code - multiple times.
+ */
 public class VariableDeclaration extends Statement implements Declaration {
 
     private Type type;

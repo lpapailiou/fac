@@ -30,8 +30,12 @@ public abstract class Statement implements Traversable {
         return new AssignmentStatement(op, e1, (Statement) e2);
     }
 
-    public static UnaryExpression expr(Object e1) {
-        return new UnaryExpression("", e1);
+    public static AssignmentStatement assgn(Object op, Object o) {
+        return new AssignmentStatement("=", o, new UnaryExpression(op, o));
+    }
+
+    public static Constant constnt(Object obj) {
+        return new Constant(obj);
     }
 
     public static UnaryExpression expr(Object op, Object e1) {
@@ -40,10 +44,6 @@ public abstract class Statement implements Traversable {
 
     public static BinaryExpression expr(Object op, Object e1, Object e2) {
         return new BinaryExpression(op, e1, e2);
-    }
-
-    public static UnaryCondition cond(Object e) {
-        return new UnaryCondition("", e);
     }
 
     public static UnaryCondition cond(Object op, Object e) {
@@ -68,17 +68,17 @@ public abstract class Statement implements Traversable {
 
     public static FunctionCallStatement fun(Object n, Object p) {
         if (p instanceof ConditionalExpression) {
-            return new FunctionCallStatement(n, new ParamExpression(p));
+            return new FunctionCallStatement(n, new Arguments(p));
         }
         return new FunctionCallStatement(n, p);
     }
 
-    public static ParamExpression param(Object obj) {
-        return new ParamExpression(obj);
+    public static Arguments param(Object obj) {
+        return new Arguments(obj);
     }
 
-    public static ParamExpression param(Object obj, Object list) {
-        return new ParamExpression(obj, list);
+    public static Arguments param(Object obj, Object list) {
+        return new Arguments(obj, list);
     }
 
     public static ParamDeclaration paramDecl(Object t, Object v) {

@@ -118,7 +118,10 @@ print                             { return collectToken(PRINT, "PRINT"); }
 -=                                { return collectToken(MINEQ, "MINEQ"); }
 \*=                               { return collectToken(MULEQ, "MULEQ"); }
 \/=                               { return collectToken(DIVEQ, "DIVEQ"); }
+\%=                               { return collectToken(MODEQ, "MODEQ"); }
 =                                 { return collectToken(EQUAL, "EQUAL"); }
+\++                               { return collectToken(INC, "INC"); }
+\--                               { return collectToken(DEC, "DEC"); }
 \<                                { return collectToken(LESS, "LESS"); }
 >                                 { return collectToken(GREATER, "GREATER"); }
 \+                                { return collectToken(PLUS, "PLUS"); }

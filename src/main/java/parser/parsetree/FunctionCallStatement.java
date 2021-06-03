@@ -5,6 +5,10 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a wrapper class for function call statements.
+ * It holds the identifier and a parameter list.
+ */
 public class FunctionCallStatement extends Statement {
 
 
@@ -18,7 +22,7 @@ public class FunctionCallStatement extends Statement {
     public FunctionCallStatement(Object identifier, Object params) {
         this(identifier);
         if (params != null) {
-            this.parameterList = ((ParamExpression) params).getStatements();
+            this.parameterList = ((Arguments) params).getStatements();
         }
     }
 

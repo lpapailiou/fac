@@ -5,18 +5,22 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParamExpression extends Statement {
+/**
+ * This is a helper class for arguments of a function call. Each instance will be held by its own wrapper
+ * and point to the next argument if present - similar to a linked list.
+ */
+public class Arguments extends Statement {
 
     private Statement param;
-    private ParamExpression next;
+    private Arguments next;
 
-    public ParamExpression(Object o1) {
+    public Arguments(Object o1) {
         param = (Statement) o1;
     }
 
-    public ParamExpression(Object o1, Object o2) {
+    public Arguments(Object o1, Object o2) {
         this(o1);
-        next = (ParamExpression) o2;
+        next = (Arguments) o2;
     }
 
     @Override

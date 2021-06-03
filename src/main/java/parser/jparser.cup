@@ -37,7 +37,7 @@ scan with {: return getScanner().next_token(); :};
 // zerminals (tokens returned by the scanner)
 terminal            WHILE, IF, ELSE, DEF, PRINT, BREAK, RETURN,
                     BL, BR, CBL, CBR, COMMA, STOP,
-                    EQUAL, LESS, GREATER, PLUS, MINUS, MUL, DIV, EQ, NEQ, GREQ, LEQ, AND, OR, PLUSEQ, MINEQ, MULEQ, DIVEQ, MOD, EXCL;
+                    EQUAL, LESS, GREATER, PLUS, MINUS, MUL, DIV, EQ, NEQ, GREQ, LEQ, AND, OR, PLUSEQ, MINEQ, MULEQ, DIVEQ, MODEQ, MOD, EXCL, INC, DEC;
 terminal String     STR, STRTYPE, NUM, NUMTYPE, BOOL, BOOLTYPE, VAR;
 
 // non terminals
@@ -47,10 +47,9 @@ non terminal        TYPE, PARAM, PARAMDEF, RET,
 
 non terminal Program                    PROGRAM;
 non terminal List<Statement>            STMT_LIST;
-non terminal Statement                  STMT, PROG_STMT, NEST_STMT;
+non terminal Statement                  STMT, PROG_STMT, NEST_STMT, EXPR;
 non terminal AssignmentStatement        ASSIGN;
-non terminal ExpressionStatement        EXPR;
-non terminal ConditionalStatement       COND;
+non terminal ConditionalExpression      COND;
 non terminal FunctionCallStatement      FUNCALL;
 non terminal FunctionDefStatement       FUNDEF;
 non terminal PrintCallStatement         PRINTCALL;
@@ -151,7 +150,7 @@ COND_OP         ::= AND:op                                                      
                     ;
 
 // arithmetic expressions. brackets are optional, mul/div has precedence over plus/minus
-EXPR 	        ::=  CALC_MUL:e                                                             {: RESULT = Statement.expr(e); :}
+EXPR 	        ::=  CALC_MUL:e                                                             {: RESULT = Statement.constnt(e); :}
                     | EXPR:e1 PLUS:op CALC_MUL:e2                                           {: RESULT = Statement.expr(op, e1, e2); :}
                     | EXPR:e1 MINUS:op CALC_MUL:e2                                          {: RESULT = Statement.expr(op, e1, e2); :}
                     ;
@@ -163,7 +162,9 @@ CALC_MUL        ::= VAL:e                                                       
                     ;
 
 // variable assignments
-ASSIGN 	        ::= VAR:e1 ASSIGN_OP:op EXPR:e2 STOP                                        {: RESULT = Statement.assgn(op, e1, e2); :}
+ASSIGN 	        ::= VAR:v ASSIGN_OP:op EXPR:e STOP                                          {: RESULT = Statement.assgn(op, v, e); :}
+                    | VAR:v INC:op STOP                                                     {: RESULT = Statement.assgn(op, v); :}
+                    | VAR:v DEC:op STOP                                                     {: RESULT = Statement.assgn(op, v); :}
                     ;
 
 ASSIGN_OP       ::= EQUAL:op                                                                {: RESULT = op; :}
@@ -171,6 +172,7 @@ ASSIGN_OP       ::= EQUAL:op                                                    
                     | MINEQ:op                                                              {: RESULT = op; :}
                     | DIVEQ:op                                                              {: RESULT = op; :}
                     | MULEQ:op                                                              {: RESULT = op; :}
+                    | MODEQ:op                                                              {: RESULT = op; :}
                     ;
 
 // variable declaration

@@ -5,6 +5,10 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a wrapper class for while loops.
+ * It holds a condition and a list of nested statements.
+ */
 public class WhileStatement extends Statement {
 
     private Object condition;

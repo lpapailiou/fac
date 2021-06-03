@@ -98,7 +98,7 @@ public class Interpreter implements Visitor {
     @Override
     public void visit(FunctionDefStatement acceptor) {
         Type defType = acceptor.getType();
-        Object returnValue = acceptor.getReturnValue();
+        Object returnValue = acceptor.getReturnStatement();
         Type retType = getTypeOfOperand(returnValue);
         if (defType != retType) {
             throw new TypeMismatchException("Return type <" + retType.getDescription() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.paramTypeListAsString() + ")> does not match defined type <" + defType.getDescription() + ">!");
@@ -151,10 +151,14 @@ public class Interpreter implements Visitor {
     private Type getType(UnaryExpression statement) {
         Type type = getTypeOfOperand(statement.getOperand());
         UnOp op = statement.getOperator();
-        if ((op == UnOp.MINUS && type != Type.NUMERIC) || (op == UnOp.EXCL && type != Type.BOOLEAN)) {
+        if ((op == UnOp.EXCL && type != Type.BOOLEAN)  || ((op == UnOp.MINUS || op == UnOp.INC || op == UnOp.DEC) && type != Type.NUMERIC)) {
             throw new OperatorMismatchException("UnOp of expression <" + statement.getOperator().getOperator() + "> may not be used in context <" + statement.toString().replaceAll("\n", "") + ">!");
         }
         return type;
+    }
+
+    private Type getType(Constant statement) {
+        return getTypeOfOperand(statement.getValue());
     }
 
     private Type getType(BinaryExpression statement) {
@@ -216,6 +220,8 @@ public class Interpreter implements Visitor {
             type = getType((BinaryExpression) operand);
         } else if (operand instanceof UnaryExpression) {
             type = getType((UnaryExpression) operand);
+        } else if (operand instanceof Constant) {
+            type = getType((Constant) operand);
         } else if (operand instanceof BinaryCondition) {
             type = getType((BinaryCondition) operand);
         } else if (operand instanceof UnaryCondition) {

@@ -84,9 +84,9 @@ Pattern: ``[a-z_]+([0-9])*``.
 Additionally, there is a set of basic operators.  
 Arithmetic operators: ``+``, ``-``, ``*``, ``/``, ``%``.  
 Conditional operators: ``==``, ``!=``, ``<``, ``>``, ``<=``, ``>=``.  
-Assignment operators: ``=``, ``+=``, ``-=``, ``*=``, ``/=``.  
+Assignment operators: ``=``, ``+=``, ``-=``, ``*=``, ``/=``, ``%=``.  
 Evaluation operators: ``&&``, ``||``.
-Unary operators: ``-``, ``!``.
+Unary operators: ``-``, ``++``, ``--``, ``!``.
 #### Special characters
 Finally, there are two types of brackets: ``(``, ``)``, ``{``, ``}``, as well as the infamous comma ``,`` 
 and semicolon ``;``. 
@@ -143,12 +143,14 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
 <li>the preceding data type must be omitted.</li>
 <li>a value must be assigned.</li>
 <li>arithmetic assignment operators are additionally allowed.</li>
+<li>incrementing or decrementing (++ or --) is allowed at this place only.</li>
 </ul></li>
 </ul>
 
     // examples
-    x1 = 1;                         // valid (no type safety yet)
+    x1 = 1 + true;                  // valid (no type safety yet)
     y;                              // parser fails, as a value must be assigned
+    x1++;                           // valid 
     y7 = (true && false);           // valid (conditional expressions can be assigned)
     x8 = fun1()                     // parser fails, as semicolon is missing
 

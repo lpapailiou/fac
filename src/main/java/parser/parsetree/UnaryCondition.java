@@ -5,6 +5,10 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a wrapper class for unary conditional expressions.
+ * Its instances will hold an assignment operator and an operand.
+ */
 public class UnaryCondition extends ConditionalExpression {
 
     private UnOp op;

@@ -5,6 +5,10 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a wrapper class for if-then statements.
+ * It holds one condition and the statement list.
+ */
 public class IfThenStatement extends Statement {
 
     protected Object condition;

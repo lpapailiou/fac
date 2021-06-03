@@ -5,6 +5,11 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a wrapper class for function definitions.
+ * It holds the declared type of the function, the identifier, the parameter declarations, the
+ * statements of the function body and the return statement.
+ */
 public class FunctionDefStatement extends Statement {
 
 
@@ -12,9 +17,9 @@ public class FunctionDefStatement extends Statement {
     private String identifier;
     private List<ParamDeclaration> paramDeclarationList = new ArrayList<>();
     private List<Statement> statementList = new ArrayList<>();
-    private Object returnVal;
+    private Object returnStatement;
 
-    public FunctionDefStatement(Object type, Object name, Object params, Object statements, Object returnVal) {
+    public FunctionDefStatement(Object type, Object name, Object params, Object statements, Object returnStatement) {
         this.type = Type.getByName(type);
         this.identifier = name.toString();
         if (params != null) {
@@ -27,7 +32,7 @@ public class FunctionDefStatement extends Statement {
         if (statements != null) {
             this.statementList.addAll(((NestedStatement) statements).getStatements());
         }
-        this.returnVal = returnVal;
+        this.returnStatement = returnStatement;
 
     }
 
@@ -39,8 +44,8 @@ public class FunctionDefStatement extends Statement {
         return type;
     }
 
-    public Object getReturnValue() {
-        return returnVal;
+    public Object getReturnStatement() {
+        return returnStatement;
     }
 
     public int getParamCount() {
@@ -91,7 +96,7 @@ public class FunctionDefStatement extends Statement {
             out += "\t" + st.toString();
         }
 
-        out += "\treturn " + returnVal + ";\n}\n\n";
+        out += "\treturn " + returnStatement + ";\n}\n\n";
         return out;
     }
 }

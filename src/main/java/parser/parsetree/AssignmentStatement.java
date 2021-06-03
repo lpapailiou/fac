@@ -5,6 +5,10 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a wrapper class for assignment statements.
+ * Its instances will hold an assignment operator, an identifier and an assigned value.
+ */
 public class AssignmentStatement extends Statement {
 
     private BinOp op;

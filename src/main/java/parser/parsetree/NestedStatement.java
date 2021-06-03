@@ -5,6 +5,11 @@ import parser.parsetree.interfaces.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a helper class for wrapping multiple statements in one object.
+ * It is constructed like a linked list and meant to be collect nested statements (e.g. from if-then statements
+ * or loops).
+ */
 public class NestedStatement extends Statement {
 
     private Statement statement;
