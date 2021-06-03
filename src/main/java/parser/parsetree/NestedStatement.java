@@ -8,26 +8,26 @@ import java.util.List;
  * It is constructed like a linked list and meant to be collect nested statements (e.g. from if-then statements
  * or loops).
  */
-public class NestedStatement extends Statement {
+public class NestedStatement extends Component {
 
-    private Statement statement;
+    private Component component;
     private NestedStatement next;
 
     /**
-     * This constructor will take one statement and wrap it.
+     * This constructor will take one component and wrap it.
      *
-     * @param st the statement to wrap.
+     * @param st the component to wrap.
      */
     NestedStatement(Object st) {
-        statement = (Statement) st;
+        component = (Component) st;
     }
 
     /**
-     * This constructor will take two statements. The first statement will be wrapped in this instance.
-     * The second statement will serve as pointer to the next statement.
+     * This constructor will take two statements. The first component will be wrapped in this instance.
+     * The second component will serve as pointer to the next component.
      *
-     * @param st     the statement to wrap.
-     * @param nextSt the next statement to point to.
+     * @param st     the component to wrap.
+     * @param nextSt the next component to point to.
      */
     NestedStatement(Object st, Object nextSt) {
         this(st);
@@ -40,14 +40,14 @@ public class NestedStatement extends Statement {
      * @return the list of nested statements.
      */
     @Override
-    public List<Statement> getStatements() {
-        List<Statement> statements = new ArrayList<>();
-        statements.add(statement);
+    public List<Component> getStatements() {
+        List<Component> components = new ArrayList<>();
+        components.add(component);
         while (next != null) {
-            statements.add(next.statement);
+            components.add(next.component);
             next = next.next;
         }
-        return statements;
+        return components;
     }
 
     /**

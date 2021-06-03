@@ -11,7 +11,7 @@ import java.util.List;
  * This is a superclass for all program components. it is also used as factory to initialize
  * the required instances of the parse tree components.
  */
-public abstract class Statement implements Traversable {
+public abstract class Component implements Traversable {
 
     public static VariableDeclaration decl(Object t, String e1, Object e2) {
         return new VariableDeclaration(t, e1, e2);
@@ -133,11 +133,11 @@ public abstract class Statement implements Traversable {
         return new NestedStatement(obj1, obj2);
     }
 
-    public static LinkedList<Statement> stmtList() {
+    public static LinkedList<Component> stmtList() {
         return new LinkedList<>();
     }
 
-    public static Program prog(List<Statement> list) {
+    public static Program prog(List<Component> list) {
         return new Program(list);
     }
 
@@ -149,7 +149,7 @@ public abstract class Statement implements Traversable {
      * @return an empty statement list.
      */
     @Override
-    public List<Statement> getStatements() {
+    public List<Component> getStatements() {
         return new ArrayList<>();
     }
 

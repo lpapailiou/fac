@@ -24,7 +24,7 @@ Our new toy language has roughly following scope:
 <li>string concatenation</li>
 <li>arithmetic expressions</li>
 <li>conditional expressions</li>
-<li>conditional statements</li>
+<li>conditional components</li>
 <li>loops</li>
 <li>function calls</li>
 <li>function definitions</li>
@@ -67,7 +67,7 @@ is initially useful to separate tokens from each other.
 Pattern: ``[ \t\f\r\n]*`` 
 #### Reserved words
 Reserved words are: ``string``, ``number``, ``boolean`` (for data types), ``while``, ``break``,
-``if``, ``else``, ``def``, ``return`` (for statements) and ``print`` (for printing to the console).  
+``if``, ``else``, ``def``, ``return`` (for components) and ``print`` (for printing to the console).  
 #### Boolean values
 Boolean values may be either ``true`` or ``false``.  
 #### Numeric values
@@ -94,7 +94,7 @@ and semicolon ``;``.
 ### Syntactical rules
 Syntactical rules are applied by the ``Parser``. During the processing of the code, it will receive token by token
 from the scanner. The parser then validates if the sequence of tokens follows the defined grammatical rules (e.g. 
-a statement must stop always with a semicolon). If the code is valid, the parser will organize the identified statements
+a component must stop always with a semicolon). If the code is valid, the parser will organize the identified components
  in a so called 'parse tree', which will be handy for further processing.   
   
 The parser used in this repository was generated with [cup](http://www2.cs.tum.edu/projects/cup/). It can be found in the
@@ -157,7 +157,7 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
 #### Arithmetic expressions
 <ul>
 <li>Arithmetic expressions are meant to perform numeric calculations and string concatenation. Therefore, they use specific operators (+, -, *, /).</li>
-<li>Arithmetic expressions cannot exist as isolated statement. They need to be part of a declaration or be assigned.</li>
+<li>Arithmetic expressions cannot exist as isolated component. They need to be part of a declaration or be assigned.</li>
 <li>By default, their components can be either 'raw' values, conditional expressions or function calls.</li>
 <li>Multiplication and division have precedence over addition and subtraction.</li>
 <li>Arithmetic expressions can be nested. They are - after precedence - evaluated from left to right.</li>
@@ -182,7 +182,7 @@ The syntactical rules are designed with the Backus-Naur-notation, which allows c
 <li>Conditional expressions are quite similar to arithmetic expressions, except they must be enclosed in (round) brackets.</li>
 <li>Conditional expressions use comparing (<, <=, ==, ...) or evaluating (&&, ||) operators.</li>
 <li>Conditional expressions or boolean values can be switched by exclamation marks. The exclamation marks
-cannot be placed before the outer brackets if a conditional expression is used in a if-then or while statement.</li>
+cannot be placed before the outer brackets if a conditional expression is used in a if-then or while component.</li>
 </ul>
 
     // examples
@@ -227,8 +227,8 @@ cannot be placed before the outer brackets if a conditional expression is used i
 <li>This declaration list can be empty or consist of one or multiple declarations.</li>
 <li>A parameter declaration consists of a data type and an identifier.</li></ul></li>
 <li>After the parameter declarations, curly brackets open and close.<ul>
-<li>The function body may contain zero, one or multiple nestable statements.</li>
-<li>Just before the curly brackets are closed, a return statement must be placed. <ul><li>The return statement consists 
+<li>The function body may contain zero, one or multiple nestable components.</li>
+<li>Just before the curly brackets are closed, a return component must be placed. <ul><li>The return component consists 
 of the return keyword, a return value (an expression) and a semicolon.</li></ul></li></ul></li>
 </ul>
 
@@ -242,10 +242,10 @@ of the return keyword, a return value (an expression) and a semicolon.</li></ul>
         return x;
     }
 
-#### Conditional statements
+#### Conditional components
 <ul>
-<li>Conditional statements must start with the if keyword and a conditional expression (in round brackets).</li>
-<li>Then, a body in curly brackets follows, which can contain zero, one or more statements.</li>
+<li>Conditional components must start with the if keyword and a conditional expression (in round brackets).</li>
+<li>Then, a body in curly brackets follows, which can contain zero, one or more components.</li>
 <li>Optionally, an else keyword may follow, with another body as above.</li>
 </ul>
 
@@ -259,7 +259,7 @@ of the return keyword, a return value (an expression) and a semicolon.</li></ul>
 #### While loops
 <ul>
 <li>While loops must start with the while keyword and a conditional expression (in round brackets).</li>
-<li>Then, a body in curly braces follows, which can contain zero, one or more statements.</li>
+<li>Then, a body in curly braces follows, which can contain zero, one or more components.</li>
 </ul>
 
     // examples
@@ -273,31 +273,31 @@ of the return keyword, a return value (an expression) and a semicolon.</li></ul>
 #### Statements
 <ul>
 <li>Statements are basically all grammatical structures, which do not require another surrounding construct to be valid.
-They always must end with a semicolon (if they do not end with a body in curly brackets). Implemented statements are:<ul>
+They always must end with a semicolon (if they do not end with a body in curly brackets). Implemented components are:<ul>
 <li>variable declarations</li>
 <li>variable assignments</li>
 <li>function calls (including print calls)</li>
 <li>function definitions</li>
-<li>conditional statements</li>
+<li>conditional components</li>
 <li>while loops</li></ul></li>
-<li>Additionally, break statements do also count as statements. They are meant to be used within while loop bodies.
+<li>Additionally, break components do also count as components. They are meant to be used within while loop bodies.
 As they cannot be strictly at the end of a while body (they could be nested deeper within if-then-structures), the parser
 will not perform any further syntactical validations in this case.</li>
-<li>Nested statements are a list of statements. This is a helper structure to fill bodies of conditional statements, while loops
+<li>Nested components are a list of components. This is a helper structure to fill bodies of conditional components, while loops
  and function definitions.</li>
-<li>Function definitions must be 'top level' statements (e.g. it is not possible to nest them in a while loop).</li>
-<li>All 'top level' statements and function definitions will finally be added to the program statement list.</li>
+<li>Function definitions must be 'top level' components (e.g. it is not possible to nest them in a while loop).</li>
+<li>All 'top level' components and function definitions will finally be added to the program component list.</li>
 </ul>
 
 #### Program
 <ul>
-<li>The program is a container for the 'top level' list of program statements.</li>
+<li>The program is a container for the 'top level' list of program components.</li>
 <li>If the parser finishes without error, the program will be the root of the generated parse tree.</li>
 </ul>
 
 ### Semantic rules
 So far, our toy language is defined and we have the tools to validate if a code belongs to our language or not. But at 
-this point, there is no type safety, variables can be assigned before they are declared and break statements
+this point, there is no type safety, variables can be assigned before they are declared and break components
 are a mere decoration.  
   
 The required semantic validation must now be performed by an ``Interpreter`` (see ``src\main\java\interpreter``).  
@@ -376,22 +376,22 @@ The interpreter will receive the parse tree from the parser and traverse it dept
         def number y() {                // interpreter fails, as function y() is already defined with 0 params and same return type
             return 1; }
 
-#### Conditional statements and while loops
+#### Conditional components and while loops
 <ul>
-<li>Apart from the break statement validation, no additional semantic validation is required in this case, as the syntactical checks are sufficient.</li>
+<li>Apart from the break component validation, no additional semantic validation is required in this case, as the syntactical checks are sufficient.</li>
 </ul>
 
-#### Break statements
+#### Break components
 <ul>
-<li>Per while loop and nesting level, one break statement is allowed.</li>
-<li>Exception: if a break loop contains an if-then-else statement, two breaks are allowed.</li>
-<li>A break must be the last statement of a statement list, but can be nested within other statement lists. Thus, a simple validation for
+<li>Per while loop and nesting level, one break component is allowed.</li>
+<li>Exception: if a break loop contains an if-then-else component, two breaks are allowed.</li>
+<li>A break must be the last component of a component list, but can be nested within other component lists. Thus, a simple validation for
 unreachable code occurs at this place.</li>
-<li>Break statements are only allowed within while loops, and never as top-level-statement.</li>
+<li>Break components are only allowed within while loops, and never as top-level-component.</li>
 </ul>
 
     // examples
-    break;                              // interpreter fails, as break statement is dangling outside loop
+    break;                              // interpreter fails, as break component is dangling outside loop
     while(true) {                       // interpreter fails, as there is unreachable code
         break; number x = 1; }
     while(false) {                      // valid
@@ -405,9 +405,9 @@ validate code semantically before execution - even if the code itself will never
 Please note that global variables and function definitions must be declared always before being referenced. Thus, declarations must be 
 placed always before callers (not like Java, where global variables and functions may be defined anywhere in a file).  
   
-The ``Executor`` can also be set to script mode. In this case, only the last entered statement will trigger the execution of print calls.  
+The ``Executor`` can also be set to script mode. In this case, only the last entered component will trigger the execution of print calls.  
 In the console, entered code will be validated after pressing ENTER on a blank input line. This means, multiple lines
-can be entered before validating (e.g. breaks are allowed within complex statements). 
+can be entered before validating (e.g. breaks are allowed within complex components). 
 
 ## Repository handling
 This section contains a few technical notes about this repository.

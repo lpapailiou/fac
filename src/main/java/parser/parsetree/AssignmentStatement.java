@@ -6,7 +6,7 @@ import parser.parsetree.interfaces.Visitor;
  * This is a wrapper class for assignment statements.
  * Its instances will hold an assignment operator, an identifier and an assigned value.
  */
-public class AssignmentStatement extends Statement {
+public class AssignmentStatement extends Component {
 
     private BinOp op;
     private String identifier;

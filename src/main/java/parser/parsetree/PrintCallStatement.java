@@ -6,7 +6,7 @@ import parser.parsetree.interfaces.Visitor;
  * This is a wrapper class for print call statements.
  * An instance holds a value, which will be a chain of arguments.
  */
-public class PrintCallStatement extends Statement {
+public class PrintCallStatement extends Component {
 
 
     private Object value;

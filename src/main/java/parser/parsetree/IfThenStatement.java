@@ -9,10 +9,10 @@ import java.util.List;
  * This is a wrapper class for if-then statements.
  * It holds one condition and the statement list, and may be used as component for an if-then-else statement.
  */
-public class IfThenStatement extends Statement {
+public class IfThenStatement extends Component {
 
     protected Object condition;
-    protected List<Statement> statementList1 = new ArrayList<>();
+    protected List<Component> componentList1 = new ArrayList<>();
 
     /**
      * This constructor will wrap an if-then statement.
@@ -24,7 +24,7 @@ public class IfThenStatement extends Statement {
     public IfThenStatement(Object condition, Object statementList1) {
         this.condition = condition;
         if (statementList1 != null) {
-            this.statementList1.addAll(((Statement) statementList1).getStatements());
+            this.componentList1.addAll(((Component) statementList1).getStatements());
         }
     }
 
@@ -43,12 +43,12 @@ public class IfThenStatement extends Statement {
      * @return the statement list.
      */
     @Override
-    public List<Statement> getStatements() {
-        List<Statement> statements = new ArrayList<>();
-        if (!statementList1.isEmpty()) {
-            statements.addAll(statementList1);
+    public List<Component> getStatements() {
+        List<Component> components = new ArrayList<>();
+        if (!componentList1.isEmpty()) {
+            components.addAll(componentList1);
         }
-        return statements;
+        return components;
     }
 
     /**
@@ -70,8 +70,8 @@ public class IfThenStatement extends Statement {
             out += ")";
         }
         out += " {\n";
-        if (!statementList1.isEmpty()) {
-            for (Statement st : statementList1) {
+        if (!componentList1.isEmpty()) {
+            for (Component st : componentList1) {
                 out += "\t" + st;
             }
         }

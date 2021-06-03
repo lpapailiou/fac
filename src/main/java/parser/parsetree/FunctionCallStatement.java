@@ -9,11 +9,11 @@ import java.util.List;
  * This is a wrapper class for function call statements.
  * It holds the identifier and a parameter list.
  */
-public class FunctionCallStatement extends Statement {
+public class FunctionCallStatement extends Component {
 
 
     private String identifier;
-    private List<Statement> argumentList = new ArrayList<>();
+    private List<Component> argumentList = new ArrayList<>();
 
     /**
      * This constructor initializes a wrapper for a function call without arguments.
@@ -60,7 +60,7 @@ public class FunctionCallStatement extends Statement {
      *
      * @return the argument list.
      */
-    public List<Statement> getArgumentList() {
+    public List<Component> getArgumentList() {
         return argumentList;
     }
 

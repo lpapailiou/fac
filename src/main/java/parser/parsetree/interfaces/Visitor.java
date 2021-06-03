@@ -5,7 +5,7 @@ import parser.parsetree.*;
 /**
  * This interface allows to interact easily with the whole parse tree by visiting the parse tree components,
  * which are marked as acceptors. The less complex parse tree components will be visited indirectly. In consequence,
- * the visitor will collect them with the fall-through method visit(Statement acceptor).
+ * the visitor will collect them with the fall-through method visit(Component acceptor).
  */
 public interface Visitor {
 
@@ -19,9 +19,9 @@ public interface Visitor {
     /**
      * Visits a generic statement. This case will be most likely a fall-through action.
      *
-     * @param acceptor the generic Statement to visit.
+     * @param acceptor the generic Component to visit.
      */
-    void visit(Statement acceptor);
+    void visit(Component acceptor);
 
     /**
      * Visits a variable declaration.

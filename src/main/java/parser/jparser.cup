@@ -47,7 +47,7 @@ non terminal        TYPE, PARAM, PARAMDEF, RET,
 
 non terminal Program                    PROGRAM;
 non terminal List<Statement>            STMT_LIST;
-non terminal Statement                  STMT, PROG_STMT, NEST_STMT, EXPR;
+non terminal Component                  STMT, PROG_STMT, NEST_STMT, EXPR;
 non terminal AssignmentStatement        ASSIGN;
 non terminal ConditionalExpression      COND;
 non terminal FunctionCallStatement      FUNCALL;
@@ -66,19 +66,19 @@ start with PROGRAM;
 
 // ************* SYNTACTICAL RULES *************
 
-PROGRAM         ::= STMT_LIST:s                                                             {: RESULT = Statement.prog(s); :}
+PROGRAM         ::= STMT_LIST:s                                                             {: RESULT = Component.prog(s); :}
                     ;
 
-STMT_LIST       ::= STMT_LIST:sl PROG_STMT:s                                                {: sl.add((Statement) s); RESULT = sl; :}
-                    | /* empty STMT_LIST */                                                 {: RESULT = Statement.stmtList(); :}
+STMT_LIST       ::= STMT_LIST:sl PROG_STMT:s                                                {: sl.add((Component) s); RESULT = sl; :}
+                    | /* empty STMT_LIST */                                                 {: RESULT = Component.stmtList(); :}
                     ;
 
 PROG_STMT       ::= STMT:st                                                                 {: RESULT = st; :}
                     | FUNDEF:st                                                             {: RESULT = st; :}
                     ;
 
-NEST_STMT       ::= STMT:st                                                                 {: RESULT = Statement.nest(st); :}
-                    | STMT:st NEST_STMT:stList                                              {: RESULT = Statement.nest(st, stList); :}
+NEST_STMT       ::= STMT:st                                                                 {: RESULT = Component.nest(st); :}
+                    | STMT:st NEST_STMT:stList                                              {: RESULT = Component.nest(st, stList); :}
                     ;
 
 STMT            ::= DECL:st                                                                 {: RESULT = st; :}
@@ -87,19 +87,19 @@ STMT            ::= DECL:st                                                     
                     | PRINTCALL:st                                                          {: RESULT = st; :}
                     | IFTHEN_STMT:st                                                        {: RESULT = st; :}
                     | WHILE_STMT:st                                                         {: RESULT = st; :}
-                    | BREAK:br STOP                                                         {: RESULT = Statement.brk(); :}
+                    | BREAK:br STOP                                                         {: RESULT = Component.brk(); :}
                     ;
 
-WHILE_STMT      ::= WHILE COND_VAL:c CBL NEST_STMT:s CBR                                    {: RESULT = Statement.loop(c, s); :}
-                    | WHILE COND_VAL:c CBL CBR                                              {: RESULT = Statement.loop(c, null); :}
+WHILE_STMT      ::= WHILE COND_VAL:c CBL NEST_STMT:s CBR                                    {: RESULT = Component.loop(c, s); :}
+                    | WHILE COND_VAL:c CBL CBR                                              {: RESULT = Component.loop(c, null); :}
                     ;
 
-IFTHEN_STMT     ::= IF COND_VAL:c CBL NEST_STMT:s CBR                                       {: RESULT = Statement.ifThen(c, s); :}
-                    | IF COND_VAL:c CBL CBR                                                 {: RESULT = Statement.ifThen(c, null); :}
-                    | IF COND_VAL:c CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR          {: RESULT = Statement.ifThen(c, s1, s2); :}
-                    | IF COND_VAL:c CBL CBR ELSE CBL NEST_STMT:s2 CBR                       {: RESULT = Statement.ifThen(c, null, s2); :}
-                    | IF COND_VAL:c CBL NEST_STMT:s1 CBR ELSE CBL CBR                       {: RESULT = Statement.ifThen(c, s1, null); :}
-                    | IF COND_VAL:c CBL CBR ELSE CBL CBR                                    {: RESULT = Statement.ifThen(c, null, null); :}
+IFTHEN_STMT     ::= IF COND_VAL:c CBL NEST_STMT:s CBR                                       {: RESULT = Component.ifThen(c, s); :}
+                    | IF COND_VAL:c CBL CBR                                                 {: RESULT = Component.ifThen(c, null); :}
+                    | IF COND_VAL:c CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR          {: RESULT = Component.ifThen(c, s1, s2); :}
+                    | IF COND_VAL:c CBL CBR ELSE CBL NEST_STMT:s2 CBR                       {: RESULT = Component.ifThen(c, null, s2); :}
+                    | IF COND_VAL:c CBL NEST_STMT:s1 CBR ELSE CBL CBR                       {: RESULT = Component.ifThen(c, s1, null); :}
+                    | IF COND_VAL:c CBL CBR ELSE CBL CBR                                    {: RESULT = Component.ifThen(c, null, null); :}
                     ;
 
 COND_VAL        ::= COND:c                                                                  {: RESULT = c; :}
@@ -107,36 +107,36 @@ COND_VAL        ::= COND:c                                                      
                     ;
 
 // function definition
-FUNDEF 	        ::= DEF TYPE:t VAR:n BL PARAMDEF:p BR CBL NEST_STMT:st RET:r CBR            {: RESULT = Statement.funDef(t, n, p, st, r); :}
-                    | DEF TYPE:t VAR:n BL PARAMDEF:p BR CBL RET:r CBR                       {: RESULT = Statement.funDefEmpty(t, n, p, r); :}
-                    | DEF TYPE:t VAR:n BL BR CBL NEST_STMT:st RET:r CBR                     {: RESULT = Statement.funDef(t, n, st, r); :}
-                    | DEF TYPE:t VAR:n BL BR CBL RET:r CBR                                  {: RESULT = Statement.funDefEmpty(t, n, r); :}
+FUNDEF 	        ::= DEF TYPE:t VAR:n BL PARAMDEF:p BR CBL NEST_STMT:st RET:r CBR            {: RESULT = Component.funDef(t, n, p, st, r); :}
+                    | DEF TYPE:t VAR:n BL PARAMDEF:p BR CBL RET:r CBR                       {: RESULT = Component.funDefEmpty(t, n, p, r); :}
+                    | DEF TYPE:t VAR:n BL BR CBL NEST_STMT:st RET:r CBR                     {: RESULT = Component.funDef(t, n, st, r); :}
+                    | DEF TYPE:t VAR:n BL BR CBL RET:r CBR                                  {: RESULT = Component.funDefEmpty(t, n, r); :}
                     ;
 
-PARAMDEF 	    ::= TYPE:t VAR:v                                                            {: RESULT = Statement.paramDecl(t, v); :}
-                    | TYPE:t VAR:v COMMA PARAMDEF:p                                         {: RESULT = Statement.paramDecl(t, v, p); :}
+PARAMDEF 	    ::= TYPE:t VAR:v                                                            {: RESULT = Component.paramDecl(t, v); :}
+                    | TYPE:t VAR:v COMMA PARAMDEF:p                                         {: RESULT = Component.paramDecl(t, v, p); :}
                     ;
 
-PARAM 	        ::= EXPR:t                                                                  {: RESULT = Statement.param(t); :}
-                    | EXPR:t COMMA PARAM:p                                                  {: RESULT = Statement.param(t, p); :}
+PARAM 	        ::= EXPR:t                                                                  {: RESULT = Component.param(t); :}
+                    | EXPR:t COMMA PARAM:p                                                  {: RESULT = Component.param(t, p); :}
                     ;
 
 RET 	        ::= RETURN EXPR:r STOP                                                      {: RESULT = r; :}
                     ;
 
 // function calls
-FUNCALL 	    ::= VAR:n BL PARAM:p BR                                                     {: RESULT = Statement.fun(n, p); :}
-                    | VAR:n COND:p                                                          {: RESULT = Statement.fun(n, p); :}
-                    | VAR:n BL BR                                                           {: RESULT = Statement.fun(n); :}
+FUNCALL 	    ::= VAR:n BL PARAM:p BR                                                     {: RESULT = Component.fun(n, p); :}
+                    | VAR:n COND:p                                                          {: RESULT = Component.fun(n, p); :}
+                    | VAR:n BL BR                                                           {: RESULT = Component.fun(n); :}
                     ;
 
-PRINTCALL 	    ::= PRINT BL EXPR:v BR STOP                                                 {: RESULT = Statement.print(v); :}
-                    | PRINT COND:v STOP                                                     {: RESULT = Statement.print(v); :}
-                    | PRINT BL BR STOP                                                      {: RESULT = Statement.print(); :}
+PRINTCALL 	    ::= PRINT BL EXPR:v BR STOP                                                 {: RESULT = Component.print(v); :}
+                    | PRINT COND:v STOP                                                     {: RESULT = Component.print(v); :}
+                    | PRINT BL BR STOP                                                      {: RESULT = Component.print(); :}
                     ;
 
 // boolean conditions. brackets are mandatory, no precedence order needed
-COND 	        ::= BL EXPR:e1 COND_OP:op EXPR:e2 BR                                        {: RESULT = Statement.cond(op, e1, e2); :}
+COND 	        ::= BL EXPR:e1 COND_OP:op EXPR:e2 BR                                        {: RESULT = Component.cond(op, e1, e2); :}
                    ;
 
 COND_OP         ::= AND:op                                                                  {: RESULT = op; :}
@@ -150,21 +150,21 @@ COND_OP         ::= AND:op                                                      
                     ;
 
 // arithmetic expressions. brackets are optional, mul/div has precedence over plus/minus
-EXPR 	        ::=  CALC_MUL:e                                                             {: RESULT = Statement.constnt(e); :}
-                    | EXPR:e1 PLUS:op CALC_MUL:e2                                           {: RESULT = Statement.expr(op, e1, e2); :}
-                    | EXPR:e1 MINUS:op CALC_MUL:e2                                          {: RESULT = Statement.expr(op, e1, e2); :}
+EXPR 	        ::=  CALC_MUL:e                                                             {: RESULT = Component.constnt(e); :}
+                    | EXPR:e1 PLUS:op CALC_MUL:e2                                           {: RESULT = Component.expr(op, e1, e2); :}
+                    | EXPR:e1 MINUS:op CALC_MUL:e2                                          {: RESULT = Component.expr(op, e1, e2); :}
                     ;
 
 CALC_MUL        ::= VAL:e                                                                   {: RESULT = e; :}
-                    | CALC_MUL:e1 MUL:op VAL:e2                                             {: RESULT = Statement.expr(op, e1, e2); :}
-                    | CALC_MUL:e1 DIV:op VAL:e2                                             {: RESULT = Statement.expr(op, e1, e2); :}
-                    | CALC_MUL:e1 MOD:op VAL:e2                                             {: RESULT = Statement.expr(op, e1, e2); :}
+                    | CALC_MUL:e1 MUL:op VAL:e2                                             {: RESULT = Component.expr(op, e1, e2); :}
+                    | CALC_MUL:e1 DIV:op VAL:e2                                             {: RESULT = Component.expr(op, e1, e2); :}
+                    | CALC_MUL:e1 MOD:op VAL:e2                                             {: RESULT = Component.expr(op, e1, e2); :}
                     ;
 
 // variable assignments
-ASSIGN 	        ::= VAR:v ASSIGN_OP:op EXPR:e STOP                                          {: RESULT = Statement.assgn(op, v, e); :}
-                    | VAR:v INC:op STOP                                                     {: RESULT = Statement.assgn(op, v); :}
-                    | VAR:v DEC:op STOP                                                     {: RESULT = Statement.assgn(op, v); :}
+ASSIGN 	        ::= VAR:v ASSIGN_OP:op EXPR:e STOP                                          {: RESULT = Component.assgn(op, v, e); :}
+                    | VAR:v INC:op STOP                                                     {: RESULT = Component.assgn(op, v); :}
+                    | VAR:v DEC:op STOP                                                     {: RESULT = Component.assgn(op, v); :}
                     ;
 
 ASSIGN_OP       ::= EQUAL:op                                                                {: RESULT = op; :}
@@ -176,8 +176,8 @@ ASSIGN_OP       ::= EQUAL:op                                                    
                     ;
 
 // variable declaration
-DECL 	        ::= TYPE:t VAR:e1 STOP                                                      {: RESULT = Statement.decl(t, e1); :}
-                    | TYPE:t VAR:e1 EQUAL EXPR:e2 STOP                                      {: RESULT = Statement.decl(t, e1, e2); :}
+DECL 	        ::= TYPE:t VAR:e1 STOP                                                      {: RESULT = Component.decl(t, e1); :}
+                    | TYPE:t VAR:e1 EQUAL EXPR:e2 STOP                                      {: RESULT = Component.decl(t, e1, e2); :}
                     ;
 
 // base components
@@ -192,6 +192,6 @@ VAL             ::= VAR:str                                                     
                     | NUM:n                                                                 {: RESULT = n; :}
                     | FUNCALL:f                                                             {: RESULT = f; :}
                     | COND:c                                                                {: RESULT = c; :}
-                    | EXCL:op VAL:e                                                         {: RESULT = Statement.cond(op, e); :}
-                    | MINUS:op VAL:e                                                        {: RESULT = Statement.expr(op, e); :}
+                    | EXCL:op VAL:e                                                         {: RESULT = Component.cond(op, e); :}
+                    | MINUS:op VAL:e                                                        {: RESULT = Component.expr(op, e); :}
                     ;

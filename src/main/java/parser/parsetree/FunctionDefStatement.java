@@ -10,13 +10,13 @@ import java.util.List;
  * It holds the declared type of the function, the identifier, the parameter declarations, the
  * statements of the function body and the return statement.
  */
-public class FunctionDefStatement extends Statement {
+public class FunctionDefStatement extends Component {
 
 
     private Type type;
     private String identifier;
     private List<ParamDeclaration> paramDeclarationList = new ArrayList<>();
-    private List<Statement> statementList = new ArrayList<>();
+    private List<Component> componentList = new ArrayList<>();
     private Object returnStatement;
 
     /**
@@ -39,7 +39,7 @@ public class FunctionDefStatement extends Statement {
             }
         }
         if (statements != null) {
-            this.statementList.addAll(((NestedStatement) statements).getStatements());
+            this.componentList.addAll(((NestedStatement) statements).getStatements());
         }
         this.returnStatement = returnStatement;
 
@@ -120,11 +120,11 @@ public class FunctionDefStatement extends Statement {
      * @return the parameter list.
      */
     @Override
-    public List<Statement> getStatements() {
-        List<Statement> statements = new ArrayList<>();
-        statements.addAll(paramDeclarationList);
-        statements.addAll(statementList);
-        return statements;
+    public List<Component> getStatements() {
+        List<Component> components = new ArrayList<>();
+        components.addAll(paramDeclarationList);
+        components.addAll(componentList);
+        return components;
     }
 
     /**
@@ -139,7 +139,7 @@ public class FunctionDefStatement extends Statement {
         String out = "\ndef " + type.getIdentifier() + " " + identifier + "(";
         out += paramListAsString();
         out += ") {\n";
-        for (Statement st : statementList) {
+        for (Component st : componentList) {
             out += "\t" + st.toString();
         }
 

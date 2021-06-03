@@ -27,7 +27,7 @@ public class Executor extends Interpreter {
     }
 
     @Override
-    public void visit(Statement acceptor) {
+    public void visit(Component acceptor) {
         super.visit(acceptor);
     }
 
@@ -69,9 +69,9 @@ public class Executor extends Interpreter {
     public void visit(PrintCallStatement acceptor) {
         super.visit(acceptor);
         if (execute && (!scriptMode || printActive)) {
-            Statement statement = (Statement) acceptor.getValue();
-            if (statement != null) {
-                System.out.println(">>>>  " + getValueOfOperand(statement).toString().replaceAll("'", ""));
+            Component component = (Component) acceptor.getValue();
+            if (component != null) {
+                System.out.println(">>>>  " + getValueOfOperand(component).toString().replaceAll("'", ""));
             } else {
                 System.out.println(">>>>  ");
             }
@@ -131,11 +131,11 @@ public class Executor extends Interpreter {
 
     private Object getValue(FunctionCallStatement statement) {
         FunctionDefStatement function = getFunction(statement.getIdentifier(), statement.getArgumentCount());
-        List<Statement> callParams = statement.getArgumentList();
-        List<Statement> statements = function.getStatements();
+        List<Component> callParams = statement.getArgumentList();
+        List<Component> components = function.getStatements();
         boolean isNested = false;
-        for (int i = 0; i < statements.size(); i++) {
-            Statement stmt = statements.get(i);
+        for (int i = 0; i < components.size(); i++) {
+            Component stmt = components.get(i);
             if (stmt instanceof ParamDeclaration) {
                 ParamDeclaration paramDeclaration = ((ParamDeclaration) stmt);
                 try {
@@ -183,8 +183,8 @@ public class Executor extends Interpreter {
         if (node != null) {
             preValidation(node);
 
-            List<Statement> statements = getStatements(node);
-            processStatements(node, statements);
+            List<Component> components = getStatements(node);
+            processStatements(node, components);
 
             if (!(node instanceof Program)) {
                 node.accept(this);
@@ -192,66 +192,66 @@ public class Executor extends Interpreter {
         }
     }
 
-    private List<Statement> getStatements(Traversable node) {
+    private List<Component> getStatements(Traversable node) {
         boolean switched = execute;
-        List<Statement> executableStatements = node.getStatements();
+        List<Component> executableComponents = node.getStatements();
         if (!execute) {
-            return executableStatements;
+            return executableComponents;
         }
-        List<Statement> validateOnlyStatements = new ArrayList<>();
+        List<Component> validateOnlyComponents = new ArrayList<>();
         boolean condition;
         if (node instanceof IfThenElseStatement) {
             condition = (Boolean) getValueOfOperand(((IfThenElseStatement) node).getCondition());
             if (condition) {
-                executableStatements = ((IfThenElseStatement) node).getIfStatements();
-                validateOnlyStatements = ((IfThenElseStatement) node).getElseStatements();
+                executableComponents = ((IfThenElseStatement) node).getIfStatements();
+                validateOnlyComponents = ((IfThenElseStatement) node).getElseStatements();
             } else {
-                executableStatements = ((IfThenElseStatement) node).getElseStatements();
-                validateOnlyStatements = ((IfThenElseStatement) node).getIfStatements();
+                executableComponents = ((IfThenElseStatement) node).getElseStatements();
+                validateOnlyComponents = ((IfThenElseStatement) node).getIfStatements();
             }
         } else if (node instanceof IfThenStatement) {
             condition = (Boolean) getValueOfOperand(((IfThenStatement) node).getCondition());
             if (!condition) {
-                validateOnlyStatements = executableStatements;
-                executableStatements = new ArrayList<>();
+                validateOnlyComponents = executableComponents;
+                executableComponents = new ArrayList<>();
             }
         } else if (node instanceof FunctionDefStatement) {
-            validateOnlyStatements = executableStatements;
-            executableStatements = new ArrayList<>();
+            validateOnlyComponents = executableComponents;
+            executableComponents = new ArrayList<>();
         }
 
         execute = false;
-        for (Statement st : validateOnlyStatements) {
+        for (Component st : validateOnlyComponents) {
             traverse(st);
         }
         if (switched) {
             execute = true;
         }
-        return executableStatements;
+        return executableComponents;
     }
 
-    private void processStatements(Traversable node, List<Statement> statements) {
+    private void processStatements(Traversable node, List<Component> components) {
         if (node instanceof WhileStatement && execute) {
             while ((Boolean) getValueOfOperand(((WhileStatement) node).getCondition())) {
                 if (breakEvent > breakOccurred) {
                     breakOccurred++;
                     break;
                 }
-                for (Statement st : statements) {
+                for (Component st : components) {
                     traverse(st);
                 }
                 removeDeclarations(node);
             }
         } else {
             if (node instanceof Program) {
-                for (int i = 0; i < statements.size(); i++) {
-                    if (i == statements.size() - 1) {
+                for (int i = 0; i < components.size(); i++) {
+                    if (i == components.size() - 1) {
                         printActive = true;
                     }
-                    traverse(statements.get(i));
+                    traverse(components.get(i));
                 }
             } else {
-                for (Statement st : statements) {
+                for (Component st : components) {
                     traverse(st);
                 }
             }

@@ -4,7 +4,7 @@ package parser.parsetree;
 /**
  * This is a wrapper for a break statement. It is basically used as marker.
  */
-public class BreakStatement extends Statement {
+public class BreakStatement extends Component {
 
     /**
      * The toString method provides a pretty-printable String

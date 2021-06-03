@@ -9,7 +9,7 @@ import parser.parsetree.interfaces.Visitor;
  * During initialization, the initialized value will be stored, which will allow to run parts of the code -
  * or the whole code - multiple times.
  */
-public class VariableDeclaration extends Statement implements Declaration {
+public class VariableDeclaration extends Component implements Declaration {
 
     private Type type;
     private String identifier;

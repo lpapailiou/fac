@@ -3,7 +3,7 @@ package parser.parsetree;
 /**
  * This is a wrapper class for constants. A constant may be an expression or a value of any type.
  */
-public class Constant extends Statement {
+public class Constant extends Component {
 
     private Object obj;
 

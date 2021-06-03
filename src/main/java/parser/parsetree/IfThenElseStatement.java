@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class IfThenElseStatement extends IfThenStatement {
 
-    private List<Statement> statementListElse = new ArrayList<>();
+    private List<Component> componentListElse = new ArrayList<>();
 
     /**
      * This constructor will wrap the contents of an if-then-else statement. It will initialize the
@@ -25,7 +25,7 @@ public class IfThenElseStatement extends IfThenStatement {
     IfThenElseStatement(Object condition, Object statementList1, Object statementList2) {
         super(condition, statementList1);
         if (statementList2 != null) {
-            this.statementListElse.addAll(((Statement) statementList2).getStatements());
+            this.componentListElse.addAll(((Component) statementList2).getStatements());
         }
     }
 
@@ -34,7 +34,7 @@ public class IfThenElseStatement extends IfThenStatement {
      *
      * @return the if-then statement list.
      */
-    public List<Statement> getIfStatements() {
+    public List<Component> getIfStatements() {
         return super.getStatements();
     }
 
@@ -43,12 +43,12 @@ public class IfThenElseStatement extends IfThenStatement {
      *
      * @return the else statement list.
      */
-    public List<Statement> getElseStatements() {
-        List<Statement> statements = new ArrayList<>();
-        if (!statementListElse.isEmpty()) {
-            statements.addAll(statementListElse);
+    public List<Component> getElseStatements() {
+        List<Component> components = new ArrayList<>();
+        if (!componentListElse.isEmpty()) {
+            components.addAll(componentListElse);
         }
-        return statements;
+        return components;
     }
 
     /**
@@ -57,12 +57,12 @@ public class IfThenElseStatement extends IfThenStatement {
      * @return the complete statement list.
      */
     @Override
-    public List<Statement> getStatements() {
-        List<Statement> statements = super.getStatements();
-        if (!statementListElse.isEmpty()) {
-            statements.addAll(statementListElse);
+    public List<Component> getStatements() {
+        List<Component> components = super.getStatements();
+        if (!componentListElse.isEmpty()) {
+            components.addAll(componentListElse);
         }
-        return statements;
+        return components;
     }
 
     /**
@@ -84,15 +84,15 @@ public class IfThenElseStatement extends IfThenStatement {
             out += ")";
         }
         out += " {\n";
-        if (!statementList1.isEmpty()) {
-            for (Statement st : statementList1) {
+        if (!componentList1.isEmpty()) {
+            for (Component st : componentList1) {
                 out += "\t" + st;
             }
         }
 
-        if (!statementListElse.isEmpty()) {
+        if (!componentListElse.isEmpty()) {
             out += "} else { \n";
-            for (Statement st : statementListElse) {
+            for (Component st : componentListElse) {
                 out += "\t" + st;
             }
         }

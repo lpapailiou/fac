@@ -7,9 +7,9 @@ import java.util.List;
  * This is a helper class for arguments of a function call. Each instance will be held by its own wrapper
  * and point to the next argument if present - similar to a linked list.
  */
-public class Argument extends Statement {
+public class Argument extends Component {
 
-    private Statement arg;
+    private Component arg;
     private Argument next;
 
     /**
@@ -19,7 +19,7 @@ public class Argument extends Statement {
      * @param arg the argument to wrap.
      */
     Argument(Object arg) {
-        this.arg = (Statement) arg;
+        this.arg = (Component) arg;
     }
 
     /**
@@ -41,14 +41,14 @@ public class Argument extends Statement {
      * @return the list of arguments.
      */
     @Override
-    public List<Statement> getStatements() {
-        List<Statement> statements = new ArrayList<>();
-        statements.add(arg);
+    public List<Component> getStatements() {
+        List<Component> components = new ArrayList<>();
+        components.add(arg);
         while (next != null) {
-            statements.add(next.arg);
+            components.add(next.arg);
             next = next.next;
         }
-        return statements;
+        return components;
     }
 
     /**

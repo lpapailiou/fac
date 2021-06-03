@@ -524,8 +524,8 @@ public class JParser extends java_cup.runtime.lr_parser {
                     Program RESULT = null;
                     int sleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int sright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
-                    List<Statement> s = (List<Statement>) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.prog(s);
+                    List<Component> s = (List<Component>) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
+                    RESULT = Component.prog(s);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("PROGRAM", 9, ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -533,14 +533,14 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 2: // STMT_LIST ::= STMT_LIST PROG_STMT
                 {
-                    List<Statement> RESULT = null;
+                    List<Component> RESULT = null;
                     int slleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int slright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
-                    List<Statement> sl = (List<Statement>) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
+                    List<Component> sl = (List<Component>) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
                     int sleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int sright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
-                    Statement s = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    sl.add((Statement) s);
+                    Component s = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
+                    sl.add((Component) s);
                     RESULT = sl;
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("STMT_LIST", 10, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
@@ -549,8 +549,8 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 3: // STMT_LIST ::=
                 {
-                    List<Statement> RESULT = null;
-                    RESULT = Statement.stmtList();
+                    List<Component> RESULT = null;
+                    RESULT = Component.stmtList();
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("STMT_LIST", 10, ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -558,10 +558,10 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 4: // PROG_STMT ::= STMT
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int stleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int stright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
-                    Statement st = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
+                    Component st = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
                     RESULT = st;
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("PROG_STMT", 12, ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
@@ -570,7 +570,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 5: // PROG_STMT ::= FUNDEF
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int stleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int stright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     FunctionDefStatement st = (FunctionDefStatement) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
@@ -582,11 +582,11 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 6: // NEST_STMT ::= STMT
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int stleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int stright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
-                    Statement st = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.nest(st);
+                    Component st = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
+                    RESULT = Component.nest(st);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("NEST_STMT", 13, ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -594,14 +594,14 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 7: // NEST_STMT ::= STMT NEST_STMT
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int stleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int stright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
-                    Statement st = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
+                    Component st = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
                     int stListleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int stListright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
-                    Statement stList = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.nest(st, stList);
+                    Component stList = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
+                    RESULT = Component.nest(st, stList);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("NEST_STMT", 13, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -609,7 +609,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 8: // STMT ::= DECL
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int stleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int stright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     VariableDeclaration st = (VariableDeclaration) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
@@ -621,7 +621,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 9: // STMT ::= ASSIGN
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int stleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int stright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     AssignmentStatement st = (AssignmentStatement) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
@@ -633,7 +633,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 10: // STMT ::= FUNCALL STOP
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int stleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int stright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     FunctionCallStatement st = (FunctionCallStatement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
@@ -645,7 +645,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 11: // STMT ::= PRINTCALL
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int stleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int stright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     PrintCallStatement st = (PrintCallStatement) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
@@ -657,7 +657,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 12: // STMT ::= IFTHEN_STMT
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int stleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int stright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     IfThenStatement st = (IfThenStatement) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
@@ -669,7 +669,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 13: // STMT ::= WHILE_STMT
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int stleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int stright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     WhileStatement st = (WhileStatement) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
@@ -681,11 +681,11 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 14: // STMT ::= BREAK STOP
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int brleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int brright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     Object br = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.brk();
+                    RESULT = Component.brk();
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("STMT", 11, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -699,8 +699,8 @@ public class JParser extends java_cup.runtime.lr_parser {
                     Object c = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)).value;
                     int sleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int sright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
-                    Statement s = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.loop(c, s);
+                    Component s = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
+                    RESULT = Component.loop(c, s);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("WHILE_STMT", 21, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 4)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -712,7 +712,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int cleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).left;
                     int cright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).right;
                     Object c = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
-                    RESULT = Statement.loop(c, null);
+                    RESULT = Component.loop(c, null);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("WHILE_STMT", 21, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -726,8 +726,8 @@ public class JParser extends java_cup.runtime.lr_parser {
                     Object c = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)).value;
                     int sleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int sright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
-                    Statement s = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.ifThen(c, s);
+                    Component s = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
+                    RESULT = Component.ifThen(c, s);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("IFTHEN_STMT", 20, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 4)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -739,7 +739,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int cleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).left;
                     int cright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).right;
                     Object c = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
-                    RESULT = Statement.ifThen(c, null);
+                    RESULT = Component.ifThen(c, null);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("IFTHEN_STMT", 20, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -753,11 +753,11 @@ public class JParser extends java_cup.runtime.lr_parser {
                     Object c = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 7)).value;
                     int s1left = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 5)).left;
                     int s1right = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 5)).right;
-                    Statement s1 = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 5)).value;
+                    Component s1 = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 5)).value;
                     int s2left = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int s2right = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
-                    Statement s2 = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.ifThen(c, s1, s2);
+                    Component s2 = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
+                    RESULT = Component.ifThen(c, s1, s2);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("IFTHEN_STMT", 20, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 8)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -771,8 +771,8 @@ public class JParser extends java_cup.runtime.lr_parser {
                     Object c = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 6)).value;
                     int s2left = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int s2right = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
-                    Statement s2 = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.ifThen(c, null, s2);
+                    Component s2 = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
+                    RESULT = Component.ifThen(c, null, s2);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("IFTHEN_STMT", 20, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 7)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -786,8 +786,8 @@ public class JParser extends java_cup.runtime.lr_parser {
                     Object c = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 6)).value;
                     int s1left = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 4)).left;
                     int s1right = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 4)).right;
-                    Statement s1 = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 4)).value;
-                    RESULT = Statement.ifThen(c, s1, null);
+                    Component s1 = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 4)).value;
+                    RESULT = Component.ifThen(c, s1, null);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("IFTHEN_STMT", 20, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 7)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -799,7 +799,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int cleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 5)).left;
                     int cright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 5)).right;
                     Object c = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 5)).value;
-                    RESULT = Statement.ifThen(c, null, null);
+                    RESULT = Component.ifThen(c, null, null);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("IFTHEN_STMT", 20, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 6)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -843,11 +843,11 @@ public class JParser extends java_cup.runtime.lr_parser {
                     Object p = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 5)).value;
                     int stleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).left;
                     int stright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).right;
-                    Statement st = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
+                    Component st = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
                     int rleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int rright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     Object r = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.funDef(t, n, p, st, r);
+                    RESULT = Component.funDef(t, n, p, st, r);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("FUNDEF", 18, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 9)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -868,7 +868,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int rleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int rright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     Object r = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.funDefEmpty(t, n, p, r);
+                    RESULT = Component.funDefEmpty(t, n, p, r);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("FUNDEF", 18, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 8)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -885,11 +885,11 @@ public class JParser extends java_cup.runtime.lr_parser {
                     String n = (String) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 6)).value;
                     int stleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).left;
                     int stright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).right;
-                    Statement st = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
+                    Component st = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
                     int rleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int rright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     Object r = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.funDef(t, n, st, r);
+                    RESULT = Component.funDef(t, n, st, r);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("FUNDEF", 18, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 8)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -907,7 +907,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int rleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int rright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     Object r = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.funDefEmpty(t, n, r);
+                    RESULT = Component.funDefEmpty(t, n, r);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("FUNDEF", 18, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 7)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -922,7 +922,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int vleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int vright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     String v = (String) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.paramDecl(t, v);
+                    RESULT = Component.paramDecl(t, v);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("PARAMDEF", 2, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -940,7 +940,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int pleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int pright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     Object p = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.paramDecl(t, v, p);
+                    RESULT = Component.paramDecl(t, v, p);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("PARAMDEF", 2, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -951,8 +951,8 @@ public class JParser extends java_cup.runtime.lr_parser {
                     Object RESULT = null;
                     int tleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int tright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
-                    Statement t = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.param(t);
+                    Component t = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
+                    RESULT = Component.param(t);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("PARAM", 1, ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -963,11 +963,11 @@ public class JParser extends java_cup.runtime.lr_parser {
                     Object RESULT = null;
                     int tleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).left;
                     int tright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).right;
-                    Statement t = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
+                    Component t = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
                     int pleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int pright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     Object p = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.param(t, p);
+                    RESULT = Component.param(t, p);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("PARAM", 1, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -978,7 +978,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     Object RESULT = null;
                     int rleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int rright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
-                    Statement r = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
+                    Component r = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
                     RESULT = r;
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("RET", 3, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
@@ -994,7 +994,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int pleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int pright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     Object p = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.fun(n, p);
+                    RESULT = Component.fun(n, p);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("FUNCALL", 17, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1009,7 +1009,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int pleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int pright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     ConditionalExpression p = (ConditionalExpression) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.fun(n, p);
+                    RESULT = Component.fun(n, p);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("FUNCALL", 17, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1021,7 +1021,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int nleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).left;
                     int nright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).right;
                     String n = (String) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
-                    RESULT = Statement.fun(n);
+                    RESULT = Component.fun(n);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("FUNCALL", 17, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1032,8 +1032,8 @@ public class JParser extends java_cup.runtime.lr_parser {
                     PrintCallStatement RESULT = null;
                     int vleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).left;
                     int vright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).right;
-                    Statement v = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
-                    RESULT = Statement.print(v);
+                    Component v = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
+                    RESULT = Component.print(v);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("PRINTCALL", 19, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 4)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1045,7 +1045,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int vleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int vright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     ConditionalExpression v = (ConditionalExpression) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.print(v);
+                    RESULT = Component.print(v);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("PRINTCALL", 19, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1054,7 +1054,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                 case 39: // PRINTCALL ::= PRINT BL BR STOP
                 {
                     PrintCallStatement RESULT = null;
-                    RESULT = Statement.print();
+                    RESULT = Component.print();
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("PRINTCALL", 19, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1065,14 +1065,14 @@ public class JParser extends java_cup.runtime.lr_parser {
                     ConditionalExpression RESULT = null;
                     int e1left = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)).left;
                     int e1right = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)).right;
-                    Statement e1 = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)).value;
+                    Component e1 = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)).value;
                     int opleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).left;
                     int opright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).right;
                     Object op = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
                     int e2left = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int e2right = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
-                    Statement e2 = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.cond(op, e1, e2);
+                    Component e2 = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
+                    RESULT = Component.cond(op, e1, e2);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("COND", 16, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 4)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1176,11 +1176,11 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 49: // EXPR ::= CALC_MUL
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int eleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int eright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     Object e = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.constnt(e);
+                    RESULT = Component.constnt(e);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("EXPR", 14, ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1188,17 +1188,17 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 50: // EXPR ::= EXPR PLUS CALC_MUL
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int e1left = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).left;
                     int e1right = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).right;
-                    Statement e1 = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
+                    Component e1 = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
                     int opleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int opright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     Object op = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
                     int e2left = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int e2right = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     Object e2 = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.expr(op, e1, e2);
+                    RESULT = Component.expr(op, e1, e2);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("EXPR", 14, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1206,17 +1206,17 @@ public class JParser extends java_cup.runtime.lr_parser {
                 /*. . . . . . . . . . . . . . . . . . . .*/
                 case 51: // EXPR ::= EXPR MINUS CALC_MUL
                 {
-                    Statement RESULT = null;
+                    Component RESULT = null;
                     int e1left = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).left;
                     int e1right = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).right;
-                    Statement e1 = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
+                    Component e1 = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
                     int opleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int opright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     Object op = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
                     int e2left = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int e2right = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     Object e2 = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.expr(op, e1, e2);
+                    RESULT = Component.expr(op, e1, e2);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("EXPR", 14, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1246,7 +1246,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int e2left = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int e2right = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     Object e2 = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.expr(op, e1, e2);
+                    RESULT = Component.expr(op, e1, e2);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("CALC_MUL", 7, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1264,7 +1264,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int e2left = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int e2right = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     Object e2 = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.expr(op, e1, e2);
+                    RESULT = Component.expr(op, e1, e2);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("CALC_MUL", 7, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1282,7 +1282,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int e2left = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int e2right = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     Object e2 = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.expr(op, e1, e2);
+                    RESULT = Component.expr(op, e1, e2);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("CALC_MUL", 7, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1299,8 +1299,8 @@ public class JParser extends java_cup.runtime.lr_parser {
                     Object op = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)).value;
                     int eleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int eright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
-                    Statement e = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.assgn(op, v, e);
+                    Component e = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
+                    RESULT = Component.assgn(op, v, e);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("ASSIGN", 15, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1315,7 +1315,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int opleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int opright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     Object op = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.assgn(op, v);
+                    RESULT = Component.assgn(op, v);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("ASSIGN", 15, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1330,7 +1330,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int opleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int opright = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     Object op = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.assgn(op, v);
+                    RESULT = Component.assgn(op, v);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("ASSIGN", 15, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1417,7 +1417,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int e1left = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int e1right = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
                     String e1 = (String) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.decl(t, e1);
+                    RESULT = Component.decl(t, e1);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("DECL", 22, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 2)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1434,8 +1434,8 @@ public class JParser extends java_cup.runtime.lr_parser {
                     String e1 = (String) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 3)).value;
                     int e2left = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).left;
                     int e2right = ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).right;
-                    Statement e2 = (Statement) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
-                    RESULT = Statement.decl(t, e1, e2);
+                    Component e2 = (Component) ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)).value;
+                    RESULT = Component.decl(t, e1, e2);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("DECL", 22, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 4)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1558,7 +1558,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int eleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int eright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     Object e = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.cond(op, e);
+                    RESULT = Component.cond(op, e);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("VAL", 8, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;
@@ -1573,7 +1573,7 @@ public class JParser extends java_cup.runtime.lr_parser {
                     int eleft = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).left;
                     int eright = ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).right;
                     Object e = (Object) ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()).value;
-                    RESULT = Statement.expr(op, e);
+                    RESULT = Component.expr(op, e);
                     CUP$JParser$result = parser.getSymbolFactory().newSymbol("VAL", 8, ((java_cup.runtime.Symbol) CUP$JParser$stack.elementAt(CUP$JParser$top - 1)), ((java_cup.runtime.Symbol) CUP$JParser$stack.peek()), RESULT);
                 }
                 return CUP$JParser$result;

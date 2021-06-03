@@ -1,6 +1,6 @@
 package parser.parsetree.interfaces;
 
-import parser.parsetree.Statement;
+import parser.parsetree.Component;
 
 import java.util.List;
 
@@ -16,6 +16,6 @@ public interface Traversable extends Acceptor {
      *
      * @return the list of nested statements.
      */
-    List<Statement> getStatements();
+    List<Component> getStatements();
 
 }

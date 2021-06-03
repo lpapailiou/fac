@@ -7,7 +7,7 @@ import parser.parsetree.interfaces.Visitor;
  * This is a wrapper class for parameter declarations of a function body.
  * It is constructed like a linked list. The leftmost declaration points to its neighbor to the right, etc.
  */
-public class ParamDeclaration extends Statement implements Declaration {
+public class ParamDeclaration extends Component implements Declaration {
 
     private Type type;
     private String identifier;

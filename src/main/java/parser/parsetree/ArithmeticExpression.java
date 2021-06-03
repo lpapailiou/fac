@@ -5,5 +5,5 @@ package parser.parsetree;
  * It is meant to be used for arithmetic expressions, but is also used as container for
  * all types of values expressions and function calls.
  */
-abstract class ArithmeticExpression extends Statement {
+abstract class ArithmeticExpression extends Component {
 }

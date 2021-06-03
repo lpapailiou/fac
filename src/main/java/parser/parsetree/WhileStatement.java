@@ -9,10 +9,10 @@ import java.util.List;
  * This is a wrapper class for while loops.
  * It holds a condition and a list of nested statements.
  */
-public class WhileStatement extends Statement {
+public class WhileStatement extends Component {
 
     private Object condition;
-    private List<Statement> statementList = new ArrayList<>();
+    private List<Component> componentList = new ArrayList<>();
 
     /**
      * This constructor will wrap a conditional expression and a statement list to represent a while statement.
@@ -24,7 +24,7 @@ public class WhileStatement extends Statement {
     public WhileStatement(Object condition, Object statements) {
         this.condition = condition;
         if (statements != null) {
-            this.statementList = ((NestedStatement) statements).getStatements();
+            this.componentList = ((NestedStatement) statements).getStatements();
         }
     }
 
@@ -43,8 +43,8 @@ public class WhileStatement extends Statement {
      * @return the statement list.
      */
     @Override
-    public List<Statement> getStatements() {
-        return statementList;
+    public List<Component> getStatements() {
+        return componentList;
     }
 
     /**
@@ -67,7 +67,7 @@ public class WhileStatement extends Statement {
         }
         out += " {\n";
 
-        for (Statement st : statementList) {
+        for (Component st : componentList) {
             out += "\t" + st;
         }
         out += "}\n";

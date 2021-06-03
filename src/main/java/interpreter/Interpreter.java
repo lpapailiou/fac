@@ -24,7 +24,7 @@ public class Interpreter implements Visitor {
     }
 
     @Override
-    public void visit(Statement acceptor) {
+    public void visit(Component acceptor) {
         System.out.println("FALL THROUGH: " + acceptor.getClass());
         if (acceptor instanceof VariableDeclaration) {
             visit((VariableDeclaration) acceptor);
@@ -130,19 +130,19 @@ public class Interpreter implements Visitor {
         }
     }
 
-    protected void checkBreakStatement(Traversable parent, List<Statement> statements, boolean hold) {
-        for (int i = 0; i < statements.size(); i++) {
-            if (statements.get(i) instanceof BreakStatement) {
+    protected void checkBreakStatement(Traversable parent, List<Component> components, boolean hold) {
+        for (int i = 0; i < components.size(); i++) {
+            if (components.get(i) instanceof BreakStatement) {
                 if (whileDepth <= 0) {
                     throw new GrammarException("Not in loop! Break statement is not possible at position <" + parent + ">!");
-                } else if (i < statements.size() - 1) {
+                } else if (i < components.size() - 1) {
                     throw new GrammarException("Unreachable code! Break statement is not possible at position <" + parent + ">.");
                 }
                 if (!hold) {
                     if (whileDepth > 0) {
                         whileDepth--;
                     } else {
-                        throw new GrammarException("Too many break statements in loop <" + parent + ">!");
+                        throw new GrammarException("Too many break components in loop <" + parent + ">!");
                     }
                 }
             }
@@ -239,7 +239,7 @@ public class Interpreter implements Visitor {
 
     private void validateFunctionCall(FunctionCallStatement functionCall) {
         FunctionDefStatement function = getFunction(functionCall.getIdentifier(), functionCall.getArgumentCount());
-        List<Statement> callArgs = functionCall.getArgumentList();
+        List<Component> callArgs = functionCall.getArgumentList();
         List<String> functionParams = Arrays.asList(function.paramTypeListAsString().split(", "));
         for (int i = 0; i < callArgs.size(); i++) {
             Type caller = getTypeOfOperand(callArgs.get(i));
@@ -314,9 +314,9 @@ public class Interpreter implements Visitor {
     private void traverse(Traversable node) {
         if (node != null) {
             preValidation(node);
-            List<Statement> statements = node.getStatements();
+            List<Component> components = node.getStatements();
 
-            for (Statement st : statements) {
+            for (Component st : components) {
                 this.traverse(st);
             }
             if (!(node instanceof Program)) {

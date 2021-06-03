@@ -13,16 +13,16 @@ import java.util.List;
  */
 public class Program implements Traversable {
 
-    private List<Statement> statementList = new ArrayList<>();
+    private List<Component> componentList = new ArrayList<>();
 
     /**
      * This constructor initializes the wrapper for the root of the generated parse tree.
      * It contains the list of all top-level statements.
      *
-     * @param statementList the list of all top-level statements.
+     * @param componentList the list of all top-level statements.
      */
-    public Program(List<Statement> statementList) {
-        this.statementList.addAll(statementList);
+    public Program(List<Component> componentList) {
+        this.componentList.addAll(componentList);
     }
 
     /**
@@ -30,8 +30,8 @@ public class Program implements Traversable {
      *
      * @return the statement list.
      */
-    public List<Statement> getStatements() {
-        return statementList;
+    public List<Component> getStatements() {
+        return componentList;
     }
 
     /**
@@ -44,7 +44,7 @@ public class Program implements Traversable {
     @Override
     public String toString() {
         String out = "";
-        for (Statement st : statementList) {
+        for (Component st : componentList) {
             out += st.toString();
         }
 
