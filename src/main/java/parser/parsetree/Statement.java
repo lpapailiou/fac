@@ -3,20 +3,15 @@ package parser.parsetree;
 import parser.parsetree.interfaces.Traversable;
 import parser.parsetree.interfaces.Visitor;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This is a superclass for all program components. it is also used as factory to initialize
+ * the required instances of the parse tree components.
+ */
 public abstract class Statement implements Traversable {
-
-    @Override
-    public String toString() {
-        return "[statement]";
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
 
     public static VariableDeclaration decl(Object t, Object e1, Object e2) {
         return new VariableDeclaration(t, e1, e2);
@@ -68,17 +63,17 @@ public abstract class Statement implements Traversable {
 
     public static FunctionCallStatement fun(Object n, Object p) {
         if (p instanceof ConditionalExpression) {
-            return new FunctionCallStatement(n, new Arguments(p));
+            return new FunctionCallStatement(n, new Argument(p));
         }
         return new FunctionCallStatement(n, p);
     }
 
-    public static Arguments param(Object obj) {
-        return new Arguments(obj);
+    public static Argument param(Object obj) {
+        return new Argument(obj);
     }
 
-    public static Arguments param(Object obj, Object list) {
-        return new Arguments(obj, list);
+    public static Argument param(Object obj, Object list) {
+        return new Argument(obj, list);
     }
 
     public static ParamDeclaration paramDecl(Object t, Object v) {
@@ -107,21 +102,21 @@ public abstract class Statement implements Traversable {
 
     public static IfThenStatement ifThen(Object c, Object obj) {
         if (!(c instanceof ConditionalExpression)) {
-            c = new UnaryCondition("", c);
+            c = new Constant(c);
         }
         return new IfThenStatement(c, obj);
     }
 
     public static IfThenStatement ifThen(Object c, Object obj1, Object obj2) {
         if (!(c instanceof ConditionalExpression)) {
-            c = new UnaryCondition("", c);
+            c = new Constant(c);
         }
         return new IfThenElseStatement(c, obj1, obj2);
     }
 
     public static WhileStatement loop(Object c, Object obj) {
         if (!(c instanceof ConditionalExpression)) {
-            c = new UnaryCondition("", c);
+            c = new Constant(c);
         }
         return new WhileStatement(c, obj);
     }
@@ -144,6 +139,28 @@ public abstract class Statement implements Traversable {
 
     public static Program prog(List<Statement> list) {
         return new Program(list);
+    }
+
+    /**
+     * This method will return an empty list, as no nested statements are expected or
+     * the nested statements will be validated otherwise.
+     * If statements are expected, this method will be overridden by the according sub class.
+     * @return an empty statement list.
+     */
+    @Override
+    public List<Statement> getStatements() {
+        return new ArrayList<>();
+    }
+
+    /**
+     * This method accepts a visitor. The visitor will then have access to this instance
+     * for code validation and execution. The relevant sub classes will overwrite this
+     * method, the other sub classes will be processed indirectly.
+     * @param visitor the visitor to accept.
+     */
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 
 }

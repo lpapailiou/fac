@@ -25,6 +25,7 @@ public class Interpreter implements Visitor {
 
     @Override
     public void visit(Statement acceptor) {
+        System.out.println("FALL THROUGH: " + acceptor.getClass());
         if (acceptor instanceof VariableDeclaration) {
             visit((VariableDeclaration) acceptor);
         } else if (acceptor instanceof ParamDeclaration) {
@@ -67,18 +68,18 @@ public class Interpreter implements Visitor {
     public void visit(AssignmentStatement acceptor) {
         Declaration declaration = getDeclaration(acceptor.getIdentifier());
         Type expectedType = declaration.getType();
-        Type effectiveType = getTypeOfOperand(acceptor.getStatements().get(0));
+        Type effectiveType = getTypeOfOperand(acceptor.getValue());
         BinOp binOp = acceptor.getOperator();
 
         if (expectedType != effectiveType) {
             if (expectedType != Type.STRING || binOp == BinOp.EQUAL) {
-                throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[", "").replaceAll("]", "") + ">!");
+                throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getDescription() + "> and cannot assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + ">!");
             }
         } else if (expectedType != Type.NUMERIC && binOp != BinOp.EQUAL) {
             if (expectedType == Type.STRING && binOp == BinOp.PLUSEQ) {
                 return;
             }
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the binOp <" + acceptor.getOperator().getOperator() + "> to assign value <" + acceptor.getStatements().toString().replaceAll("\\[","").replaceAll("]","") + ">!");
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the binOp <" + acceptor.getOperator().asString() + "> to assign value <" + acceptor.getValue().toString().replaceAll("\\[","").replaceAll("]","") + ">!");
         }
     }
 
@@ -101,7 +102,7 @@ public class Interpreter implements Visitor {
         Object returnValue = acceptor.getReturnStatement();
         Type retType = getTypeOfOperand(returnValue);
         if (defType != retType) {
-            throw new TypeMismatchException("Return type <" + retType.getDescription() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.paramTypeListAsString() + ")> does not match defined type <" + defType.getDescription() + ">!");
+            throw new TypeMismatchException("Return type <" + retType.getDescription() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.argTypeListAsString() + ")> does not match defined type <" + defType.getDescription() + ">!");
         }
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
         removeDeclarations(acceptor);
@@ -152,7 +153,7 @@ public class Interpreter implements Visitor {
         Type type = getTypeOfOperand(statement.getOperand());
         UnOp op = statement.getOperator();
         if ((op == UnOp.EXCL && type != Type.BOOLEAN)  || ((op == UnOp.MINUS || op == UnOp.INC || op == UnOp.DEC) && type != Type.NUMERIC)) {
-            throw new OperatorMismatchException("UnOp of expression <" + statement.getOperator().getOperator() + "> may not be used in context <" + statement.toString().replaceAll("\n", "") + ">!");
+            throw new OperatorMismatchException("UnOp of expression <" + statement.getOperator().asString() + "> may not be used in context <" + statement.toString().replaceAll("\n", "") + ">!");
         }
         return type;
     }
@@ -167,14 +168,14 @@ public class Interpreter implements Visitor {
         BinOp binOp = statement.getOperator();
         if (type == Type.STRING || type2 == Type.STRING) {
             if (binOp != BinOp.PLUS) {
-                throw new OperatorMismatchException("BinOp of expression <" + statement.getOperator().getOperator() + "> may not be used in context <" + statement.toString().replaceAll("\n", "") + ">!");
+                throw new OperatorMismatchException("BinOp of expression <" + statement.getOperator().asString() + "> may not be used in context <" + statement.toString().replaceAll("\n", "") + ">!");
             }
             return Type.STRING;
         }
         if (type != type2) {
             throw new TypeMismatchException("Types of expression <" + statement.toString().replaceAll("\n", "") + "> do not match!");
         } if (type == Type.BOOLEAN) {
-            throw new TypeMismatchException("Types of expression <" + statement.toString().replaceAll("\n", "") + "> do not match with binOp <" + binOp.getOperator() + ">!");
+            throw new TypeMismatchException("Types of expression <" + statement.toString().replaceAll("\n", "") + "> do not match with binOp <" + binOp.asString() + ">!");
         }
         return type;
     }
@@ -188,9 +189,9 @@ public class Interpreter implements Visitor {
         }
         BinOp binOp = statement.getOperator();
         if (type1 != Type.NUMERIC && (binOp == BinOp.GREATER || binOp == BinOp.GREQ || binOp == BinOp.LEQ || binOp == BinOp.LESS)) {
-            throw new OperatorMismatchException("BinOp <" + binOp.getOperator() + "> must not be used for non-numeric statements!");
+            throw new OperatorMismatchException("BinOp <" + binOp.asString() + "> must not be used for non-numeric statements!");
         } else if (type1 != Type.BOOLEAN && (binOp == BinOp.AND || binOp == BinOp.OR)) {
-            throw new OperatorMismatchException("BinOp <" + binOp.getOperator() + "> must not be used for non-boolean statements!");
+            throw new OperatorMismatchException("BinOp <" + binOp.asString() + "> must not be used for non-boolean statements!");
         }
 
         return Type.BOOLEAN;
@@ -209,7 +210,7 @@ public class Interpreter implements Visitor {
         return function.getType();
     }
 
-    private Type getTypeOfOperand(Object operand) {
+    protected Type getTypeOfOperand(Object operand) {
         if (operand == null) {
             throw new GrammarException("Operand must never be null!");
         }
@@ -237,13 +238,13 @@ public class Interpreter implements Visitor {
 
     private void validateFunctionCall(FunctionCallStatement functionCall) {
         FunctionDefStatement function = getFunction(functionCall.getIdentifier(), functionCall.getParamCount());
-        List<Statement> callParams = functionCall.getParameterList();
-        List<String> functionParams = Arrays.asList(function.paramTypeListAsString().split(", "));
-        for (int i = 0; i < callParams.size(); i++) {
-            Type caller = getTypeOfOperand(callParams.get(i));
+        List<Statement> callArgs = functionCall.getArgumentList();
+        List<String> functionParams = Arrays.asList(function.argTypeListAsString().split(", "));
+        for (int i = 0; i < callArgs.size(); i++) {
+            Type caller = getTypeOfOperand(callArgs.get(i));
             Type callee = Type.getByName(functionParams.get(i));
             if (caller != callee) {
-                throw new GrammarException("Function parameters do not match with function <" + function.getIdentifier() + "(" + function.paramTypeListAsString() + ")>!");
+                throw new GrammarException("Function parameters do not match with function <" + function.getIdentifier() + "(" + function.argTypeListAsString() + ")>!");
             }
         }
     }
@@ -272,7 +273,7 @@ public class Interpreter implements Visitor {
     }
 
     private boolean isFunctionExisting(FunctionDefStatement function) {
-        FunctionDefStatement definition = functionScope.stream().filter(fun -> fun.getIdentifier().equals(function.getIdentifier()) && fun.getType() == function.getType() && fun.paramTypeListAsString().equals(function.paramTypeListAsString())).findAny().orElse(null);
+        FunctionDefStatement definition = functionScope.stream().filter(fun -> fun.getIdentifier().equals(function.getIdentifier()) && fun.getType() == function.getType() && fun.argTypeListAsString().equals(function.argTypeListAsString())).findAny().orElse(null);
         return definition != null;
     }
 

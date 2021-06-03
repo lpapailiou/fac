@@ -57,9 +57,7 @@ public enum BinOp {
     MINUS("-", (a, b) -> Double.parseDouble(a.toString()) - Double.parseDouble(b.toString())),
     MUL("*", (a, b) -> Double.parseDouble(a.toString()) * Double.parseDouble(b.toString())),
     DIV("/", (a, b) -> Double.parseDouble(a.toString()) / Double.parseDouble(b.toString())),
-    MOD("%", (a, b) -> Double.parseDouble(a.toString()) % Double.parseDouble(b.toString()))
-    ;
-
+    MOD("%", (a, b) -> Double.parseDouble(a.toString()) % Double.parseDouble(b.toString()));
 
     private String operator;
     private BiFunction<Object, Object, Object> function;
@@ -69,7 +67,7 @@ public enum BinOp {
         this.function = function;
     }
 
-    public String getOperator() {
+    public String asString() {
         return operator;
     }
 

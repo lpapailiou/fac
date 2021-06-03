@@ -35,16 +35,15 @@ public class NestedStatement extends Statement {
         return statements;
     }
 
+    /**
+     * This toString method provides an empty string only, as it will be overwritten
+     * by the nested statements of this instance.
+     * @return an empty string.
+     */
     @Override
     public String toString() {
         String out = "";
         return out;
     }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
 
 }

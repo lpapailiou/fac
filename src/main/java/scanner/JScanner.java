@@ -123,12 +123,12 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     "\1\1\1\2\1\1\1\3\1\4\2\2\1\5\1\6"+
     "\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16"+
     "\1\17\1\20\14\21\1\22\1\2\1\23\1\24\1\25"+
-    "\1\26\1\0\1\27\1\30\1\10\1\31\1\32\1\33"+
-    "\2\0\1\34\1\0\1\35\1\36\1\37\6\21\1\40"+
-    "\6\21\1\41\2\0\1\1\1\14\2\21\1\42\10\21"+
-    "\1\0\1\1\2\21\1\43\4\21\1\44\2\21\1\45"+
-    "\1\21\1\46\2\21\1\47\1\21\1\50\1\51\1\52"+
-    "\1\53";
+    "\1\26\1\0\1\27\1\30\1\31\1\32\1\33\1\34"+
+    "\2\0\1\35\1\0\1\36\1\37\1\40\6\21\1\41"+
+    "\6\21\1\42\2\0\1\1\1\14\2\21\1\43\10\21"+
+    "\1\0\1\1\2\21\1\44\4\21\1\45\2\21\1\46"+
+    "\1\21\1\47\2\21\1\50\1\21\1\51\1\52\1\53"+
+    "\1\54";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[103];
@@ -161,14 +161,14 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     "\0\u0228\0\u0256\0\u0284\0\u02b2\0\u02e0\0\u030e\0\u033c\0\u036a"+
     "\0\u0398\0\u03c6\0\u03f4\0\u0422\0\u0450\0\u047e\0\u04ac\0\56"+
     "\0\u04da\0\56\0\56\0\56\0\56\0\u0114\0\56\0\56"+
-    "\0\u0508\0\56\0\56\0\56\0\u0536\0\u0564\0\56\0\u0592"+
-    "\0\56\0\56\0\56\0\u05c0\0\u05ee\0\u061c\0\u064a\0\u0678"+
-    "\0\u06a6\0\u02b2\0\u06d4\0\u0702\0\u0730\0\u075e\0\u078c\0\u07ba"+
-    "\0\56\0\u07e8\0\u0816\0\56\0\u0592\0\u0844\0\u0872\0\u02b2"+
-    "\0\u08a0\0\u08ce\0\u08fc\0\u092a\0\u0958\0\u0986\0\u09b4\0\u09e2"+
-    "\0\u0a10\0\u07e8\0\u0a3e\0\u0a6c\0\u02b2\0\u0a9a\0\u0ac8\0\u0af6"+
-    "\0\u0b24\0\u02b2\0\u0b52\0\u0b80\0\u02b2\0\u0bae\0\u02b2\0\u0bdc"+
-    "\0\u0c0a\0\u02b2\0\u0c38\0\u02b2\0\u02b2\0\u02b2\0\u02b2";
+    "\0\56\0\56\0\56\0\56\0\u0508\0\u0536\0\56\0\u0564"+
+    "\0\56\0\56\0\56\0\u0592\0\u05c0\0\u05ee\0\u061c\0\u064a"+
+    "\0\u0678\0\u02b2\0\u06a6\0\u06d4\0\u0702\0\u0730\0\u075e\0\u078c"+
+    "\0\56\0\u07ba\0\u07e8\0\56\0\u0564\0\u0816\0\u0844\0\u02b2"+
+    "\0\u0872\0\u08a0\0\u08ce\0\u08fc\0\u092a\0\u0958\0\u0986\0\u09b4"+
+    "\0\u09e2\0\u07ba\0\u0a10\0\u0a3e\0\u02b2\0\u0a6c\0\u0a9a\0\u0ac8"+
+    "\0\u0af6\0\u02b2\0\u0b24\0\u0b52\0\u02b2\0\u0b80\0\u02b2\0\u0bae"+
+    "\0\u0bdc\0\u02b2\0\u0c0a\0\u02b2\0\u02b2\0\u02b2\0\u02b2";
 
   private static int [] zzUnpackRowMap() {
     int [] result = new int[103];
@@ -214,38 +214,38 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     "\25\0\1\64\4\0\4\24\1\75\17\24\25\0\1\64"+
     "\4\0\21\24\1\76\2\24\25\0\1\64\4\0\17\24"+
     "\1\77\4\24\25\0\1\64\4\0\7\24\1\100\14\24"+
-    "\57\0\1\101\16\0\1\51\41\0\13\102\1\103\42\102"+
-    "\2\56\1\0\1\56\1\104\51\56\21\0\1\105\33\0"+
-    "\1\105\21\0\1\64\55\0\1\64\4\0\15\24\1\106"+
-    "\6\24\25\0\1\64\4\0\4\24\1\107\17\24\25\0"+
-    "\1\64\4\0\5\24\1\110\16\24\25\0\1\64\4\0"+
-    "\20\24\1\111\3\24\25\0\1\64\4\0\12\24\1\112"+
-    "\11\24\25\0\1\64\4\0\13\24\1\113\10\24\25\0"+
-    "\1\64\4\0\10\24\1\114\13\24\25\0\1\64\4\0"+
-    "\21\24\1\115\2\24\25\0\1\64\4\0\17\24\1\116"+
-    "\4\24\25\0\1\64\4\0\22\24\1\117\1\24\25\0"+
-    "\1\64\4\0\10\24\1\120\13\24\4\0\13\102\1\121"+
-    "\55\102\1\121\4\102\1\122\35\102\21\0\1\64\4\0"+
-    "\12\24\1\123\11\24\25\0\1\64\4\0\1\24\1\124"+
-    "\22\24\25\0\1\64\4\0\4\24\1\125\17\24\25\0"+
-    "\1\64\4\0\20\24\1\117\3\24\25\0\1\64\4\0"+
-    "\2\24\1\126\21\24\25\0\1\64\4\0\14\24\1\127"+
-    "\7\24\25\0\1\64\4\0\22\24\1\130\1\24\25\0"+
-    "\1\64\4\0\10\24\1\131\13\24\25\0\1\64\4\0"+
-    "\4\24\1\132\17\24\25\0\1\64\4\0\12\24\1\133"+
-    "\11\24\4\0\13\102\1\121\4\102\1\104\35\102\21\0"+
-    "\1\64\4\0\4\24\1\134\17\24\25\0\1\64\4\0"+
-    "\11\24\1\135\12\24\25\0\1\64\4\0\4\24\1\136"+
-    "\17\24\25\0\1\64\4\0\21\24\1\137\2\24\25\0"+
-    "\1\64\4\0\17\24\1\140\4\24\25\0\1\64\4\0"+
-    "\14\24\1\141\7\24\25\0\1\64\4\0\4\24\1\142"+
-    "\17\24\25\0\1\64\4\0\1\24\1\143\22\24\25\0"+
-    "\1\64\4\0\17\24\1\144\4\24\25\0\1\64\4\0"+
-    "\14\24\1\145\7\24\25\0\1\64\4\0\6\24\1\146"+
-    "\15\24\25\0\1\64\4\0\14\24\1\147\7\24\4\0";
+    "\57\0\1\101\2\0\13\102\1\103\42\102\2\56\1\0"+
+    "\1\56\1\104\51\56\21\0\1\105\33\0\1\105\21\0"+
+    "\1\64\55\0\1\64\4\0\15\24\1\106\6\24\25\0"+
+    "\1\64\4\0\4\24\1\107\17\24\25\0\1\64\4\0"+
+    "\5\24\1\110\16\24\25\0\1\64\4\0\20\24\1\111"+
+    "\3\24\25\0\1\64\4\0\12\24\1\112\11\24\25\0"+
+    "\1\64\4\0\13\24\1\113\10\24\25\0\1\64\4\0"+
+    "\10\24\1\114\13\24\25\0\1\64\4\0\21\24\1\115"+
+    "\2\24\25\0\1\64\4\0\17\24\1\116\4\24\25\0"+
+    "\1\64\4\0\22\24\1\117\1\24\25\0\1\64\4\0"+
+    "\10\24\1\120\13\24\4\0\13\102\1\121\55\102\1\121"+
+    "\4\102\1\122\35\102\21\0\1\64\4\0\12\24\1\123"+
+    "\11\24\25\0\1\64\4\0\1\24\1\124\22\24\25\0"+
+    "\1\64\4\0\4\24\1\125\17\24\25\0\1\64\4\0"+
+    "\20\24\1\117\3\24\25\0\1\64\4\0\2\24\1\126"+
+    "\21\24\25\0\1\64\4\0\14\24\1\127\7\24\25\0"+
+    "\1\64\4\0\22\24\1\130\1\24\25\0\1\64\4\0"+
+    "\10\24\1\131\13\24\25\0\1\64\4\0\4\24\1\132"+
+    "\17\24\25\0\1\64\4\0\12\24\1\133\11\24\4\0"+
+    "\13\102\1\121\4\102\1\104\35\102\21\0\1\64\4\0"+
+    "\4\24\1\134\17\24\25\0\1\64\4\0\11\24\1\135"+
+    "\12\24\25\0\1\64\4\0\4\24\1\136\17\24\25\0"+
+    "\1\64\4\0\21\24\1\137\2\24\25\0\1\64\4\0"+
+    "\17\24\1\140\4\24\25\0\1\64\4\0\14\24\1\141"+
+    "\7\24\25\0\1\64\4\0\4\24\1\142\17\24\25\0"+
+    "\1\64\4\0\1\24\1\143\22\24\25\0\1\64\4\0"+
+    "\17\24\1\144\4\24\25\0\1\64\4\0\14\24\1\145"+
+    "\7\24\25\0\1\64\4\0\6\24\1\146\15\24\25\0"+
+    "\1\64\4\0\14\24\1\147\7\24\4\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[3174];
+    int [] result = new int[3128];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -289,9 +289,9 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
     "\1\1\1\11\5\1\2\11\2\1\1\11\3\1\1\11"+
-    "\17\1\1\11\1\1\4\11\1\0\2\11\1\1\3\11"+
-    "\2\0\1\11\1\0\3\11\15\1\1\11\2\0\1\11"+
-    "\14\1\1\0\26\1";
+    "\17\1\1\11\1\1\4\11\1\0\6\11\2\0\1\11"+
+    "\1\0\3\11\15\1\1\11\2\0\1\11\14\1\1\0"+
+    "\26\1";
 
   private static int [] zzUnpackAttribute() {
     int [] result = new int[103];
@@ -823,217 +823,222 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
             { /* ignore */
             }
             // fall through
-          case 44: break;
+          case 45: break;
           case 2:
             { throw new Error("Illegal character <"+ yytext()+">");
             }
             // fall through
-          case 45: break;
+          case 46: break;
           case 3:
             { return collectToken(EXCL, "EXCL");
             }
             // fall through
-          case 46: break;
+          case 47: break;
           case 4:
             { return collectToken(MOD, "MOD");
             }
             // fall through
-          case 47: break;
+          case 48: break;
           case 5:
             { return collectToken(BL, "BL");
             }
             // fall through
-          case 48: break;
+          case 49: break;
           case 6:
             { return collectToken(BR, "BR");
             }
             // fall through
-          case 49: break;
+          case 50: break;
           case 7:
             { return collectToken(MUL, "MUL");
             }
             // fall through
-          case 50: break;
+          case 51: break;
           case 8:
-            { return collectToken(INC, "INC");
+            { return collectToken(PLUS, "PLUS");
             }
             // fall through
-          case 51: break;
+          case 52: break;
           case 9:
             { return collectToken(COMMA, "COMMA");
             }
             // fall through
-          case 52: break;
+          case 53: break;
           case 10:
             { return collectToken(MINUS, "MINUS");
             }
             // fall through
-          case 53: break;
+          case 54: break;
           case 11:
             { return collectToken(DIV, "DIV");
             }
             // fall through
-          case 54: break;
+          case 55: break;
           case 12:
             { return collectToken(NUM, "NUM");
             }
             // fall through
-          case 55: break;
+          case 56: break;
           case 13:
             { return collectToken(STOP, "STOP");
             }
             // fall through
-          case 56: break;
+          case 57: break;
           case 14:
             { return collectToken(LESS, "LESS");
             }
             // fall through
-          case 57: break;
+          case 58: break;
           case 15:
             { return collectToken(EQUAL, "EQUAL");
             }
             // fall through
-          case 58: break;
+          case 59: break;
           case 16:
             { return collectToken(GREATER, "GREATER");
             }
             // fall through
-          case 59: break;
+          case 60: break;
           case 17:
             { return collectToken(VAR, "VAR");
             }
             // fall through
-          case 60: break;
+          case 61: break;
           case 18:
             { return collectToken(CBL, "CBL");
             }
             // fall through
-          case 61: break;
+          case 62: break;
           case 19:
             { return collectToken(CBR, "CBR");
             }
             // fall through
-          case 62: break;
+          case 63: break;
           case 20:
             { return collectToken(NEQ, "NEQ");
             }
             // fall through
-          case 63: break;
+          case 64: break;
           case 21:
             { return collectToken(MODEQ, "MODEQ");
             }
             // fall through
-          case 64: break;
+          case 65: break;
           case 22:
             { return collectToken(AND, "AND");
             }
             // fall through
-          case 65: break;
+          case 66: break;
           case 23:
             { return collectToken(STR, "STR");
             }
             // fall through
-          case 66: break;
+          case 67: break;
           case 24:
             { return collectToken(MULEQ, "MULEQ");
             }
             // fall through
-          case 67: break;
-          case 25:
-            { return collectToken(PLUSEQ, "PLUSEQ");
-            }
-            // fall through
           case 68: break;
-          case 26:
-            { return collectToken(DEC, "DEC");
+          case 25:
+            { return collectToken(INC, "INC");
             }
             // fall through
           case 69: break;
-          case 27:
-            { return collectToken(MINEQ, "MINEQ");
+          case 26:
+            { return collectToken(PLUSEQ, "PLUSEQ");
             }
             // fall through
           case 70: break;
-          case 28:
-            { return collectToken(DIVEQ, "DIVEQ");
+          case 27:
+            { return collectToken(DEC, "DEC");
             }
             // fall through
           case 71: break;
-          case 29:
-            { return collectToken(LEQ, "LEQ");
+          case 28:
+            { return collectToken(MINEQ, "MINEQ");
             }
             // fall through
           case 72: break;
-          case 30:
-            { return collectToken(EQ, "EQ");
+          case 29:
+            { return collectToken(DIVEQ, "DIVEQ");
             }
             // fall through
           case 73: break;
-          case 31:
-            { return collectToken(GREQ, "GREQ");
+          case 30:
+            { return collectToken(LEQ, "LEQ");
             }
             // fall through
           case 74: break;
-          case 32:
-            { return collectToken(IF, "IF");
+          case 31:
+            { return collectToken(EQ, "EQ");
             }
             // fall through
           case 75: break;
-          case 33:
-            { return collectToken(OR, "OR");
+          case 32:
+            { return collectToken(GREQ, "GREQ");
             }
             // fall through
           case 76: break;
-          case 34:
-            { return collectToken(DEF, "DEF");
+          case 33:
+            { return collectToken(IF, "IF");
             }
             // fall through
           case 77: break;
-          case 35:
-            { return collectToken(ELSE, "ELSE");
+          case 34:
+            { return collectToken(OR, "OR");
             }
             // fall through
           case 78: break;
-          case 36:
-            { return collectToken(BOOL, "BOOLTYPE");
+          case 35:
+            { return collectToken(DEF, "DEF");
             }
             // fall through
           case 79: break;
-          case 37:
-            { return collectToken(BREAK, "BREAK");
+          case 36:
+            { return collectToken(ELSE, "ELSE");
             }
             // fall through
           case 80: break;
-          case 38:
-            { return collectToken(PRINT, "PRINT");
+          case 37:
+            { return collectToken(BOOL, "BOOLTYPE");
             }
             // fall through
           case 81: break;
-          case 39:
-            { return collectToken(WHILE, "WHILE");
+          case 38:
+            { return collectToken(BREAK, "BREAK");
             }
             // fall through
           case 82: break;
-          case 40:
-            { return collectToken(NUMTYPE, "NUMTYPE");
+          case 39:
+            { return collectToken(PRINT, "PRINT");
             }
             // fall through
           case 83: break;
-          case 41:
-            { return collectToken(RETURN, "RETURN");
+          case 40:
+            { return collectToken(WHILE, "WHILE");
             }
             // fall through
           case 84: break;
-          case 42:
-            { return collectToken(STRTYPE, "STRTYPE");
+          case 41:
+            { return collectToken(NUMTYPE, "NUMTYPE");
             }
             // fall through
           case 85: break;
-          case 43:
-            { return collectToken(BOOLTYPE, "BOOLTYPE");
+          case 42:
+            { return collectToken(RETURN, "RETURN");
             }
             // fall through
           case 86: break;
+          case 43:
+            { return collectToken(STRTYPE, "STRTYPE");
+            }
+            // fall through
+          case 87: break;
+          case 44:
+            { return collectToken(BOOLTYPE, "BOOLTYPE");
+            }
+            // fall through
+          case 88: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

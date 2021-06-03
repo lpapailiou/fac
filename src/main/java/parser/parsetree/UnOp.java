@@ -22,7 +22,7 @@ public enum UnOp {
         this.function = function;
     }
 
-    public String getOperator() {
+    public String asString() {
         return operator;
     }
 

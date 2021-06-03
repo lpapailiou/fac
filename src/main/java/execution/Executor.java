@@ -52,7 +52,7 @@ public class Executor extends Interpreter {
         if (execute) {
             Declaration declaration = getDeclaration(acceptor.getIdentifier());
             Object value1 = declaration.getValue();
-            Object value2 = getValueOfOperand(acceptor.getStatements().get(0));
+            Object value2 = getValueOfOperand(acceptor.getValue());
             declaration.setValue(acceptor.getOperator().apply(value1, value2));
         }
     }
@@ -110,7 +110,12 @@ public class Executor extends Interpreter {
     }
 
     private Object getValue(Constant statement) {
-        return getValueOfOperand(statement.getValue());
+        Type type = getTypeOfOperand(statement.getValue());
+        Object value = getValueOfOperand(statement.getValue());
+        if (type == Type.BOOLEAN) {
+            return Boolean.parseBoolean(value.toString());
+        }
+        return value;
     }
 
     private Object getValue(BinaryCondition statement) {
@@ -126,7 +131,7 @@ public class Executor extends Interpreter {
 
     private Object getValue(FunctionCallStatement statement) {
         FunctionDefStatement function = getFunction(statement.getIdentifier(), statement.getParamCount());
-        List<Statement> callParams = statement.getParameterList();
+        List<Statement> callParams = statement.getArgumentList();
         List<Statement> statements = function.getStatements();
         boolean isNested = false;
         for (int i = 0; i < statements.size(); i++) {
