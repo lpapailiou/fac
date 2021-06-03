@@ -7,7 +7,7 @@ package exceptions;
 public class OperatorMismatchException extends GrammarException {
 
     /**
-     * Throws a generic grammar exception.
+     * Throws an exception pointing out that the operator is not valid within the context of the present data type(s).
      *
      * @param message the exception message.
      */
@@ -16,7 +16,7 @@ public class OperatorMismatchException extends GrammarException {
     }
 
     /**
-     * Throws a generic grammar exception and may wrap an already thrown exception.
+     * Throws an exception pointing out that the operator is not valid within the context of the present data type(s).
      *
      * @param message the exception message.
      * @param t       the exception to wrap.

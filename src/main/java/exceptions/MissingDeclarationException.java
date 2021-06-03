@@ -7,7 +7,7 @@ package exceptions;
 public class MissingDeclarationException extends GrammarException {
 
     /**
-     * Throws a generic grammar exception.
+     * Throws an exception pointing out that the validated declaration is missing in the current declaration scope.
      *
      * @param message the exception message.
      */
@@ -16,7 +16,7 @@ public class MissingDeclarationException extends GrammarException {
     }
 
     /**
-     * Throws a generic grammar exception and may wrap an already thrown exception.
+     * Throws an exception pointing out that the validated declaration is missing in the current declaration scope.
      *
      * @param message the exception message.
      * @param t       the exception to wrap.

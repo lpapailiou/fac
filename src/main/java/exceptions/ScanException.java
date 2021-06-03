@@ -8,7 +8,7 @@ package exceptions;
 public class ScanException extends RuntimeException {
 
     /**
-     * Throws a generic grammar exception.
+     * Throws an exception pointing out that an error occurred during the scanning process.
      *
      * @param message the exception message.
      */
@@ -17,7 +17,7 @@ public class ScanException extends RuntimeException {
     }
 
     /**
-     * Throws a generic grammar exception and may wrap an already thrown exception.
+     * Throws an exception pointing out that an error occurred during the scanning process.
      *
      * @param message the exception message.
      * @param t       the error to wrap.

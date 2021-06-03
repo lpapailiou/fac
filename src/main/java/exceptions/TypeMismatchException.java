@@ -8,7 +8,7 @@ package exceptions;
 public class TypeMismatchException extends GrammarException {
 
     /**
-     * Throws a generic grammar exception.
+     * Throws an exception pointing out that the data types are not valid in the context of the current expression.
      *
      * @param message the exception message.
      */
@@ -17,7 +17,7 @@ public class TypeMismatchException extends GrammarException {
     }
 
     /**
-     * Throws a generic grammar exception and may wrap an already thrown exception.
+     * Throws an exception pointing out that the data types are not valid in the context of the current expression.
      *
      * @param message the exception message.
      * @param t       the exception to wrap.

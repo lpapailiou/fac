@@ -7,7 +7,7 @@ package exceptions;
 public class UniquenessViolationException extends GrammarException {
 
     /**
-     * Throws a generic grammar exception.
+     * Throws an exception pointing out that a variable was already declared, thus not valid in this context.
      *
      * @param message the exception message.
      */
@@ -16,7 +16,7 @@ public class UniquenessViolationException extends GrammarException {
     }
 
     /**
-     * Throws a generic grammar exception and may wrap an already thrown exception.
+     * Throws an exception pointing out that a variable was already declared, thus not valid in this context.
      *
      * @param message the exception message.
      * @param t       the exception to wrap.
