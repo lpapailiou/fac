@@ -1,33 +1,20 @@
 
-def number fun() {
-    return 10;
+def number mod(number a, number b) {
+    return a % b;
 }
 
-string str = 'a';
+number x = 3;
 
-print(str + fun());
+while (x > 0) {
+    x--;
+    print(x + mod(x, 2));
+}
 
-/*
-print('a');
-print('a' + 'b');
-string a = 'x' + 'y' + 'z';
-print(a);
-print('blablabla xxx');
-print(a + a);
+if (x == 0) {
+    print('x is 0 now');
+}
 
-print(fun());
-
-//print(fun() + fun() + fun());
-
-number x = 3 + 2 * 3 - 3 * 1;
-
-x = 1 + 2 * 3 * 4 + 2 + 2 * 6 + 8;
-print();
-*/
-/*
-print(x);
-print(x + 2 + 3);
-print(x + fun() + fun());*/
+print('end');
 
 
 

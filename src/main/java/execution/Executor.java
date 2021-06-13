@@ -9,6 +9,17 @@ import parser.parsetree.interfaces.Traversable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The purpose of this class is to execute parsed code.
+ * It is implemented as visitor and walks the parse tree depth-first, while a node will be evaluated after
+ * its children.
+ * A semantic code validation will take place during
+ * execution in parallel, as the Executor builds on the Interpreter. Like this, it is not possible
+ * to execute not validated code.
+ * Example for usage (where the rootSymbol is the resulting symbol of a parse process):
+ * <code>Executor executor = new Executor();
+ * ((Program) rootSymbol.value).accept(executor);</code>
+ */
 public class Executor extends Interpreter {
 
     private boolean execute = true;         // to be switched off if validation only is required
@@ -22,7 +33,6 @@ public class Executor extends Interpreter {
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
         if (execute) {
             traverse(acceptor);
-            //printDeclarations();
         }
     }
 
@@ -181,7 +191,7 @@ public class Executor extends Interpreter {
 
     private void traverse(Traversable node) {
         if (node != null) {
-            preValidation(node);
+            preValidate(node);
 
             List<Component> components = getStatements(node);
             processStatements(node, components);
@@ -259,8 +269,8 @@ public class Executor extends Interpreter {
     }
 
     @Override
-    protected void preValidation(Traversable node) {
-        super.preValidation(node);
+    protected void preValidate(Traversable node) {
+        super.preValidate(node);
         if (node instanceof BreakStatement && execute) {
             breakEvent++;
         }

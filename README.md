@@ -307,7 +307,8 @@ The interpreter will receive the parse tree from the parser and traverse it dept
 <ul>
 <li>A variable must be declared before it can be referenced.</li>
 <li>The same rule applies to function definitions and function calls.</li>
-<li>Identifiers are valid within the same and lower levels of the parse tree, starting from the location where they are declared.</li>
+<li>Identifiers are valid within the same and lower levels of the parse tree, starting from the location where they are declared.
+This means, that nested variable declarations cannot overwrite already defined identifiers.</li>
 <li>Identifiers must be unique within their scope, except for functions, which can be overloaded.</li>
 </ul>
 

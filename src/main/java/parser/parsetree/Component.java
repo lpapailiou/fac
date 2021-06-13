@@ -92,13 +92,16 @@ public abstract class Component implements Traversable {
     }
 
     /**
-     * Returns a constant wrapper.
+     * Returns a constant wrapper if the passed object is not already a wrapped component.
      *
-     * @param constant the constant to wrap.
-     * @return the constant wrapper.
+     * @param object the constant to wrap.
+     * @return a program component.
      */
-    public static Constant constnt(Object constant) {
-        return new Constant(constant);
+    public static Component constnt(Object object) {
+        if (object instanceof Component) {
+            return (Component) object;
+        }
+        return new Constant(object);
     }
 
     /**

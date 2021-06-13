@@ -46,7 +46,7 @@ non terminal        TYPE, PARAM, PARAMDEF, RET,
                     CALC_MUL, VAL;
 
 non terminal Program                    PROGRAM;
-non terminal List<Statement>            STMT_LIST;
+non terminal List<Component>            STMT_LIST;
 non terminal Component                  STMT, PROG_STMT, NEST_STMT, EXPR;
 non terminal AssignmentStatement        ASSIGN;
 non terminal ConditionalExpression      COND;

@@ -10,77 +10,77 @@ import parser.parsetree.*;
 public interface Visitor {
 
     /**
-     * Visits the program - the root of the parse tree.
-     *
-     * @param acceptor the Program to visit.
-     */
-    void visit(Program acceptor);
-
-    /**
-     * Visits a generic statement. This case will be most likely a fall-through action.
-     *
-     * @param acceptor the generic Component to visit.
-     */
-    void visit(Component acceptor);
-
-    /**
-     * Visits a variable declaration.
-     *
-     * @param acceptor the VariableDeclaration to visit.
-     */
-    void visit(VariableDeclaration acceptor);
-
-    /**
-     * Visits a parameter declaration of a function.
-     *
-     * @param acceptor the ParamDeclaration to visit.
-     */
-    void visit(ParamDeclaration acceptor);
-
-    /**
-     * Visits an assignment statement.
+     * Visits an assignment statement wrapper.
      *
      * @param acceptor the AssignmentStatement to visit.
      */
     void visit(AssignmentStatement acceptor);
 
     /**
-     * Visits a function call statement.
+     * Visits a generic parse tree component. This case will be most likely a fall-through action.
+     *
+     * @param acceptor the generic Component to visit.
+     */
+    void visit(Component acceptor);
+
+    /**
+     * Visits a function call statement wrapper.
      *
      * @param acceptor the FunctionCallStatement to visit.
      */
     void visit(FunctionCallStatement acceptor);
 
     /**
-     * Visits a print call statement.
-     *
-     * @param acceptor the PrintCallStatement to visit.
-     */
-    void visit(PrintCallStatement acceptor);
-
-    /**
-     * Visits a function definition.
+     * Visits a function definition wrapper.
      *
      * @param acceptor the FunctionDefStatement to visit.
      */
     void visit(FunctionDefStatement acceptor);
 
     /**
-     * Visits an if-then statement.
-     *
-     * @param acceptor the IfThenStatement to visit.
-     */
-    void visit(IfThenStatement acceptor);
-
-    /**
-     * Visits an if-then-else statement.
+     * Visits an if-then-else statement wrapper.
      *
      * @param acceptor the IfThenElseStatement to visit.
      */
     void visit(IfThenElseStatement acceptor);
 
     /**
-     * Visits a while statement.
+     * Visits an if-then statement wrapper.
+     *
+     * @param acceptor the IfThenStatement to visit.
+     */
+    void visit(IfThenStatement acceptor);
+
+    /**
+     * Visits a parameter declaration wrapper of a function.
+     *
+     * @param acceptor the ParamDeclaration to visit.
+     */
+    void visit(ParamDeclaration acceptor);
+
+    /**
+     * Visits a print call statement wrapper.
+     *
+     * @param acceptor the PrintCallStatement to visit.
+     */
+    void visit(PrintCallStatement acceptor);
+
+    /**
+     * Visits the program wrapper - the root of the parse tree.
+     *
+     * @param acceptor the Program to visit.
+     */
+    void visit(Program acceptor);
+
+    /**
+     * Visits a variable declaration wrapper.
+     *
+     * @param acceptor the VariableDeclaration to visit.
+     */
+    void visit(VariableDeclaration acceptor);
+
+    /**
+     * Visits a while statement wrapper.
      *
      * @param acceptor the WhileStatement to visit.
      */
