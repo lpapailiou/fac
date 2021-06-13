@@ -38,19 +38,6 @@ public class Compiler {
             }
             switch (option) {
                 case SCAN:
-                    try {
-                        if (path != null) {
-                            scanFile(path);
-                        }
-                    } catch (IOException e) {
-                        LOG.log(Level.WARNING, "File " + path + " does not seem to be readable. The sample file " + defaultFilePath + " will be processed instead.");
-                        try {
-                            scanFile(defaultFilePath);
-                        } catch (IOException e1) {
-                            e.printStackTrace();
-                        }
-                    }
-                    break;
                 case PARSE:
                 case INTERPRET:
                 case EXECUTE:
@@ -176,16 +163,11 @@ public class Compiler {
     private static void executeConsoleContent(String code) throws Exception {
         try (InputStream stream = new ByteArrayInputStream(code.getBytes()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
             JParser parser = new JParser(reader, false);
-
-            Symbol reducedResult = null;
-
-            while (!parser.yyatEOF()) {
-                reducedResult = parser.parse();
-            }
+            Program program = getProgram(parser);
 
             Executor executor = new Executor();
             executor.setScriptMode(true);
-            ((Program) reducedResult.value).accept(executor);
+            program.accept(executor);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -194,13 +176,15 @@ public class Compiler {
 
     private static void processFile(String data) throws IOException {
         try (FileInputStream stream = new FileInputStream(Paths.get(data).toAbsolutePath().toString()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
-            JParser parser = new JParser(reader, true);
-
-            Symbol reducedResult = null;
+            Program program = null;
 
             try {
-                while (!parser.yyatEOF()) {
-                    reducedResult = parser.parse();
+                if (option == Option.SCAN) {
+                    JScanner scanner = new JScanner(reader);
+                    program = getProgram(scanner);
+                } else {
+                    JParser parser = new JParser(reader, true);
+                    program = getProgram(parser);
                 }
             } catch (Exception e) {
                 if (e instanceof GrammarException) {
@@ -214,18 +198,19 @@ public class Compiler {
                 LOG.log(Level.WARNING, "Scanned code not valid (" + t.getLocalizedMessage() + ")!");
             }
 
-            System.out.println("***** PARSER RESULT *****\n\n" + reducedResult.value + "\n");
-
+            if (option != Option.SCAN) {
+                System.out.println("***** PARSER RESULT *****\n\n" + program + "\n");
+            }
             if (option == Option.INTERPRET) {
                 Interpreter interpreter = new Interpreter();
-                ((Program) reducedResult.value).accept(interpreter);
+                program.accept(interpreter);
 
                 System.out.println("\n***** SEMANTIC CHECK SUCCEEDED *****\n");
             } else if (option == Option.EXECUTE) {
                 System.out.println("***** EXECUTION RESULT *****\n");
 
                 Executor executor = new Executor();
-                ((Program) reducedResult.value).accept(executor);
+                program.accept(executor);
             }
 
         } catch (IOException e) {
@@ -233,23 +218,20 @@ public class Compiler {
         }
     }
 
-    private static void scanFile(String data) throws IOException {
-        try (FileInputStream stream = new FileInputStream(Paths.get(data).toAbsolutePath().toString()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
-
-            JScanner scanner = new JScanner(reader);
-
-            try {
-                while (!scanner.yyatEOF()) {
-                    scanner.next_token();
-                }
-            } catch (Error e) {
-                Throwable t = new ScanException(e.getMessage(), e);
-                LOG.log(Level.WARNING, "Scanned code not valid (" + t.getLocalizedMessage() + ")!");
-            }
-
-        } catch (IOException e) {
-            throw e;
+    private static Program getProgram(JScanner scanner) throws Exception {
+        Symbol root = null;
+        while (!scanner.yyatEOF()) {
+            root = scanner.next_token();
         }
+        return (Program) root.value;
+    }
+
+    private static Program getProgram(JParser parser) throws Exception {
+        Symbol root = null;
+        while (!parser.yyatEOF()) {
+            root = parser.parse();
+        }
+        return (Program) root.value;
     }
 
 }
