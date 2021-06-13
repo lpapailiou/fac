@@ -22,40 +22,18 @@ import java.util.List;
  */
 public class Executor extends Interpreter {
 
-    private boolean execute = true;         // to be switched off if validation only is required
-    private boolean scriptMode = false;     // will prevent print statements from being executed multiple times if not placed in functions
-    private boolean printActive = false;
-    private int breakEvent = 0;
-    private int breakOccurred = 0;
+    private boolean execute = true;         // to be switched off if validation only is required (e.g. for dead if-then-else branches)
+    private boolean scriptMode = false;     // allows to change behavior for script mode vs. all-at-once-execution
+    private boolean printActive = false;    // indicator to switch off execution for print statements (used in script mode)
+    private int breakEvent = 0;             // counts the break statements found
+    private int breakOccurred = 0;          // counts the break statements 'executed'
 
-    @Override
-    public void visit(Program acceptor) {
-        checkBreakStatement(acceptor, acceptor.getStatements(), false);
-        if (execute) {
-            traverse(acceptor);
-        }
-    }
-
-    @Override
-    public void visit(Component acceptor) {
-        super.visit(acceptor);
-    }
-
-    @Override
-    public void visit(VariableDeclaration acceptor) {
-        super.visit(acceptor);
-        if (execute) {
-            acceptor.reset();
-            Object value = getValueOfOperand(acceptor.getValue());
-            acceptor.setValue(value);
-        }
-    }
-
-    @Override
-    public void visit(ParamDeclaration acceptor) {
-        super.visit(acceptor);
-    }
-
+    /**
+     * This method will trigger the validation for the assignment statement first.
+     * Then, if the code is executable, it will assign the new value to the variable.
+     *
+     * @param acceptor the AssignmentStatement to visit.
+     */
     @Override
     public void visit(AssignmentStatement acceptor) {
         super.visit(acceptor);
@@ -67,6 +45,23 @@ public class Executor extends Interpreter {
         }
     }
 
+    /**
+     * This method visits a generic component (i.e. a component which has not an own specific visit method).
+     * This is a fall-through action.
+     * @param acceptor the generic Component to visit.
+     */
+    @Override
+    public void visit(Component acceptor) {
+        super.visit(acceptor);
+    }
+
+    /**
+     * This method will trigger the validation for the function call statement first.
+     * Then, if the code is executable, it will evaluate the value of the function call. The value is not used any
+     * further at this place, but in case of runtime exceptions, execution will stop accordingly.
+     * This is important, as function calls can be independent statements.
+     * @param acceptor the FunctionCallStatement to visit.
+     */
     @Override
     public void visit(FunctionCallStatement acceptor) {
         super.visit(acceptor);
@@ -75,6 +70,51 @@ public class Executor extends Interpreter {
         }
     }
 
+    /**
+     * This method triggers the validation for the function definition statement.
+     *
+     * @param acceptor the FunctionDefStatement to visit.
+     */
+    @Override
+    public void visit(FunctionDefStatement acceptor) {
+        super.visit(acceptor);
+    }
+
+    /**
+     * This method triggers the validation for the if-then-else statement.
+     *
+     * @param acceptor the IfThenElseStatement to visit.
+     */
+    @Override
+    public void visit(IfThenElseStatement acceptor) {
+        super.visit(acceptor);
+    }
+
+    /**
+     * This method triggers the execution for the if-then statement.
+     *
+     * @param acceptor the IfThenStatement to visit.
+     */
+    @Override
+    public void visit(IfThenStatement acceptor) {
+        super.visit(acceptor);
+    }
+
+    /**
+     * This method triggers the validation for this parameter declaration.
+     *
+     * @param acceptor the ParamDeclaration to visit.
+     */
+    @Override
+    public void visit(ParamDeclaration acceptor) {
+        super.visit(acceptor);
+    }
+
+    /**
+     * This method triggers the validation for this print call statement.
+     * Then, depending on the current mode, the statement is executed, i.e. its resulting value is printed to the console.
+     * @param acceptor the PrintCallStatement to visit.
+     */
     @Override
     public void visit(PrintCallStatement acceptor) {
         super.visit(acceptor);
@@ -88,83 +128,184 @@ public class Executor extends Interpreter {
         }
     }
 
+    /**
+     * This method triggers the top-level validation for break statements. Then it will start the depth-first traversal
+     * of the parse tree for validation and execution.
+     * @param acceptor the Program to visit.
+     */
     @Override
-    public void visit(FunctionDefStatement acceptor) {
-        super.visit(acceptor);
+    public void visit(Program acceptor) {
+        checkBreakStatement(acceptor, acceptor.getStatements(), false);
+        traverse(acceptor);
     }
 
+    /**
+     * This method triggers the validation of this variable declaration. If the code is executable, the
+     * declaration is set to it's original value (in case the code was executed already) and then set the
+     * according value.
+     *
+     * @param acceptor the VariableDeclaration to visit.
+     */
     @Override
-    public void visit(IfThenStatement acceptor) {
+    public void visit(VariableDeclaration acceptor) {
         super.visit(acceptor);
+        if (execute) {
+            acceptor.reset();
+            Object value = getValueOfOperand(acceptor.getValue());
+            acceptor.setValue(value);
+        }
     }
 
-    @Override
-    public void visit(IfThenElseStatement acceptor) {
-        super.visit(acceptor);
-    }
-
+    /**
+     * This method will trigger the validation for this while statement.
+     * @param acceptor the WhileStatement to visit.
+     */
     @Override
     public void visit(WhileStatement acceptor) {
         super.visit(acceptor);
     }
 
-    private Object getValue(BinaryExpression statement) {
-        Object value1 = getValueOfOperand(statement.getOperand1());
-        Object value2 = getValueOfOperand(statement.getOperand2());
-        return statement.getOperator().apply(value1, value2);
-    }
+    /**
+     * This method will perform thee depth-first traversal of the parse tree recursively.
+     * It traverses first the nested components of a component, then the component itself.
+     * As some of the program components are complex structures (i.e. execution of child components
+     * is depending on conditions of the parent component), the processing is controlled within
+     * the processStatements method.
+     * If necessary, pre-validations are done for specific nodes.
+     *
+     * @param node the parse tree node to traverse
+     */
+    private void traverse(Traversable node) {
+        if (node != null) {
+            preValidate(node);
 
-    private Object getValue(UnaryExpression statement) {
-        Object value = getValueOfOperand(statement.getOperand());
-        return statement.getOperator().apply(value);
-    }
+            List<Component> components = getStatements(node);   // select executable child components
+            processStatements(node, components);                // process child components accordingly
 
-    private Object getValue(Constant statement) {
-        Type type = getTypeOfOperand(statement.getValue());
-        Object value = getValueOfOperand(statement.getValue());
-        if (type == Type.BOOLEAN) {
-            return Boolean.parseBoolean(value.toString());
-        }
-        return value;
-    }
-
-    private Object getValue(BinaryCondition statement) {
-        Object value1 = getValueOfOperand(statement.getOperand1());
-        Object value2 = getValueOfOperand(statement.getOperand2());
-        return statement.getOperator().apply(value1, value2);
-    }
-
-    private Object getValue(UnaryCondition statement) {
-        Object value = getValueOfOperand(statement.getOperand());
-        return statement.getOperator().apply(value);
-    }
-
-    private Object getValue(FunctionCallStatement statement) {
-        FunctionDefStatement function = getFunction(statement.getIdentifier(), statement.getArgumentCount());
-        List<Component> callParams = statement.getArgumentList();
-        List<Component> components = function.getStatements();
-        boolean isNested = false;
-        for (int i = 0; i < components.size(); i++) {
-            Component stmt = components.get(i);
-            if (stmt instanceof ParamDeclaration) {
-                ParamDeclaration paramDeclaration = ((ParamDeclaration) stmt);
-                try {
-                    addDeclarationToScope(paramDeclaration);
-                } catch (UniquenessViolationException e) {
-                    isNested = true;
-                }
-                paramDeclaration.setValue(getValueOfOperand(callParams.get(i)));
-            } else {
-                traverse(stmt);
+            if (!(node instanceof Program)) {   // the program node starts the traversal and does not have to be visited again
+                node.accept(this);
             }
         }
-        Object value = getValueOfOperand(function.getReturnStatement());
-        if (!isNested) {
-            removeDeclarations(function);
-        }
-        return value;
     }
 
+    /**
+     * This method allows to set the executor to 'script mode'. This means, that the code execution will be handled
+     * a little differently: only the last print statement of the code is executed, even if the code runs multiple times (after entering a new line in the console, the full
+     * code has to be validated and re-run again completely. Executing just the last print call give a more 'natural' flow to the application).
+     *
+     * @param scriptMode indicates if script mode should be turned on or off.
+     */
+    public void setScriptMode(boolean scriptMode) {
+        this.scriptMode = scriptMode;
+    }
+
+    // ------------------------------------------ helper methods ------------------------------------------
+
+    /**
+     * This methods takes care about the pre-validations before the content of a node and then the node itself are visited.
+     * Entering a while loop will increase the whileDepth counter (e.g. one nested break statement is allowed). Entering
+     * a function definition will add its declaration to scope. Entering a break statement in executable context will
+     * increase the breakEvent threshold by one (which means one more break statement may be executed).
+     *
+     * @param node the parse tree node to pre-validate.
+     */
+    @Override
+    protected void preValidate(Traversable node) {
+        super.preValidate(node);
+        if (node instanceof BreakStatement && execute) {
+            breakEvent++;
+        }
+    }
+
+    /**
+     * This method will select the executable child component for the passed parent component.
+     * If the code is executable, it will be processed as foreseen. If not (e.g. in a dead if-else-then branch), this method
+     * takes care that the code will still be validated semantically.
+     *
+     * @param node the parse tree node to get child components from.
+     * @return the selected executable child components of the passed parent node.
+     */
+    private List<Component> getStatements(Traversable node) {
+        boolean switchExecutionOn = execute;        // indicates if execution must be switched on again if turned off temporarily
+        List<Component> executableComponents = node.getStatements();
+        if (!execute) {
+            return executableComponents;            // if we are in a non-executable block, all child components are validated, but not executed
+        }
+        List<Component> validateOnlyComponents = new ArrayList<>();
+        boolean condition;
+        if (node instanceof IfThenElseStatement) {
+            condition = (Boolean) getValueOfOperand(((IfThenElseStatement) node).getCondition());
+            if (condition) {
+                executableComponents = ((IfThenElseStatement) node).getIfStatements();
+                validateOnlyComponents = ((IfThenElseStatement) node).getElseStatements();
+            } else {
+                executableComponents = ((IfThenElseStatement) node).getElseStatements();
+                validateOnlyComponents = ((IfThenElseStatement) node).getIfStatements();
+            }
+        } else if (node instanceof IfThenStatement) {
+            condition = (Boolean) getValueOfOperand(((IfThenStatement) node).getCondition());
+            if (!condition) {
+                validateOnlyComponents = executableComponents;
+                executableComponents = new ArrayList<>();
+            }
+        } else if (node instanceof FunctionDefStatement) {
+            validateOnlyComponents = executableComponents;
+            executableComponents = new ArrayList<>();           // function definitions are executed only by callers, not when parsed
+        }
+
+        execute = false;
+        for (Component st : validateOnlyComponents) {
+            traverse(st);                                       // validation only for not executable code
+        }
+        if (switchExecutionOn) {
+            execute = true;                                     // switch execution back on
+        }
+        return executableComponents;                            // return executable child components
+    }
+
+    /**
+     * This method contains the top-level logic to traverse executable statements. The runs of the while loop can be repeated
+     * within this method. Furthermore, the scriptMode indicator can change the behavior of print call executions here.
+     *
+     * @param node       the parse tree component as parent node.
+     * @param components the child components of the parent node.
+     */
+    private void processStatements(Traversable node, List<Component> components) {
+        if (node instanceof WhileStatement && execute) {
+            while ((Boolean) getValueOfOperand(((WhileStatement) node).getCondition())) {   // while loop execution
+                if (breakEvent > breakOccurred) {           // break statement execution
+                    breakOccurred++;
+                    break;
+                }
+                for (Component st : components) {
+                    traverse(st);                           // execution of child components
+                }
+                removeDeclarations(node);                   // remove local variables from scope
+            }
+        } else {
+            if (node instanceof Program) {
+                for (int i = 0; i < components.size(); i++) {
+                    if (i == components.size() - 1) {
+                        printActive = true;                 // marks last print call statement as executable indirectly
+                    }
+                    traverse(components.get(i));            // execution of child components
+                }
+            } else {
+                for (Component st : components) {
+                    traverse(st);                           // execution of child components
+                }
+            }
+        }
+    }
+
+    /**
+     * This method will evaluate the value of an object, which can be any type of program component which results in a value (e.g. a 'raw value', an expression
+     * or the result of a function call).
+     * If the object to evaluate is more complex, this method will follow the component chain until the final result is found.
+     *
+     * @param operand the operand of which the value should be evaluated.
+     * @return the value of the operand.
+     */
     private Object getValueOfOperand(Object operand) {
         Object value;
         if (operand instanceof FunctionCallStatement) {
@@ -189,96 +330,100 @@ public class Executor extends Interpreter {
         return value;
     }
 
-    private void traverse(Traversable node) {
-        if (node != null) {
-            preValidate(node);
-
-            List<Component> components = getStatements(node);
-            processStatements(node, components);
-
-            if (!(node instanceof Program)) {
-                node.accept(this);
-            }
-        }
-    }
-
-    private List<Component> getStatements(Traversable node) {
-        boolean switched = execute;
-        List<Component> executableComponents = node.getStatements();
-        if (!execute) {
-            return executableComponents;
-        }
-        List<Component> validateOnlyComponents = new ArrayList<>();
-        boolean condition;
-        if (node instanceof IfThenElseStatement) {
-            condition = (Boolean) getValueOfOperand(((IfThenElseStatement) node).getCondition());
-            if (condition) {
-                executableComponents = ((IfThenElseStatement) node).getIfStatements();
-                validateOnlyComponents = ((IfThenElseStatement) node).getElseStatements();
+    /**
+     * This method will evaluate the value of a function call.
+     * First it will look up the according function definition, pass the according arguments and then
+     * execute the function. Finally, the value of the return statement will be returned.
+     * As function calls can be nested (i.e. in recursive calls), variable scope needs to be handled for this edge case additionally.
+     *
+     * @param operand the operand to evaluate.
+     * @return the value of the operand.
+     */
+    private Object getValue(FunctionCallStatement operand) {
+        FunctionDefStatement function = getFunction(operand.getIdentifier(), operand.getArgumentCount());
+        List<Component> callParams = operand.getArgumentList();
+        List<Component> components = function.getStatements();
+        boolean isNestedFunctionCall = false;
+        for (int i = 0; i < components.size(); i++) {
+            Component stmt = components.get(i);
+            if (stmt instanceof ParamDeclaration) {
+                ParamDeclaration paramDeclaration = ((ParamDeclaration) stmt);
+                try {
+                    addDeclarationToScope(paramDeclaration);
+                } catch (UniquenessViolationException e) {      // handle edge case recursion
+                    isNestedFunctionCall = true;
+                }
+                paramDeclaration.setValue(getValueOfOperand(callParams.get(i)));
             } else {
-                executableComponents = ((IfThenElseStatement) node).getElseStatements();
-                validateOnlyComponents = ((IfThenElseStatement) node).getIfStatements();
-            }
-        } else if (node instanceof IfThenStatement) {
-            condition = (Boolean) getValueOfOperand(((IfThenStatement) node).getCondition());
-            if (!condition) {
-                validateOnlyComponents = executableComponents;
-                executableComponents = new ArrayList<>();
-            }
-        } else if (node instanceof FunctionDefStatement) {
-            validateOnlyComponents = executableComponents;
-            executableComponents = new ArrayList<>();
-        }
-
-        execute = false;
-        for (Component st : validateOnlyComponents) {
-            traverse(st);
-        }
-        if (switched) {
-            execute = true;
-        }
-        return executableComponents;
-    }
-
-    private void processStatements(Traversable node, List<Component> components) {
-        if (node instanceof WhileStatement && execute) {
-            while ((Boolean) getValueOfOperand(((WhileStatement) node).getCondition())) {
-                if (breakEvent > breakOccurred) {
-                    breakOccurred++;
-                    break;
-                }
-                for (Component st : components) {
-                    traverse(st);
-                }
-                removeDeclarations(node);
-            }
-        } else {
-            if (node instanceof Program) {
-                for (int i = 0; i < components.size(); i++) {
-                    if (i == components.size() - 1) {
-                        printActive = true;
-                    }
-                    traverse(components.get(i));
-                }
-            } else {
-                for (Component st : components) {
-                    traverse(st);
-                }
+                traverse(stmt);
             }
         }
-    }
-
-    @Override
-    protected void preValidate(Traversable node) {
-        super.preValidate(node);
-        if (node instanceof BreakStatement && execute) {
-            breakEvent++;
+        Object value = getValueOfOperand(function.getReturnStatement());
+        if (!isNestedFunctionCall) {                            // handle edge case recursion
+            removeDeclarations(function);
         }
+        return value;
     }
 
-    public void setScriptMode(boolean scriptMode) {
-        this.scriptMode = scriptMode;
+    /**
+     * This method will evaluate the value of a binary arithmetic expression.
+     *
+     * @param operand the operand to evaluate.
+     * @return the value of the operand.
+     */
+    private Object getValue(BinaryExpression operand) {
+        Object value1 = getValueOfOperand(operand.getOperand1());
+        Object value2 = getValueOfOperand(operand.getOperand2());
+        return operand.getOperator().apply(value1, value2);
     }
 
+    /**
+     * This method will evaluate the value of a unary arithmetic expression.
+     *
+     * @param operand the operand to evaluate.
+     * @return the value of the operand.
+     */
+    private Object getValue(UnaryExpression operand) {
+        Object value = getValueOfOperand(operand.getOperand());
+        return operand.getOperator().apply(value);
+    }
+
+    /**
+     * This method will evaluate the value of a constant.
+     *
+     * @param operand the operand to evaluate.
+     * @return the value of the operand.
+     */
+    private Object getValue(Constant operand) {
+        Type type = getTypeOfOperand(operand.getValue());
+        Object value = getValueOfOperand(operand.getValue());
+        if (type == Type.BOOLEAN) {
+            return Boolean.parseBoolean(value.toString());
+        }
+        return value;
+    }
+
+    /**
+     * This method will evaluate the value of a binary conditional expression.
+     *
+     * @param operand the operand to evaluate.
+     * @return the value of the operand.
+     */
+    private Object getValue(BinaryCondition operand) {
+        Object value1 = getValueOfOperand(operand.getOperand1());
+        Object value2 = getValueOfOperand(operand.getOperand2());
+        return operand.getOperator().apply(value1, value2);
+    }
+
+    /**
+     * This method will evaluate the value of a unary conditional expression.
+     *
+     * @param operand the operand to evaluate.
+     * @return the value of the operand.
+     */
+    private Object getValue(UnaryCondition operand) {
+        Object value = getValueOfOperand(operand.getOperand());
+        return operand.getOperator().apply(value);
+    }
 
 }

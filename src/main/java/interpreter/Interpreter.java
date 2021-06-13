@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 public class Interpreter implements Visitor {
 
-    private List<Declaration> declarationScope = new ArrayList<>();         // variable declaratation context
+    private List<Declaration> declarationScope = new ArrayList<>();         // variable declaration context
     private List<FunctionDefStatement> functionScope = new ArrayList<>();   // function declaration context
     private int whileDepth = 0;                                             // control counter for break statement check
 
@@ -193,7 +193,7 @@ public class Interpreter implements Visitor {
     /**
      * This method will perform thee depth-first traversal of the parse tree recursively.
      * It validates first the nested components of a component, then the component itself.
-     * If necessary, prevalidations are done for specific nodes.
+     * If necessary, pre-validations are done for specific nodes.
      *
      * @param node the parse tree node to traverse
      */
@@ -212,12 +212,14 @@ public class Interpreter implements Visitor {
         }
     }
 
+    // ------------------------------------------ helper methods ------------------------------------------
+
     /**
-     * This methods takes care about the prevalidations before the content of a node and then the node itself are visited.
+     * This methods takes care about the pre-validations before the content of a node and then the node itself are visited.
      * Entering a while loop will increase the whileDepth counter (e.g. one nested break statement is allowed). Entering
      * a function definition will add its declaration to scope.
      *
-     * @param node the parse tree node to prevalidate.
+     * @param node the parse tree node to pre-validate.
      */
     protected void preValidate(Traversable node) {
         if (node instanceof WhileStatement) {
@@ -226,8 +228,6 @@ public class Interpreter implements Visitor {
             addFunDeclarationToScope((FunctionDefStatement) node);
         }
     }
-
-    // ------------------------------------------ helper methods ------------------------------------------
 
     /**
      * This method will check if a break statement is at a correct position.
