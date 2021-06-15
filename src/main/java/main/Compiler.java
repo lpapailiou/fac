@@ -202,7 +202,10 @@ public class Compiler {
      * @throws IOException the exception thrown in case the file path is not valid.
      */
     private static void processFile(String data) throws IOException {
-        try (FileInputStream stream = new FileInputStream(Paths.get(data).toAbsolutePath().toString()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
+        try (InputStreamReader reader = data.equals(defaultFilePath) ?
+                new InputStreamReader(Compiler.class.getClassLoader().getResourceAsStream(defaultFilePath.substring(19)), ENCODING) :   // make work from jar
+                new InputStreamReader(new FileInputStream(Paths.get(data).toAbsolutePath().toString()), ENCODING)) {                    // custom file
+
             Program program = null;
 
             try {
