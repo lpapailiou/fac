@@ -104,10 +104,7 @@ public class Compiler {
         } else if (args[0].equals("-h")) {
             LOG.log(Level.INFO, "Following options are available:\n\t-o scan\n\t-o parse\n\t-o interpret\n\t-o execute\n\nOptionally you may enter a file path after the option.");
             cache = SCANNER.nextLine();
-            evaluateArguments(cache);
-            if (!cache.startsWith("-h")) {
-                cache = "";
-            }
+            evaluateArguments(cache.split(" "));
         } else if (args[0].equals("-o")) {
             try {
                 option = Option.valueOf(args[1].toUpperCase());
