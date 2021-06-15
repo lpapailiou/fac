@@ -14,6 +14,7 @@ The goal is to specify a new programming language, which is deterministic and ex
 	2.1 [Clone](#clone)   
 	2.2 [Package structure](#package-structure)   
 	2.3 [Run](#run)  
+	2.4 [Generate](#generate)  	
 
 ## Language design
 In this section, the language design will be documented with its rules and a few examples. 
@@ -530,6 +531,8 @@ The console mode can be escaped with -h or -q.
     >>>>  hello world
     >  
 
+### Generate
+In case you may want to modify the language rules, the scanner and parsers can be generated easily with following commands.
 #### Scanner generation
 To generate a new scanner from the flex file, run following command (java path must be set).  
 
