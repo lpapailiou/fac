@@ -538,7 +538,7 @@ The console mode can be escaped with -h or -q.
     >  
 
 ### Generate
-In case you may want to modify the language rules, the scanner and parsers can be generated easily with following commands.
+In case you may want to modify the language rules, the scanner and parser can be generated easily with following commands.
 #### Scanner generation
 To generate a new scanner from the flex file, run following command (java path must be set).  
 
