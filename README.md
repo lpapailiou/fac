@@ -161,8 +161,8 @@ The syntactical rules are designed in the form of the Backus-Naur-notation, whic
 <li>Arithmetic expressions cannot exist as isolated statement. They need to be part of a declaration or be assigned.</li>
 <li>By default, their components can be either 'raw' values, conditional expressions or function calls.</li>
 <li>Multiplication and division have precedence over addition and subtraction.</li>
+<li>Unary expressions have highest precedence.</li>
 <li>Arithmetic expressions can be nested. They are - after precedence - evaluated from left to right.</li>
-<li>Unary expressions have the highest precedence.</li>
 <li>Arithmetic expressions must not have brackets.</li>
 <li>As arithmetic expressions (for simplicity are abused to) group all possible values and expressions, they can be potentially assigned anywhere.</li>
 <li>Also here, data types are not evaluated any further.</li>
@@ -194,8 +194,8 @@ cannot be placed before the outer brackets if a conditional expression is used i
 
 #### Function calls
 <ul>
-<li>Function calls consist of an identifier, followed by an opening round bracket, parameters, a closing bracket and a semicolon.</li>
-<li>Parameters can be zero, one or multiple (comma separated) expressions.</li>
+<li>Function calls consist of an identifier, followed by an opening round bracket, arguments, a closing bracket and a semicolon.</li>
+<li>Arguments can be zero, one or multiple (comma separated) expressions.</li>
 <li>Without the semicolon, a function call can be used as value within an expression, as it is expected to always have a return value.</li>
 </ul>
 
@@ -228,7 +228,7 @@ cannot be placed before the outer brackets if a conditional expression is used i
 <li>This declaration list can be empty or consist of one or multiple declarations.</li>
 <li>A parameter declaration consists of a data type and an identifier.</li></ul></li>
 <li>After the parameter declarations, curly brackets open and close.<ul>
-<li>The function body may contain zero, one or multiple nestable statements.</li>
+<li>The function body may contain zero, one or multiple nested statements.</li>
 <li>Just before the curly brackets are closed, a return statement must be placed. <ul><li>The return statement consists 
 of the return keyword, a return value (an expression) and a semicolon.</li></ul></li></ul></li>
 </ul>
@@ -310,7 +310,7 @@ The interpreter will receive the parse tree from the parser and traverse it dept
 <li>The same rule applies to function definitions and function calls.</li>
 <li>Identifiers are valid within the same and lower levels of the parse tree, starting from the location where they are declared.
 This means, that nested variable declarations cannot overwrite already defined identifiers.</li>
-<li>Identifiers must be unique within their scope, except for functions, which can be overloaded.</li>
+<li>Identifiers must be unique within their scope, except for function identifiers, which can be overloaded.</li>
 </ul>
 
     // examples
@@ -341,9 +341,9 @@ This means, that nested variable declarations cannot overwrite already defined i
 
 #### Operator validation
 <ul>
-<li>In assignments, binOp = can be used for all data types, += for numeric and string values, other operators (-=, *=, /=) for numeric values only.</li>
-<li>In conditional expressions, == and != may be used for all types, && and || may used for boolean values only, comparing operators (<, <=, >=, >) can be used for numeric values only.</li>
-<li>In arithmetic expressions, + is valid for numeric values or if at least one of the components is a string. All other available operators (-,*, /) are for numeric values only.</li>
+<li>In assignments, the operator = can be used for all data types, += for numeric and string values, other operators (-=, *=, /=, %=) for numeric values only.</li>
+<li>In conditional expressions, == and != may be used for all types, !, && and || may used for boolean values only, comparing operators (<, <=, >=, >) can be used for numeric values only.</li>
+<li>In arithmetic expressions, + is valid for numeric values or if at least one of the components is a string. All other available operators (-,*, /, %) are for numeric values only.</li>
 </ul>
 
     // examples
@@ -385,11 +385,11 @@ This means, that nested variable declarations cannot overwrite already defined i
 
 #### Break statements
 <ul>
+<li>Break statements are only allowed within while loops, and never as top-level-statement.</li>
 <li>Per while loop and nesting level, one break statement is allowed.</li>
 <li>Exception: if a break loop contains an if-then-else statement, two breaks are allowed.</li>
 <li>A break must be the last statement of a statement list, but can be nested within other statement lists. Thus, a simple validation for
 unreachable code occurs at this place.</li>
-<li>Break statements are only allowed within while loops, and never as top-level-statement.</li>
 </ul>
 
     // examples
@@ -409,7 +409,7 @@ placed always before callers (not like Java, where global variables and function
   
 The ``Executor`` can also be set to script mode. In this case, only the last entered statement will trigger the execution of print calls.  
 In the console, entered code will be validated after pressing ENTER on a blank input line. This means, multiple lines
-can be entered before validating (e.g. breaks are allowed within complex statements). 
+can be entered before validating (e.g. line breaks are allowed in between complex statements). 
 
 ## Repository handling
 This section contains a few technical notes about this repository.
@@ -420,6 +420,8 @@ Clone the repository with following command.
 
 The code is written in ``java 8``.
 Once the repository is cloned, ``maven`` may take care about the build, plugins and the dependencies.  
+  
+You may also just download the jar file from [latest release](https://github.com/lpapailiou/fac/releases/latest).  
 
 ### Package structure
 Below, the structure of the package tree is listed for better overview.
@@ -439,6 +441,10 @@ Below, the structure of the package tree is listed for better overview.
                 + lib                       // external dependecies (jflex & cup)
 
 ### Run
+Start the program from the IDE or from the [jar file](https://github.com/lpapailiou/fac/releases/latest) directly.
+
+    java -jar fac.jar
+
 #### main.Compiler
 The main class ``Compiler`` may be run with or without options. If there are no options given, it will
 initialize the [interactive console mode](#console-mode).  
