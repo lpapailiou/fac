@@ -16,6 +16,11 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This is the main class of this application. Its purpose is to start code processing.
+ * The Compiler can be run in different modes.
+ * After processing, the program will remain running. A small menu allows to change mode and continue processing.
+ */
 public class Compiler {
 
     private static final String ENCODING = "UTF-8";
@@ -26,7 +31,20 @@ public class Compiler {
     private static String path;
     private static String cache;
 
-
+    /**
+     * The compiler can be started in different modes. The modes can be passed as arguments.
+     * Options:
+     * <code>-o scan</code>: scan a code to for lexical validation.
+     * <code>-o parse</code>: parse a code for syntactical validation.
+     * <code>-o interpret</code>: interpret a code for semantic validation.
+     * <code>-o execute</code>: execute a code.
+     * <code>-o console</code>: start console mode and process code typed as console input.
+     * If a file path is given as third argument, the according file will be processed. Otherwise, a short demo file
+     * will be processed.
+     * If no arguments are given at all, console mode will be started immediately.
+     *
+     * @param args
+     */
     public static void main(String... args) {
         if (args != null) {
             cache = Arrays.toString(args).replaceAll("\\[", "").replaceAll("]", "").replaceAll(",", "");
@@ -55,7 +73,7 @@ public class Compiler {
                     }
                     break;
                 case CONSOLE:
-                    startExecutor();
+                    startConsole();
                     break;
                 default:
                     LOG.log(Level.INFO, "Compiler was started with invalid arguments. Type -h for help.");
@@ -69,7 +87,13 @@ public class Compiler {
 
     }
 
-    private static void evaluateArguments(String[] args) {
+    /**
+     * This method is used to evaluate passed arguments from the main method. Its purpose is to set the correct mode
+     * and optionally point to the file chosen to process.
+     *
+     * @param args the arguments to evaluate the mode to take.
+     */
+    private static void evaluateArguments(String... args) {
         option = Option.CONSOLE;
         path = null;
         if (args == null || args.length == 0) {
@@ -80,29 +104,16 @@ public class Compiler {
         } else if (args[0].equals("-h")) {
             LOG.log(Level.INFO, "Following options are available:\n\t-o scan\n\t-o parse\n\t-o interpret\n\t-o execute\n\nOptionally you may enter a file path after the option.");
             cache = SCANNER.nextLine();
+            evaluateArguments(cache);
             if (!cache.startsWith("-h")) {
                 cache = "";
             }
         } else if (args[0].equals("-o")) {
-            switch (args[1]) {
-                case "scan":
-                    option = Option.SCAN;
-                    break;
-                case "parse":
-                    option = Option.PARSE;
-                    break;
-                case "interpret":
-                    option = Option.INTERPRET;
-                    break;
-                case "execute":
-                    option = Option.EXECUTE;
-                    break;
-                case "console":
-                    option = Option.CONSOLE;
-                    break;
-                default:
-                    LOG.log(Level.WARNING, "Entered option is not valid, console opens.");
-                    option = Option.CONSOLE;
+            try {
+                option = Option.valueOf(args[1].toUpperCase());
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, "Entered option is not valid, console opens.");
+                option = Option.CONSOLE;
             }
             if (option == Option.CONSOLE) {
                 path = null;
@@ -114,7 +125,11 @@ public class Compiler {
         }
     }
 
-    private static void startExecutor() {
+    /**
+     * This method will start the interactive console mode. After printing a header, the user may then
+     * enter script code to process.
+     */
+    private static void startConsole() {
         String consoleMarker = ">  ";
         String code = "";
         String tmpCache = "";
@@ -160,6 +175,13 @@ public class Compiler {
         }
     }
 
+    /**
+     * This method executes console input after the input is confirmed by the ENTER key.
+     * It will process the code accordingly. If valid, the next line may be entered. If not, the last
+     * entry is rejected, and the user may retry with a new input.
+     * @param code the code to process.
+     * @throws Exception the exception to throw in case the code is rejected.
+     */
     private static void executeConsoleContent(String code) throws Exception {
         try (InputStream stream = new ByteArrayInputStream(code.getBytes()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
             JParser parser = new JParser(reader, false);
@@ -174,6 +196,11 @@ public class Compiler {
         }
     }
 
+    /**
+     * This method will process code from a given file. The processing will depend on the chosen mode.
+     * @param data the file path of the code.
+     * @throws IOException the exception thrown in case the file path is not valid.
+     */
     private static void processFile(String data) throws IOException {
         try (FileInputStream stream = new FileInputStream(Paths.get(data).toAbsolutePath().toString()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
             Program program = null;
@@ -218,6 +245,12 @@ public class Compiler {
         }
     }
 
+    /**
+     * This method will perform a scanning process for the complete code.
+     * @param scanner the scanner to use (including reader and input).
+     * @return the last token which was scanned.
+     * @throws Exception the exception thrown in case of invalid code.
+     */
     private static Program getProgram(JScanner scanner) throws Exception {
         Symbol root = null;
         while (!scanner.yyatEOF()) {
@@ -226,6 +259,12 @@ public class Compiler {
         return (Program) root.value;
     }
 
+    /**
+     * This method will perform a parsing process for the complete code.
+     * @param parser the parser to use (including scanner, reader and input).
+     * @return the root of the parse tree as Program instance.
+     * @throws Exception the exception thrown in case of invalid code.
+     */
     private static Program getProgram(JParser parser) throws Exception {
         Symbol root = null;
         while (!parser.yyatEOF()) {
