@@ -206,13 +206,14 @@ public class Console {
                 new InputStreamReader(new FileInputStream(Paths.get(data).toAbsolutePath().toString()), ENCODING)) {                    // custom file
 
             Program program = null;
+            JParser parser = null;
 
             try {
                 if (option == Option.SCAN) {
                     JScanner scanner = new JScanner(reader);
                     program = getProgram(scanner);
                 } else {
-                    JParser parser = new JParser(reader, true);
+                    parser = new JParser(reader, true);
                     program = getProgram(parser);
                 }
             } catch (Exception e) {
@@ -228,6 +229,12 @@ public class Console {
             }
 
             if (option != Option.SCAN) {
+                System.out.println("***** PARSE TREE *****\n\n" + program + "\n");
+
+                for (String str : parser.getScannerOutput()) {
+                    System.out.println(str);
+                }
+                System.out.println("\n");
                 System.out.println("***** PARSER RESULT *****\n\n" + program + "\n");
             }
             if (option == Option.VALIDATE) {

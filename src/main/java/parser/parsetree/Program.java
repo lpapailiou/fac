@@ -55,7 +55,7 @@ public class Program implements Traversable {
     @Override
     public String getParseTree() {
         String out = this.getClass().getName();
-        out = out.substring(out.lastIndexOf(".") + 1) + "\n";
+        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
         List<String> components = new ArrayList<>();
         for (Component st : componentList) {
             components.addAll(Arrays.asList(st.getParseTree().split("\n")));

@@ -1,0 +1,71 @@
+* {
+    -fx-base: black; /* combobox color */
+    -fx-text-fill: white; /* no idea but seems important */
+    -fx-text-background-color: white; /* text in combobox */
+    -fx-control-inner-background: rgba(255, 255, 255, 0.45); /* combobox list background */
+    -fx-accent: black; /* combobox selected background */
+    -fx-focus-color: #c71585; /* focus color */
+
+    -fx-hover-base: #c71585; /* hover */
+    -fx-color: rgba(255, 255, 255, 0.69); /* outer border for list cell */
+    -fx-pressed-base: #c71585; /* control pressed */
+    -fx-body-color: black; /* inactive frame */
+
+    -fx-faint-focus-color: #ffc2cd22; /* not sure about this anymore but was important */
+    -fx-cell-focus-inner-border: #c71585; /* not sure about this anymore but was important */
+    -fx-outer-border: black; /* not sure about this */
+    -fx-inner-border: black; /* not sure about this */
+    -fx-focused-base: #c71585; /* not sure about this */
+}
+
+.label {
+    -fx-text-fill: black;
+}
+
+.tooltip {
+    -fx-text-fill: -fx-focus-color;
+}
+
+#baseControls, #neuralNetworkControls, #actionControls, #statisticControls {
+    -fx-border-color: darkgray;
+}
+
+#baseControlsLabel, #neuralNetworkControlsLabel, #actionControlsLabel, #statisticControlsLabel {
+    -fx-text-fill: darkgray;
+    -fx-background-color: black;
+}
+
+/* ------------------------- flat design from here ------------------------- */
+
+.combo-box-base, .button, .radio-button .radio {
+    -fx-background-color: -fx-base, -fx-text-fill, -fx-base, -fx-base;
+}
+
+.combo-box-base:hover, .button:hover, .radio-button:hover .radio {
+    -fx-background-color: -fx-base, -fx-text-fill, -fx-base, -fx-base;
+    -fx-color: -fx-hover-base;
+}
+
+.combo-box-base:showing, .button:showing, .radio-button:showing .radio {
+    -fx-color: -fx-pressed-base;
+}
+
+.combo-box-base:focused, .button:focused {
+    -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+}
+
+.radio-button:focused > .radio {
+    -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+}
+
+.text-field {
+    -fx-background-color: -fx-text-fill, -fx-base, -fx-base;
+}
+
+.text-field:focused {
+    -fx-background-color: -fx-base, -fx-base, -fx-focus-color, -fx-base;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected, .combo-box-popup .list-view .list-cell:filled:selected:hover {
+    -fx-background-color: -fx-base;
+}
