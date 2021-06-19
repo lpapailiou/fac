@@ -113,7 +113,10 @@ public class ParamDeclaration extends Component implements Declaration {
 
     @Override
     public String getParseTree() {
-        return this.getClass().getName();
+        String out = this.getClass().getName();
+        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+        out += "\t+ " + "TYPE" + "\n\t+ " + "IDENTIFIER" + "\n";
+        return out;
     }
 
     /**

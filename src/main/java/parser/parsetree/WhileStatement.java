@@ -82,7 +82,24 @@ public class WhileStatement extends Component {
 
     @Override
     public String getParseTree() {
-        return this.getClass().getName();
+        String out = this.getClass().getName();
+        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+        out += "\t+ " + "WHILE" + "\n";
+        out += "\t\t+ " + "CONDITION" + "\n";
+        List<String> conditionComponents = Arrays.asList((((Component) condition)).getParseTree().split("\n"));
+        for (String str : conditionComponents) {
+            out += "\t\t\t " + str + "\n";
+        }
+        if (!componentList.isEmpty()) {
+            out += "\t\t+ " + "BODY" + "\n";
+            for (Component c : componentList) {
+                List<String> components = Arrays.asList((c).getParseTree().split("\n"));
+                for (String str : components) {
+                    out += "\t\t\t " + str + "\n";
+                }
+            }
+        }
+        return out;
     }
 
     /**

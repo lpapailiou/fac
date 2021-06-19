@@ -155,7 +155,34 @@ public class FunctionDefStatement extends Component {
 
     @Override
     public String getParseTree() {
-        return this.getClass().getName();
+        String out = this.getClass().getName();
+        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+        out += "\t+ " + "DEF" + "\n";
+        out += "\t+ " + "TYPE" + "\n";
+        out += "\t+ " + "IDENTIFIER" + "\n";
+        out += "\t+ " + "PARAMETER" + "\n";
+        for (Component c : paramDeclarationList) {
+            List<String> components = Arrays.asList((c).getParseTree().split("\n"));
+            for (String str : components) {
+                out += "\t\t " + str + "\n";
+            }
+        }
+        if (!componentList.isEmpty()) {
+            out += "\t+ " + "BODY" + "\n";
+            for (Component c : componentList) {
+                List<String> components = Arrays.asList((c).getParseTree().split("\n"));
+                for (String str : components) {
+                    out += "\t\t " + str + "\n";
+                }
+            }
+        }
+
+        out += "\t+ " + "RETURN" + "\n";
+        List<String> returnStat = Arrays.asList((((Component) returnStatement)).getParseTree().split("\n"));
+        for (String str : returnStat) {
+            out += "\t\t " + str + "\n";
+        }
+        return out;
     }
 
     /**

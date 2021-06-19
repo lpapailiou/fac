@@ -20,7 +20,9 @@ public class BreakStatement extends Component {
 
     @Override
     public String getParseTree() {
-        return this.getClass().getName();
+        String out = this.getClass().getName();
+        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+        return out;
     }
 
 

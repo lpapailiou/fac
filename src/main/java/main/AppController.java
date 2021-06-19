@@ -59,8 +59,8 @@ public class AppController implements Initializable {
 
     public void init() {
         start.setOnAction(e -> process());
-        input.setText("number one = 1; print(one);" +
-                "if(true) { one++; } else { one = 1 + 2; } print(one);");
+        input.setText("def number fun(number x, number xx) { number a = 3; return x + 1; }" +
+                "print(fun(7,7));");
     }
 
 

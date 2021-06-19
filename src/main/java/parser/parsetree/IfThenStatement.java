@@ -90,10 +90,18 @@ public class IfThenStatement extends Component {
         String out = this.getClass().getName();
         out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
         out += "\t+ " + "IF" + "\n";
-        for (Component c : componentListIf) {
-            List<String> components = Arrays.asList((c).getParseTree().split("\n"));
-            for (String str : components) {
-                out += "\t\t " + str + "\n";
+        out += "\t\t+ " + "CONDITION" + "\n";
+        List<String> conditionComponents = Arrays.asList((((Component) condition)).getParseTree().split("\n"));
+        for (String str : conditionComponents) {
+            out += "\t\t\t " + str + "\n";
+        }
+        if (!componentListIf.isEmpty()) {
+            out += "\t\t+ " + "BODY" + "\n";
+            for (Component c : componentListIf) {
+                List<String> components = Arrays.asList((c).getParseTree().split("\n"));
+                for (String str : components) {
+                    out += "\t\t\t " + str + "\n";
+                }
             }
         }
         return out;

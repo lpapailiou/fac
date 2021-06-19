@@ -3,6 +3,7 @@ package parser.parsetree;
 import parser.parsetree.interfaces.Visitor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -87,7 +88,20 @@ public class FunctionCallStatement extends Component {
 
     @Override
     public String getParseTree() {
-        return this.getClass().getName();
+        String out = this.getClass().getName();
+        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+        out += "\t+ " + "IDENTIFIER" + "\n";
+        if (!argumentList.isEmpty()) {
+            out += "\t+ " + "ARGUMENTS" + "\n";
+            List<String> components = new ArrayList<>();
+            for (Component c : argumentList) {
+                components.addAll(Arrays.asList(c.getParseTree().split("\n")));
+            }
+            for (String str : components) {
+                out += "\t\t " + str + "\n";
+            }
+        }
+        return out;
     }
 
     /**
