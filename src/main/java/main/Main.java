@@ -102,7 +102,7 @@ public class Main {
             LOG.log(Level.INFO, "... bye bye.");
             System.exit(0);
         } else if (args[0].equals("-h")) {
-            LOG.log(Level.INFO, "Following options are available:\n\t-o scan\n\t-o parse\n\t-o interpret\n\t-o execute\n\nOptionally you may enter a file path after the option.");
+            LOG.log(Level.INFO, "Following options are available:\n\t-o scan\n\t-o parse\n\t-o validate\n\t-o execute\n\nOptionally you may enter a file path after the option.");
             cache = SCANNER.nextLine();
             evaluateArguments(cache.split(" "));
         } else if (args[0].equals("-o")) {
