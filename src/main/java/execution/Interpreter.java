@@ -1,9 +1,9 @@
 package execution;
 
-import interpreter.Interpreter;
 import parser.parsetree.*;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Traversable;
+import validator.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +13,13 @@ import java.util.List;
  * It is implemented as visitor and walks the parse tree depth-first, while a node will be evaluated after
  * its children.
  * A semantic code validation will take place during
- * execution in parallel, as the Executor builds on the Interpreter. Like this, it is not possible
+ * execution in parallel, as the Interpreter builds on the Validator. Like this, it is not possible
  * to execute not validated code.
  * Example for usage (where the rootSymbol is the resulting symbol of a parse process):
- * <code>Executor executor = new Executor();
- * ((Program) rootSymbol.value).accept(executor);</code>
+ * <code>Interpreter interpreter = new Interpreter();
+ * ((Program) rootSymbol.value).accept(interpreter);</code>
  */
-public class Executor extends Interpreter {
+public class Interpreter extends Validator {
 
     private boolean execute = true;         // to be switched off if validation only is required (e.g. for dead if-then-else branches)
     private boolean scriptMode = false;     // allows to change behavior for script mode vs. all-at-once-execution
@@ -187,7 +187,7 @@ public class Executor extends Interpreter {
     }
 
     /**
-     * This method allows to set the executor to 'script mode'. This means, that the code execution will be handled
+     * This method allows to set the interpreter to 'script mode'. This means, that the code execution will be handled
      * a little differently: only the last print statement of the code is executed, even if the code runs multiple times (after entering a new line in the console, the full
      * code has to be validated and re-run again completely. Executing just the last print call give a more 'natural' flow to the application).
      *

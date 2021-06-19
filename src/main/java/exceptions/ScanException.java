@@ -3,7 +3,7 @@ package exceptions;
 /**
  * This exception may be thrown during lexical validation.
  * It is used to wrap scanning errors, which would not be possible to recover. Like that,
- * invalid code can be rejected without leading the compiler to terminate.
+ * invalid code can be rejected without leading this program to terminate.
  */
 public class ScanException extends RuntimeException {
 

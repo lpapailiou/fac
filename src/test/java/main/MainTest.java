@@ -4,12 +4,12 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class CompilerTest {
+public class MainTest {
 
     @Test
-    public void testCompiler() throws IOException {
+    public void testMain() throws IOException {
         String file = "src/main/resources/misc_test_1.txt";
-        Compiler.main("-o", "execute", file);
+        Main.main("-o", "validate", file);
 
     }
 

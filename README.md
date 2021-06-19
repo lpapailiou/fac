@@ -301,8 +301,8 @@ So far, our toy language is defined and we have the tools to validate if a code 
 this point, there is no type safety, variables can be assigned before they are declared and break statements
 are a mere decoration.  
   
-The required semantic validation must now be performed by an ``Interpreter`` (see ``src\main\java\interpreter``).  
-The interpreter will receive the parse tree from the parser and traverse it depth-first.
+The required semantic validation must now be performed by a ``Validator`` (see ``src\main\java\validator``).  
+The validator will receive the parse tree from the parser and traverse it depth-first.
 
 #### Identifier scope
 <ul>
@@ -315,11 +315,11 @@ Within nested scope, they can be overwritten by local variables.</li>
 
     // examples
     number x = 1;                       // valid
-    y = x;                              // interpreter fails as y was not instantiated
+    y = x;                              // validator fails as y was not instantiated
     def string fun(string z) {          // valid
         return z;
     }
-    x = z;                              // interpreter fails, as z is out of scope
+    x = z;                              // validator fails, as z is out of scope
  
 #### Type safety
 <ul>
@@ -332,11 +332,11 @@ Within nested scope, they can be overwritten by local variables.</li>
 
     // examples
     string x = 1 + 2 + 'a';             // valid (nesting & string casting)
-    number y = true;                    // interpreter fails, as boolean is assigned to number type
+    number y = true;                    // validator fails, as boolean is assigned to number type
     x += true;                          // valid (string casting)
-    x = true;                           // interpreter fails, string casting can only occur in binary expression
-    x = 1 * 2;                          // interpreter fails, string casting can only occur in binary expression
-    def number fun() {                  // interpreter fails, as returned string is not a number
+    x = true;                           // validator fails, string casting can only occur in binary expression
+    x = 1 * 2;                          // validator fails, string casting can only occur in binary expression
+    def number fun() {                  // validator fails, as returned string is not a number
         return 'x'; }
 
 #### Operator validation
@@ -348,10 +348,10 @@ Within nested scope, they can be overwritten by local variables.</li>
 
     // examples
     string x = 'x' + 'b';               // valid
-    x = 'x' - 'b';                      // interpreter fails, as minus cannot be used for string concatenation
-    boolean y = (true && 1);            // interpreter fails, as the binOp && can be used for booleans only
+    x = 'x' - 'b';                      // validator fails, as minus cannot be used for string concatenation
+    boolean y = (true && 1);            // validator fails, as the binOp && can be used for booleans only
     boolean z = (1 < 2);                // valid
-    x = 1 * 'x';                        // interpreter fails, multiplication binOp is not valid for strings
+    x = 1 * 'x';                        // validator fails, multiplication binOp is not valid for strings
 
 
 #### Expressions
@@ -371,11 +371,11 @@ Within nested scope, they can be overwritten by local variables.</li>
 </ul>
 
     // examples
-        def number x() {                // interpreter fails, as 'seven' is a string
+        def number x() {                // validator fails, as 'seven' is a string
             return 'seven'; }
         def number y() {                // valid
             return 0; }
-        def number y() {                // interpreter fails, as function y() is already defined with 0 params and same return type
+        def number y() {                // validator fails, as function y() is already defined with 0 params and same return type
             return 1; }
 
 #### Conditional statements and while loops
@@ -393,21 +393,21 @@ unreachable code occurs at this place.</li>
 </ul>
 
     // examples
-    break;                              // interpreter fails, as break statement is dangling outside loop
-    while(true) {                       // interpreter fails, as there is unreachable code
+    break;                              // validator fails, as break statement is dangling outside loop
+    while(true) {                       // validator fails, as there is unreachable code
         break; number x = 1; }
     while(false) {                      // valid
         break; }        
 
 ### Execution
-The execution is handled by the ``Executor``. It can be found int the 
-package ``src\main\java\execution``. It is built on an interpreter, which means that it will automatically also
+The execution is handled by the ``Interpreter``. It can be found int the 
+package ``src\main\java\execution``. It is built on a validator, which means that it will automatically also
 validate code semantically before execution - even if the code itself will never run (e.g. in a dead if-then-else branch). 
   
 Please note that global variables and function definitions must be declared always before being referenced. Thus, declarations must be 
 placed always before callers (not like Java, where global variables and functions may be defined anywhere in a file).  
   
-The ``Executor`` can also be set to script mode. In this case, only the last entered statement will trigger the execution of print calls.  
+The ``Interpreter`` can also be set to script mode. In this case, only the last entered statement will trigger the execution of print calls.  
 In the console, entered code will be validated after pressing ENTER on a blank input line. This means, multiple lines
 can be entered before validating (e.g. line breaks are allowed in between complex statements). 
 
@@ -430,13 +430,13 @@ Below, the structure of the package tree is listed for better overview.
         + main
             + java
                 + exceptions                // custom exceptions
-                + execution                 // code execution handling
-                + interpreter               // semantic validation 
-                + main                      // samples (ready for execution)
+                + execution                 // code execution handling by interpreter    
+                + main                      // --> starts program
                 + parser                    // syntactical analysis              
                     + parsetree                 // parse tree components
                         + interfaces
                 + scanner                   // lexical analysis & token generation
+                + validator                 // semantic validation                
             + resources                     // code sample files
                 + lib                       // external dependecies (jflex & cup)
 
@@ -445,8 +445,8 @@ Start the program from the IDE or from the [jar file](https://github.com/lpapail
 
     java -jar fac.jar
 
-#### main.Compiler
-The main class ``Compiler`` may be run with or without options. If there are no options given, it will
+#### main.Main
+The main class ``Main`` may be run with or without options. If there are no options given, it will
 initialize the [interactive console mode](#console-mode).  
 There's also a small menu available.
 
@@ -490,9 +490,9 @@ Additionally, it will print the parsed code to the console.
         print('hello world');
     }
     
-##### Interpreter mode
+##### Validation mode
 This mode will run a parser as above.
-As soon as the parse tree is ready, the interpreter will traverse the tree and validate semantic rules.  
+As soon as the parse tree is ready, the validator will traverse the tree and validate semantic rules.  
 
     // sample output
     ***** PARSER RESULT *****
@@ -507,7 +507,7 @@ As soon as the parse tree is ready, the interpreter will traverse the tree and v
     ***** SEMANTIC CHECK SUCCEEDED *****
 
 ##### Execution mode
-The executor is built on an interpreter. The process is similar to the interpreter mode, but the executor
+The interpreter is built on an validator. The process is similar to the validator mode, but the interpreter
 will similarly validate and execute the interpreted code.
 
     // sample output
@@ -519,7 +519,7 @@ will similarly validate and execute the interpreted code.
     >>>>  hello world
 
 ##### Console mode
-The console mode starts an executor in the console. This version is interactive. For every entered code block, the
+The console mode starts an interpreter in the console. This version is interactive. For every entered code block, the
 whole so-far valid code will be scanned, parsed, interpreted and directly be executed.  
 
 In case of an error, the last entry will be ignored. New code can be added to the so-far valid code.  

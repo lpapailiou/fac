@@ -22,7 +22,7 @@ public enum Option {
      * Will validate a code and omit further processing.
      * If no exception is thrown, processed code is semantically valid.
      */
-    INTERPRET,
+    VALIDATE,
     /**
      * Will execute a code at once.
      * If no exception is thrown, processed code is valid.

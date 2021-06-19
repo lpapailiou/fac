@@ -2,12 +2,12 @@ package main;
 
 import exceptions.GrammarException;
 import exceptions.ScanException;
-import execution.Executor;
-import interpreter.Interpreter;
+import execution.Interpreter;
 import java_cup.runtime.Symbol;
 import parser.JParser;
 import parser.parsetree.Program;
 import scanner.JScanner;
+import validator.Validator;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -18,25 +18,25 @@ import java.util.logging.Logger;
 
 /**
  * This is the main class of this application. Its purpose is to start code processing.
- * The Compiler can be run in different modes.
+ * The Main can be run in different modes.
  * After processing, the program will remain running. A small menu allows to change mode and continue processing.
  */
-public class Compiler {
+public class Main {
 
     private static final String ENCODING = "UTF-8";
     private static final Logger LOG = Logger.getLogger(String.class.getName());
     private static final Scanner SCANNER = new Scanner(System.in);
     private static Option option = Option.CONSOLE;
-    private static String defaultFilePath = "src/main/resources/hello_world.txt";
+    private static String defaultFilePath = "hello_world.txt";
     private static String path;
     private static String cache;
 
     /**
-     * The compiler can be started in different modes. The modes can be passed as arguments.
+     * The program can be started in different modes. The modes can be passed as arguments.
      * Options:
      * <code>-o scan</code>: scan a code to for lexical validation.
      * <code>-o parse</code>: parse a code for syntactical validation.
-     * <code>-o interpret</code>: interpret a code for semantic validation.
+     * <code>-o validate</code>: validate a code for semantic validation.
      * <code>-o execute</code>: execute a code.
      * <code>-o console</code>: start console mode and process code typed as console input.
      * If a file path is given as third argument, the according file will be processed. Otherwise, a short demo file
@@ -57,7 +57,7 @@ public class Compiler {
             switch (option) {
                 case SCAN:
                 case PARSE:
-                case INTERPRET:
+                case VALIDATE:
                 case EXECUTE:
                     try {
                         if (path != null) {
@@ -76,7 +76,7 @@ public class Compiler {
                     startConsole();
                     break;
                 default:
-                    LOG.log(Level.INFO, "Compiler was started with invalid arguments. Type -h for help.");
+                    LOG.log(Level.INFO, "Main was started with invalid arguments. Type -h for help.");
             }
             if (!cache.startsWith("-h")) {
                 System.out.println();
@@ -184,9 +184,9 @@ public class Compiler {
             JParser parser = new JParser(reader, false);
             Program program = getProgram(parser);
 
-            Executor executor = new Executor();
-            executor.setScriptMode(true);
-            program.accept(executor);
+            Interpreter interpreter = new Interpreter();
+            interpreter.setScriptMode(true);
+            program.accept(interpreter);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -200,7 +200,7 @@ public class Compiler {
      */
     private static void processFile(String data) throws IOException {
         try (InputStreamReader reader = data.equals(defaultFilePath) ?
-                new InputStreamReader(Compiler.class.getClassLoader().getResourceAsStream(defaultFilePath.substring(19)), ENCODING) :   // make work from jar
+                new InputStreamReader(Main.class.getClassLoader().getResourceAsStream(defaultFilePath), ENCODING) :                     // make work from jar
                 new InputStreamReader(new FileInputStream(Paths.get(data).toAbsolutePath().toString()), ENCODING)) {                    // custom file
 
             Program program = null;
@@ -228,16 +228,16 @@ public class Compiler {
             if (option != Option.SCAN) {
                 System.out.println("***** PARSER RESULT *****\n\n" + program + "\n");
             }
-            if (option == Option.INTERPRET) {
-                Interpreter interpreter = new Interpreter();
-                program.accept(interpreter);
+            if (option == Option.VALIDATE) {
+                Validator validator = new Validator();
+                program.accept(validator);
 
                 System.out.println("\n***** SEMANTIC CHECK SUCCEEDED *****\n");
             } else if (option == Option.EXECUTE) {
                 System.out.println("***** EXECUTION RESULT *****\n");
 
-                Executor executor = new Executor();
-                program.accept(executor);
+                Interpreter interpreter = new Interpreter();
+                program.accept(interpreter);
             }
 
         } catch (IOException e) {

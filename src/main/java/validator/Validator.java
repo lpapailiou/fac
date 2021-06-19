@@ -1,4 +1,4 @@
-package interpreter;
+package validator;
 
 import exceptions.*;
 import parser.parsetree.*;
@@ -17,10 +17,10 @@ import java.util.List;
  * its children.
  * In case of invalid semantics, an according error is thrown.
  * Example for usage (where the rootSymbol is the resulting symbol of a parse process):
- * <code>Interpreter interpreter = new Interpreter();
- * ((Program) rootSymbol.value).accept(interpreter);</code>
+ * <code>Validator validator = new Validator();
+ * ((Program) rootSymbol.value).accept(validator);</code>
  */
-public class Interpreter implements Visitor {
+public class Validator implements Visitor {
 
     private List<List<Declaration>> declarationScope = new ArrayList<>();   // variable declaration context
     private List<FunctionDefStatement> functionScope = new ArrayList<>();   // function declaration context
