@@ -61,4 +61,9 @@ public class NestedStatement extends Component {
         return "";
     }
 
+    @Override
+    public String getParseTree() {
+        return "";
+    }
+
 }

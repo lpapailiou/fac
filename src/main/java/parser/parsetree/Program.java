@@ -4,6 +4,7 @@ import parser.parsetree.interfaces.Traversable;
 import parser.parsetree.interfaces.Visitor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -48,6 +49,20 @@ public class Program implements Traversable {
             out += st.toString();
         }
 
+        return out;
+    }
+
+    @Override
+    public String getParseTree() {
+        String out = this.getClass().getName();
+        out = out.substring(out.lastIndexOf(".") + 1) + "\n";
+        List<String> components = new ArrayList<>();
+        for (Component st : componentList) {
+            components.addAll(Arrays.asList(st.getParseTree().split("\n")));
+        }
+        for (String str : components) {
+            out += "\t " + str + "\n";
+        }
         return out;
     }
 

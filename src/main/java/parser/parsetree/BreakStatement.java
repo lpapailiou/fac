@@ -18,5 +18,10 @@ public class BreakStatement extends Component {
         return "break;\n";
     }
 
+    @Override
+    public String getParseTree() {
+        return this.getClass().getName();
+    }
+
 
 }

@@ -437,8 +437,9 @@ Below, the structure of the package tree is listed for better overview.
                         + interfaces
                 + scanner                   // lexical analysis & token generation
                 + validator                 // semantic validation                
-            + resources                     // code sample files
+            + resources                     
                 + lib                       // external dependecies (jflex & cup)
+                + samples                   // code sample files
 
 ### Run
 Start the program from the IDE or from the [jar file](https://github.com/lpapailiou/fac/releases/latest) directly.

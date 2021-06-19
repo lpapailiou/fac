@@ -85,6 +85,11 @@ public class FunctionCallStatement extends Component {
         return out;
     }
 
+    @Override
+    public String getParseTree() {
+        return this.getClass().getName();
+    }
+
     /**
      * This method accepts a visitor. The visitor will then have access to this instance
      * for code validation and execution.

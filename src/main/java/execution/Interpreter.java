@@ -25,6 +25,7 @@ public class Interpreter extends Validator {
     private boolean scriptMode = false;     // allows to change behavior for script mode vs. all-at-once-execution
     private boolean printActive = false;    // indicator to switch off execution for print statements (used in script mode)
     private int breakEvent = 0;             // counts the break statements found to be executed
+    private List<String> output = new ArrayList<>();
 
     /**
      * This method will trigger the validation for the assignment statement first.
@@ -129,7 +130,9 @@ public class Interpreter extends Validator {
                         value = ((int) doubleValue) + "";
                     }
                 }
-                System.out.println(">>>>  " + value.replaceAll("'", ""));
+                String out = value.replaceAll("'", "");
+                output.add(out);
+                System.out.println(">>>>  " + out);
             } else {
                 System.out.println(">>>>  ");
             }
@@ -434,6 +437,10 @@ public class Interpreter extends Validator {
     private Object getValue(UnaryCondition operand) {
         Object value = getValueOfOperand(operand.getOperand());
         return operand.getOperator().apply(value);
+    }
+
+    public List<String> getOutput() {
+        return output;
     }
 
 }

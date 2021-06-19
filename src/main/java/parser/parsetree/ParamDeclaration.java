@@ -111,6 +111,11 @@ public class ParamDeclaration extends Component implements Declaration {
         return type.getIdentifier() + " " + identifier;
     }
 
+    @Override
+    public String getParseTree() {
+        return this.getClass().getName();
+    }
+
     /**
      * This method accepts a visitor. The visitor will then have access to this instance
      * for code validation and execution.

@@ -27,6 +27,10 @@ parser code {:
     public boolean yyatEOF(){
         return ((JScanner) getScanner()).yyatEOF();
     }
+
+    public List<String> getScannerOutput() {
+        return ((JScanner) getScanner()).getOutput();
+    }
 :}
 
 // definition of scanner connection

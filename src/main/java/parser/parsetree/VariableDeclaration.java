@@ -3,6 +3,9 @@ package parser.parsetree;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Visitor;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * This is a wrapper class for variable declarations.
  * It holds the data type of the variable, the identifier and a value.
@@ -106,6 +109,22 @@ public class VariableDeclaration extends Component implements Declaration {
         return out + ";\n";
     }
 
+    @Override
+    public String getParseTree() {
+        String out = this.getClass().getName();
+        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+        out += "\t+ " + "TYPE" + "\n\t+ " + "IDENTIFIER" + "\n";
+        if (value instanceof Component) {
+            List<String> components = Arrays.asList(((Component) value).getParseTree().split("\n"));
+            for (String str : components) {
+                out += "\t " + str + "\n";
+            }
+        } else {
+            out += "\t+ " + Type.getTypeForValue(value) + "\n";
+        }
+        return out;
+    }
+
     /**
      * This method accepts a visitor. The visitor will then have access to this instance
      * for code validation and execution.
@@ -116,4 +135,5 @@ public class VariableDeclaration extends Component implements Declaration {
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
+
 }

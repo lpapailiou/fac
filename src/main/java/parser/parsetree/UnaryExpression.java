@@ -1,6 +1,9 @@
 package parser.parsetree;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * This is a wrapper class for unary arithmetic expressions.
  * Its instances will hold an assignment operator and an operand.
@@ -56,6 +59,30 @@ public class UnaryExpression extends ArithmeticExpression {
         }
         if (operand instanceof FunctionCallStatement) {
             out = out.substring(0, out.length() - 2);
+        }
+        return out;
+    }
+
+    @Override
+    public String getParseTree() {
+        String out = this.getClass().getName();
+        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+
+        if (op != UnOp.DEC && op != UnOp.INC) {
+            out += "\t+ " + "OPERATOR\n";
+        }
+
+        if (operand instanceof Component) {
+            List<String> components = Arrays.asList(((Component) operand).getParseTree().split("\n"));
+            for (String str : components) {
+                out += "\t" + str + "\n";
+            }
+        } else {
+            out += "\t+ " + Type.getTypeForValue(operand) + "\n";
+        }
+
+        if (op == UnOp.DEC || op == UnOp.INC) {
+            out += "\t+ " + "OPERATOR\n";
         }
         return out;
     }

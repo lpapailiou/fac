@@ -1,5 +1,8 @@
 package parser.parsetree;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * This is a wrapper class for unary conditional expressions.
  * Its instances will hold an assignment operator and an operand.
@@ -48,6 +51,30 @@ public class UnaryCondition extends ConditionalExpression {
     @Override
     public String toString() {
         return "(" + op.asString() + operand.toString() + ")";
+    }
+
+    @Override
+    public String getParseTree() {
+        String out = this.getClass().getName();
+        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+
+        if (op != UnOp.DEC && op != UnOp.INC) {
+            out += "\t+ " + "OPERATOR\n";
+        }
+
+        if (operand instanceof Component) {
+            List<String> components = Arrays.asList(((Component) operand).getParseTree().split("\n"));
+            for (String str : components) {
+                out += "\t" + str + "\n";
+            }
+        } else {
+            out += "\t+ " + Type.getTypeForValue(operand) + "\n";
+        }
+
+        if (op == UnOp.DEC || op == UnOp.INC) {
+            out += "\t+ " + "OPERATOR\n";
+        }
+        return out;
     }
 
 }

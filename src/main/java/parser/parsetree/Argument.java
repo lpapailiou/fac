@@ -51,6 +51,15 @@ public class Argument extends Component {
         return components;
     }
 
+    @Override
+    public String getParseTree() {
+        String out = this.getClass().getName();
+        if (next != null) {
+            out += " " + next;
+        }
+        return out;
+    }
+
     /**
      * The toString method provides a pretty-printable String
      * of this parse tree component.

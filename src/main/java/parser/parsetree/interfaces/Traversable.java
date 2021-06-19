@@ -18,4 +18,12 @@ public interface Traversable extends Acceptor {
      */
     List<Component> getStatements();
 
+
+    /**
+     * Returns the parse tree as string.
+     *
+     * @return a string of the parse tree.
+     */
+    String getParseTree();
+
 }

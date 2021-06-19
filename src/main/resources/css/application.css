@@ -1,0 +1,127 @@
+.root {
+    -fx-font-size: 11pt;
+    -fx-background-color: transparent;
+    -fx-font-family: "Courier New";
+}
+
+.radio-button, .combo-box {
+    -fx-alignment: center-left;
+    -fx-font-size: 10pt;
+    -fx-cursor: hand;
+}
+
+.radio-button .radio {
+    -fx-border-width: 0px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 2.0em;
+    -fx-padding: 0.2em;
+    -fx-cursor: hand;
+}
+
+.radio-button .dot {
+    -fx-background-radius: 10px;
+    -fx-padding: 6px;
+}
+
+.text-field, .combo-box {
+    -fx-min-height: 26;
+    -fx-max-height: 26;
+}
+
+.combo-box .list-cell {
+    -fx-translate-y: -2px;
+    -fx-cursor: hand;
+}
+
+.tooltip {
+    -fx-font-size: 12pt;
+}
+
+#baseControls, #neuralNetworkControls, #actionControls, #statisticControls {
+    -fx-padding: 10, 10, 10, 10;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 4;
+}
+
+#baseControlsLabel, #neuralNetworkControlsLabel, #actionControlsLabel, #statisticControlsLabel {
+    -fx-font-style: italic;
+    -fx-padding: 4;
+    -fx-translate-y: -25;
+}
+
+#hbox1, #hbox2, #hbox3, #hbox4, #hbox5, #neuralNetworkStack, #hiddenLayerConfiguration {
+    -fx-translate-y: -20;
+}
+
+#baseControlsLabel:disabled, #neuralNetworkControlsLabel:disabled, #actionControlsLabel:disabled, #statisticControlsLabel:disabled {
+    -fx-opacity: 1.0;
+}
+
+.button {
+    -fx-effect: null;
+    -fx-cursor: hand;
+}
+
+.popup {
+    -fx-font-size: 10pt;
+    -fx-background-color: -fx-base;
+    -fx-background-radius-radius: 4px;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-alignment: center;
+}
+
+.popup .label {
+    -fx-text-fill: -fx-text-background-color;
+}
+
+/* ------------------------- flat design from here ------------------------- */
+
+.combo-box-base, .button, .radio-button .radio {
+    -fx-background-color: -fx-base, -fx-body-color, -fx-base, -fx-base;
+}
+
+.combo-box-base:hover, .button:hover, .radio-button:hover .radio {
+    -fx-color: -fx-hover-base;
+    -fx-background-color: -fx-hover-base;
+}
+
+.combo-box-base:showing, .button:showing, .radio-button:showing .radio {
+    -fx-color: -fx-pressed-base;
+    -fx-background-color: -fx-pressed-base;
+}
+
+.combo-box-base:focused, .button:focused {
+    -fx-background-color: -fx-pressed-base;
+    -fx-background-radius: 6.4, 4, 5, 3;
+    -fx-background-insets: -1.4, 0, 1, 2;
+}
+
+.radio-button:focused > .radio {
+    -fx-background-color: -fx-pressed-base;
+    -fx-background-insets: -1.4, 0, 1, 2;
+}
+
+.combo-box-base:pressed, .button:pressed, .radio-button:pressed .radio {
+    -fx-color: -fx-pressed-base;
+    -fx-background-color: -fx-pressed-base;
+}
+
+.combo-box-base:disabled, .text-field:disabled, .button:disabled, .radio-button:disabled {
+    -fx-opacity: .4;
+    -fx-cursor: default;
+}
+
+.text-field {
+    -fx-background-color: -fx-body-color, -fx-base, -fx-base;
+}
+
+.text-field:focused {
+    -fx-background-color: -fx-pressed-base;
+    -fx-background-radius: 6.4, 4, 5, 3;
+    -fx-background-insets: -1.4, 0, 1, 2;
+}
+
+.combo-box-popup > .list-view {
+    -fx-effect: null;
+}

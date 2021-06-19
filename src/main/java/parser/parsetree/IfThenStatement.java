@@ -85,6 +85,20 @@ public class IfThenStatement extends Component {
         return out;
     }
 
+    @Override
+    public String getParseTree() {
+        String out = this.getClass().getName();
+        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+        out += "\t+ " + "IF" + "\n";
+        for (Component c : componentListIf) {
+            List<String> components = Arrays.asList((c).getParseTree().split("\n"));
+            for (String str : components) {
+                out += "\t\t " + str + "\n";
+            }
+        }
+        return out;
+    }
+
     /**
      * This method accepts a visitor. The visitor will then have access to this instance
      * for code validation and execution.

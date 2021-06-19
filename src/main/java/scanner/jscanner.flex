@@ -3,6 +3,7 @@ import java_cup.runtime.Symbol;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import parser.JSymbol;
+import java.util.*;
 
 // ************* OPTIONS *************
 
@@ -21,6 +22,7 @@ import parser.JSymbol;
 %{
     private ComplexSymbolFactory symbolFactory;
     private boolean verbose = true;
+    private List<String> output = new ArrayList();
 
     /**
    * Custom constructor to pass the verbose attribute.
@@ -41,7 +43,9 @@ import parser.JSymbol;
     }
 
     private void consolePrint(String value) {
-      System.out.println("scanning token {" + value + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".");
+      String out = "scanning token {" + value + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".";
+      output.add(out);
+      System.out.println(out);
     }
 
     private Symbol symbol(String name, int sym, Object val) {
@@ -52,6 +56,10 @@ import parser.JSymbol;
 
     private void error(String message) {
       System.out.println("Error at line " + (yyline+1) + ", column "+ (yycolumn+1) + " : "+message);
+    }
+
+    public List<String> getOutput() {
+        return output;
     }
 
 %}
