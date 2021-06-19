@@ -25,8 +25,7 @@ public class Executor extends Interpreter {
     private boolean execute = true;         // to be switched off if validation only is required (e.g. for dead if-then-else branches)
     private boolean scriptMode = false;     // allows to change behavior for script mode vs. all-at-once-execution
     private boolean printActive = false;    // indicator to switch off execution for print statements (used in script mode)
-    private int breakEvent = 0;             // counts the break statements found
-    private int breakOccurred = 0;          // counts the break statements 'executed'
+    private int breakEvent = 0;             // counts the break statements found to be executed
 
     /**
      * This method will trigger the validation for the assignment statement first.
@@ -273,8 +272,8 @@ public class Executor extends Interpreter {
     private void processStatements(Traversable node, List<Component> components) {
         if (node instanceof WhileStatement && execute) {
             while ((Boolean) getValueOfOperand(((WhileStatement) node).getCondition())) {   // while loop execution
-                if (breakEvent > breakOccurred) {           // break statement execution
-                    breakOccurred++;
+                if (breakEvent > 0) {                       // break statement execution
+                    breakEvent--;
                     break;
                 }
                 for (Component st : components) {
