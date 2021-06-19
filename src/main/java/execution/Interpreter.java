@@ -119,7 +119,14 @@ public class Interpreter extends Validator {
         if (execute && (!scriptMode || printActive)) {
             Component component = (Component) acceptor.getValue();
             if (component != null) {
-                System.out.println(">>>>  " + getValueOfOperand(component).toString().replaceAll("'", ""));
+                String value = getValueOfOperand(component).toString();
+                if (getTypeOfOperand(value) == Type.NUMERIC) {
+                    double doubleValue = Double.parseDouble(value);
+                    if (doubleValue == Math.floor(doubleValue)) {
+                        value = ((int) doubleValue) + "";
+                    }
+                }
+                System.out.println(">>>>  " + value.replaceAll("'", ""));
             } else {
                 System.out.println(">>>>  ");
             }

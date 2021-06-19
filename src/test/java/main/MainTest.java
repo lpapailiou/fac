@@ -8,7 +8,7 @@ public class MainTest {
 
     @Test
     public void testMain() throws IOException {
-        String file = "src/main/resources/while_test.txt";
+        String file = "src/main/resources/recursion.txt";
         Main.main("-o", "execute", file);
 
     }
