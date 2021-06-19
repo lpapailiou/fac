@@ -454,7 +454,7 @@ There's also a small menu available.
     Following options are available:
         -o scan
         -o parse
-        -o interpret
+        -o validate
         -o execute
     
     Optionally you may enter a file path after the option.

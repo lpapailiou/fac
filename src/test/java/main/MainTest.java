@@ -8,8 +8,8 @@ public class MainTest {
 
     @Test
     public void testMain() throws IOException {
-        String file = "jklsrc/main/resources/misc_test_1.txt";
-        Main.main("-o", "validate", file);
+        String file = "src/main/resources/while_test.txt";
+        Main.main("-o", "execute", file);
 
     }
 
