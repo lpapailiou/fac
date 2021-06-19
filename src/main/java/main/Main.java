@@ -176,6 +176,7 @@ public class Main {
      * This method executes console input after the input is confirmed by the ENTER key.
      * It will process the code accordingly. If valid, the next line may be entered. If not, the last
      * entry is rejected, and the user may retry with a new input.
+     *
      * @param code the code to process.
      * @throws Exception the exception to throw in case the code is rejected.
      */
@@ -195,6 +196,7 @@ public class Main {
 
     /**
      * This method will process code from a given file. The processing will depend on the chosen mode.
+     *
      * @param data the file path of the code.
      * @throws IOException the exception thrown in case the file path is not valid.
      */
@@ -247,6 +249,7 @@ public class Main {
 
     /**
      * This method will perform a scanning process for the complete code.
+     *
      * @param scanner the scanner to use (including reader and input).
      * @return the last token which was scanned.
      * @throws Exception the exception thrown in case of invalid code.
@@ -261,6 +264,7 @@ public class Main {
 
     /**
      * This method will perform a parsing process for the complete code.
+     *
      * @param parser the parser to use (including scanner, reader and input).
      * @return the root of the parse tree as Program instance.
      * @throws Exception the exception thrown in case of invalid code.

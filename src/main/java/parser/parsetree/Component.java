@@ -182,7 +182,8 @@ public abstract class Component implements Traversable {
 
     /**
      * Returns an if-then statement wrapper.
-     * @param condition the conditional expression.
+     *
+     * @param condition  the conditional expression.
      * @param statements the nested statements.
      * @return the if-then wrapper.
      */
@@ -195,8 +196,9 @@ public abstract class Component implements Traversable {
 
     /**
      * Returns an if-then-else statement wrapper.
-     * @param condition the conditional expression.
-     * @param ifStatements the nested if-then statements.
+     *
+     * @param condition      the conditional expression.
+     * @param ifStatements   the nested if-then statements.
      * @param elseStatements the nested else statements.
      * @return the if-then-else wrapper.
      */
@@ -210,6 +212,7 @@ public abstract class Component implements Traversable {
     /**
      * Returns a nested statement wrapper. It will wrap one statement each and form a chain with the
      * help of a pointer to the next statement.
+     *
      * @param statement the statement to wrap.
      * @return the nested statement wrapper.
      */
@@ -220,7 +223,8 @@ public abstract class Component implements Traversable {
     /**
      * Returns a nested statement wrapper. It will wrap one statement each and form a chain with the
      * help of a pointer to the next statement.
-     * @param statement the statement to wrap.
+     *
+     * @param statement     the statement to wrap.
      * @param nextStatement the next statement.
      * @return the nested statement wrapper.
      */
@@ -241,8 +245,9 @@ public abstract class Component implements Traversable {
 
     /**
      * Returns a parameter declaration wrapper.
-     * @param type the data type of the declaration.
-     * @param identifier the identifier of the declaration.
+     *
+     * @param type          the data type of the declaration.
+     * @param identifier    the identifier of the declaration.
      * @param nextParameter the next parameter declaration.
      * @return the parameter declaration wrapper.
      */
@@ -271,6 +276,7 @@ public abstract class Component implements Traversable {
 
     /**
      * Returns a program wrapper. This will be the root of the parse tree.
+     *
      * @param componentList the components (i.e. top-level statements) the program contains.
      * @return the program wrapper.
      */
@@ -340,6 +346,7 @@ public abstract class Component implements Traversable {
     /**
      * Returns an empty component list. During parse tree generation, this list will be filled with the
      * top-level statements of the code.
+     *
      * @return an empty component list.
      */
     public static LinkedList<Component> stmtList() {

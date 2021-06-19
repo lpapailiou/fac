@@ -56,6 +56,7 @@ public class Validator implements Visitor {
     /**
      * This method visits a generic component (i.e. a component which has not an own specific visit method).
      * This is a fall-through action.
+     *
      * @param acceptor the generic Component to visit.
      */
     @Override
@@ -66,6 +67,7 @@ public class Validator implements Visitor {
      * This method visits a function call statement. It will look up already declared functions with
      * matching parameter count.
      * If declared, it will check if the data types of parameters of the callee and arguments of the caller match.
+     *
      * @param acceptor the FunctionCallStatement to visit.
      */
     @Override
@@ -130,6 +132,7 @@ public class Validator implements Visitor {
 
     /**
      * This method will add the declared parameter to the variable scope.
+     *
      * @param acceptor the ParamDeclaration to visit.
      */
     @Override
@@ -153,6 +156,7 @@ public class Validator implements Visitor {
     /**
      * This method will validate for nested break statements. It will start the depth-first-traversal
      * of the parse tree to validate all program components.
+     *
      * @param acceptor the Program to visit.
      */
     @Override
@@ -164,6 +168,7 @@ public class Validator implements Visitor {
     /**
      * This method will add the variable declaration to scope. Additionally, it will validate if the declared
      * data type and the data type of the assigned value match.
+     *
      * @param acceptor the VariableDeclaration to visit.
      */
     @Override
@@ -180,6 +185,7 @@ public class Validator implements Visitor {
      * This method will visit a while statement and validate nested break statements.
      * Additionally, all local variable declarations are cleared from scope and the break statement validation
      * counter is decremented by one.
+     *
      * @param acceptor the WhileStatement to visit.
      */
     @Override
@@ -283,9 +289,10 @@ public class Validator implements Visitor {
      * statement of a statement list (otherwise there would be unreachable code).
      * Within an if-else-then component, one break statement for each body is allowed.
      * If the break statement is placed correctly, the whileDepth counter will be decreased by one.
-     * @param parent the parent parse tree component.
+     *
+     * @param parent     the parent parse tree component.
      * @param components the nested parse tree components.
-     * @param hold the indicator, if the decrease of the whileDepth counter should be executed (only relevant for if-then-else components).
+     * @param hold       the indicator, if the decrease of the whileDepth counter should be executed (only relevant for if-then-else components).
      */
     protected void checkBreakStatement(Traversable parent, List<Component> components, boolean hold) {
         for (int i = 0; i < components.size(); i++) {
@@ -481,6 +488,7 @@ public class Validator implements Visitor {
     /**
      * This method will check if a function was already defined (i.e. already in scope) or definable (i.e. possible to overwrite).
      * If no problems occur, the function definition will be added to scope.
+     *
      * @param function the function definition to add to scope.
      */
     private void addFunDeclarationToScope(FunctionDefStatement function) {
@@ -495,6 +503,7 @@ public class Validator implements Visitor {
 
     /**
      * This method checks if a matching function definition exists. The identifier, the return type and the count and types of the parameters must match.
+     *
      * @param function the function definition to check.
      * @return true if the function was already defined.
      */
@@ -516,7 +525,8 @@ public class Validator implements Visitor {
 
     /**
      * This method looks for a fitting function definition which matches a given identifier and the parameter count.
-     * @param identifier the identifier of the function.
+     *
+     * @param identifier     the identifier of the function.
      * @param parameterCount the parameter count of the function.
      * @return the function definition of the found function.
      */

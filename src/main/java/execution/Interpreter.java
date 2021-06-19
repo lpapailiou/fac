@@ -46,6 +46,7 @@ public class Interpreter extends Validator {
     /**
      * This method visits a generic component (i.e. a component which has not an own specific visit method).
      * This is a fall-through action.
+     *
      * @param acceptor the generic Component to visit.
      */
     @Override
@@ -58,6 +59,7 @@ public class Interpreter extends Validator {
      * Then, if the code is executable, it will evaluate the value of the function call. The value is not used any
      * further at this place, but in case of runtime exceptions, execution will stop accordingly.
      * This is important, as function calls can be independent statements.
+     *
      * @param acceptor the FunctionCallStatement to visit.
      */
     @Override
@@ -111,6 +113,7 @@ public class Interpreter extends Validator {
     /**
      * This method triggers the validation for this print call statement.
      * Then, depending on the current mode, the statement is executed, i.e. its resulting value is printed to the console.
+     *
      * @param acceptor the PrintCallStatement to visit.
      */
     @Override
@@ -136,6 +139,7 @@ public class Interpreter extends Validator {
     /**
      * This method triggers the top-level validation for break statements. Then it will start the depth-first traversal
      * of the parse tree for validation and execution.
+     *
      * @param acceptor the Program to visit.
      */
     @Override
@@ -163,6 +167,7 @@ public class Interpreter extends Validator {
 
     /**
      * This method will trigger the validation for this while statement.
+     *
      * @param acceptor the WhileStatement to visit.
      */
     @Override
