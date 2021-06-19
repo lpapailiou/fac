@@ -8,8 +8,8 @@ import parser.parsetree.interfaces.Visitor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The purpose of this class is to validate a parse tree for semantic correctness.
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 public class Interpreter implements Visitor {
 
-    private List<Declaration> declarationScope = new ArrayList<>();         // variable declaration context
+    private List<List<Declaration>> declarationScope = new ArrayList<>();   // variable declaration context
     private List<FunctionDefStatement> functionScope = new ArrayList<>();   // function declaration context
     private int whileDepth = 0;                                             // control counter for break statement check
 
@@ -80,6 +80,7 @@ public class Interpreter implements Visitor {
                 throw new GrammarException("Function parameters do not match with function <" + function.getIdentifier() + "(" + function.paramTypeListAsString() + ")>!");
             }
         }
+        closeCurrentScope();
     }
 
     /**
@@ -99,7 +100,7 @@ public class Interpreter implements Visitor {
             throw new TypeMismatchException("Return type <" + retType.getIdentifier() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.paramTypeListAsString() + ")> does not match defined type <" + defType.getIdentifier() + ">!");
         }
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
-        removeDeclarations(acceptor);
+        closeCurrentScope();
     }
 
     /**
@@ -112,7 +113,7 @@ public class Interpreter implements Visitor {
     public void visit(IfThenElseStatement acceptor) {
         checkBreakStatement(acceptor, acceptor.getIfStatements(), true);
         checkBreakStatement(acceptor, acceptor.getElseStatements(), false);
-        removeDeclarations(acceptor);
+        closeCurrentScope();
     }
 
     /**
@@ -124,7 +125,7 @@ public class Interpreter implements Visitor {
     @Override
     public void visit(IfThenStatement acceptor) {
         checkBreakStatement(acceptor, acceptor.getStatements(), true);
-        removeDeclarations(acceptor);
+        closeCurrentScope();
     }
 
     /**
@@ -184,7 +185,7 @@ public class Interpreter implements Visitor {
     @Override
     public void visit(WhileStatement acceptor) {
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
-        removeDeclarations(acceptor);
+        closeCurrentScope();
         if (whileDepth > 0) {
             whileDepth--;
         }
@@ -199,12 +200,10 @@ public class Interpreter implements Visitor {
      */
     private void traverse(Traversable node) {
         if (node != null) {
-            preValidate(node);
-            List<Component> components = node.getStatements();
 
-            for (Component st : components) {
-                this.traverse(st);
-            }
+            preValidate(node);
+
+            processStatements(node);
 
             if (!(node instanceof Program)) {   // the program node starts the traversal and does not have to be visited again
                 node.accept(this);
@@ -222,11 +221,60 @@ public class Interpreter implements Visitor {
      * @param node the parse tree node to pre-validate.
      */
     protected void preValidate(Traversable node) {
-        if (node instanceof WhileStatement) {
-            whileDepth++;
-        } else if (node instanceof FunctionDefStatement) {
-            addFunDeclarationToScope((FunctionDefStatement) node);
+        if (node instanceof FunctionCallStatement || node instanceof FunctionDefStatement || node instanceof IfThenStatement || node instanceof Program || node instanceof WhileStatement) {
+            openNewScope();
+
+            if (node instanceof WhileStatement) {
+                whileDepth++;
+            } else if (node instanceof FunctionDefStatement) {
+                addFunDeclarationToScope((FunctionDefStatement) node);
+            }
         }
+    }
+
+    /**
+     * This method will control the traversal of nested components of a parse tree node.
+     * Its purpose is to manage the edge case, where an if-then-else statement has two bodies,
+     * which means that it requires two inner contexts.
+     *
+     * @param node the parse tree node as parent of child nodes to traverse.
+     */
+    private void processStatements(Traversable node) {
+        if (node instanceof IfThenElseStatement) {
+            traverseStatements(((IfThenElseStatement) node).getIfStatements());
+            closeCurrentScope();
+            openNewScope();
+            traverseStatements(((IfThenElseStatement) node).getElseStatements());
+        } else {
+            traverseStatements(node.getStatements());
+        }
+    }
+
+    /**
+     * This helper method will traverse a statement list. This method should reduce duplicate code fragments.
+     *
+     * @param components the program components to traverse.
+     */
+    private void traverseStatements(List<Component> components) {
+        for (Component st : components) {
+            this.traverse(st);
+        }
+    }
+
+    /**
+     * This method will open a new variable scope. This occurs when a complex structure (e.g. an if-then statement or a while statement)
+     * is opened, so the contained nested variables will be placed in a new isolated scope.
+     */
+    protected void openNewScope() {
+        declarationScope.add(0, new ArrayList<>());
+    }
+
+    /**
+     * This method will close the current variable scope. This occurs when a complex structure (e.g. an if-then statement or a while statement)
+     * is left, so the contained nested variables will not be valid anymore in the outer context.
+     */
+    protected void closeCurrentScope() {
+        declarationScope.remove(0);
     }
 
     /**
@@ -296,6 +344,7 @@ public class Interpreter implements Visitor {
      */
     private Type getType(FunctionCallStatement operand) {
         FunctionDefStatement function = getFunction(operand.getIdentifier(), operand.getArgumentCount());
+        traverse(operand);                  // make sure function call is validated
         return function.getType();
     }
 
@@ -396,21 +445,21 @@ public class Interpreter implements Visitor {
      * @param declaration the declaration to add to scope.
      */
     protected void addDeclarationToScope(Declaration declaration) {
-        if (isVariableInScope(declaration.getIdentifier())) {
+        if (isVariableInCurrentScope(declaration.getIdentifier())) {
             throw new UniquenessViolationException("variable identifier <" + declaration.getIdentifier() + "> is already defined!");
         } else {
-            declarationScope.add(declaration);
+            declarationScope.get(0).add(declaration);
         }
     }
 
     /**
-     * This method checks if a variable declaration is already in scope by using the passed identifier.
+     * This method checks if a variable declaration is already in the current scope by using the passed identifier.
      *
      * @param identifier the identifier to check.
      * @return true if the variable was already declared.
      */
-    private boolean isVariableInScope(String identifier) {
-        Declaration declaration = declarationScope.stream().filter(dec -> dec.getIdentifier().equals(identifier)).findAny().orElse(null);
+    private boolean isVariableInCurrentScope(String identifier) {
+        Declaration declaration = declarationScope.get(0).stream().filter(dec -> dec.getIdentifier().equals(identifier)).findFirst().orElse(null);
         return declaration != null;
     }
 
@@ -422,21 +471,11 @@ public class Interpreter implements Visitor {
      * @return the matching declaration for the passed identifier.
      */
     protected Declaration getDeclaration(String identifier) {
-        Declaration declaration = declarationScope.stream().filter(dec -> dec.getIdentifier().equals(identifier)).findAny().orElse(null);
+        Declaration declaration = declarationScope.stream().flatMap(Collection::stream).filter(dec -> dec.getIdentifier().equals(identifier)).findFirst().orElse(null);
         if (declaration == null) {
             throw new MissingDeclarationException("Declaration <" + identifier + "> was never instantiated!");
         }
         return declaration;
-    }
-
-    /**
-     * This method takes a parse tree component and looks for nested variable declarations (i.e. local variables).
-     * If found, they are removed from scope.
-     * @param acceptor the parent parse tree component to remove local variables from.
-     */
-    protected void removeDeclarations(Traversable acceptor) {
-        List<Declaration> declarations = acceptor.getStatements().stream().filter(st -> st instanceof Declaration).map(st -> (Declaration) st).collect(Collectors.toList());
-        declarationScope.removeAll(declarations);
     }
 
     /**

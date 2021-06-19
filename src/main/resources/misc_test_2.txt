@@ -1,3 +1,8 @@
+
+number x = 99999999999999999999999999999999999999999999999999999999999999999999999999999999;
+print(x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x*x/2);
+
+/*
 string h = 'o';
 string e = 'p';
 number j = 4;
@@ -23,3 +28,5 @@ def number i(boolean y, number z, boolean c, boolean f) {
     n = (s == k);
     return b;
 }
+
+*/

@@ -8,7 +8,7 @@ public class CompilerTest {
 
     @Test
     public void testCompiler() throws IOException {
-        String file = "src/main/resources/misc_test_0.txt";
+        String file = "src/main/resources/misc_test_1.txt";
         Compiler.main("-o", "execute", file);
 
     }

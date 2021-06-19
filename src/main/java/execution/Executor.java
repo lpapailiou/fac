@@ -1,6 +1,5 @@
 package execution;
 
-import exceptions.UniquenessViolationException;
 import interpreter.Interpreter;
 import parser.parsetree.*;
 import parser.parsetree.interfaces.Declaration;
@@ -256,6 +255,12 @@ public class Executor extends Interpreter {
         for (Component st : validateOnlyComponents) {
             traverse(st);                                       // validation only for not executable code
         }
+
+        if (node instanceof IfThenElseStatement) {
+            closeCurrentScope();
+            openNewScope();
+        }
+
         if (switchExecutionOn) {
             execute = true;                                     // switch execution back on
         }
@@ -279,7 +284,7 @@ public class Executor extends Interpreter {
                 for (Component st : components) {
                     traverse(st);                           // execution of child components
                 }
-                removeDeclarations(node);                   // remove local variables from scope
+                closeCurrentScope();                        // remove local variables from scope
             }
         } else {
             if (node instanceof Program) {
@@ -333,34 +338,27 @@ public class Executor extends Interpreter {
      * This method will evaluate the value of a function call.
      * First it will look up the according function definition, pass the according arguments and then
      * execute the function. Finally, the value of the return statement will be returned.
-     * As function calls can be nested (i.e. in recursive calls), variable scope needs to be handled for this edge case additionally.
      *
      * @param operand the operand to evaluate.
      * @return the value of the operand.
      */
     private Object getValue(FunctionCallStatement operand) {
+        openNewScope();
         FunctionDefStatement function = getFunction(operand.getIdentifier(), operand.getArgumentCount());
         List<Component> callParams = operand.getArgumentList();
         List<Component> components = function.getStatements();
-        boolean isNestedFunctionCall = false;
         for (int i = 0; i < components.size(); i++) {
             Component stmt = components.get(i);
             if (stmt instanceof ParamDeclaration) {
                 ParamDeclaration paramDeclaration = ((ParamDeclaration) stmt);
-                try {
-                    addDeclarationToScope(paramDeclaration);
-                } catch (UniquenessViolationException e) {      // handle edge case recursion
-                    isNestedFunctionCall = true;
-                }
+                addDeclarationToScope(paramDeclaration);
                 paramDeclaration.setValue(getValueOfOperand(callParams.get(i)));
             } else {
                 traverse(stmt);
             }
         }
         Object value = getValueOfOperand(function.getReturnStatement());
-        if (!isNestedFunctionCall) {                            // handle edge case recursion
-            removeDeclarations(function);
-        }
+        closeCurrentScope();
         return value;
     }
 

@@ -1,3 +1,55 @@
+/*number x = 88;
+def string fun(number x) {
+    x += 1;
+    print(x);
+    if (x < 100) {
+        fun(x);
+    }
+    return '' + x;
+}
+
+fun(0);
+*/
+
+number x = 100;
+number a = 0;
+
+def number fun(number x) {
+
+    a += 10;
+    return x;
+}
+fun(3);
+print(fun(3));
+print('a is: ' + a);
+
+/*
+number abc = fun(77);
+
+
+number one = 1;
+number two = 7;
+print(one);
+if (true) {
+    number one = 2;
+    print(one);
+    print(two);
+    if (false) {
+        number one = 3;
+        print(one);
+        print(two);
+    } else {
+        number one = 4;
+        print(one);
+    }
+
+    print(one);
+}
+
+print(one);
+
+// -------------------------
+
 while(true) {
     number one = 0;
     one += 1;
@@ -7,7 +59,7 @@ while(true) {
     } else {
     }
     break;
-}
+}*/
 
 
 
