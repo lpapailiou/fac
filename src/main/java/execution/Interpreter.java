@@ -277,6 +277,7 @@ public class Interpreter extends Validator {
     private void processStatements(Traversable node, List<Component> components) {
         if (node instanceof WhileStatement && execute) {
             while ((Boolean) getValueOfOperand(((WhileStatement) node).getCondition())) {   // while loop execution
+                openNewScope();
                 if (breakEvent > 0) {                       // break statement execution
                     breakEvent--;
                     break;
