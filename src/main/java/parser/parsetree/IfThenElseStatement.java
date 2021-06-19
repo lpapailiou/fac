@@ -3,6 +3,7 @@ package parser.parsetree;
 import parser.parsetree.interfaces.Visitor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -84,16 +85,24 @@ public class IfThenElseStatement extends IfThenStatement {
             out += ")";
         }
         out += " {\n";
-        if (!componentList1.isEmpty()) {
-            for (Component st : componentList1) {
-                out += "\t" + st;
+        if (!componentListIf.isEmpty()) {
+            List<String> componentStrings = new ArrayList<>();
+            for (Component st : componentListIf) {
+                componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
+            }
+            for (String str : componentStrings) {
+                out += "\t" + str + "\n";
             }
         }
 
         if (!componentListElse.isEmpty()) {
             out += "} else { \n";
+            List<String> componentStrings = new ArrayList<>();
             for (Component st : componentListElse) {
-                out += "\t" + st;
+                componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
+            }
+            for (String str : componentStrings) {
+                out += "\t" + str + "\n";
             }
         }
         out += "}\n\n";

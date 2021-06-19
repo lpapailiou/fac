@@ -463,7 +463,7 @@ If a file path follows the option, this specific file will be processed. Otherwi
 Several sample files are available in the directory ``src\main\resources``.
 
 ##### Scan mode
-The Scanner will take a file and tokenize its content. The output is verbose, every processed token will be
+The scanner will take a file and tokenize its content. The output is verbose, every processed token will be
 printed accordingly to the console.
 
     // sample output

@@ -3,6 +3,7 @@ package parser.parsetree;
 import parser.parsetree.interfaces.Visitor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -67,8 +68,12 @@ public class WhileStatement extends Component {
         }
         out += " {\n";
 
+        List<String> componentStrings = new ArrayList<>();
         for (Component st : componentList) {
-            out += "\t" + st;
+            componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
+        }
+        for (String str : componentStrings) {
+            out += "\t" + str + "\n";
         }
         out += "}\n";
 

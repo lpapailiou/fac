@@ -58,8 +58,7 @@ public class NestedStatement extends Component {
      */
     @Override
     public String toString() {
-        String out = "";
-        return out;
+        return "";
     }
 
 }

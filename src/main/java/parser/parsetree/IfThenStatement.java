@@ -3,6 +3,7 @@ package parser.parsetree;
 import parser.parsetree.interfaces.Visitor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
 public class IfThenStatement extends Component {
 
     protected Object condition;
-    protected List<Component> componentList1 = new ArrayList<>();
+    protected List<Component> componentListIf = new ArrayList<>();
 
     /**
      * This constructor will wrap an if-then statement.
@@ -24,7 +25,7 @@ public class IfThenStatement extends Component {
     public IfThenStatement(Object condition, Object statementList1) {
         this.condition = condition;
         if (statementList1 != null) {
-            this.componentList1.addAll(((Component) statementList1).getStatements());
+            this.componentListIf.addAll(((Component) statementList1).getStatements());
         }
     }
 
@@ -45,8 +46,8 @@ public class IfThenStatement extends Component {
     @Override
     public List<Component> getStatements() {
         List<Component> components = new ArrayList<>();
-        if (!componentList1.isEmpty()) {
-            components.addAll(componentList1);
+        if (!componentListIf.isEmpty()) {
+            components.addAll(componentListIf);
         }
         return components;
     }
@@ -70,9 +71,13 @@ public class IfThenStatement extends Component {
             out += ")";
         }
         out += " {\n";
-        if (!componentList1.isEmpty()) {
-            for (Component st : componentList1) {
-                out += "\t" + st;
+        if (!componentListIf.isEmpty()) {
+            List<String> componentStrings = new ArrayList<>();
+            for (Component st : componentListIf) {
+                componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
+            }
+            for (String str : componentStrings) {
+                out += "\t" + str + "\n";
             }
         }
 

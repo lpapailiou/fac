@@ -3,6 +3,7 @@ package parser.parsetree;
 import parser.parsetree.interfaces.Visitor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -139,8 +140,13 @@ public class FunctionDefStatement extends Component {
         String out = "\ndef " + type.getIdentifier() + " " + identifier + "(";
         out += paramListAsString();
         out += ") {\n";
+
+        List<String> componentStrings = new ArrayList<>();
         for (Component st : componentList) {
-            out += "\t" + st.toString();
+            componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
+        }
+        for (String str : componentStrings) {
+            out += "\t" + str + "\n";
         }
 
         out += "\treturn " + returnStatement + ";\n}\n\n";
