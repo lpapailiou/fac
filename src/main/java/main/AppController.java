@@ -189,7 +189,7 @@ public class AppController implements Initializable {
                 parseTreeOut.setText(program.getParseTree());
                 codeOut.setText(program.toString());
                 executeOut.setText(interpreter.getOutput().stream().collect(Collectors.joining("\n")));
-                validationOut.setText("- lexical validation is fine\n- syntax validation is fine\n- semantic validation is fine\n- no runtime errors");
+                validationOut.setText("everything is fine :)");
                 if (opneExec) {
                     tabPane.getSelectionModel().select(3);
                 }
