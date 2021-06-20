@@ -92,6 +92,7 @@ public class AppController implements Initializable {
             if (input.getText().substring(input.getText().length() - 2).equals("\n\n")) {
                 process();
             }
+            Platform.runLater(() -> input.requestFocus());
         });
 
         lexCheck.setDisable(true);
@@ -186,7 +187,7 @@ public class AppController implements Initializable {
                 codeOut.setText(program.toString());
                 executeOut.setText(interpreter.getOutput().stream().collect(Collectors.joining("\n")));
                 validationOut.setText("- lexical validation is fine\n- syntax validation is fine\n- semantic validation is fine\n- no runtime errors");
-                tabPane.getSelectionModel().select(3);
+                //tabPane.getSelectionModel().select(3);
                 Platform.runLater(() -> executeOut.requestFocus());
             }
 
