@@ -29,6 +29,8 @@
                         <Region VBox.vgrow="ALWAYS"/>
                         <Button fx:id="theme" text="light theme" prefWidth="150.0"/>
                         <Region minHeight="10.0" prefHeight="10.0"/>
+                        <Button fx:id="split" text="orientation" prefWidth="150.0"/>
+                        <Region minHeight="10.0" prefHeight="10.0"/>
                         <Button fx:id="help" text="help" prefWidth="150.0"/>
                         <Region minHeight="10.0" prefHeight="10.0"/>
                     </children>
@@ -39,7 +41,8 @@
                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
 
                     <children>
-                        <SplitPane dividerPositions="0.5" maxHeight="Infinity" orientation="HORIZONTAL"
+                        <SplitPane fx:id="splitPane" dividerPositions="0.5" maxHeight="Infinity"
+                                   orientation="HORIZONTAL"
                                    prefHeight="2000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <items>

@@ -7,6 +7,7 @@ import java_cup.runtime.Symbol;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextArea;
@@ -41,6 +42,9 @@ public class AppController implements Initializable {
 
     @FXML
     BorderPane borderPane;
+
+    @FXML
+    SplitPane splitPane;
 
     @FXML
     TabPane tabPane;
@@ -86,6 +90,9 @@ public class AppController implements Initializable {
 
     @FXML
     Button theme;
+
+    @FXML
+    Button split;
 
     @FXML
     Button help;
@@ -286,6 +293,16 @@ public class AppController implements Initializable {
         help.setOnAction(e -> setUpDialog());
 
         initializeDemoFileSelector();
+
+        split.setOnAction(e -> {
+            if (splitPane.getOrientation() == Orientation.HORIZONTAL) {
+                splitPane.setOrientation(Orientation.VERTICAL);
+            } else {
+                splitPane.setOrientation(Orientation.HORIZONTAL);
+            }
+            splitPane.setDividerPositions(0.5);
+        });
+
     }
 
     private void initializeDemoFileSelector() {

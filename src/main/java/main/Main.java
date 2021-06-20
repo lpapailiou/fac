@@ -37,9 +37,9 @@ public class Main extends Application {
         scene.getStylesheets().add(classLoader.getResource("css/application.css").toExternalForm());
         scene.getStylesheets().add(classLoader.getResource("css/darkTheme.css").toExternalForm());
         stage.setScene(scene);
-        stage.setMinHeight(300);
+        stage.setMinHeight(400);
         stage.setMinWidth(800);
-        stage.setTitle("jlang | the toy language playground");
+        stage.setTitle("JLANG | the toy programming language playground");
         stage.getIcons().add(new Image("icon.png"));
         AppController controller = loader.getController();
         controller.initializeFileChooser(stage);
