@@ -76,7 +76,11 @@ public class FunctionCallStatement extends Component {
     public String toString() {
         String out = identifier + "(";
         for (int i = 0; i < argumentList.size(); i++) {
-            out += argumentList.get(i);
+            Component arg = argumentList.get(i);
+            out += arg;
+            if (arg instanceof FunctionCallStatement) {
+                out = out.substring(0, out.length() - 2);
+            }
             if (i != argumentList.size() - 1) {
                 out += ", ";
             }
