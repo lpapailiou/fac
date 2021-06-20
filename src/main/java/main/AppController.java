@@ -80,7 +80,10 @@ public class AppController implements Initializable {
 
 
     public void init() {
-        start.setOnAction(e -> process());
+        start.setOnAction(e -> {
+            process(true);
+            //tabPane.getSelectionModel().select(3);
+        });
         tabPane.getSelectionModel().select(3);
         scanOut.setEditable(false);
         parseTreeOut.setEditable(false);
@@ -90,7 +93,7 @@ public class AppController implements Initializable {
 
         input.textProperty().addListener((o, nv, ov) -> {
             if (input.getText().substring(input.getText().length() - 2).equals("\n\n")) {
-                process();
+                process(false);
             }
             Platform.runLater(() -> input.requestFocus());
         });
@@ -130,7 +133,7 @@ public class AppController implements Initializable {
         }
     }
 
-    private void process() {
+    private void process(boolean opneExec) {
         try (InputStream stream = new ByteArrayInputStream(input.getText().getBytes()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
 
             lexCheck.setSelected(true);
@@ -187,7 +190,9 @@ public class AppController implements Initializable {
                 codeOut.setText(program.toString());
                 executeOut.setText(interpreter.getOutput().stream().collect(Collectors.joining("\n")));
                 validationOut.setText("- lexical validation is fine\n- syntax validation is fine\n- semantic validation is fine\n- no runtime errors");
-                //tabPane.getSelectionModel().select(3);
+                if (opneExec) {
+                    tabPane.getSelectionModel().select(3);
+                }
                 Platform.runLater(() -> executeOut.requestFocus());
             }
 
