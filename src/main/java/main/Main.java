@@ -31,11 +31,12 @@ public class Main extends Application {
         Parent root = loader.load();
         Scene scene = new Scene(root, 1600, 800);
         scene.getStylesheets().add(classLoader.getResource("css/application.css").toExternalForm());
-        scene.getStylesheets().add(classLoader.getResource("css/lightTheme.css").toExternalForm());
+        scene.getStylesheets().add(classLoader.getResource("css/darkTheme.css").toExternalForm());
         //scene.setFill();
         stage.setScene(scene);
         stage.setTitle("jlang | the toy language playground");
         stage.getIcons().add(new Image("icon.png"));
+        ((AppController) loader.getController()).setUpFileChooser(stage);
         stage.show();
     }
 

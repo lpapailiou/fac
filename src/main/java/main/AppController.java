@@ -4,21 +4,19 @@ import exceptions.GrammarException;
 import exceptions.ScanException;
 import execution.Interpreter;
 import java_cup.runtime.Symbol;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import parser.JParser;
 import parser.parsetree.Program;
-import scanner.JScanner;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
-import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -56,8 +54,24 @@ public class AppController implements Initializable {
     @FXML
     Button start;
 
+    @FXML
+    CheckBox lexCheck;
+
+    @FXML
+    CheckBox parseCheck;
+
+    @FXML
+    CheckBox validationCheck;
+
+    @FXML
+    Button upload;
+
+    @FXML
+    ToggleButton theme;
+
     private static final String ENCODING = "UTF-8";
     private static final Logger LOG = Logger.getLogger(String.class.getName());
+    private FileChooser fileChooser = new FileChooser();
     private static final Scanner SCANNER = new Scanner(System.in);
     private static Option option = Option.CONSOLE;
     private static String defaultFilePath = "samples/hello_world.txt";
@@ -67,13 +81,61 @@ public class AppController implements Initializable {
 
     public void init() {
         start.setOnAction(e -> process());
-        input.setText("def number fun(number x, number xx) { number a = 3; return x + 1; }" +
-                "print(fun(7,7));");
+        tabPane.getSelectionModel().select(3);
+        scanOut.setEditable(false);
+        parseTreeOut.setEditable(false);
+        codeOut.setEditable(false);
+        executeOut.setEditable(false);
+        validationOut.setEditable(false);
+
+        input.textProperty().addListener((o, nv, ov) -> {
+            if (input.getText().substring(input.getText().length() - 2).equals("\n\n")) {
+                process();
+            }
+        });
+
+        lexCheck.setDisable(true);
+        parseCheck.setDisable(true);
+        validationCheck.setDisable(true);
+
     }
 
+    public void setUpFileChooser(Stage stage) {
+        if (stage == null) {
+            return;
+        }
+        upload.setOnAction(ev -> {
+            File file = fileChooser.showOpenDialog(stage);
+            uploadFile(file);
+        });
+    }
+
+    private void uploadFile(File file) {
+        if (file != null) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
+                StringBuilder text = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    text.append(line);
+                    text.append("\n");
+                }
+
+                input.setText(text.toString());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private void process() {
         try (InputStream stream = new ByteArrayInputStream(input.getText().getBytes()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
+
+            lexCheck.setSelected(true);
+            parseCheck.setSelected(true);
+            validationCheck.setSelected(true);
+
 
             Program program = null;
             Interpreter interpreter = null;
@@ -92,15 +154,23 @@ public class AppController implements Initializable {
                 if (e instanceof GrammarException) {
                     err = "Parsed code semantically not valid (" + e.getLocalizedMessage() + ")!";
                     LOG.log(Level.WARNING, err);
+                    validationCheck.setSelected(false);
                 } else {
-                    err = "Parsed code syntax not valid!\n" + Arrays.toString(e.getStackTrace());
+
+                    StringWriter stackTraceWriter = new StringWriter();
+                    e.printStackTrace(new PrintWriter(stackTraceWriter));
+                    err = "Parsed code syntax not valid!\n" + stackTraceWriter.toString();
                     LOG.log(Level.WARNING, "Parsed code syntax not valid!");
-                    e.printStackTrace();
+                    validationCheck.setSelected(false);
+                    parseCheck.setSelected(false);
                 }
             } catch (Error e) {
                 Throwable t = new ScanException(e.getMessage(), e);
                 err = "Scanned code not valid (" + t.getLocalizedMessage() + ")!";
                 LOG.log(Level.WARNING, "Scanned code not valid (" + t.getLocalizedMessage() + ")!");
+                lexCheck.setSelected(false);
+                parseCheck.setSelected(false);
+                validationCheck.setSelected(false);
             }
 
             if (!err.equals("")) {
@@ -110,12 +180,14 @@ public class AppController implements Initializable {
                 executeOut.setText("");
                 validationOut.setText(err);
                 tabPane.getSelectionModel().select(4);
+                Platform.runLater(() -> validationOut.requestFocus());
             } else {
                 parseTreeOut.setText(program.getParseTree());
                 codeOut.setText(program.toString());
                 executeOut.setText(interpreter.getOutput().stream().collect(Collectors.joining("\n")));
                 validationOut.setText("- lexical validation is fine\n- syntax validation is fine\n- semantic validation is fine\n- no runtime errors");
                 tabPane.getSelectionModel().select(3);
+                Platform.runLater(() -> executeOut.requestFocus());
             }
 
         } catch (IOException e) {
@@ -123,17 +195,7 @@ public class AppController implements Initializable {
         }
     }
 
-
-    private static Program getProgram(JScanner scanner) throws Exception {
-        Symbol root = null;
-        while (!scanner.yyatEOF()) {
-            root = scanner.next_token();
-        }
-        return (Program) root.value;
-    }
-
-
-    private static Program getProgram(JParser parser) throws Exception {
+    private Program getProgram(JParser parser) throws Exception {
         Symbol root = null;
         while (!parser.yyatEOF()) {
             root = parser.parse();
@@ -145,7 +207,13 @@ public class AppController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         init();
-        tabPane.getSelectionModel().select(3);
-        input.requestFocus();
+        try (InputStream in = AppController.class.getClassLoader().getResourceAsStream("samples/hello_world.txt")) {
+            File file = new File("output.txt");
+            Files.copy(in, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            uploadFile(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Platform.runLater(() -> input.requestFocus());
     }
 }

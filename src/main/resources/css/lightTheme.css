@@ -3,7 +3,7 @@
     -fx-text-fill: black; /* no idea but seems important */
     -fx-text-background-color: black; /* text in combobox */
     -fx-control-inner-background: rgba(255, 255, 255, 0.45); /* combobox list background */
-    -fx-accent: white; /* combobox selected background */
+    -fx-accent: white; /* selection marker */
     -fx-focus-color: #c71585; /* focus color */
 
     -fx-hover-base: #c71585; /* hover */
@@ -22,39 +22,51 @@
     -fx-text-fill: black;
 }
 
+.text-area {
+    -fx-highlight-fill: #ffc2cd22;
+    -fx-highlight-text-fill: #c71585;
+}
+
 .tooltip {
     -fx-text-fill: -fx-focus-color;
 }
 
-#baseControls, #neuralNetworkControls, #actionControls, #statisticControls {
-    -fx-border-color: darkgray;
+.tab-pane .tab {
+    -fx-background-color: -fx-faint-focus-color;
 }
 
-#baseControlsLabel, #neuralNetworkControlsLabel, #actionControlsLabel, #statisticControlsLabel {
-    -fx-text-fill: darkgray;
-    -fx-background-color: white;
+.tab-pane .tab:selected {
+    -fx-background-color: -fx-base;
+}
+
+.tab .tab-label {
+    -fx-text-fill: #828282;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: -fx-focus-color;
 }
 
 /* ------------------------- flat design from here ------------------------- */
 
-.combo-box-base, .button, .radio-button .radio {
+.combo-box-base, .button, .radio-button .radio, .check-box .mark {
     -fx-background-color: -fx-base, -fx-text-fill, -fx-base, -fx-base;
 }
 
-.combo-box-base:hover, .button:hover, .radio-button:hover .radio {
+.combo-box-base:hover, .button:hover, .radio-button:hover .radio, .check-box:hover .mark {
     -fx-background-color: -fx-base, -fx-text-fill, -fx-base, -fx-base;
     -fx-color: -fx-hover-base;
 }
 
-.combo-box-base:showing, .button:showing, .radio-button:showing .radio {
+.combo-box-base:showing, .button:showing, .radio-button:showing .radio, .check-box:showing .mark {
     -fx-color: -fx-pressed-base;
 }
 
-.combo-box-base:focused, .button:focused {
+.combo-box-base:focused, .button:focused, .checkbox-base:focused {
     -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
 }
 
-.radio-button:focused > .radio {
+.radio-button:focused > .radio, .check-box:focused > .mark {
     -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
 }
 

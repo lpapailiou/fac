@@ -1,21 +1,63 @@
 .root {
     -fx-font-size: 11pt;
-    -fx-background-color: transparent;
+    -fx-background-color: -fx-base;
     -fx-font-family: "Courier New";
 }
 
-.radio-button, .combo-box {
+.radio-button, .combo-box, .check-box {
     -fx-alignment: center-left;
     -fx-font-size: 10pt;
     -fx-cursor: hand;
 }
 
-.radio-button .radio {
+.check-box:disabled {
+    -fx-opacity: 1.0;
+}
+
+.radio-button .radio, .check-box .mark {
     -fx-border-width: 0px;
-    -fx-border-radius: 8px;
+    -fx-border-radius: 12px;
     -fx-background-radius: 2.0em;
     -fx-padding: 0.2em;
     -fx-cursor: hand;
+}
+
+.text-area {
+    -fx-border-radius: 5 5 0 0;
+    -fx-background-radius: 5 5 0 0;
+}
+
+.split-pane:horizontal > .split-pane-divider {
+    -fx-background-color: transparent;
+}
+
+.split-pane:vertical > .split-pane-divider {
+    -fx-background-color: transparent;
+}
+
+.split-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+
+.tab-pane {
+    -fx-tab-min-width: 90px;
+}
+
+.tab {
+    -fx-background-insets: 0 1 0 1, 0, 0;
+}
+
+.tab .tab-label {
+    -fx-alignment: CENTER;
+}
+
+.tab:selected .tab-label {
+    -fx-alignment: CENTER;
 }
 
 .radio-button .dot {
@@ -37,21 +79,6 @@
     -fx-font-size: 12pt;
 }
 
-#baseControls, #neuralNetworkControls, #actionControls, #statisticControls {
-    -fx-padding: 10, 10, 10, 10;
-    -fx-border-width: 1.5;
-    -fx-border-radius: 4;
-}
-
-#baseControlsLabel, #neuralNetworkControlsLabel, #actionControlsLabel, #statisticControlsLabel {
-    -fx-font-style: italic;
-    -fx-padding: 4;
-    -fx-translate-y: -25;
-}
-
-#hbox1, #hbox2, #hbox3, #hbox4, #hbox5, #neuralNetworkStack, #hiddenLayerConfiguration {
-    -fx-translate-y: -20;
-}
 
 #baseControlsLabel:disabled, #neuralNetworkControlsLabel:disabled, #actionControlsLabel:disabled, #statisticControlsLabel:disabled {
     -fx-opacity: 1.0;
@@ -77,7 +104,7 @@
 
 /* ------------------------- flat design from here ------------------------- */
 
-.combo-box-base, .button, .radio-button .radio {
+.combo-box-base, .button, .radio-button .radio, .check-box .box {
     -fx-background-color: -fx-base, -fx-body-color, -fx-base, -fx-base;
 }
 
@@ -86,13 +113,30 @@
     -fx-background-color: -fx-hover-base;
 }
 
+.check-box .box {
+    -fx-background-color: -fx-base;
+    -fx-border-color: -fx-base;
+    -fx-border-radius: 3px;
+    -fx-border-width: 1px;
+}
+
+.check-box:selected > .box > .mark,
+.check-box:indeterminate > .box > .mark {
+    /* modify mark color */
+    -fx-background-color: -fx-focus-color;
+}
+
+.box {
+    -fx-background-color: -fx-base;
+}
+
 .combo-box-base:showing, .button:showing, .radio-button:showing .radio {
     -fx-color: -fx-pressed-base;
     -fx-background-color: -fx-pressed-base;
 }
 
-.combo-box-base:focused, .button:focused {
-    -fx-background-color: -fx-pressed-base;
+.combo-box-base:focused, .button:focused, .radio-button-base:focused {
+    /*-fx-background-color: -fx-pressed-base;*/
     -fx-background-radius: 6.4, 4, 5, 3;
     -fx-background-insets: -1.4, 0, 1, 2;
 }
@@ -102,13 +146,13 @@
     -fx-background-insets: -1.4, 0, 1, 2;
 }
 
-.combo-box-base:pressed, .button:pressed, .radio-button:pressed .radio {
+.combo-box-base:pressed, .button:pressed, .radio-button:pressed .radio, .check-box:pressed .mark {
     -fx-color: -fx-pressed-base;
     -fx-background-color: -fx-pressed-base;
 }
 
-.combo-box-base:disabled, .text-field:disabled, .button:disabled, .radio-button:disabled {
-    -fx-opacity: .4;
+.combo-box-base:disabled, .text-field:disabled, .button:disabled, .radio-button:disabled, .check-box:disabled {
+    -fx-opacity: 1.0;
     -fx-cursor: default;
 }
 
