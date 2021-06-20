@@ -1,4 +1,3 @@
-
 number one = 1;
 number two = 2;
 
@@ -20,12 +19,3 @@ while (one < 5) {
     }
 
 }
-
-
-
-
-
-
-
-
-

@@ -17,10 +17,14 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     public static void main(String... args) {
-        if (System.console() != null) {
-            Console.startTerminal(args);
-        } else {
-            launch(args);
+        try {
+            if (System.console() != null) {
+                Console.startTerminal(args);
+            } else {
+                launch(args);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -32,11 +36,14 @@ public class Main extends Application {
         Scene scene = new Scene(root, 1600, 800);
         scene.getStylesheets().add(classLoader.getResource("css/application.css").toExternalForm());
         scene.getStylesheets().add(classLoader.getResource("css/darkTheme.css").toExternalForm());
-        //scene.setFill();
         stage.setScene(scene);
+        stage.setMinHeight(300);
+        stage.setMinWidth(800);
         stage.setTitle("jlang | the toy language playground");
         stage.getIcons().add(new Image("icon.png"));
-        ((AppController) loader.getController()).setUpFileChooser(stage);
+        AppController controller = loader.getController();
+        controller.initializeFileChooser(stage);
+        controller.initializeThemeControl(stage);
         stage.show();
     }
 

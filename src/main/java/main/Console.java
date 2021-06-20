@@ -17,11 +17,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This is the main class of this application. Its purpose is to start code processing.
- * The Main can be run in different modes.
- * After processing, the program will remain running. A small menu allows to change mode and continue processing.
+ * This class is responsible for the execution of this program in the terminal.
+ * It will stay in a loop and provide multiple options to process code until the user decides to quit the program.
  */
-public class Console {
+class Console {
 
     private static final String ENCODING = "UTF-8";
     private static final Logger LOG = Logger.getLogger(String.class.getName());
@@ -32,7 +31,7 @@ public class Console {
     private static String cache;
 
     /**
-     * The program can be started in different modes. The modes can be passed as arguments.
+     * The console can be started in different modes. The modes can be passed as arguments.
      * Options:
      * <code>-o scan</code>: scan a code to for lexical validation.
      * <code>-o parse</code>: parse a code for syntactical validation.
@@ -43,9 +42,9 @@ public class Console {
      * will be processed.
      * If no arguments are given at all, console mode will be started immediately.
      *
-     * @param args
+     * @param args the arguments passed to start the console mode.
      */
-    public static void startTerminal(String... args) {
+    static void startTerminal(String... args) {
         if (args != null) {
             cache = Arrays.toString(args).replaceAll("\\[", "").replaceAll("]", "").replaceAll(",", "");
         }

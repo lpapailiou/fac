@@ -1,0 +1,11 @@
+number x = 100;
+number a = 0;
+
+def number fun(number x) {
+
+    a += 10;
+    return x;
+}
+fun(3);
+print(fun(3));
+print('a is: ' + a);

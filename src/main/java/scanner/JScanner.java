@@ -128,13 +128,13 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     private static final int[] ZZ_ACTION = zzUnpackAction();
 
     private static final String ZZ_ACTION_PACKED_0 =
-            "\1\1\1\2\1\1\1\3\1\4\2\2\1\5\1\6" +
+            "\1\0\1\1\1\2\1\3\1\4\2\1\1\5\1\6" +
                     "\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16" +
-                    "\1\17\1\20\14\21\1\22\1\2\1\23\1\24\1\25" +
+                    "\1\17\1\20\14\21\1\22\1\1\1\23\1\24\1\25" +
                     "\1\26\1\0\1\27\1\30\1\31\1\32\1\33\1\34" +
                     "\2\0\1\35\1\0\1\36\1\37\1\40\6\21\1\41" +
-                    "\6\21\1\42\2\0\1\1\1\14\2\21\1\43\10\21" +
-                    "\1\0\1\1\2\21\1\44\4\21\1\45\2\21\1\46" +
+                    "\6\21\1\42\2\0\1\2\1\14\2\21\1\43\10\21" +
+                    "\1\0\1\2\2\21\1\44\4\21\1\45\2\21\1\46" +
                     "\1\21\1\47\2\21\1\50\1\21\1\51\1\52\1\53" +
                     "\1\54";
 
@@ -302,7 +302,7 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     private static final int[] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
     private static final String ZZ_ATTRIBUTE_PACKED_0 =
-            "\1\1\1\11\5\1\2\11\2\1\1\11\3\1\1\11" +
+            "\1\0\1\11\5\1\2\11\2\1\1\11\3\1\1\11" +
                     "\17\1\1\11\1\1\4\11\1\0\6\11\2\0\1\11" +
                     "\1\0\3\11\15\1\1\11\2\0\1\11\14\1\1\0" +
                     "\26\1";
@@ -439,7 +439,7 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
 
     private Symbol symbol(String name, int sym, Object val) {
         Location left = new Location(yyline + 1, (int) yycolumn + 1, (int) yychar);
-        Location right = new Location(yyline + 1, (int) (yycolumn + yylength()), (int) (yychar + yylength()));
+        Location right = new Location(yyline + 1, (int) (yycolumn + yylength()), (int)(yychar+yylength()));
         return symbolFactory.newSymbol(name, sym, left, right, val);
     }
 
@@ -861,13 +861,13 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
                 }
             } else {
                 switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
-                    case 1: { /* ignore */
+                    case 1: {
+                        throw new Error("Illegal character <" + yytext() + ">");
                     }
                     // fall through
                     case 45:
                         break;
-                    case 2: {
-                        throw new Error("Illegal character <" + yytext() + ">");
+                    case 2: { /* ignore */
                     }
                     // fall through
                     case 46:
@@ -1106,16 +1106,15 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
                     // fall through
                     case 85:
                         break;
-                    case 42: {
-                        return collectToken(RETURN, "RETURN");
-                    }
-                    // fall through
-                    case 86:
-                        break;
-                    case 43: {
-                        return collectToken(STRTYPE, "STRTYPE");
-                    }
-                    // fall through
+          case 42:
+            { return collectToken(RETURN, "RETURN");
+            }
+            // fall through
+          case 86: break;
+          case 43:
+            { return collectToken(STRTYPE, "STRTYPE");
+            }
+            // fall through
           case 87: break;
           case 44:
             { return collectToken(BOOLTYPE, "BOOLTYPE");

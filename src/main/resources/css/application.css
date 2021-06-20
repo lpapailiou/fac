@@ -66,12 +66,11 @@
 }
 
 .text-field, .combo-box {
-    -fx-min-height: 26;
-    -fx-max-height: 26;
+
 }
 
 .combo-box .list-cell {
-    -fx-translate-y: -2px;
+    -fx-translate-y: 0px;
     -fx-cursor: hand;
 }
 
@@ -120,6 +119,10 @@
     -fx-border-width: 1px;
 }
 
+.check-box > .box > .mark {
+    -fx-font-size: 24;
+}
+
 .check-box:selected > .box > .mark,
 .check-box:indeterminate > .box > .mark {
     /* modify mark color */
@@ -136,7 +139,7 @@
 }
 
 .combo-box-base:focused, .button:focused, .radio-button-base:focused {
-    /*-fx-background-color: -fx-pressed-base;*/
+    -fx-background-color: -fx-pressed-base;
     -fx-background-radius: 6.4, 4, 5, 3;
     -fx-background-insets: -1.4, 0, 1, 2;
 }

@@ -6,7 +6,7 @@
             AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.AppController">
     <children>
-        <BorderPane maxHeight="Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+        <BorderPane fx:id="borderPane" maxHeight="Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <top>
                 <Region prefHeight="10.0" minHeight="10.0"></Region>
@@ -23,10 +23,13 @@
                                 <CheckBox fx:id="lexCheck" text="lexical check"/>
                                 <CheckBox fx:id="parseCheck" text="syntax check"/>
                                 <CheckBox fx:id="validationCheck" text="semantics check"/>
+                                <CheckBox fx:id="runtimeCheck" text="runtime check"/>
                             </children>
                         </VBox>
                         <Region VBox.vgrow="ALWAYS"/>
-                        <ToggleButton fx:id="theme"/>
+                        <Button fx:id="theme" text="light theme" prefWidth="150.0"/>
+                        <Region minHeight="10.0" prefHeight="10.0"/>
+                        <Button fx:id="help" text="help" prefWidth="150.0"/>
                         <Region minHeight="10.0" prefHeight="10.0"/>
                     </children>
                 </VBox>
@@ -47,11 +50,13 @@
                                               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                                               AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <HBox maxHeight="38.0" minHeight="38.0">
+                                                <HBox maxHeight="38.0" minHeight="38.0" spacing="10.0">
                                                     <children>
                                                         <Button fx:id="upload" alignment="CENTER"
                                                                 mnemonicParsing="false" prefWidth="150.0"
                                                                 text="upload"/>
+                                                        <ComboBox fx:id="demoFiles" prefWidth="250.0" prefHeight="29.0"
+                                                                  minHeight="29.0"></ComboBox>
                                                     </children>
                                                 </HBox>
                                                 <TextArea fx:id="input" layoutX="-.0" layoutY="-1.0" prefHeight="2000.0"
@@ -140,7 +145,8 @@
                                                                     AnchorPane.rightAnchor="0.0"
                                                                     AnchorPane.topAnchor="0.0">
                                                             <children>
-                                                                <TextArea fx:id="validationOut" layoutY="-2.0"
+                                                                <TextArea fx:id="validationOut" wrapText="true"
+                                                                          layoutY="-2.0"
                                                                           AnchorPane.bottomAnchor="0.0"
                                                                           AnchorPane.leftAnchor="0.0"
                                                                           AnchorPane.rightAnchor="0.0"

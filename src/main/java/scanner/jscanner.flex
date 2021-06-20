@@ -91,7 +91,7 @@ NUM = -?[0-9]\d*(\.\d+)?                // decimal/int number, positive or negat
 VAR = [a-z_]+([0-9])*                   // variables
 STR = '[a-z0-9_\,\.\(\)\;\:\/\+\-\*\/ \s\t\f\r\n]*'   // strings
 
-WHITESPACE = [ \t\f\r\n]*               // newline or spaces
+WHITESPACE = [ \t\f\r\n]+               // newline or spaces
 
 ERR = [^]                               // fallback
 

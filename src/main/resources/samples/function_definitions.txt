@@ -1,0 +1,8 @@
+def number fun() { return 1; }      // valid (minimal example)
+//boolean fun() { return x; }       // parser fails, as def keyword is missing
+//def fun() { return 1 + 1; }       // parser fails, as data type is missing
+//def string fun() { }              // parser fails, as return keyword is missing
+def boolean f1(string x) {          // valid
+    print(x);
+    return x;
+}

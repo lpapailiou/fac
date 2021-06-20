@@ -1,13 +1,13 @@
 * {
     -fx-base: rgba(43, 43, 43, 1); /* combobox color */
     -fx-text-fill: rgba(186, 186, 186, 1); /* no idea but seems important */
-    -fx-text-background-color: -fx-text-fill; /* text in combobox */
+    -fx-text-background-color: rgba(186, 186, 186, 1); /* text in combobox */
     -fx-control-inner-background: rgba(255, 255, 255, 0.01); /* combobox list background */
     -fx-accent: -fx-base; /* selection marker */
     -fx-focus-color: #c71585; /* focus color */
 
     -fx-hover-base: #c71585; /* hover */
-    -fx-color: rgba(255, 255, 255, 0.69); /* outer border for list cell */
+    -fx-color: -fx-base; /* outer border for list cell */
     -fx-pressed-base: #c71585; /* control pressed */
     -fx-body-color: -fx-base; /* inactive frame */
 
@@ -20,6 +20,10 @@
 
 .label {
     -fx-text-fill: -fx-text-fill;
+}
+
+.dialog-pane .label {
+    -fx-text-fill: rgba(186, 186, 186, 1);
 }
 
 .text-area {
