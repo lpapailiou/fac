@@ -619,7 +619,7 @@ The mini-IDE has also a little 'action area', which should improve usability.
 
 ![action area](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_actionarea.png) 
 
-The code processing can be triggered at once by pushing the button 'go'. As soon as the input is
+The code processing can be triggered at once by pushing the button ``go``. As soon as the input is
 validated, check marks will indicate if the processing was successful, or - if not - where the problem occurred.  
 
 Additionally, there are minor features:
