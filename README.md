@@ -1,7 +1,10 @@
 # FAC
 This repository connects the two theoretical computer science disciplines ``formal languages`` and ``automatons`` with
 the rather technical discipline of ``compiler construction`` (<b>F.A.C.</b>).  
-The goal is to specify a new programming language, which is deterministic and executable.
+The goal is to specify a new programming language, which is deterministic and executable.  
+  
+This project contains the language specification, as well as possibilities to execute the toy-language from
+the terminal or from a mini-IDE.
 
 ![jlang](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_gui.png)
 
@@ -561,17 +564,21 @@ The mini-IDE is implemented with javafx, which may be a restriction depending on
 
 #### Code input
 There are multiple options to input code.  
-You may enter code directly to the text area on the left hand side. Alternatively, you may upload
-a file or choose a simple file provided by a combobox.  
+You may enter code directly to the primary text area. Alternatively, you may upload
+a file or choose a simple file provided by the according combobox.  
+  
+![input](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_input.png)  
   
 If code is entered manually and the code ends with two newlines, the code will be processed dynamically while
 you are entering.
 
-#### Results
-The secondary area will show the results of the processing of your code. The visualization is organized in tabs.
-The tabs show following:  
+#### Execution
+The secondary area is split up in multiple tabs. It will show the results of the processing of your code. 
+  
+![tabs](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_tabs.png)  
+  
 <ul>
-<li>The scanned tokens</li>
+<li>The scanned tokens.</li>
 <li>The generated parse tree (which is not equal to the real parse tree, but in 'human readable format').</li>
 <li>The parsed code (e.g. the parser repeats what he thinks he was reading).</li>
 <li>The result of the execution.</li>
