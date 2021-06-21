@@ -571,7 +571,7 @@ you are entering.
 The secondary area will show the results of the processing of your code. The visualization is organized in tabs.
 The tabs show following:  
 <ul>
-<li>The scanned tokesn</li>
+<li>The scanned tokens</li>
 <li>The generated parse tree (which is not equal to the real parse tree, but in 'human readable format').</li>
 <li>The parsed code (e.g. the parser repeats what he thinks he was reading).</li>
 <li>The result of the execution.</li>
