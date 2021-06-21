@@ -328,7 +328,6 @@ public class AppController implements Initializable {
         Optional<String> result = dialog.showAndWait();
 
         result.ifPresent(r -> borderPane.setEffect(null));
-
         if (!result.isPresent()) {
             borderPane.setEffect(null);
         } else {

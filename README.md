@@ -463,7 +463,7 @@ There's also a small menu available which provides some orientation:
     Following options are available:
         -o scan
         -o parse
-        -o validate
+        -o validate 
         -o execute
         -o gui          // with this method, the javafx gui is launched        
     
