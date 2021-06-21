@@ -572,6 +572,8 @@ a file or choose a simple file provided by the according combobox. The available
   
 If the input is validated and turns out to be invalid, the invalid section will be highlighted.  
   
+![text highlight](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_highlight.png)   
+  
 If code is edited manually and the code ends with two newlines, the code will be processed dynamically while
 you are typing.  
 In this case, the tabs won't switch automatically, so you can observe the tab of your choice.  Also,
