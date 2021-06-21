@@ -555,7 +555,7 @@ The jar file must be started by double click or without arguments within the ter
 
     java -jar fac.jar
 
-The mini-IDE is implemented with javafx, which may be a restriction depending on the version you use.
+The mini-IDE is implemented with javafx, which may be a restriction depending on the java version you use.
 
 ![jlang](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_gui.png)
 
