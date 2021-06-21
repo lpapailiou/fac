@@ -570,8 +570,8 @@ a file or choose a simple file provided by the according combobox. The available
   
 ![input](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_input.png)  
   
-If code is entered manually and the code ends with two newlines, the code will be processed dynamically while
-you are entering.
+If code is edited manually and the code ends with two newlines, the code will be processed dynamically while
+you are typing.
 
 #### Execution
 The secondary area is split up in multiple tabs. It will show the results of the processing of your code in
