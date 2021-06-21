@@ -15,9 +15,9 @@ The goal is to specify a new programming language, which is deterministic and ex
 2. [Repository handling](#repository-handling)  
 	2.1 [Clone](#clone)   
 	2.2 [Package structure](#package-structure)   
-	2.3 [Run with console](#run-with-console)  
-	2.4 [Run with gui](#run-with-gui)  	
-	2.5 [Generate](#generate)  	
+	2.3 [Run with console](#run-with-console)    
+	2.4 [Run with gui](#run-with-gui)  	  
+	2.5 [Generate](#generate)  	  
 
 ## Language design
 In this section, the language design will be documented with its rules and a few examples. 
