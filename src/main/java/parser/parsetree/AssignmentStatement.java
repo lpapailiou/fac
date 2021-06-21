@@ -2,9 +2,6 @@ package parser.parsetree;
 
 import parser.parsetree.interfaces.Visitor;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * This is a wrapper class for assignment statements.
  * Its instances will hold an assignment operator, an identifier and an assigned value.
@@ -78,7 +75,7 @@ public class AssignmentStatement extends Component {
         out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
         out += "\t+ " + "IDENTIFIER" + "\n\t+ " + "OPERATOR" + "\n";
         if (value instanceof Component) {
-            List<String> components = Arrays.asList(((Component) value).getParseTree().split("\n"));
+            String[] components = ((Component) value).getParseTree().split("\n");
             for (String str : components) {
                 out += "\t" + str + "\n";
             }

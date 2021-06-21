@@ -445,7 +445,7 @@ Below, the structure of the package tree is listed for better overview.
                 + samples                   // code sample files
 
 ### Run with console
-By default, a start within the IDE or by a double click on the jar file, the [graphic user interface](#start-with-gui) will be launched.  
+By default, a start within the IDE or by a double click on the jar file, the [graphic user interface](#run-with-gui) will be launched.  
 The console mode can be started, if the jar file is started from within the command line of your os.
 The restriction is, that an additional argument must be used.  
   

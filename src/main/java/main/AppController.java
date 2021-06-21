@@ -271,7 +271,7 @@ public class AppController implements Initializable {
         start.setOnAction(e -> process(true));
 
         help.setOnAction(e -> {
-            String url = "https://github.com/lpapailiou/fac#readme";        // TODO: set correct pointer
+            String url = "https://github.com/lpapailiou/fac#run-with-gui";
             try {
                 URI uri = new URI(url);
                 Desktop.getDesktop().browse(uri);

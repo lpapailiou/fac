@@ -167,7 +167,7 @@ public class FunctionDefStatement extends Component {
         out += "\t+ " + "IDENTIFIER" + "\n";
         out += "\t+ " + "PARAMETER" + "\n";
         for (Component c : paramDeclarationList) {
-            List<String> components = Arrays.asList((c).getParseTree().split("\n"));
+            String[] components = (c).getParseTree().split("\n");
             for (String str : components) {
                 out += "\t\t " + str + "\n";
             }
@@ -175,7 +175,7 @@ public class FunctionDefStatement extends Component {
         if (!componentList.isEmpty()) {
             out += "\t+ " + "BODY" + "\n";
             for (Component c : componentList) {
-                List<String> components = Arrays.asList((c).getParseTree().split("\n"));
+                String[] components = (c).getParseTree().split("\n");
                 for (String str : components) {
                     out += "\t\t " + str + "\n";
                 }
@@ -183,7 +183,7 @@ public class FunctionDefStatement extends Component {
         }
 
         out += "\t+ " + "RETURN" + "\n";
-        List<String> returnStat = Arrays.asList((((Component) returnStatement)).getParseTree().split("\n"));
+        String[] returnStat = (((Component) returnStatement)).getParseTree().split("\n");
         for (String str : returnStat) {
             out += "\t\t " + str + "\n";
         }
