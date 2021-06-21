@@ -4,7 +4,7 @@ the rather technical discipline of ``compiler construction`` (<b>F.A.C.</b>).
 The goal is to specify a new programming language, which is deterministic and executable.  
   
 This project contains the language specification, as well as possibilities to execute the toy-language from
-the terminal or from a mini-IDE.
+the terminal or from a mini-IDE (implemented with ``javafx``).
 
 ![jlang](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_gui.png)
 
@@ -480,6 +480,7 @@ The scanner will take a file and tokenize its content. The output is verbose, ev
 printed accordingly to the console.
 
     // sample output
+    [...]
     scanning token {NUMTYPE}: found match <number> at line 1, column 0.
     scanning token {VAR}: found match <one> at line 1, column 7.
     scanning token {EQUAL}: found match <=> at line 1, column 11.
@@ -565,7 +566,7 @@ The mini-IDE is implemented with javafx, which may be a restriction depending on
 #### Code input
 There are multiple options to input code.  
 You may enter code directly to the primary text area. Alternatively, you may upload
-a file or choose a simple file provided by the according combobox.  
+a file or choose a simple file provided by the according combobox. The available demo files are the ones from the directory ``src\main\resources\samples``.  
   
 ![input](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_input.png)  
   
@@ -573,25 +574,58 @@ If code is entered manually and the code ends with two newlines, the code will b
 you are entering.
 
 #### Execution
-The secondary area is split up in multiple tabs. It will show the results of the processing of your code. 
+The secondary area is split up in multiple tabs. It will show the results of the processing of your code in
+the order of processing.   
   
 ![tabs](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_tabs.png)  
   
-<ul>
-<li>The scanned tokens.</li>
-<li>The generated parse tree (which is not equal to the real parse tree, but in 'human readable format').</li>
-<li>The parsed code (e.g. the parser repeats what he thinks he was reading).</li>
-<li>The result of the execution.</li>
-<li>The validation notification. In this tab, errors will be noted, if occurred.</li>
-</ul>
+##### Scanned tokens tab
+In this tab, the scanned tokens are listed in the order of scanning.  
+If the tokens appear, the input code is lexically valid.
+    
+![scanned tokens](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_scan.png)  
+  
+##### Parse tree tab
+This tab shows a visualization of the parse tree. The format does whether completely match the parse tree of the parser,
+nor the structure of the classes generated while parsing. The result can be seen as 'compromise' which
+is close to the real parse tree, but easier for the human eye to read.  
+Important is: if the parse tree could be generated, the syntax of the code is valid.
+    
+![parse tree](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_parsetree.png)  
+ 
+##### Parsed code tab
+This tab shows the code as pretty-printed interpretation of the input by the parser. 
+It should match the input, except the comments and excess whitespace is gone.  
+Also here: if the code is visible, the syntax of the code is valid.  
+ 
+![parsed code](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_parsedcode.png)  
 
-#### Controls
-The code processing can be triggered by pushing the button 'go' on the right hand side. As soon as the input is
+##### Execution result tab
+This is probably the most interesting tab, as it shows the result of the execution of the code.  
+If it appears, it means that all validations (lexical, syntax, semantics) were successful. At this point,
+it is still possible that runtime errors occur (e.g. stack overflow, division by zero, etc.).
+    
+![execution result](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_executionresult.png)  
+
+##### Validation tab
+This is the 'annoying' tab, as it will open as soon as something went wrong. It will show a short error message
+and reveal further details about the problem. If the problem is ambiguous, the stack trace is shown additionally.  
+With this tab, the toy code can be debugged if needed.
+    
+![validation](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_validation.png)  
+  
+#### Action area
+The mini-IDE has also a little 'action area', which should improve usability.  
+
+![action area](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_actionarea.png) 
+
+The code processing can be triggered at once by pushing the button 'go'. As soon as the input is
 validated, check marks will indicate if the processing was successful, or - if not - where the problem occurred.  
+
 Additionally, there are minor features:
 <ul>
 <li>The theme can be switched between dark mode and light mode.</li>
-<li>The orientation of the split pane an be switched.</li>
+<li>The orientation of the split pane an be switched (vertical vs. horizontal).</li>
 <li>The help button will open this very page for easy access to additional information.</li>
 </ul>
 
