@@ -32,6 +32,10 @@ public enum Option {
      * Will execute a code entry by entry within the console.
      * If no exception is thrown, processed code is valid.
      */
-    CONSOLE;
+    CONSOLE,
+    /**
+     * Will start up the gui from the terminal, while leaving the terminal open.
+     */
+    GUI;
 
 }

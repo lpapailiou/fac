@@ -11,18 +11,24 @@
             <top>
                 <Region prefHeight="10.0" minHeight="10.0"></Region>
             </top>
+            <bottom>
+                <Region prefHeight="10.0" minHeight="10.0"></Region>
+            </bottom>
+            <left>
+                <Region prefWidth="10.0" minWidth="10.0"></Region>
+            </left>
             <right>
                 <VBox alignment="TOP_CENTER" minWidth="200.0" prefHeight="Infinity" prefWidth="200.0"
                       BorderPane.alignment="CENTER">
                     <children>
                         <Region prefHeight="42.0"/>
                         <Button fx:id="start" alignment="CENTER" mnemonicParsing="false" prefWidth="150.0" text="go"/>
-                        <Region prefHeight="38.0"/>
+                        <Region prefHeight="30.0"/>
                         <VBox maxWidth="150.0" prefWidth="150.0" spacing="5.0">
                             <children>
                                 <CheckBox fx:id="lexCheck" text="lexical check"/>
                                 <CheckBox fx:id="parseCheck" text="syntax check"/>
-                                <CheckBox fx:id="validationCheck" text="semantics check"/>
+                                <CheckBox fx:id="validationCheck" text="semantic check"/>
                                 <CheckBox fx:id="runtimeCheck" text="runtime check"/>
                             </children>
                         </VBox>

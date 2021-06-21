@@ -68,6 +68,11 @@ public class BinaryCondition extends ConditionalExpression {
         return "(" + operand1.toString() + ")";
     }
 
+    /**
+     * This method returns the binary condition as representation of the parse tree.
+     *
+     * @return a snipped of the parse tree.
+     */
     @Override
     public String getParseTree() {
         String out = this.getClass().getName();

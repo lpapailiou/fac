@@ -53,6 +53,11 @@ public class UnaryCondition extends ConditionalExpression {
         return "(" + op.asString() + operand.toString() + ")";
     }
 
+    /**
+     * This method returns the unary condition as representation of the parse tree.
+     *
+     * @return a snipped of the parse tree.
+     */
     @Override
     public String getParseTree() {
         String out = this.getClass().getName();

@@ -51,6 +51,11 @@ public class Argument extends Component {
         return components;
     }
 
+    /**
+     * This method returns the whole argument chain as representation of the parse tree.
+     *
+     * @return a snipped of the parse tree.
+     */
     @Override
     public String getParseTree() {
         String out = this.getClass().getName();

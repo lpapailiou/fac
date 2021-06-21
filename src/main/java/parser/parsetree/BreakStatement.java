@@ -18,6 +18,11 @@ public class BreakStatement extends Component {
         return "break;\n";
     }
 
+    /**
+     * This method returns the break statement as representation of the parse tree.
+     *
+     * @return a snipped of the parse tree.
+     */
     @Override
     public String getParseTree() {
         String out = this.getClass().getName();

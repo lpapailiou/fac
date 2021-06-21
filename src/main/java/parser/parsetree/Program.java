@@ -52,6 +52,14 @@ public class Program implements Traversable {
         return out;
     }
 
+    /**
+     * This method returns the program components as a string of the parse tree.
+     * The parse tree returned will not match the 'real' parse tree completely.
+     * Some changes were made to make it more human-readable. Another reason is, that the classes generated
+     * from the parse tree do not match the technical parse tree anymore.
+     *
+     * @return the complete parse tree represented as a string.
+     */
     @Override
     public String getParseTree() {
         String out = this.getClass().getName();

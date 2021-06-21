@@ -40,6 +40,11 @@ public class Constant extends Component {
         return obj.toString();
     }
 
+    /**
+     * This method returns this constant as representation of the parse tree.
+     *
+     * @return a snipped of the parse tree.
+     */
     @Override
     public String getParseTree() {
         String out = this.getClass().getName();

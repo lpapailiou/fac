@@ -80,6 +80,11 @@ public class WhileStatement extends Component {
         return out;
     }
 
+    /**
+     * This method returns the while statement as representation of the parse tree.
+     *
+     * @return a snipped of the parse tree.
+     */
     @Override
     public String getParseTree() {
         String out = this.getClass().getName();

@@ -12,6 +12,7 @@ import validator.Validator;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,16 +39,18 @@ class Console {
      * <code>-o validate</code>: validate a code for semantic validation.
      * <code>-o execute</code>: execute a code.
      * <code>-o console</code>: start console mode and process code typed as console input.
+     * <code>-o gui</code>: starts up the graphic user interface while leaving the console open.
      * If a file path is given as third argument, the according file will be processed. Otherwise, a short demo file
      * will be processed.
      * If no arguments are given at all, console mode will be started immediately.
      *
      * @param args the arguments passed to start the console mode.
      */
-    static void startTerminal(String... args) {
+    void startTerminal(String... args) {
         if (args != null) {
             cache = Arrays.toString(args).replaceAll("\\[", "").replaceAll("]", "").replaceAll(",", "");
         }
+        RUNNER:
         while (true) {
             evaluateArguments(cache.split(" "));
             if (cache.startsWith("-h") || cache.startsWith("-q")) {
@@ -74,6 +77,10 @@ class Console {
                 case CONSOLE:
                     startConsole();
                     break;
+                case GUI:
+                    System.out.println("See you on the other side ...\n");
+                    Main.initializeGui();
+                    break RUNNER;
                 default:
                     LOG.log(Level.INFO, "Main was started with invalid arguments. Type -h for help.");
             }
@@ -92,7 +99,7 @@ class Console {
      *
      * @param args the arguments to evaluate the mode to take.
      */
-    private static void evaluateArguments(String... args) {
+    private void evaluateArguments(String... args) {
         option = Option.CONSOLE;
         path = null;
         if (args == null || args.length == 0) {
@@ -101,7 +108,7 @@ class Console {
             LOG.log(Level.INFO, "... bye bye.");
             System.exit(0);
         } else if (args[0].equals("-h")) {
-            LOG.log(Level.INFO, "Following options are available:\n\t-o scan\n\t-o parse\n\t-o validate\n\t-o execute\n\nOptionally you may enter a file path after the option.");
+            LOG.log(Level.INFO, "Following options are available:\n\t-o scan\n\t-o parse\n\t-o validate\n\t-o execute\n\t-o gui\n\nOptionally you may enter a file path after the option.");
             cache = SCANNER.nextLine();
             evaluateArguments(cache.split(" "));
         } else if (args[0].equals("-o")) {
@@ -125,7 +132,7 @@ class Console {
      * This method will start the interactive console mode. After printing a header, the user may then
      * enter script code to process.
      */
-    private static void startConsole() {
+    private void startConsole() {
         String consoleMarker = ">  ";
         String code = "";
         String tmpCache = "";
@@ -158,13 +165,13 @@ class Console {
                 code += cache;
             } catch (Exception e) {
                 if (e instanceof GrammarException) {
-                    LOG.log(Level.WARNING, "Parsed code semantically not valid (" + e.getLocalizedMessage() + ")!");
+                    LOG.log(Level.WARNING, "Parsed code semantically not valid (" + e.getMessage() + ")!");
                 } else {
                     LOG.log(Level.WARNING, "Parsed code syntax not valid!");
                 }
             } catch (Error e) {
                 Throwable t = new ScanException(e.getMessage(), e);
-                LOG.log(Level.WARNING, "Scanned code not valid (" + t.getLocalizedMessage() + ")!");
+                LOG.log(Level.WARNING, "Scanned code not valid (" + t.getMessage() + ")!");
             } finally {
                 cache = "";
             }
@@ -179,7 +186,7 @@ class Console {
      * @param code the code to process.
      * @throws Exception the exception to throw in case the code is rejected.
      */
-    private static void executeConsoleContent(String code) throws Exception {
+    private void executeConsoleContent(String code) throws Exception {
         try (InputStream stream = new ByteArrayInputStream(code.getBytes()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
             JParser parser = new JParser(reader, false);
             Program program = getProgram(parser);
@@ -199,10 +206,10 @@ class Console {
      * @param data the file path of the code.
      * @throws IOException the exception thrown in case the file path is not valid.
      */
-    private static void processFile(String data) throws IOException {
+    private void processFile(String data) throws IOException {
         try (InputStreamReader reader = data.equals(defaultFilePath) ?
-                new InputStreamReader(Console.class.getClassLoader().getResourceAsStream(defaultFilePath), ENCODING) :                     // make work from jar
-                new InputStreamReader(new FileInputStream(Paths.get(data).toAbsolutePath().toString()), ENCODING)) {                    // custom file
+                new InputStreamReader(Objects.requireNonNull(Console.class.getClassLoader().getResourceAsStream(defaultFilePath)), ENCODING) :  // make work from jar
+                new InputStreamReader(new FileInputStream(Paths.get(data).toAbsolutePath().toString()), ENCODING)) {                            // custom file
 
             Program program = null;
             JParser parser = null;
@@ -234,6 +241,9 @@ class Console {
                     System.out.println(str);
                 }
                 System.out.println("\n");
+                System.out.println("***** PARSE TREE *****\n\n" + program.getParseTree() + "\n");
+
+                System.out.println("\n");
                 System.out.println("***** PARSER RESULT *****\n\n" + program + "\n");
             }
             if (option == Option.VALIDATE) {
@@ -260,7 +270,7 @@ class Console {
      * @return the last token which was scanned.
      * @throws Exception the exception thrown in case of invalid code.
      */
-    private static Program getProgram(JScanner scanner) throws Exception {
+    private Program getProgram(JScanner scanner) throws Exception {
         Symbol root = null;
         while (!scanner.yyatEOF()) {
             root = scanner.next_token();
@@ -275,7 +285,7 @@ class Console {
      * @return the root of the parse tree as Program instance.
      * @throws Exception the exception thrown in case of invalid code.
      */
-    private static Program getProgram(JParser parser) throws Exception {
+    private Program getProgram(JParser parser) throws Exception {
         Symbol root = null;
         while (!parser.yyatEOF()) {
             root = parser.parse();

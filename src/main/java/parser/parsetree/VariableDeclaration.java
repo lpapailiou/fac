@@ -109,6 +109,11 @@ public class VariableDeclaration extends Component implements Declaration {
         return out + ";\n";
     }
 
+    /**
+     * This method returns the variable declaration as representation of the parse tree.
+     *
+     * @return a snipped of the parse tree.
+     */
     @Override
     public String getParseTree() {
         String out = this.getClass().getName();

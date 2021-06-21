@@ -61,6 +61,12 @@ public class NestedStatement extends Component {
         return "";
     }
 
+    /**
+     * This toString method provides an empty string only, as it will be overwritten
+     * by the nested statements of this instance.
+     *
+     * @return an empty string.
+     */
     @Override
     public String getParseTree() {
         return "";

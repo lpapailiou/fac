@@ -153,6 +153,11 @@ public class FunctionDefStatement extends Component {
         return out;
     }
 
+    /**
+     * This method returns this function definition as representation of the parse tree.
+     *
+     * @return a snipped of the parse tree.
+     */
     @Override
     public String getParseTree() {
         String out = this.getClass().getName();

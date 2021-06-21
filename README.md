@@ -3,6 +3,8 @@ This repository connects the two theoretical computer science disciplines ``form
 the rather technical discipline of ``compiler construction`` (<b>F.A.C.</b>).  
 The goal is to specify a new programming language, which is deterministic and executable.
 
+![jlang](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_gui.png)
+
 ## Table of Contents
 1. [Language design](#language-design)  
 	1.1 [Scope](#scope)  
@@ -13,8 +15,9 @@ The goal is to specify a new programming language, which is deterministic and ex
 2. [Repository handling](#repository-handling)  
 	2.1 [Clone](#clone)   
 	2.2 [Package structure](#package-structure)   
-	2.3 [Run](#run)  
-	2.4 [Generate](#generate)  	
+	2.3 [Run with console](#run-with-console)  
+	2.4 [Run with gui](#run-with-gui)  	
+	2.5 [Generate](#generate)  	
 
 ## Language design
 In this section, the language design will be documented with its rules and a few examples. 
@@ -441,15 +444,20 @@ Below, the structure of the package tree is listed for better overview.
                 + lib                       // external dependecies (jflex & cup)
                 + samples                   // code sample files
 
-### Run
-Start the program from the IDE or from the [jar file](https://github.com/lpapailiou/fac/releases/latest) directly.
+### Run with console
+By default, a start within the IDE or by a double click on the jar file, the [graphic user interface](#start-with-gui) will be launched.  
+The console mode can be started, if the jar file is started from within the command line of your os.
+The restriction is, that an additional argument must be used.  
+  
+Build the jar file yourself or [download](https://github.com/lpapailiou/fac/releases/latest) directly.
+Then run it with following command:
 
-    java -jar fac.jar
+    java -jar fac.jar <argument>
 
-#### main.Main
-The main class ``Main`` may be run with or without options. If there are no options given, it will
-initialize the [interactive console mode](#console-mode).  
-There's also a small menu available.
+#### Launching
+The main class ``Main`` has to be run with options to use the terminal. If ambiguous options (i.e. 'press any key') are given, 
+the [interactive console mode](#console-mode) will be launched.  
+There's also a small menu available which provides some orientation:
 
     // output of help menu (accessed with -h)
     Following options are available:
@@ -457,11 +465,12 @@ There's also a small menu available.
         -o parse
         -o validate
         -o execute
+        -o gui          // with this method, the javafx gui is launched        
     
     Optionally you may enter a file path after the option.
 
 If a file path follows the option, this specific file will be processed. Otherwise, a sample file will be run.  
-Several sample files are available in the directory ``src\main\resources``.
+Several sample files are available in the directory ``src\main\resources\samples``.
 
 ##### Scan mode
 The scanner will take a file and tokenize its content. The output is verbose, every processed token will be
@@ -479,9 +488,19 @@ printed accordingly to the console.
 The parser will initialize a scanner. During processing, the parser will take token by token and validate if
 the sequence follows the syntactical definition of the grammar. If no error occurs, the parser will generate
 a parse tree. This means, that the syntax of the scanned code is valid.  
-Additionally, it will print the parsed code to the console.
+Additionally to the parse tree, it will print the parsed code to the console.
 
     // sample output
+    [...]
+    ***** PARSE TREE *****
+    + Program
+        + VariableDeclaration
+            + TYPE
+            + IDENTIFIER
+            + Constant
+                + NUMERIC
+            [...]
+    
     ***** PARSER RESULT *****
     
     number one = 1;
@@ -496,15 +515,7 @@ This mode will run a parser as above.
 As soon as the parse tree is ready, the validator will traverse the tree and validate semantic rules.  
 
     // sample output
-    ***** PARSER RESULT *****
-    
-    number one = 1;
-    
-    while (one < 5) {
-        one += 1;
-        print('hello world');
-    }
-    
+    [...]   
     ***** SEMANTIC CHECK SUCCEEDED *****
 
 ##### Execution mode
@@ -537,6 +548,45 @@ The console mode can be escaped with -h or -q.
     >                                                                   // empty line triggering execution
     >>>>  hello world
     >  
+
+### Run with gui
+To run the gui, you may do so directly from the IDE or from the [jar file](https://github.com/lpapailiou/fac/releases/latest).
+The jar file must be started by double click or without arguments within the terminal:
+
+    java -jar fac.jar
+
+The mini-IDE is implemented with javafx, which may be a restriction depending on the version you use.
+
+![jlang](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_gui.png)
+
+#### Code input
+There are multiple options to input code.  
+You may enter code directly to the text area on the left hand side. Alternatively, you may upload
+a file or choose a simple file provided by a combobox.  
+  
+If code is entered manually and the code ends with two newlines, the code will be processed dynamically while
+you are entering.
+
+#### Results
+The secondary area will show the results of the processing of your code. The visualization is organized in tabs.
+The tabs show following:  
+<ul>
+<li>The scanned tokesn</li>
+<li>The generated parse tree (which is not equal to the real parse tree, but in 'human readable format').</li>
+<li>The parsed code (e.g. the parser repeats what he thinks he was reading).</li>
+<li>The result of the execution.</li>
+<li>The validation notification. In this tab, errors will be noted, if occurred.</li>
+</ul>
+
+#### Controls
+The code processing can be triggered by pushing the button 'go' on the right hand side. As soon as the input is
+validated, check marks will indicate if the processing was successful, or - if not - where the problem occurred.  
+Additionally, there are minor features:
+<ul>
+<li>The theme can be switched between dark mode and light mode.</li>
+<li>The orientation of the split pane an be switched.</li>
+<li>The help button will open this very page for easy access to additional information.</li>
+</ul>
 
 ### Generate
 In case you may want to modify the language rules, the scanner and parser can be generated easily with following commands.
