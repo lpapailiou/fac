@@ -1,0 +1,6 @@
+number x = 123;
+boolean boo = true;
+
+if true {
+    print('true');
+}

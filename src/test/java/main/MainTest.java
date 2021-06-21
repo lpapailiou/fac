@@ -9,7 +9,9 @@ public class MainTest {
     @Test
     public void testMain() throws IOException {
         String file = "src/main/resources/demo_2.txt";
-        Main.main("-o", "execute", file);
+        //Main.main("-o", "execute", file);
+
+        System.out.println("".substring(0, 0).length());
 
     }
 

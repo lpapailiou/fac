@@ -37,9 +37,9 @@ public class Interpreter extends Validator {
     public void visit(AssignmentStatement acceptor) {
         super.visit(acceptor);
         if (execute) {
-            Declaration declaration = getDeclaration(acceptor.getIdentifier());
+            Declaration declaration = getDeclaration(acceptor, acceptor.getIdentifier());
             Object value1 = declaration.getValue();
-            Object value2 = getValueOfOperand(acceptor.getValue());
+            Object value2 = getValueOfOperand(acceptor, acceptor.getValue());
             declaration.setValue(acceptor.getOperator().apply(value1, value2));
         }
     }
@@ -67,7 +67,7 @@ public class Interpreter extends Validator {
     public void visit(FunctionCallStatement acceptor) {
         super.visit(acceptor);
         if (execute) {
-            getValueOfOperand(acceptor);
+            getValueOfOperand(acceptor, acceptor);
         }
     }
 
@@ -123,8 +123,8 @@ public class Interpreter extends Validator {
         if (execute && (!scriptMode || printActive)) {
             Component component = (Component) acceptor.getValue();
             if (component != null) {
-                String value = getValueOfOperand(component).toString();
-                if (getTypeOfOperand(value) == Type.NUMERIC) {
+                String value = getValueOfOperand(acceptor, component).toString();
+                if (getTypeOfOperand(acceptor, value) == Type.NUMERIC) {
                     double doubleValue = Double.parseDouble(value);
                     if (doubleValue == Math.floor(doubleValue)) {
                         value = ((int) doubleValue) + "";
@@ -163,7 +163,7 @@ public class Interpreter extends Validator {
         super.visit(acceptor);
         if (execute) {
             acceptor.reset();
-            Object value = getValueOfOperand(acceptor.getValue());
+            Object value = getValueOfOperand(acceptor, acceptor.getValue());
             acceptor.setValue(value);
         }
     }
@@ -247,7 +247,7 @@ public class Interpreter extends Validator {
         List<Component> validateOnlyComponents = new ArrayList<>();
         boolean condition;
         if (node instanceof IfThenElseStatement) {
-            condition = (Boolean) getValueOfOperand(((IfThenElseStatement) node).getCondition());
+            condition = (Boolean) getValueOfOperand(node, ((IfThenElseStatement) node).getCondition());
             if (condition) {
                 executableComponents = ((IfThenElseStatement) node).getIfStatements();
                 validateOnlyComponents = ((IfThenElseStatement) node).getElseStatements();
@@ -256,7 +256,7 @@ public class Interpreter extends Validator {
                 validateOnlyComponents = ((IfThenElseStatement) node).getIfStatements();
             }
         } else if (node instanceof IfThenStatement) {
-            condition = (Boolean) getValueOfOperand(((IfThenStatement) node).getCondition());
+            condition = (Boolean) getValueOfOperand(node, ((IfThenStatement) node).getCondition());
             if (!condition) {
                 validateOnlyComponents = executableComponents;
                 executableComponents = new ArrayList<>();
@@ -291,7 +291,7 @@ public class Interpreter extends Validator {
      */
     private void processStatements(Traversable node, List<Component> components) {
         if (node instanceof WhileStatement && execute) {
-            while ((Boolean) getValueOfOperand(((WhileStatement) node).getCondition())) {   // while loop execution
+            while ((Boolean) getValueOfOperand(node, ((WhileStatement) node).getCondition())) {   // while loop execution
                 openNewScope();
                 if (breakEvent > 0) {                       // break statement execution
                     breakEvent--;
@@ -323,10 +323,11 @@ public class Interpreter extends Validator {
      * or the result of a function call).
      * If the object to evaluate is more complex, this method will follow the component chain until the final result is found.
      *
+     * @param parent     the parent parse tree component.
      * @param operand the operand of which the value should be evaluated.
      * @return the value of the operand.
      */
-    private Object getValueOfOperand(Object operand) {
+    private Object getValueOfOperand(Traversable parent, Object operand) {
         Object value;
         if (operand instanceof FunctionCallStatement) {
             value = getValue((FunctionCallStatement) operand);
@@ -342,7 +343,7 @@ public class Interpreter extends Validator {
             value = getValue((UnaryCondition) operand);
         } else {
             if (Type.getTypeForValue(operand) == Type.VARIABLE) {
-                value = getDeclaration(operand.toString()).getValue();
+                value = getDeclaration(parent, operand.toString()).getValue();
             } else {
                 value = operand;
             }
@@ -360,7 +361,7 @@ public class Interpreter extends Validator {
      */
     private Object getValue(FunctionCallStatement operand) {
         openNewScope();
-        FunctionDefStatement function = getFunction(operand.getIdentifier(), operand.getArgumentCount());
+        FunctionDefStatement function = getFunction(operand, operand.getIdentifier(), operand.getArgumentCount());
         List<Component> callParams = operand.getArgumentList();
         List<Component> components = function.getStatements();
         for (int i = 0; i < components.size(); i++) {
@@ -368,12 +369,12 @@ public class Interpreter extends Validator {
             if (stmt instanceof ParamDeclaration) {
                 ParamDeclaration paramDeclaration = ((ParamDeclaration) stmt);
                 addDeclarationToScope(paramDeclaration);
-                paramDeclaration.setValue(getValueOfOperand(callParams.get(i)));
+                paramDeclaration.setValue(getValueOfOperand(operand, callParams.get(i)));
             } else {
                 traverse(stmt);
             }
         }
-        Object value = getValueOfOperand(function.getReturnStatement());
+        Object value = getValueOfOperand(operand, function.getReturnStatement());
         closeCurrentScope();
         return value;
     }
@@ -385,8 +386,8 @@ public class Interpreter extends Validator {
      * @return the value of the operand.
      */
     private Object getValue(BinaryExpression operand) {
-        Object value1 = getValueOfOperand(operand.getOperand1());
-        Object value2 = getValueOfOperand(operand.getOperand2());
+        Object value1 = getValueOfOperand(operand, operand.getOperand1());
+        Object value2 = getValueOfOperand(operand, operand.getOperand2());
         return operand.getOperator().apply(value1, value2);
     }
 
@@ -397,7 +398,7 @@ public class Interpreter extends Validator {
      * @return the value of the operand.
      */
     private Object getValue(UnaryExpression operand) {
-        Object value = getValueOfOperand(operand.getOperand());
+        Object value = getValueOfOperand(operand, operand.getOperand());
         return operand.getOperator().apply(value);
     }
 
@@ -408,8 +409,8 @@ public class Interpreter extends Validator {
      * @return the value of the operand.
      */
     private Object getValue(Constant operand) {
-        Type type = getTypeOfOperand(operand.getValue());
-        Object value = getValueOfOperand(operand.getValue());
+        Type type = getTypeOfOperand(operand, operand.getValue());
+        Object value = getValueOfOperand(operand, operand.getValue());
         if (type == Type.BOOLEAN) {
             return Boolean.parseBoolean(value.toString());
         }
@@ -423,8 +424,8 @@ public class Interpreter extends Validator {
      * @return the value of the operand.
      */
     private Object getValue(BinaryCondition operand) {
-        Object value1 = getValueOfOperand(operand.getOperand1());
-        Object value2 = getValueOfOperand(operand.getOperand2());
+        Object value1 = getValueOfOperand(operand, operand.getOperand1());
+        Object value2 = getValueOfOperand(operand, operand.getOperand2());
         return operand.getOperator().apply(value1, value2);
     }
 
@@ -435,7 +436,7 @@ public class Interpreter extends Validator {
      * @return the value of the operand.
      */
     private Object getValue(UnaryCondition operand) {
-        Object value = getValueOfOperand(operand.getOperand());
+        Object value = getValueOfOperand(operand, operand.getOperand());
         return operand.getOperator().apply(value);
     }
 

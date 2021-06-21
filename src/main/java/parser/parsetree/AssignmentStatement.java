@@ -19,7 +19,8 @@ public class AssignmentStatement extends Component {
      * @param identifier the identifier of the variable.
      * @param value      the value to be assigned.
      */
-    public AssignmentStatement(Object op, Object identifier, Object value) {
+    public AssignmentStatement(Object op, Object identifier, Object value, int left, int right) {
+        super(left, right);
         this.op = BinOp.getName(op.toString());
         this.identifier = identifier.toString();
         this.value = value;

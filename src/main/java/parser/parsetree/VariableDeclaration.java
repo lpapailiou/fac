@@ -26,7 +26,8 @@ public class VariableDeclaration extends Component implements Declaration {
      * @param type       the data type.
      * @param identifier the identifier.
      */
-    public VariableDeclaration(Object type, String identifier) {
+    public VariableDeclaration(Object type, String identifier, int left, int right) {
+        super(left, right);
         this.type = Type.getByName(type);
         this.identifier = identifier;
         this.value = Type.getByName(type).getDefaultValue();
@@ -40,8 +41,8 @@ public class VariableDeclaration extends Component implements Declaration {
      * @param identifier the identifier.
      * @param value      the value to be assigned initially.
      */
-    public VariableDeclaration(Object type, String identifier, Object value) {
-        this(type, identifier);
+    public VariableDeclaration(Object type, String identifier, Object value, int left, int right) {
+        this(type, identifier, left, right);
         this.value = value;
         this.initValue = value;
     }

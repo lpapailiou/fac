@@ -286,10 +286,7 @@ class Console {
      * @throws Exception the exception thrown in case of invalid code.
      */
     private Program getProgram(JParser parser) throws Exception {
-        Symbol root = null;
-        while (!parser.yyatEOF()) {
-            root = parser.parse();
-        }
+        Symbol root = parser.parse();
         return (Program) root.value;
     }
 

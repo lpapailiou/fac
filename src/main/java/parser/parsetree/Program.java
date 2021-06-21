@@ -75,6 +75,16 @@ public class Program implements Traversable {
     }
 
     /**
+     * Returns the location from the source file of this code fragment.
+     *
+     * @return the location of this code fragment.
+     */
+    @Override
+    public int[] getLocation() {
+        return new int[]{0, 0};
+    }
+
+    /**
      * This method accepts a visitor. The visitor will then have access to this instance
      * for code validation and execution.
      *

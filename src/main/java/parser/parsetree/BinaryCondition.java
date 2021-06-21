@@ -20,7 +20,8 @@ public class BinaryCondition extends ConditionalExpression {
      * @param o1 the first operand.
      * @param o2 the second operand.
      */
-    BinaryCondition(Object op, Object o1, Object o2) {
+    BinaryCondition(Object op, Object o1, Object o2, int left, int right) {
+        super(left, right);
         this.operand1 = o1;
         this.operand2 = o2;
         this.op = BinOp.getName(op.toString());

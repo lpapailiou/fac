@@ -19,6 +19,7 @@ public class NestedStatement extends Component {
      * @param st the component to wrap.
      */
     NestedStatement(Object st) {
+        super(0, 0);
         component = (Component) st;
     }
 

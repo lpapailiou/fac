@@ -22,7 +22,8 @@ public class WhileStatement extends Component {
      * @param condition  the conditional expression.
      * @param statements the statement list of the while body.
      */
-    public WhileStatement(Object condition, Object statements) {
+    public WhileStatement(Object condition, Object statements, int left, int right) {
+        super(left, right);
         this.condition = condition;
         if (statements != null) {
             this.componentList = ((NestedStatement) statements).getStatements();

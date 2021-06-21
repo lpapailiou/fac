@@ -1,8 +1,8 @@
 package parser;
 import parser.parsetree.*;
-
+import java_cup.runtime.Symbol;
 import scanner.JScanner;
-import java.util.List;
+import java.util.*;
 
 // ************* CUSTOM PARSER CODE *************
 
@@ -21,15 +21,19 @@ parser code {:
     public JParser(java.io.Reader in, boolean verbose) {super(new JScanner(in, verbose));}
 
     /**
-     * This method tests if the scanner reached the end of file yet.
-     * @return true if the end of file is reached.
+     * With this method, the custom log of the scanner can be passed to an outside class.
+     * @return the scanner log.
      */
-    public boolean yyatEOF(){
-        return ((JScanner) getScanner()).yyatEOF();
-    }
-
     public List<String> getScannerOutput() {
         return ((JScanner) getScanner()).getOutput();
+    }
+
+    /**
+     * This method returns the current token of the scanning process.
+     * @return the current token.
+     */
+    public Symbol getCurrentToken() {
+            return cur_token;
     }
 :}
 
@@ -91,19 +95,19 @@ STMT            ::= DECL:st                                                     
                     | PRINTCALL:st                                                          {: RESULT = st; :}
                     | IFTHEN_STMT:st                                                        {: RESULT = st; :}
                     | WHILE_STMT:st                                                         {: RESULT = st; :}
-                    | BREAK:br STOP                                                         {: RESULT = Component.brk(); :}
+                    | BREAK:br STOP:st                                                      {: RESULT = Component.brk(brleft, stright); :}
                     ;
 
-WHILE_STMT      ::= WHILE COND_VAL:c CBL NEST_STMT:s CBR                                    {: RESULT = Component.loop(c, s); :}
-                    | WHILE COND_VAL:c CBL CBR                                              {: RESULT = Component.loop(c, null); :}
+WHILE_STMT      ::= WHILE:w COND_VAL:c CBL NEST_STMT:s CBR:st                               {: RESULT = Component.loop(c, s, wleft, stright, cleft, cright); :}
+                    | WHILE:w COND_VAL:c CBL CBR:st                                         {: RESULT = Component.loop(c, null, wleft, stright, cleft, cright); :}
                     ;
 
-IFTHEN_STMT     ::= IF COND_VAL:c CBL NEST_STMT:s CBR                                       {: RESULT = Component.ifThen(c, s); :}
-                    | IF COND_VAL:c CBL CBR                                                 {: RESULT = Component.ifThen(c, null); :}
-                    | IF COND_VAL:c CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR          {: RESULT = Component.ifThen(c, s1, s2); :}
-                    | IF COND_VAL:c CBL CBR ELSE CBL NEST_STMT:s2 CBR                       {: RESULT = Component.ifThen(c, null, s2); :}
-                    | IF COND_VAL:c CBL NEST_STMT:s1 CBR ELSE CBL CBR                       {: RESULT = Component.ifThen(c, s1, null); :}
-                    | IF COND_VAL:c CBL CBR ELSE CBL CBR                                    {: RESULT = Component.ifThen(c, null, null); :}
+IFTHEN_STMT     ::= IF:i COND_VAL:c CBL NEST_STMT:s CBR:st                                  {: RESULT = Component.ifThen(c, s, ileft, stright, cleft, cright); :}
+                    | IF:i COND_VAL:c CBL CBR:st                                            {: RESULT = Component.ifThen(c, null, ileft, stright, cleft, cright); :}
+                    | IF:i COND_VAL:c CBL NEST_STMT:s1 CBR ELSE CBL NEST_STMT:s2 CBR:st     {: RESULT = Component.ifThen(c, s1, s2, ileft, stright, cleft, cright); :}
+                    | IF:i COND_VAL:c CBL CBR ELSE CBL NEST_STMT:s2 CBR:st                  {: RESULT = Component.ifThen(c, null, s2, ileft, stright, cleft, cright); :}
+                    | IF:i COND_VAL:c CBL NEST_STMT:s1 CBR ELSE CBL CBR:st                  {: RESULT = Component.ifThen(c, s1, null, ileft, stright, cleft, cright); :}
+                    | IF:i COND_VAL:c CBL CBR ELSE CBL CBR:st                               {: RESULT = Component.ifThen(c, null, null, ileft, stright, cleft, cright); :}
                     ;
 
 COND_VAL        ::= COND:c                                                                  {: RESULT = c; :}
@@ -111,36 +115,36 @@ COND_VAL        ::= COND:c                                                      
                     ;
 
 // function definition
-FUNDEF 	        ::= DEF TYPE:t VAR:n BL PARAMDEF:p BR CBL NEST_STMT:st RET:r CBR            {: RESULT = Component.funDef(t, n, p, st, r); :}
-                    | DEF TYPE:t VAR:n BL PARAMDEF:p BR CBL RET:r CBR                       {: RESULT = Component.funDefEmpty(t, n, p, r); :}
-                    | DEF TYPE:t VAR:n BL BR CBL NEST_STMT:st RET:r CBR                     {: RESULT = Component.funDef(t, n, st, r); :}
-                    | DEF TYPE:t VAR:n BL BR CBL RET:r CBR                                  {: RESULT = Component.funDefEmpty(t, n, r); :}
+FUNDEF 	        ::= DEF:d TYPE:t VAR:n BL PARAMDEF:p BR CBL NEST_STMT:st RET:r CBR:c        {: RESULT = Component.funDef(t, n, p, st, r, dleft, cright); :}
+                    | DEF:d TYPE:t VAR:n BL PARAMDEF:p BR CBL RET:r CBR:c                   {: RESULT = Component.funDefEmpty(t, n, p, r, dleft, cright); :}
+                    | DEF:d TYPE:t VAR:n BL BR CBL NEST_STMT:st RET:r CBR:c                 {: RESULT = Component.funDef(t, n, st, r, dleft, cright); :}
+                    | DEF:d TYPE:t VAR:n BL BR CBL RET:r CBR:c                              {: RESULT = Component.funDefEmpty(t, n, r, dleft, cright); :}
                     ;
 
-PARAMDEF 	    ::= TYPE:t VAR:v                                                            {: RESULT = Component.paramDecl(t, v); :}
-                    | TYPE:t VAR:v COMMA PARAMDEF:p                                         {: RESULT = Component.paramDecl(t, v, p); :}
+PARAMDEF 	    ::= TYPE:t VAR:v                                                            {: RESULT = Component.paramDecl(t, v, tleft, vright); :}
+                    | TYPE:t VAR:v COMMA PARAMDEF:p                                         {: RESULT = Component.paramDecl(t, v, p, tleft, pright); :}
                     ;
 
-PARAM 	        ::= EXPR:t                                                                  {: RESULT = Component.param(t); :}
-                    | EXPR:t COMMA PARAM:p                                                  {: RESULT = Component.param(t, p); :}
+PARAM 	        ::= EXPR:t                                                                  {: RESULT = Component.param(t, tleft, tright); :}
+                    | EXPR:t COMMA PARAM:p                                                  {: RESULT = Component.param(t, p, tleft, pright); :}
                     ;
 
 RET 	        ::= RETURN EXPR:r STOP                                                      {: RESULT = r; :}
                     ;
 
 // function calls
-FUNCALL 	    ::= VAR:n BL PARAM:p BR                                                     {: RESULT = Component.fun(n, p); :}
-                    | VAR:n COND:p                                                          {: RESULT = Component.fun(n, p); :}
-                    | VAR:n BL BR                                                           {: RESULT = Component.fun(n); :}
+FUNCALL 	    ::= VAR:n BL PARAM:p BR:b                                                   {: RESULT = Component.fun(n, p, nleft, bright); :}
+                    | VAR:n COND:p                                                          {: RESULT = Component.fun(n, p, nleft, pright); :}
+                    | VAR:n BL BR:b                                                         {: RESULT = Component.fun(n, nleft, bright); :}
                     ;
 
-PRINTCALL 	    ::= PRINT BL EXPR:v BR STOP                                                 {: RESULT = Component.print(v); :}
-                    | PRINT COND:v STOP                                                     {: RESULT = Component.print(v); :}
-                    | PRINT BL BR STOP                                                      {: RESULT = Component.print(); :}
+PRINTCALL 	    ::= PRINT:pr BL EXPR:v BR STOP:st                                           {: RESULT = Component.print(v, prleft, stright); :}
+                    | PRINT:pr COND:v STOP:st                                               {: RESULT = Component.print(v, prleft, stright); :}
+                    | PRINT:pr BL BR STOP:st                                                {: RESULT = Component.print(prleft, stright); :}
                     ;
 
 // boolean conditions. brackets are mandatory, no precedence order needed
-COND 	        ::= BL EXPR:e1 COND_OP:op EXPR:e2 BR                                        {: RESULT = Component.cond(op, e1, e2); :}
+COND 	        ::= BL:a EXPR:e1 COND_OP:op EXPR:e2 BR:b                                    {: RESULT = Component.cond(op, e1, e2, aleft, bright); :}
                    ;
 
 COND_OP         ::= AND:op                                                                  {: RESULT = op; :}
@@ -154,21 +158,21 @@ COND_OP         ::= AND:op                                                      
                     ;
 
 // arithmetic expressions. brackets are optional, mul/div has precedence over plus/minus
-EXPR 	        ::=  CALC_MUL:e                                                             {: RESULT = Component.constnt(e); :}
-                    | EXPR:e1 PLUS:op CALC_MUL:e2                                           {: RESULT = Component.expr(op, e1, e2); :}
-                    | EXPR:e1 MINUS:op CALC_MUL:e2                                          {: RESULT = Component.expr(op, e1, e2); :}
+EXPR 	        ::=  CALC_MUL:e                                                             {: RESULT = Component.constnt(e, eleft, eright); :}
+                    | EXPR:e1 PLUS:op CALC_MUL:e2                                           {: RESULT = Component.expr(op, e1, e2, e1left, e2right); :}
+                    | EXPR:e1 MINUS:op CALC_MUL:e2                                          {: RESULT = Component.expr(op, e1, e2, e1left, e2right); :}
                     ;
 
 CALC_MUL        ::= VAL:e                                                                   {: RESULT = e; :}
-                    | CALC_MUL:e1 MUL:op VAL:e2                                             {: RESULT = Component.expr(op, e1, e2); :}
-                    | CALC_MUL:e1 DIV:op VAL:e2                                             {: RESULT = Component.expr(op, e1, e2); :}
-                    | CALC_MUL:e1 MOD:op VAL:e2                                             {: RESULT = Component.expr(op, e1, e2); :}
+                    | CALC_MUL:e1 MUL:op VAL:e2                                             {: RESULT = Component.expr(op, e1, e2, e1left, e2right); :}
+                    | CALC_MUL:e1 DIV:op VAL:e2                                             {: RESULT = Component.expr(op, e1, e2, e1left, e2right); :}
+                    | CALC_MUL:e1 MOD:op VAL:e2                                             {: RESULT = Component.expr(op, e1, e2, e1left, e2right); :}
                     ;
 
 // variable assignments
-ASSIGN 	        ::= VAR:v ASSIGN_OP:op EXPR:e STOP                                          {: RESULT = Component.assgn(op, v, e); :}
-                    | VAR:v INC:op STOP                                                     {: RESULT = Component.assgn(op, v); :}
-                    | VAR:v DEC:op STOP                                                     {: RESULT = Component.assgn(op, v); :}
+ASSIGN 	        ::= VAR:v ASSIGN_OP:op EXPR:e STOP:st                                       {: RESULT = Component.assgn(op, v, e, vleft, stright); :}
+                    | VAR:v INC:op STOP:st                                                  {: RESULT = Component.assgn(op, v, vleft, stright); :}
+                    | VAR:v DEC:op STOP:st                                                  {: RESULT = Component.assgn(op, v, vleft, stright); :}
                     ;
 
 ASSIGN_OP       ::= EQUAL:op                                                                {: RESULT = op; :}
@@ -180,8 +184,8 @@ ASSIGN_OP       ::= EQUAL:op                                                    
                     ;
 
 // variable declaration
-DECL 	        ::= TYPE:t VAR:e1 STOP                                                      {: RESULT = Component.decl(t, e1); :}
-                    | TYPE:t VAR:e1 EQUAL EXPR:e2 STOP                                      {: RESULT = Component.decl(t, e1, e2); :}
+DECL 	        ::= TYPE:t VAR:e1 STOP:st                                                   {: RESULT = Component.decl(t, e1, tleft, stright); :}
+                    | TYPE:t VAR:e1 EQUAL EXPR:e2 STOP:st                                   {: RESULT = Component.decl(t, e1, e2, tleft, stright); :}
                     ;
 
 // base components
@@ -196,6 +200,6 @@ VAL             ::= VAR:str                                                     
                     | NUM:n                                                                 {: RESULT = n; :}
                     | FUNCALL:f                                                             {: RESULT = f; :}
                     | COND:c                                                                {: RESULT = c; :}
-                    | EXCL:op VAL:e                                                         {: RESULT = Component.cond(op, e); :}
-                    | MINUS:op VAL:e                                                        {: RESULT = Component.expr(op, e); :}
+                    | EXCL:op VAL:e                                                         {: RESULT = Component.cond(op, e, opleft, eright); :}
+                    | MINUS:op VAL:e                                                        {: RESULT = Component.expr(op, e, opleft, eright); :}
                     ;

@@ -18,7 +18,8 @@ public class UnaryCondition extends ConditionalExpression {
      * @param op the operator.
      * @param o  the operand.
      */
-    UnaryCondition(Object op, Object o) {
+    UnaryCondition(Object op, Object o, int left, int right) {
+        super(left, right);
         this.op = UnOp.getName(op.toString());
         this.operand = o;
     }

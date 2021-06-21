@@ -7,6 +7,16 @@ package parser.parsetree;
 public class BreakStatement extends Component {
 
     /**
+     * This constructor is used to pass the location of the code fragment.
+     *
+     * @param left  the start index.
+     * @param right the end index.
+     */
+    BreakStatement(int left, int right) {
+        super(left, right);
+    }
+
+    /**
      * The toString method provides a pretty-printable String
      * of this parse tree component.
      * In this case the hard coded word 'break;'.

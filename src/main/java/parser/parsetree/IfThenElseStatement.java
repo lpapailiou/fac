@@ -23,8 +23,8 @@ public class IfThenElseStatement extends IfThenStatement {
      * @param statementList1 the if-then statement list.
      * @param statementList2 the else statement list.
      */
-    IfThenElseStatement(Object condition, Object statementList1, Object statementList2) {
-        super(condition, statementList1);
+    IfThenElseStatement(Object condition, Object statementList1, Object statementList2, int left, int right) {
+        super(condition, statementList1, left, right);
         if (statementList2 != null) {
             this.componentListElse.addAll(((Component) statementList2).getStatements());
         }

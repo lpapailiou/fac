@@ -6,4 +6,14 @@ package parser.parsetree;
  * all types of values expressions and function calls.
  */
 abstract class ArithmeticExpression extends Component {
+
+    /**
+     * This constructor is used to pass the location of the code fragment.
+     *
+     * @param left  the start index.
+     * @param right the end index.
+     */
+    ArithmeticExpression(int left, int right) {
+        super(left, right);
+    }
 }

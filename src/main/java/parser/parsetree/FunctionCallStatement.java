@@ -21,7 +21,8 @@ public class FunctionCallStatement extends Component {
      *
      * @param identifier the identifier of the called function.
      */
-    public FunctionCallStatement(Object identifier) {
+    public FunctionCallStatement(Object identifier, int left, int right) {
+        super(left, right);
         this.identifier = identifier.toString();
     }
 
@@ -31,8 +32,8 @@ public class FunctionCallStatement extends Component {
      * @param identifier the identifier of the called function.
      * @param args       the arguments of the function call.
      */
-    public FunctionCallStatement(Object identifier, Object args) {
-        this(identifier);
+    public FunctionCallStatement(Object identifier, Object args, int left, int right) {
+        this(identifier, left, right);
         if (args != null) {
             this.argumentList = ((Argument) args).getStatements();
         }

@@ -36,20 +36,19 @@ public class Validator implements Visitor {
      */
     @Override
     public void visit(AssignmentStatement acceptor) {
-        Declaration declaration = getDeclaration(acceptor.getIdentifier());
+        Declaration declaration = getDeclaration(acceptor, acceptor.getIdentifier());
         Type expectedType = declaration.getType();
-        Type effectiveType = getTypeOfOperand(acceptor.getValue());
+        Type effectiveType = getTypeOfOperand(acceptor, acceptor.getValue());
         BinOp binOp = acceptor.getOperator();
-
         if (expectedType != effectiveType) {
             if (expectedType != Type.STRING || binOp == BinOp.EQUAL) {
-                throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getIdentifier() + "> and cannot assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + ">!");
+                throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getIdentifier() + "> and cannot assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
             }
         } else if (expectedType != Type.NUMERIC && binOp != BinOp.EQUAL) {
             if (expectedType == Type.STRING && binOp == BinOp.PLUSEQ) {
                 return;
             }
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the binOp <" + acceptor.getOperator().asString() + "> to assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + ">!");
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the binOp <" + acceptor.getOperator().asString() + "> to assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
         }
     }
 
@@ -72,14 +71,14 @@ public class Validator implements Visitor {
      */
     @Override
     public void visit(FunctionCallStatement acceptor) {
-        FunctionDefStatement function = getFunction(acceptor.getIdentifier(), acceptor.getArgumentCount());
+        FunctionDefStatement function = getFunction(acceptor, acceptor.getIdentifier(), acceptor.getArgumentCount());
         List<Component> callArgs = acceptor.getArgumentList();
         List<String> functionParams = Arrays.asList(function.paramTypeListAsString().split(", "));
         for (int i = 0; i < callArgs.size(); i++) {
-            Type caller = getTypeOfOperand(callArgs.get(i));
+            Type caller = getTypeOfOperand(acceptor, callArgs.get(i));
             Type callee = Type.getByName(functionParams.get(i));
             if (caller != callee) {
-                throw new GrammarException("Function parameters do not match with function <" + function.getIdentifier() + "(" + function.paramTypeListAsString() + ")>!");
+                throw new GrammarException("Function parameters do not match with function <" + function.getIdentifier() + "(" + function.paramTypeListAsString() + ") at location " + Arrays.toString(acceptor.getLocation()) + "!");
             }
         }
         closeCurrentScope();
@@ -97,9 +96,9 @@ public class Validator implements Visitor {
     public void visit(FunctionDefStatement acceptor) {
         Type defType = acceptor.getType();
         Object returnValue = acceptor.getReturnStatement();
-        Type retType = getTypeOfOperand(returnValue);
+        Type retType = getTypeOfOperand(acceptor, returnValue);
         if (defType != retType) {
-            throw new TypeMismatchException("Return type <" + retType.getIdentifier() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.paramTypeListAsString() + ")> does not match defined type <" + defType.getIdentifier() + ">!");
+            throw new TypeMismatchException("Return type <" + retType.getIdentifier() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.paramTypeListAsString() + ")> does not match defined type <" + defType.getIdentifier() + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
         }
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
         closeCurrentScope();
@@ -149,7 +148,7 @@ public class Validator implements Visitor {
     public void visit(PrintCallStatement acceptor) {
         Object value = acceptor.getValue();
         if (value != null) {
-            getTypeOfOperand(acceptor.getValue());
+            getTypeOfOperand(acceptor, acceptor.getValue());
         }
     }
 
@@ -175,9 +174,9 @@ public class Validator implements Visitor {
     public void visit(VariableDeclaration acceptor) {
         addDeclarationToScope(acceptor);
         Type expectedType = acceptor.getType();
-        Type effectiveType = getTypeOfOperand(acceptor.getValue());
+        Type effectiveType = getTypeOfOperand(acceptor, acceptor.getValue());
         if (expectedType != effectiveType) {
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getIdentifier() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[", "").replaceAll("]", "") + ">!");
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getIdentifier() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[", "").replaceAll("]", "") + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
         }
     }
 
@@ -298,9 +297,9 @@ public class Validator implements Visitor {
         for (int i = 0; i < components.size(); i++) {
             if (components.get(i) instanceof BreakStatement) {
                 if (whileDepth <= 0) {
-                    throw new GrammarException("Not in loop! Break statement is not possible at position <" + parent + ">!");
+                    throw new GrammarException("Not in loop! Break statement is not possible at position <" + parent + "> at location " + Arrays.toString(parent.getLocation()) + "!");
                 } else if (i < components.size() - 1) {
-                    throw new GrammarException("Unreachable code! Break statement is not possible at position <" + parent + ">.");
+                    throw new GrammarException("Unreachable code! Break statement is not possible at position <" + parent + "> at location " + Arrays.toString(parent.getLocation()) + "!");
                 }
                 if (!hold) {
                     whileDepth--;
@@ -314,30 +313,31 @@ public class Validator implements Visitor {
      * or the result of a function call).
      * If the object to evaluate is more complex, this method will follow the component chain until the final result is found.
      *
+     * @param parent     the parent parse tree component.
      * @param operand the operand of which the data type should be evaluated.
      * @return the data type of the operand.
      */
-    protected Type getTypeOfOperand(Object operand) {
+    protected Type getTypeOfOperand(Traversable parent, Object operand) {
         if (operand == null) {
             throw new GrammarException("Operand must never be null!");
         }
         Type type;
         if (operand instanceof FunctionCallStatement) {
-            type = getType((FunctionCallStatement) operand);
+            type = getType(parent, (FunctionCallStatement) operand);
         } else if (operand instanceof BinaryExpression) {
-            type = getType((BinaryExpression) operand);
+            type = getType(parent, (BinaryExpression) operand);
         } else if (operand instanceof UnaryExpression) {
-            type = getType((UnaryExpression) operand);
+            type = getType(parent, (UnaryExpression) operand);
         } else if (operand instanceof Constant) {
-            type = getType((Constant) operand);
+            type = getType(parent, (Constant) operand);
         } else if (operand instanceof BinaryCondition) {
-            type = getType((BinaryCondition) operand);
+            type = getType(parent, (BinaryCondition) operand);
         } else if (operand instanceof UnaryCondition) {
-            type = getType((UnaryCondition) operand);
+            type = getType(parent, (UnaryCondition) operand);
         } else {
             type = Type.getTypeForValue(operand);
             if (type == Type.VARIABLE) {
-                type = getDeclaration(operand.toString()).getType();
+                type = getDeclaration(parent, operand.toString()).getType();
             }
         }
         return type;
@@ -346,11 +346,12 @@ public class Validator implements Visitor {
     /**
      * This method evaluates the return type of the declaration of the called function.
      *
+     * @param parent     the parent parse tree component.
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
-    private Type getType(FunctionCallStatement operand) {
-        FunctionDefStatement function = getFunction(operand.getIdentifier(), operand.getArgumentCount());
+    private Type getType(Traversable parent, FunctionCallStatement operand) {
+        FunctionDefStatement function = getFunction(parent, operand.getIdentifier(), operand.getArgumentCount());
         traverse(operand);                  // make sure function call is validated
         return function.getType();
     }
@@ -360,24 +361,25 @@ public class Validator implements Visitor {
      * If one of both operands is a string type, the result will evaluate to a string, otherwise it will be numeric.
      * Additionally, the operators must match (i.e. only a plus is allowed for string operations).
      *
+     * @param parent     the parent parse tree component.
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
-    private Type getType(BinaryExpression operand) {
-        Type type = getTypeOfOperand(operand.getOperand1());
-        Type type2 = getTypeOfOperand(operand.getOperand2());
+    private Type getType(Traversable parent, BinaryExpression operand) {
+        Type type = getTypeOfOperand(parent, operand.getOperand1());
+        Type type2 = getTypeOfOperand(parent, operand.getOperand2());
         BinOp binOp = operand.getOperator();
         if (type == Type.STRING || type2 == Type.STRING) {
             if (binOp != BinOp.PLUS) {
-                throw new OperatorMismatchException("BinOp of expression <" + operand.getOperator().asString() + "> may not be used in context <" + operand.toString().replaceAll("\n", "") + ">!");
+                throw new OperatorMismatchException("BinOp of expression <" + operand.getOperator().asString() + "> may not be used in context <" + operand.toString().replaceAll("\n", "") + "> at location " + Arrays.toString(parent.getLocation()) + "!");
             }
             return Type.STRING;
         }
         if (type != type2) {
-            throw new TypeMismatchException("Types of expression <" + operand.toString().replaceAll("\n", "") + "> do not match!");
+            throw new TypeMismatchException("Types of expression <" + operand.toString().replaceAll("\n", "") + "> do not match at location " + Arrays.toString(parent.getLocation()) + "!");
         }
         if (type == Type.BOOLEAN) {
-            throw new TypeMismatchException("Types of expression <" + operand.toString().replaceAll("\n", "") + "> do not match with binOp <" + binOp.asString() + ">!");
+            throw new TypeMismatchException("Types of expression <" + operand.toString().replaceAll("\n", "") + "> do not match with binOp <" + binOp.asString() + "> at location " + Arrays.toString(parent.getLocation()) + "!");
         }
         return type;
     }
@@ -385,14 +387,15 @@ public class Validator implements Visitor {
     /**
      * This methods validates the operand of a unary arithmetic expression and validates if the operator matches.
      *
+     * @param parent     the parent parse tree component.
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
-    private Type getType(UnaryExpression operand) {
-        Type type = getTypeOfOperand(operand.getOperand());
+    private Type getType(Traversable parent, UnaryExpression operand) {
+        Type type = getTypeOfOperand(parent, operand.getOperand());
         UnOp op = operand.getOperator();
         if ((op == UnOp.EXCL && type != Type.BOOLEAN) || ((op == UnOp.MINUS || op == UnOp.INC || op == UnOp.DEC) && type != Type.NUMERIC)) {
-            throw new OperatorMismatchException("UnOp of expression <" + operand.getOperator().asString() + "> may not be used in context <" + operand.toString().replaceAll("\n", "") + ">!");
+            throw new OperatorMismatchException("UnOp of expression <" + operand.getOperator().asString() + "> may not be used in context <" + operand.toString().replaceAll("\n", "") + "> at location " + Arrays.toString(parent.getLocation()) + "!");
         }
         return type;
     }
@@ -400,32 +403,34 @@ public class Validator implements Visitor {
     /**
      * This method returns the data type of the contained value of a constant.
      *
+     * @param parent     the parent parse tree component.
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
-    private Type getType(Constant operand) {
-        return getTypeOfOperand(operand.getValue());
+    private Type getType(Traversable parent, Constant operand) {
+        return getTypeOfOperand(parent, operand.getValue());
     }
 
     /**
      * This method returns the data type of a binary conditional expression. It must evaluate to a boolean value.
      * Operators are validated as well (e.g. 'less' can be used in numeric context only).
      *
+     * @param parent     the parent parse tree component.
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
-    private Type getType(BinaryCondition operand) {
-        Type type1 = getTypeOfOperand(operand.getOperand1());
-        Type type2 = getTypeOfOperand(operand.getOperand2());
+    private Type getType(Traversable parent, BinaryCondition operand) {
+        Type type1 = getTypeOfOperand(parent, operand.getOperand1());
+        Type type2 = getTypeOfOperand(parent, operand.getOperand2());
 
         if (type1 != type2) {
-            throw new TypeMismatchException("Types of conditional statement <" + operand.toString().replaceAll("\n", "") + "> do not match!");
+            throw new TypeMismatchException("Types of conditional statement <" + operand.toString().replaceAll("\n", "") + "> do not match at location " + Arrays.toString(parent.getLocation()) + "!");
         }
         BinOp binOp = operand.getOperator();
         if (type1 != Type.NUMERIC && (binOp == BinOp.GREATER || binOp == BinOp.GREQ || binOp == BinOp.LEQ || binOp == BinOp.LESS)) {
-            throw new OperatorMismatchException("BinOp <" + binOp.asString() + "> must not be used for non-numeric statements!");
+            throw new OperatorMismatchException("BinOp <" + binOp.asString() + "> must not be used for non-numeric statement at location " + Arrays.toString(parent.getLocation()) + "!");
         } else if (type1 != Type.BOOLEAN && (binOp == BinOp.AND || binOp == BinOp.OR)) {
-            throw new OperatorMismatchException("BinOp <" + binOp.asString() + "> must not be used for non-boolean statements!");
+            throw new OperatorMismatchException("BinOp <" + binOp.asString() + "> must not be used for non-boolean statement at location " + Arrays.toString(parent.getLocation()) + "!");
         }
 
         return Type.BOOLEAN;
@@ -434,13 +439,14 @@ public class Validator implements Visitor {
     /**
      * This method returns the data type of a unary conditional expression. It must evaluate to a boolean value.
      *
+     * @param parent     the parent parse tree component.
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
-    private Type getType(UnaryCondition operand) {
-        Type type = getTypeOfOperand(operand.getOperand());
+    private Type getType(Traversable parent, UnaryCondition operand) {
+        Type type = getTypeOfOperand(parent, operand.getOperand());
         if (type != Type.BOOLEAN) {
-            throw new TypeMismatchException("Types of conditional statement <" + operand.toString().replaceAll("\n", "") + "> do not match!");
+            throw new TypeMismatchException("Types of conditional statement <" + operand.toString().replaceAll("\n", "") + "> do not match at location " + Arrays.toString(parent.getLocation()) + "!");
         }
         return type;
     }
@@ -453,7 +459,7 @@ public class Validator implements Visitor {
      */
     protected void addDeclarationToScope(Declaration declaration) {
         if (isVariableInCurrentScope(declaration.getIdentifier())) {
-            throw new UniquenessViolationException("variable identifier <" + declaration.getIdentifier() + "> is already defined!");
+            throw new UniquenessViolationException("variable identifier <" + declaration.getIdentifier() + "> at location " + Arrays.toString(((Component) declaration).getLocation()) + " is already defined!");
         } else {
             declarationScope.get(0).add(declaration);
         }
@@ -474,13 +480,14 @@ public class Validator implements Visitor {
      * This method will search a fitting variable declaration by the passed identifier.
      * If the variable is not in scope, it will return a runtime exception.
      *
+     * @param parent     the parent parse tree component.
      * @param identifier the identifier to check.
      * @return the matching declaration for the passed identifier.
      */
-    protected Declaration getDeclaration(String identifier) {
+    protected Declaration getDeclaration(Traversable parent, String identifier) {
         Declaration declaration = declarationScope.stream().flatMap(Collection::stream).filter(dec -> dec.getIdentifier().equals(identifier)).findFirst().orElse(null);
         if (declaration == null) {
-            throw new MissingDeclarationException("Declaration <" + identifier + "> was never instantiated!");
+            throw new MissingDeclarationException("Declaration <" + identifier + "> at location " + Arrays.toString(parent.getLocation()) + " was never instantiated!");
         }
         return declaration;
     }
@@ -493,9 +500,9 @@ public class Validator implements Visitor {
      */
     private void addFunDeclarationToScope(FunctionDefStatement function) {
         if (isFunctionExisting(function)) {
-            throw new UniquenessViolationException("Function <" + function.getType().getIdentifier() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> is already defined!");
+            throw new UniquenessViolationException("Function <" + function.getType().getIdentifier() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> at location " + Arrays.toString(function.getLocation()) + " is already defined!");
         } else if (!isFunctionDefinable(function)) {
-            throw new GrammarException("Function <" + function.getType().getIdentifier() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> cannot be defined as it conflicts with similar function!");
+            throw new GrammarException("Function <" + function.getType().getIdentifier() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> at location " + Arrays.toString(function.getLocation()) + " cannot be defined as it conflicts with similar function!");
         } else {
             functionScope.add(function);
         }
@@ -526,14 +533,15 @@ public class Validator implements Visitor {
     /**
      * This method looks for a fitting function definition which matches a given identifier and the parameter count.
      *
+     * @param parent     the parent parse tree component.
      * @param identifier     the identifier of the function.
      * @param parameterCount the parameter count of the function.
      * @return the function definition of the found function.
      */
-    protected FunctionDefStatement getFunction(String identifier, int parameterCount) {
+    protected FunctionDefStatement getFunction(Traversable parent, String identifier, int parameterCount) {
         FunctionDefStatement definition = functionScope.stream().filter(fun -> fun.getIdentifier().equals(identifier) && fun.getParamCount() == parameterCount).findAny().orElse(null);
         if (definition == null) {
-            throw new MissingDeclarationException("Function <" + identifier + "> with " + parameterCount + " parameter was never defined!");
+            throw new MissingDeclarationException("Function <" + identifier + "> with " + parameterCount + " parameter was never defined for location " + Arrays.toString(parent.getLocation()) + "!");
         }
         return definition;
     }

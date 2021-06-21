@@ -18,7 +18,8 @@ public class Argument extends Component {
      *
      * @param arg the argument to wrap.
      */
-    Argument(Object arg) {
+    Argument(Object arg, int left, int right) {
+        super(left, right);
         this.arg = (Component) arg;
     }
 
@@ -29,8 +30,8 @@ public class Argument extends Component {
      * @param arg     the argument to wrap.
      * @param nextArg the next argument to point to.
      */
-    Argument(Object arg, Object nextArg) {
-        this(arg);
+    Argument(Object arg, Object nextArg, int left, int right) {
+        this(arg, left, right);
         next = (Argument) nextArg;
     }
 

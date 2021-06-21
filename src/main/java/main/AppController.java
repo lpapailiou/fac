@@ -125,123 +125,171 @@ public class AppController implements Initializable {
      * @param showExecutionResultTab determines, if the execution result tab is opened and focused or not.
      */
     private void process(boolean showExecutionResultTab) {
-        String cleansedCode = cleanse();                                                // code cleansing
+        StringWriter stackTraceWriter = null;
+        String cleansedCode = cleanse(input.getText(), true);                                 // code cleansing
         try (InputStream stream = new ByteArrayInputStream(cleansedCode.getBytes()); InputStreamReader reader = new InputStreamReader(stream, ENCODING)) {
             setCheckResultHintSelected(true);                                           // selects all validation checkboxes
 
             Program program = null;
+            String parseTree = null;
             Interpreter interpreter = null;
             String err = "";
+            Symbol root;
+            JParser parser = new JParser(reader, true);
 
-            try {                                                                       // validate code
-                JParser parser = new JParser(reader, true);
-                Symbol root = null;
-                while (!parser.yyatEOF()) {
-                    root = parser.parse();
-                }
+            try {                                                                       // process code
+                root = parser.parse();
                 program = (Program) root.value;
-                scanOut.setText(String.join("\n", parser.getScannerOutput()));
-
+                parseTree = program.getParseTree();
+                Platform.runLater(() -> scanOut.setText(String.join("\n", parser.getScannerOutput())));
                 interpreter = new Interpreter();
                 if (program != null) {
                     program.accept(interpreter);
                 }
             } catch (Exception e) {                                                     // from here, exception handling starts
+                String message = e.getMessage();
+                markExceptionText(parser, message);
                 if (e instanceof GrammarException) {
-                    String message = e.getMessage();
-                    err = "Parsed code semantically not valid (" + message + ")!";
-                    LOG.log(Level.WARNING, err);
-
                     if (message.contains("Infinity") || message.contains("NaN")) {
                         err = "During runtime, an arithmetic operation resulted in an invalid numeric value!";
-                        runtimeCheck.setSelected(false);
+                        Platform.runLater(() -> runtimeCheck.setSelected(false));
                     } else {
-                        validationCheck.setSelected(false);
-                        runtimeCheck.setSelected(false);
+                        err = "Parsed code semantically not valid (" + message + ")!";
+                        Platform.runLater(() -> {
+                            validationCheck.setSelected(false);
+                            runtimeCheck.setSelected(false);
+                        });
                     }
-                } else {                                                                // may be ambiguous, this is why StackTrace gets printed aswell
-                    StringWriter stackTraceWriter = new StringWriter();
-                    e.printStackTrace(new PrintWriter(stackTraceWriter));
-                    err = "Parsed code syntax not valid!\n" + stackTraceWriter.toString();
-                    LOG.log(Level.WARNING, "Parsed code syntax not valid!");
-                    validationCheck.setSelected(false);
-                    parseCheck.setSelected(false);
-                    runtimeCheck.setSelected(false);
+                } else {
+                    err = "Parsed code syntax not valid, parse tree could not be constructed!";
+                    Platform.runLater(() -> {
+                        validationCheck.setSelected(false);
+                        parseCheck.setSelected(false);
+                        runtimeCheck.setSelected(false);
+                    });
                 }
-            } catch (Error e) {                                                         // if an Error occurs, it's source is from the scanner
+                stackTraceWriter = new StringWriter();
+                e.printStackTrace(new PrintWriter(stackTraceWriter));
+                e.printStackTrace();
+            } catch (Error e) {                                                         // if an Error occurs, it's source is from the scanner or from overflow
+                markErrorText(parser);
                 Throwable t = new ScanException(e.getMessage(), e);
                 String message = t.getMessage();
-
-                LOG.log(Level.WARNING, "Scanned code not valid (" + message + ")!");
                 if (message == null) {
-                    LOG.log(Level.WARNING, "Scanned code not valid (" + message + ")!");
-                    runtimeCheck.setSelected(false);
-                    err = "Overflow during execution occurred!";
+                    err = "StackOverflowError during execution occurred!";
+                    Platform.runLater(() -> runtimeCheck.setSelected(false));
                 } else {
                     err = "Scanned code not valid (" + message + ")!";
-                    lexCheck.setSelected(false);
-                    parseCheck.setSelected(false);
-                    validationCheck.setSelected(false);
-                    runtimeCheck.setSelected(false);
+                    Platform.runLater(() -> {
+                        lexCheck.setSelected(false);
+                        parseCheck.setSelected(false);
+                        validationCheck.setSelected(false);
+                        runtimeCheck.setSelected(false);
+                    });
                 }
+                stackTraceWriter = new StringWriter();
+                e.printStackTrace(new PrintWriter(stackTraceWriter));
+                e.printStackTrace();
+            } finally {
+                if (!err.equals("")) {
+                    LOG.log(Level.WARNING, err);
+                }
+                if (stackTraceWriter != null) {
+                    err += "\n\n\nstackTrace:\n" + stackTraceWriter.toString();
+                }
+
+                showResultOnGui(err, program, parseTree, interpreter, showExecutionResultTab);
             }
 
-            // now, the results must be visualized on the ui accordingly
-            if (!err.equals("")) {                                                      // error case
-                if (program != null) {
-                    parseTreeOut.setText(program.getParseTree());
-                    codeOut.setText(program.toString());
-                } else {
-                    parseTreeOut.setText("");
-                    codeOut.setText("");
-                }
-                if (interpreter != null) {
-                    executeOut.setText(String.join("\n", interpreter.getOutput()));
-                } else {
-                    executeOut.setText("");
-                }
-                validationOut.setText(err);
-                tabPane.getSelectionModel().select(4);
-                Platform.runLater(() -> validationOut.requestFocus());
-            } else {                                                                    // sunshine case
-                assert program != null;
-                parseTreeOut.setText(program.getParseTree());
-                codeOut.setText(program.toString());
-                assert interpreter != null;
-                executeOut.setText(String.join("\n", interpreter.getOutput()));
-                validationOut.setText("everything is fine :)");
-                if (showExecutionResultTab) {
-                    tabPane.getSelectionModel().select(3);
-                }
-                Platform.runLater(() -> executeOut.requestFocus());                     // focus on input textarea
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void showResultOnGui(String err, Program program, String parseTree, Interpreter interpreter, boolean showExecutionResultTab) {
+
+        if (!err.equals("")) {
+            if (program != null) {
+                parseTreeOut.setText(parseTree);
+                codeOut.setText(program.toString());
+            } else {
+                parseTreeOut.setText("");
+                codeOut.setText("");
+            }
+            if (interpreter != null) {
+                executeOut.setText(String.join("\n", interpreter.getOutput()));
+            } else {
+                executeOut.setText("");
+            }
+            validationOut.setText(err);
+            tabPane.getSelectionModel().select(4);
+            Platform.runLater(() -> validationOut.requestFocus());
+        } else {
+            if (program != null) {
+                parseTreeOut.setText(parseTree);
+                codeOut.setText(program.toString());
+            }
+            if (interpreter != null) {
+                executeOut.setText(String.join("\n", interpreter.getOutput()));
+            }
+            validationOut.setText("everything is fine :)");
+            if (showExecutionResultTab) {
+                tabPane.getSelectionModel().select(3);
+                Platform.runLater(() -> executeOut.requestFocus());
+            }
+
+        }
+    }
+
+    private void markExceptionText(JParser parser, String message) {
+        if (message.contains("location")) {
+            String[] loc = message.substring(message.indexOf("location")).split(",");
+            int left = Integer.parseInt(loc[0].replaceAll("[^0-9]", ""));
+            int right = Integer.parseInt(loc[1].replaceAll("[^0-9]", ""));
+            markTextTo(left, right);
+        } else {
+            try {
+                Symbol currentToken = parser.getCurrentToken();
+                markTextTo(currentToken.left, currentToken.right);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void markErrorText(JParser parser) {
+        try {
+            Symbol currentToken = parser.getCurrentToken();
+            if (currentToken == null) {
+                Platform.runLater(() -> markText(0));
+            } else {
+                Platform.runLater(() -> markText(currentToken.right + 1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
-     * This method will pre-process the code-to-validate. It seems that the scanner does not
-     * process correctly one-line-comments, depending on the source (Java may do whatsoever by adding additional slashes I guess).
-     * Anyway, this method will remove one-line-comments from the code before it will be processed.
+     * This method will pre-process the code-to-validate by removing comments.
+     * This will facilitate further processing.
      *
      * @return the cleansed code ready to process.
      */
-    private String cleanse() {
-        String code = input.getText();
-        String[] lines = code.split("\n");
-        StringBuilder bld = new StringBuilder();
-        for (String line : lines) {
-            if (line.contains("//")) {
-                if (line.startsWith("//")) {
-                    continue;
-                }
-                line = line.substring(0, line.indexOf("//") - 1);
-            }
-            bld.append(line);
-            bld.append("\n");
+    private String cleanse(String code, boolean all) {
+        String pattern = "//.*|(\"(?:\\\\[^\"]|\\\\\"|.)*?\")|(?s)/\\*.*?\\*/";
+        if (all) {
+            return code.replaceAll(pattern, "$1 ");
         }
-        return bld.toString();
+        return code.replaceFirst(pattern, "$1 ");
+    }
+
+    private String removeWhitespace(String code, boolean all) {
+        String pattern = "[ \t]+(\r\n?|\n)";
+        if (all) {
+            return code.replaceAll(pattern, "$1 ");
+        }
+        return code.replaceFirst(pattern, "$1 ");
     }
 
     // ------------------------------------------ ui handling ------------------------------------------
@@ -260,9 +308,10 @@ public class AppController implements Initializable {
         setCheckResultHintSelected(true);
 
         input.textProperty().addListener((o, nv, ov) -> {
+            input.deselect();
             demoFiles.getSelectionModel().selectFirst();
             setCheckResultHintSelected(false);
-            if (input.getText().substring(input.getText().length() - 2).equals("\n\n")) {
+            if (input.getText().length() > 2 && input.getText().substring(input.getText().length() - 2).equals("\n\n")) {
                 process(false);
             }
             Platform.runLater(() -> input.requestFocus());
@@ -459,6 +508,61 @@ public class AppController implements Initializable {
                 Platform.runLater(() -> theme.setText("light theme"));
             }
             isDarkTheme = !isDarkTheme;
+        });
+    }
+
+    /**
+     * This method allows to mark a specific token. It is used to indicate where scanner errors happen.
+     *
+     * @param from the start index of the error token.
+     */
+    private void markText(int from) {
+        if (input.isFocused()) {
+            return;
+        }
+        Platform.runLater(() -> {
+            int fromIndex = Math.max(from, 0);
+            String text = input.getText();
+            String cleansedText = cleanse(text, true);
+            int skipped = 0;
+            while (!text.substring(0, fromIndex).equals(cleansedText.substring(0, fromIndex))) {
+                int length = text.length();
+                text = cleanse(text, false);
+                skipped += length - text.length();
+            }
+            fromIndex = fromIndex + skipped;
+            input.selectRange(fromIndex, Math.min(input.getText().indexOf(" ", fromIndex), input.getText().indexOf("\n", fromIndex)));
+        });
+    }
+
+    /**
+     * This method allows to mark a specific token. It is used to indicate where scanner errors happen.
+     *
+     * @param from the start index of the error token.
+     */
+    private void markTextTo(int from, int to) {
+        if (input.isFocused()) {
+            return;
+        }
+        Platform.runLater(() -> {
+            int fromIndex = Math.max(from, 0);
+            int toIndex = Math.max(to, 0);
+            String text = input.getText();
+            String cleansedText = cleanse(text, true);
+            int skipped = 0;
+            while (!text.substring(0, fromIndex).equals(cleansedText.substring(0, fromIndex))) {
+                int length = text.length();
+                text = cleanse(text, false);
+                skipped += length - text.length();
+            }
+            fromIndex = fromIndex + skipped;
+            while (!text.substring(0, toIndex).equals(cleansedText.substring(0, toIndex))) {
+                int length = text.length();
+                text = cleanse(text, false);
+                skipped += length - text.length();
+            }
+            toIndex = toIndex + skipped;
+            input.selectRange(fromIndex, toIndex);
         });
     }
 

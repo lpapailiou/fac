@@ -22,7 +22,8 @@ public class IfThenStatement extends Component {
      * @param condition      the conditional expression.
      * @param statementList1 the statement list for the if-then body.
      */
-    public IfThenStatement(Object condition, Object statementList1) {
+    public IfThenStatement(Object condition, Object statementList1, int left, int right) {
+        super(left, right);
         this.condition = condition;
         if (statementList1 != null) {
             this.componentListIf.addAll(((Component) statementList1).getStatements());

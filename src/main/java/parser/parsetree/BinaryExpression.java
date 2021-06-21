@@ -21,7 +21,8 @@ public class BinaryExpression extends ArithmeticExpression {
      * @param operand1 the first operand.
      * @param operand2 the second operand.
      */
-    BinaryExpression(Object op, Object operand1, Object operand2) {
+    BinaryExpression(Object op, Object operand1, Object operand2, int left, int right) {
+        super(left, right);
         this.op = BinOp.getName(op);
         this.operand1 = operand1;
         this.operand2 = operand2;

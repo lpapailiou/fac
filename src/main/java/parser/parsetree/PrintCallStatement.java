@@ -17,7 +17,8 @@ public class PrintCallStatement extends Component {
     /**
      * This constructor will create an empty wrapper for a print statement.
      */
-    public PrintCallStatement() {
+    public PrintCallStatement(int left, int right) {
+        super(left, right);
     }
 
     /**
@@ -26,7 +27,8 @@ public class PrintCallStatement extends Component {
      *
      * @param value the value to print.
      */
-    public PrintCallStatement(Object value) {
+    public PrintCallStatement(Object value, int left, int right) {
+        this(left, right);
         this.value = value;
     }
 

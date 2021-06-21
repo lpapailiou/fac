@@ -22,7 +22,8 @@ public class ParamDeclaration extends Component implements Declaration {
      * @param type       the data type of the declared parameter.
      * @param identifier the identifier of the parameter.
      */
-    ParamDeclaration(Object type, Object identifier) {
+    ParamDeclaration(Object type, Object identifier, int left, int right) {
+        super(left, right);
         this.type = Type.getByName(type);
         this.identifier = identifier.toString();
         value = Type.getByName(type).getDefaultValue();
@@ -38,8 +39,8 @@ public class ParamDeclaration extends Component implements Declaration {
      * @param identifier the identifier of the parameter.
      * @param nextParam  the following parameter to be set as pointer.
      */
-    ParamDeclaration(Object type, Object identifier, Object nextParam) {
-        this(type, identifier);
+    ParamDeclaration(Object type, Object identifier, Object nextParam, int left, int right) {
+        this(type, identifier, left, right);
         next = (ParamDeclaration) nextParam;
     }
 

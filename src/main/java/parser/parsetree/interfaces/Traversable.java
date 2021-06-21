@@ -26,4 +26,11 @@ public interface Traversable extends Acceptor {
      */
     String getParseTree();
 
+    /**
+     * Returns the location from the source file of this code fragment.
+     *
+     * @return the location of this code fragment.
+     */
+    int[] getLocation();
+
 }

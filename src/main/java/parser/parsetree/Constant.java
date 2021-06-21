@@ -15,7 +15,8 @@ public class Constant extends Component {
      *
      * @param o the object to wrap.
      */
-    Constant(Object o) {
+    Constant(Object o, int left, int right) {
+        super(left, right);
         this.obj = o;
     }
 

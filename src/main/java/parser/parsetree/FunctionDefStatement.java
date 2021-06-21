@@ -29,7 +29,8 @@ public class FunctionDefStatement extends Component {
      * @param statements      the nested statements.
      * @param returnStatement the return statement.
      */
-    public FunctionDefStatement(Object type, Object identifier, Object params, Object statements, Object returnStatement) {
+    public FunctionDefStatement(Object type, Object identifier, Object params, Object statements, Object returnStatement, int left, int right) {
+        super(left, right);
         this.type = Type.getByName(type);
         this.identifier = identifier.toString();
         if (params != null) {

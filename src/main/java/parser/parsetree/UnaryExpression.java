@@ -19,7 +19,8 @@ public class UnaryExpression extends ArithmeticExpression {
      * @param op      the operator.
      * @param operand the operand.
      */
-    UnaryExpression(Object op, Object operand) {
+    UnaryExpression(Object op, Object operand, int left, int right) {
+        super(left, right);
         this.op = UnOp.getName(op);
         this.operand = operand;
     }
