@@ -152,12 +152,13 @@ class ConsoleController {
         System.out.println("**************************************************************");
         System.out.println(consoleMarker + "... initialized & ready to code!");
 
+        LOOP:
         while (true) {
             System.out.print(consoleMarker);
             tmpCache = SCANNER.nextLine();
             if (tmpCache.startsWith("-h") || tmpCache.startsWith("-q")) {
                 cache = tmpCache;
-                break;
+                break  LOOP;
             } else if (!tmpCache.replaceAll("\\[ \\s \t\n\r]", "").equals("")) {
                 if (!tmpCache.startsWith("//")) {
                     cache += tmpCache;
