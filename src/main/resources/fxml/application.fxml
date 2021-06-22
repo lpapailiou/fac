@@ -2,177 +2,136 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane maxHeight="Infinity" prefHeight="800.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0"
-            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.AppController">
-    <children>
-        <BorderPane fx:id="borderPane" maxHeight="Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <top>
-                <Region prefHeight="10.0" minHeight="10.0"></Region>
-            </top>
-            <bottom>
-                <Region prefHeight="10.0" minHeight="10.0"></Region>
-            </bottom>
-            <left>
-                <Region prefWidth="10.0" minWidth="10.0"></Region>
-            </left>
-            <right>
-                <VBox alignment="TOP_CENTER" minWidth="200.0" prefHeight="Infinity" prefWidth="200.0"
-                      BorderPane.alignment="CENTER">
-                    <children>
-                        <Region prefHeight="42.0"/>
-                        <Button fx:id="start" alignment="CENTER" mnemonicParsing="false" prefWidth="150.0" text="go"/>
-                        <Region prefHeight="30.0"/>
-                        <VBox maxWidth="150.0" prefWidth="150.0" spacing="5.0">
-                            <children>
-                                <CheckBox fx:id="lexCheck" text="lexical check"/>
-                                <CheckBox fx:id="parseCheck" text="syntax check"/>
-                                <CheckBox fx:id="validationCheck" text="semantic check"/>
-                                <CheckBox fx:id="runtimeCheck" text="runtime check"/>
-                            </children>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="Infinity" prefHeight="800.0" prefWidth="800.0"
+            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8"
+            fx:controller="main.ApplicationController">
+    <BorderPane fx:id="borderPane" maxHeight="Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <top>
+            <Region prefHeight="10.0" minHeight="10.0"/>
+        </top>
+        <bottom>
+            <Region prefHeight="10.0" minHeight="10.0"/>
+        </bottom>
+        <left>
+            <Region prefWidth="10.0" minWidth="10.0"/>
+        </left>
+        <right>
+            <VBox alignment="TOP_CENTER" minWidth="200.0" prefHeight="Infinity" prefWidth="200.0"
+                  BorderPane.alignment="CENTER">
+                <Region prefHeight="42.0"/>
+                <Button fx:id="start" alignment="CENTER" mnemonicParsing="false" prefWidth="150.0" text="go"/>
+                <Region prefHeight="30.0"/>
+                <VBox maxWidth="150.0" prefWidth="150.0" spacing="5.0">
+                    <CheckBox fx:id="lexCheck" text="lexical check"/>
+                    <CheckBox fx:id="parseCheck" text="syntax check"/>
+                    <CheckBox fx:id="validationCheck" text="semantic check"/>
+                    <CheckBox fx:id="runtimeCheck" text="runtime check"/>
+                </VBox>
+                <Region VBox.vgrow="ALWAYS"/>
+                <Button fx:id="theme" text="light theme" prefWidth="150.0"/>
+                <Region minHeight="10.0" prefHeight="10.0"/>
+                <Button fx:id="split" text="orientation" prefWidth="150.0"/>
+                <Region minHeight="10.0" prefHeight="10.0"/>
+                <Button fx:id="help" text="help" prefWidth="150.0"/>
+                <Region minHeight="10.0" prefHeight="10.0"/>
+            </VBox>
+        </right>
+        <center>
+            <VBox maxHeight="Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
+                <SplitPane fx:id="splitPane" dividerPositions="0.5" maxHeight="Infinity"
+                           prefHeight="2000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <VBox prefHeight="20000.0" AnchorPane.bottomAnchor="0.0"
+                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="0.0">
+                            <HBox maxHeight="38.0" minHeight="38.0" spacing="10.0">
+                                <Button fx:id="upload" alignment="CENTER"
+                                        mnemonicParsing="false" prefWidth="150.0"
+                                        text="upload"/>
+                                <ComboBox fx:id="demoFiles" prefWidth="250.0" prefHeight="29.0"
+                                          minHeight="29.0"/>
+                            </HBox>
+                            <TextArea fx:id="input" layoutX="-.0" layoutY="-1.0" prefHeight="2000.0"
+                                      wrapText="true" AnchorPane.bottomAnchor="0.0"
+                                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                      AnchorPane.topAnchor="0.0"/>
                         </VBox>
-                        <Region VBox.vgrow="ALWAYS"/>
-                        <Button fx:id="theme" text="light theme" prefWidth="150.0"/>
-                        <Region minHeight="10.0" prefHeight="10.0"/>
-                        <Button fx:id="split" text="orientation" prefWidth="150.0"/>
-                        <Region minHeight="10.0" prefHeight="10.0"/>
-                        <Button fx:id="help" text="help" prefWidth="150.0"/>
-                        <Region minHeight="10.0" prefHeight="10.0"/>
-                    </children>
-                </VBox>
-            </right>
-            <center>
-                <VBox maxHeight="Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
-
-                    <children>
-                        <SplitPane fx:id="splitPane" dividerPositions="0.5" maxHeight="Infinity"
-                                   orientation="HORIZONTAL"
-                                   prefHeight="2000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                            <items>
-                                <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                    <children>
-                                        <VBox prefHeight="20000.0" AnchorPane.bottomAnchor="0.0"
-                                              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                              AnchorPane.topAnchor="0.0">
-                                            <children>
-                                                <HBox maxHeight="38.0" minHeight="38.0" spacing="10.0">
-                                                    <children>
-                                                        <Button fx:id="upload" alignment="CENTER"
-                                                                mnemonicParsing="false" prefWidth="150.0"
-                                                                text="upload"/>
-                                                        <ComboBox fx:id="demoFiles" prefWidth="250.0" prefHeight="29.0"
-                                                                  minHeight="29.0"></ComboBox>
-                                                    </children>
-                                                </HBox>
-                                                <TextArea fx:id="input" layoutX="-.0" layoutY="-1.0" prefHeight="2000.0"
-                                                          text="" wrapText="true" AnchorPane.bottomAnchor="0.0"
-                                                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                          AnchorPane.topAnchor="0.0"/>
-                                            </children>
-                                        </VBox>
-                                    </children>
+                    </AnchorPane>
+                    <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TabPane fx:id="tabPane" layoutY="-2.0" tabClosingPolicy="UNAVAILABLE"
+                                 AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                 AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <Tab text="scanned tokens">
+                                <AnchorPane AnchorPane.bottomAnchor="0.0"
+                                            AnchorPane.leftAnchor="0.0"
+                                            AnchorPane.rightAnchor="0.0"
+                                            AnchorPane.topAnchor="0.0">
+                                    <TextArea fx:id="scanOut" layoutY="-2.0"
+                                              AnchorPane.bottomAnchor="0.0"
+                                              AnchorPane.leftAnchor="0.0"
+                                              AnchorPane.rightAnchor="0.0"
+                                              AnchorPane.topAnchor="0.0"/>
                                 </AnchorPane>
-                                <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                    <children>
-                                        <TabPane fx:id="tabPane" layoutY="-2.0" tabClosingPolicy="UNAVAILABLE"
-                                                 AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                                 AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <tabs>
-                                                <Tab text="scanned tokens">
-                                                    <content>
-                                                        <AnchorPane AnchorPane.bottomAnchor="0.0"
-                                                                    AnchorPane.leftAnchor="0.0"
-                                                                    AnchorPane.rightAnchor="0.0"
-                                                                    AnchorPane.topAnchor="0.0">
-                                                            <children>
-                                                                <TextArea fx:id="scanOut" layoutY="-2.0"
-                                                                          AnchorPane.bottomAnchor="0.0"
-                                                                          AnchorPane.leftAnchor="0.0"
-                                                                          AnchorPane.rightAnchor="0.0"
-                                                                          AnchorPane.topAnchor="0.0"/>
-                                                            </children>
-                                                        </AnchorPane>
-                                                    </content>
-                                                </Tab>
-                                                <Tab text="parse tree">
-                                                    <content>
-                                                        <AnchorPane AnchorPane.bottomAnchor="0.0"
-                                                                    AnchorPane.leftAnchor="0.0"
-                                                                    AnchorPane.rightAnchor="0.0"
-                                                                    AnchorPane.topAnchor="0.0">
-                                                            <children>
-                                                                <TextArea fx:id="parseTreeOut" layoutY="-2.0"
-                                                                          AnchorPane.bottomAnchor="0.0"
-                                                                          AnchorPane.leftAnchor="0.0"
-                                                                          AnchorPane.rightAnchor="0.0"
-                                                                          AnchorPane.topAnchor="0.0"/>
-                                                            </children>
-                                                        </AnchorPane>
-                                                    </content>
-                                                </Tab>
-                                                <Tab text="parsed code">
-                                                    <content>
-                                                        <AnchorPane AnchorPane.bottomAnchor="0.0"
-                                                                    AnchorPane.leftAnchor="0.0"
-                                                                    AnchorPane.rightAnchor="0.0"
-                                                                    AnchorPane.topAnchor="0.0">
-                                                            <children>
-                                                                <TextArea fx:id="codeOut" layoutY="-2.0"
-                                                                          AnchorPane.bottomAnchor="0.0"
-                                                                          AnchorPane.leftAnchor="0.0"
-                                                                          AnchorPane.rightAnchor="0.0"
-                                                                          AnchorPane.topAnchor="0.0"/>
-                                                            </children>
-                                                        </AnchorPane>
-                                                    </content>
-                                                </Tab>
-                                                <Tab text="execution result">
-                                                    <content>
-                                                        <AnchorPane AnchorPane.bottomAnchor="0.0"
-                                                                    AnchorPane.leftAnchor="0.0"
-                                                                    AnchorPane.rightAnchor="0.0"
-                                                                    AnchorPane.topAnchor="0.0">
-                                                            <children>
-                                                                <TextArea fx:id="executeOut" layoutY="-2.0"
-                                                                          AnchorPane.bottomAnchor="0.0"
-                                                                          AnchorPane.leftAnchor="0.0"
-                                                                          AnchorPane.rightAnchor="0.0"
-                                                                          AnchorPane.topAnchor="0.0"/>
-                                                            </children>
-                                                        </AnchorPane>
-                                                    </content>
-                                                </Tab>
-                                                <Tab text="validation">
-                                                    <content>
-                                                        <AnchorPane AnchorPane.bottomAnchor="0.0"
-                                                                    AnchorPane.leftAnchor="0.0"
-                                                                    AnchorPane.rightAnchor="0.0"
-                                                                    AnchorPane.topAnchor="0.0">
-                                                            <children>
-                                                                <TextArea fx:id="validationOut" wrapText="true"
-                                                                          layoutY="-2.0"
-                                                                          AnchorPane.bottomAnchor="0.0"
-                                                                          AnchorPane.leftAnchor="0.0"
-                                                                          AnchorPane.rightAnchor="0.0"
-                                                                          AnchorPane.topAnchor="0.0"/>
-                                                            </children>
-                                                        </AnchorPane>
-                                                    </content>
-                                                </Tab>
-                                            </tabs>
-                                        </TabPane>
-                                    </children>
+                            </Tab>
+                            <Tab text="parse tree">
+                                <AnchorPane AnchorPane.bottomAnchor="0.0"
+                                            AnchorPane.leftAnchor="0.0"
+                                            AnchorPane.rightAnchor="0.0"
+                                            AnchorPane.topAnchor="0.0">
+                                    <TextArea fx:id="parseTreeOut" layoutY="-2.0"
+                                              AnchorPane.bottomAnchor="0.0"
+                                              AnchorPane.leftAnchor="0.0"
+                                              AnchorPane.rightAnchor="0.0"
+                                              AnchorPane.topAnchor="0.0"/>
                                 </AnchorPane>
-                            </items>
-                        </SplitPane>
-                    </children>
-                </VBox>
-            </center>
-        </BorderPane>
-    </children>
+                            </Tab>
+                            <Tab text="parsed code">
+                                <AnchorPane AnchorPane.bottomAnchor="0.0"
+                                            AnchorPane.leftAnchor="0.0"
+                                            AnchorPane.rightAnchor="0.0"
+                                            AnchorPane.topAnchor="0.0">
+                                    <TextArea fx:id="codeOut" layoutY="-2.0"
+                                              AnchorPane.bottomAnchor="0.0"
+                                              AnchorPane.leftAnchor="0.0"
+                                              AnchorPane.rightAnchor="0.0"
+                                              AnchorPane.topAnchor="0.0"/>
+                                </AnchorPane>
+                            </Tab>
+                            <Tab text="execution result">
+                                <AnchorPane AnchorPane.bottomAnchor="0.0"
+                                            AnchorPane.leftAnchor="0.0"
+                                            AnchorPane.rightAnchor="0.0"
+                                            AnchorPane.topAnchor="0.0">
+                                    <TextArea fx:id="executeOut" layoutY="-2.0"
+                                              AnchorPane.bottomAnchor="0.0"
+                                              AnchorPane.leftAnchor="0.0"
+                                              AnchorPane.rightAnchor="0.0"
+                                              AnchorPane.topAnchor="0.0"/>
+                                </AnchorPane>
+                            </Tab>
+                            <Tab text="validation">
+                                <AnchorPane AnchorPane.bottomAnchor="0.0"
+                                            AnchorPane.leftAnchor="0.0"
+                                            AnchorPane.rightAnchor="0.0"
+                                            AnchorPane.topAnchor="0.0">
+                                    <TextArea fx:id="validationOut" wrapText="true"
+                                              layoutY="-2.0"
+                                              AnchorPane.bottomAnchor="0.0"
+                                              AnchorPane.leftAnchor="0.0"
+                                              AnchorPane.rightAnchor="0.0"
+                                              AnchorPane.topAnchor="0.0"/>
+                                </AnchorPane>
+                            </Tab>
+                        </TabPane>
+                    </AnchorPane>
+                </SplitPane>
+            </VBox>
+        </center>
+    </BorderPane>
 </AnchorPane>

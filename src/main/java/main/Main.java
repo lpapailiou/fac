@@ -38,21 +38,6 @@ public class Main extends Application {
     }
 
     /**
-     * This method will take care about the start of the graphic user interface.
-     *
-     * @param stage the stage to pass.
-     */
-    @Override
-    public void start(Stage stage) {
-        Main.stage = stage;
-        if (isStartedByConsole) {
-            new Console().startTerminal(args);
-        } else {
-            initializeGui();
-        }
-    }
-
-    /**
      * This method is responsible for the initialization of the graphic user interface.
      * It will mainly initialize the only fxml controller used to do so.
      */
@@ -69,12 +54,27 @@ public class Main extends Application {
             stage.setMinWidth(800);
             stage.setTitle("JLANG | the toy programming language playground");
             stage.getIcons().add(new Image("icon.png"));
-            AppController controller = loader.getController();
+            ApplicationController controller = loader.getController();
             controller.initializeFileChooser(stage);
             controller.initializeThemeControl(stage);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method will take care about the start of the graphic user interface.
+     *
+     * @param stage the stage to pass.
+     */
+    @Override
+    public void start(Stage stage) {
+        Main.stage = stage;
+        if (isStartedByConsole) {
+            new ConsoleController().startTerminal(args);
+        } else {
+            initializeGui();
         }
     }
 

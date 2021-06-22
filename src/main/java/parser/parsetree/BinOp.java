@@ -122,8 +122,8 @@ public enum BinOp {
      */
     MOD("%", (a, b) -> Double.parseDouble(a.toString()) % Double.parseDouble(b.toString()));
 
-    private String operator;
-    private BiFunction<Object, Object, Object> function;
+    private final String operator;
+    private final BiFunction<Object, Object, Object> function;
 
     /**
      * This constructor initializes the enum for binary operators.

@@ -3,9 +3,6 @@ package parser.parsetree;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Visitor;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * This is a wrapper class for variable declarations.
  * It holds the data type of the variable, the identifier and a value.
@@ -14,8 +11,8 @@ import java.util.List;
  */
 public class VariableDeclaration extends Component implements Declaration {
 
-    private Type type;
-    private String identifier;
+    private final Type type;
+    private final String identifier;
     private Object value;
     private Object initValue;
 
@@ -117,18 +114,18 @@ public class VariableDeclaration extends Component implements Declaration {
      */
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
-        out += "\t+ " + "TYPE" + "\n\t+ " + "IDENTIFIER" + "\n";
+        StringBuilder out = new StringBuilder(this.getClass().getName());
+        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
+        out.append("\t+ " + "TYPE" + "\n\t+ " + "IDENTIFIER" + "\n");
         if (value instanceof Component) {
-            List<String> components = Arrays.asList(((Component) value).getParseTree().split("\n"));
+            String[] components = ((Component) value).getParseTree().split("\n");
             for (String str : components) {
-                out += "\t " + str + "\n";
+                out.append("\t ").append(str).append("\n");
             }
         } else {
-            out += "\t+ " + Type.getTypeForValue(value) + "\n";
+            out.append("\t+ ").append(Type.getTypeForValue(value)).append("\n");
         }
-        return out;
+        return out.toString();
     }
 
     /**

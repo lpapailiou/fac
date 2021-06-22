@@ -2,9 +2,6 @@ package parser.parsetree;
 
 import parser.parsetree.interfaces.Visitor;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * This is a wrapper class for print call statements.
  * An instance holds a value, which will be a chain of arguments.
@@ -68,17 +65,17 @@ public class PrintCallStatement extends Component {
      */
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+        StringBuilder out = new StringBuilder(this.getClass().getName());
+        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
         if (value instanceof Component) {
-            List<String> components = Arrays.asList(((Component) value).getParseTree().split("\n"));
+            String[] components = ((Component) value).getParseTree().split("\n");
             for (String str : components) {
-                out += "\t " + str + "\n";
+                out.append("\t ").append(str).append("\n");
             }
         } else {
-            out += "\t+ " + Type.getTypeForValue(value) + "\n";
+            out.append("\t+ ").append(Type.getTypeForValue(value)).append("\n");
         }
-        return out;
+        return out.toString();
     }
 
     /**

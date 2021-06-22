@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Program implements Traversable {
 
-    private List<Component> componentList = new ArrayList<>();
+    private final List<Component> componentList = new ArrayList<>();
 
     /**
      * This constructor initializes the wrapper for the root of the generated parse tree.
@@ -44,12 +44,12 @@ public class Program implements Traversable {
      */
     @Override
     public String toString() {
-        String out = "";
+        StringBuilder out = new StringBuilder();
         for (Component st : componentList) {
-            out += st.toString();
+            out.append(st.toString());
         }
 
-        return out;
+        return out.toString();
     }
 
     /**
@@ -62,16 +62,16 @@ public class Program implements Traversable {
      */
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+        StringBuilder out = new StringBuilder(this.getClass().getName());
+        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
         List<String> components = new ArrayList<>();
         for (Component st : componentList) {
             components.addAll(Arrays.asList(st.getParseTree().split("\n")));
         }
         for (String str : components) {
-            out += "\t " + str + "\n";
+            out.append("\t ").append(str).append("\n");
         }
-        return out;
+        return out.toString();
     }
 
     /**

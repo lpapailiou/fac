@@ -13,7 +13,7 @@ import java.util.List;
  */
 public abstract class Component implements Traversable {
 
-    private int[] location;
+    private final int[] location;
 
     /**
      * The constructor is used to set the location from the source file of this code fragment.
@@ -28,8 +28,8 @@ public abstract class Component implements Traversable {
     /**
      * Returns an argument wrapper.
      *
-     * @param arg the argument to wrap.
-     * @param left the start index of the location of the code fragment.
+     * @param arg   the argument to wrap.
+     * @param left  the start index of the location of the code fragment.
      * @param right the end index of the location of the code fragment.
      * @return the argument wrapper class.
      */
@@ -40,9 +40,9 @@ public abstract class Component implements Traversable {
     /**
      * Returns an argument wrapper, which points to the following argument.
      *
-     * @param arg  the argument to wrap.
-     * @param next the following argument.
-     * @param left the start index of the location of the code fragment.
+     * @param arg   the argument to wrap.
+     * @param next  the following argument.
+     * @param left  the start index of the location of the code fragment.
      * @param right the end index of the location of the code fragment.
      * @return the argument wrapper.
      */
@@ -56,8 +56,8 @@ public abstract class Component implements Traversable {
      *
      * @param op         the incrementing or decrementing operator.
      * @param identifier the variable identifier to modify.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left       the start index of the location of the code fragment.
+     * @param right      the end index of the location of the code fragment.
      * @return the assignment statement wrapper.
      */
     public static AssignmentStatement assgn(Object op, Object identifier, int left, int right) {
@@ -70,8 +70,8 @@ public abstract class Component implements Traversable {
      * @param op         the assignment operator
      * @param identifier the variable identifier.
      * @param value      the value to assign.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left       the start index of the location of the code fragment.
+     * @param right      the end index of the location of the code fragment.
      * @return the assignment statement wrapper.
      */
     public static AssignmentStatement assgn(Object op, Object identifier, Object value, int left, int right) {
@@ -84,8 +84,8 @@ public abstract class Component implements Traversable {
      * @param op       the binary operator.
      * @param operand1 the first operand.
      * @param operand2 the second operand.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left     the start index of the location of the code fragment.
+     * @param right    the end index of the location of the code fragment.
      * @return the binary conditional expression wrapper.
      */
     public static BinaryCondition cond(Object op, Object operand1, Object operand2, int left, int right) {
@@ -98,8 +98,8 @@ public abstract class Component implements Traversable {
      * @param op       the binary operator.
      * @param operand1 the first operand.
      * @param operand2 the second operand.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left     the start index of the location of the code fragment.
+     * @param right    the end index of the location of the code fragment.
      * @return the binary expression wrapper.
      */
     public static BinaryExpression expr(Object op, Object operand1, Object operand2, int left, int right) {
@@ -108,7 +108,8 @@ public abstract class Component implements Traversable {
 
     /**
      * Returns a break statement wrapper.
-     * @param left the start index of the location of the code fragment.
+     *
+     * @param left  the start index of the location of the code fragment.
      * @param right the end index of the location of the code fragment.
      * @return the break statement wrapper.
      */
@@ -120,8 +121,8 @@ public abstract class Component implements Traversable {
      * Returns a constant wrapper if the passed object is not already a wrapped component.
      *
      * @param object the constant to wrap.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left   the start index of the location of the code fragment.
+     * @param right  the end index of the location of the code fragment.
      * @return a program component.
      */
     public static Component constnt(Object object, int left, int right) {
@@ -135,8 +136,8 @@ public abstract class Component implements Traversable {
      * Returns a function call statement wrapper.
      *
      * @param identifier the identifier of the function call.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left       the start index of the location of the code fragment.
+     * @param right      the end index of the location of the code fragment.
      * @return the function call wrapper.
      */
     public static FunctionCallStatement fun(Object identifier, int left, int right) {
@@ -148,8 +149,8 @@ public abstract class Component implements Traversable {
      *
      * @param identifier the identifier of the function call.
      * @param arg        the argument (chain) of the function call.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left       the start index of the location of the code fragment.
+     * @param right      the end index of the location of the code fragment.
      * @return the function call wrapper.
      */
     public static FunctionCallStatement fun(Object identifier, Object arg, int left, int right) {
@@ -165,8 +166,8 @@ public abstract class Component implements Traversable {
      * @param type            the return type of the function.
      * @param identifier      the identifier of the function.
      * @param returnStatement the return statement of the function.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left            the start index of the location of the code fragment.
+     * @param right           the end index of the location of the code fragment.
      * @return the function definition wrapper.
      */
     public static FunctionDefStatement funDefEmpty(Object type, Object identifier, Object returnStatement, int left, int right) {
@@ -180,8 +181,8 @@ public abstract class Component implements Traversable {
      * @param identifier      the identifier of the function.
      * @param statements      the nested statements of the function.
      * @param returnStatement the return statement of the function.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left            the start index of the location of the code fragment.
+     * @param right           the end index of the location of the code fragment.
      * @return the function definition wrapper.
      */
     public static FunctionDefStatement funDef(Object type, Object identifier, Object statements, Object returnStatement, int left, int right) {
@@ -195,8 +196,8 @@ public abstract class Component implements Traversable {
      * @param identifier      the identifier of the function.
      * @param params          the parameter definition.
      * @param returnStatement the return statement of the function.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left            the start index of the location of the code fragment.
+     * @param right           the end index of the location of the code fragment.
      * @return the function definition wrapper.
      */
     public static FunctionDefStatement funDefEmpty(Object type, Object identifier, Object params, Object returnStatement, int left, int right) {
@@ -211,8 +212,8 @@ public abstract class Component implements Traversable {
      * @param params          the parameter definition.
      * @param statements      the nested statements of the function.
      * @param returnStatement the return statement of the function.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left            the start index of the location of the code fragment.
+     * @param right           the end index of the location of the code fragment.
      * @return the function definition wrapper.
      */
     public static FunctionDefStatement funDef(Object type, Object identifier, Object params, Object statements, Object returnStatement, int left, int right) {
@@ -224,10 +225,10 @@ public abstract class Component implements Traversable {
      *
      * @param condition  the conditional expression.
      * @param statements the nested statements.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
-     * @param cleft the start index of the location of the nested code fragment.
-     * @param cright the end index of the location of the nested code fragment.
+     * @param left       the start index of the location of the code fragment.
+     * @param right      the end index of the location of the code fragment.
+     * @param cleft      the start index of the location of the nested code fragment.
+     * @param cright     the end index of the location of the nested code fragment.
      * @return the if-then wrapper.
      */
     public static IfThenStatement ifThen(Object condition, Object statements, int left, int right, int cleft, int cright) {
@@ -243,10 +244,10 @@ public abstract class Component implements Traversable {
      * @param condition      the conditional expression.
      * @param ifStatements   the nested if-then statements.
      * @param elseStatements the nested else statements.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
-     * @param cleft the start index of the location of the nested code fragment.
-     * @param cright the end index of the location of the nested code fragment.
+     * @param left           the start index of the location of the code fragment.
+     * @param right          the end index of the location of the code fragment.
+     * @param cleft          the start index of the location of the nested code fragment.
+     * @param cright         the end index of the location of the nested code fragment.
      * @return the if-then-else wrapper.
      */
     public static IfThenStatement ifThen(Object condition, Object ifStatements, Object elseStatements, int left, int right, int cleft, int cright) {
@@ -284,8 +285,8 @@ public abstract class Component implements Traversable {
      *
      * @param type       the data type of the declaration.
      * @param identifier the identifier of the declaration.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left       the start index of the location of the code fragment.
+     * @param right      the end index of the location of the code fragment.
      * @return the parameter declaration wrapper.
      */
     public static ParamDeclaration paramDecl(Object type, Object identifier, int left, int right) {
@@ -298,8 +299,8 @@ public abstract class Component implements Traversable {
      * @param type          the data type of the declaration.
      * @param identifier    the identifier of the declaration.
      * @param nextParameter the next parameter declaration.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left          the start index of the location of the code fragment.
+     * @param right         the end index of the location of the code fragment.
      * @return the parameter declaration wrapper.
      */
     public static ParamDeclaration paramDecl(Object type, Object identifier, Object nextParameter, int left, int right) {
@@ -308,7 +309,8 @@ public abstract class Component implements Traversable {
 
     /**
      * Returns an empty print call statement wrapper.
-     * @param left the start index of the location of the code fragment.
+     *
+     * @param left  the start index of the location of the code fragment.
      * @param right the end index of the location of the code fragment.
      * @return the print call wrapper.
      */
@@ -320,8 +322,8 @@ public abstract class Component implements Traversable {
      * Returns a print call statement wrapper.
      *
      * @param object the object to print.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left   the start index of the location of the code fragment.
+     * @param right  the end index of the location of the code fragment.
      * @return the print call wrapper.
      */
     public static PrintCallStatement print(Object object, int left, int right) {
@@ -343,8 +345,8 @@ public abstract class Component implements Traversable {
      *
      * @param op      the operator.
      * @param operand the operand.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left    the start index of the location of the code fragment.
+     * @param right   the end index of the location of the code fragment.
      * @return the unary conditional expression wrapper.
      */
     public static UnaryCondition cond(Object op, Object operand, int left, int right) {
@@ -356,8 +358,8 @@ public abstract class Component implements Traversable {
      *
      * @param op      the operator.
      * @param operand the operand.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left    the start index of the location of the code fragment.
+     * @param right   the end index of the location of the code fragment.
      * @return the unary expression wrapper.
      */
     public static UnaryExpression expr(Object op, Object operand, int left, int right) {
@@ -369,8 +371,8 @@ public abstract class Component implements Traversable {
      *
      * @param type       the data type of the declaration.
      * @param identifier the identifier of the variable.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left       the start index of the location of the code fragment.
+     * @param right      the end index of the location of the code fragment.
      * @return the variable declaration wrapper.
      */
     public static VariableDeclaration decl(Object type, String identifier, int left, int right) {
@@ -383,8 +385,8 @@ public abstract class Component implements Traversable {
      * @param type       the data type of the declaration.
      * @param identifier the identifier of the variable.
      * @param value      the initial value to assign.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
+     * @param left       the start index of the location of the code fragment.
+     * @param right      the end index of the location of the code fragment.
      * @return the variable declaration wrapper.
      */
     public static VariableDeclaration decl(Object type, String identifier, Object value, int left, int right) {
@@ -396,10 +398,10 @@ public abstract class Component implements Traversable {
      *
      * @param condition  the conditional expression.
      * @param statements the nested statements of the while body.
-     * @param left the start index of the location of the code fragment.
-     * @param right the end index of the location of the code fragment.
-     * @param cleft the start index of the location of the nested code fragment.
-     * @param cright the end index of the location of the nested code fragment.
+     * @param left       the start index of the location of the code fragment.
+     * @param right      the end index of the location of the code fragment.
+     * @param cleft      the start index of the location of the nested code fragment.
+     * @param cright     the end index of the location of the nested code fragment.
      * @return the while statement wrapper.
      */
     public static WhileStatement loop(Object condition, Object statements, int left, int right, int cleft, int cright) {

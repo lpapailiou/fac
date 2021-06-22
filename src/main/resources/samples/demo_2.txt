@@ -1,27 +1,21 @@
-string h = 'o';
-string e = 'p';
-number j = 4;
-string g = 'g';
-string d = 'o';
+string h = 'o';     // string value
+number e = 2;       // number value
 
-// comment
+print(h + e);
 
-/*
-def boolean o(string t) {
-    //j = '_';
-    return t;
+if (h + e == 'o2') {
+    print('h and e is o2');
+} else {
+    print('h and e is not o2');
 }
 
-
-def string y(boolean b) {
-    while (s == r) {
-        print(2);
-    }
-    x = c;
-    return q;
+while (true) {
+    print('break works');
+    break;
 }
 
-def number i(boolean y, number z, boolean c, boolean f) {
-    n = (s == k);
-    return b;
-}*/
+def number mod(number a, number b) {
+    return a % b;
+}
+
+print(mod(-5, 3) + ' is 2 maybe');

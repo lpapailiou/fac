@@ -1,17 +1,13 @@
 package parser.parsetree;
 
-
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * This is a wrapper class for unary arithmetic expressions.
  * Its instances will hold an assignment operator and an operand.
  */
 public class UnaryExpression extends ArithmeticExpression {
 
-    private UnOp op;
-    private Object operand;
+    private final UnOp op;
+    private final Object operand;
 
     /**
      * This constructor will instantiate a wrapper for a binary expression.
@@ -65,32 +61,32 @@ public class UnaryExpression extends ArithmeticExpression {
     }
 
     /**
-     * This method returns the iunary expression as representation of the parse tree.
+     * This method returns the unary expression as representation of the parse tree.
      *
      * @return a snipped of the parse tree.
      */
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+        StringBuilder out = new StringBuilder(this.getClass().getName());
+        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
 
         if (op != UnOp.DEC && op != UnOp.INC) {
-            out += "\t+ " + "OPERATOR\n";
+            out.append("\t+ " + "OPERATOR\n");
         }
 
         if (operand instanceof Component) {
-            List<String> components = Arrays.asList(((Component) operand).getParseTree().split("\n"));
+            String[] components = ((Component) operand).getParseTree().split("\n");
             for (String str : components) {
-                out += "\t" + str + "\n";
+                out.append("\t").append(str).append("\n");
             }
         } else {
-            out += "\t+ " + Type.getTypeForValue(operand) + "\n";
+            out.append("\t+ ").append(Type.getTypeForValue(operand)).append("\n");
         }
 
         if (op == UnOp.DEC || op == UnOp.INC) {
-            out += "\t+ " + "OPERATOR\n";
+            out.append("\t+ " + "OPERATOR\n");
         }
-        return out;
+        return out.toString();
     }
 
 }

@@ -15,14 +15,4 @@ public class MissingDeclarationException extends GrammarException {
         super(message);
     }
 
-    /**
-     * Throws an exception pointing out that the validated declaration is missing in the current declaration scope.
-     *
-     * @param message the exception message.
-     * @param t       the exception to wrap.
-     */
-    public MissingDeclarationException(String message, Throwable t) {
-        super(message, t);
-    }
-
 }

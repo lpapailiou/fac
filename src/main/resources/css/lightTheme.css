@@ -43,6 +43,10 @@
     -fx-text-fill: #828282;
 }
 
+.scroll-bar .thumb {
+    -fx-background-color: #dcdcdc;
+}
+
 .tab:selected .tab-label {
     -fx-text-fill: -fx-focus-color;
 }

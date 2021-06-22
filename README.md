@@ -406,7 +406,7 @@ unreachable code occurs at this place.</li>
         break; }        
 
 ### Execution
-The execution is handled by the ``Interpreter``. It can be found int the 
+The 'execution' is handled by the ``Interpreter``. It can be found int the 
 package ``src\main\java\execution``. It is built on a validator, which means that it will automatically also
 validate code semantically before execution - even if the code itself will never run (e.g. in a dead if-then-else branch). 
   
@@ -415,7 +415,10 @@ placed always before callers (not like Java, where global variables and function
   
 The ``Interpreter`` can also be set to script mode. In this case, only the last entered statement will trigger the execution of print calls.  
 In the console, entered code will be validated after pressing ENTER on a blank input line. This means, multiple lines
-can be entered before validating (e.g. line breaks are allowed in between complex statements). 
+can be entered before validating (e.g. line breaks are allowed in between complex statements).  
+  
+The managing of the processing (e.g. specifically starting the scanner, parser, validator or interpreter and handling exceptions) is the
+``Processor``. It will run and cache all possible results. These can be extracted by other classes later on.
 
 ## Repository handling
 This section contains a few technical notes about this repository.
@@ -425,7 +428,8 @@ Clone the repository with following command.
     git clone https://github.com/lpapailiou/fac <target path>
 
 The code is written in ``java 8``.
-Once the repository is cloned, ``maven`` may take care about the build, plugins and the dependencies.  
+Once the repository is cloned, ``maven`` may take care about the build, plugins and the dependencies. The ``javafx`` dependency will
+not be handled by maven. 
   
 You may also just download the jar file from [latest release](https://github.com/lpapailiou/fac/releases/latest).  
 
@@ -470,9 +474,9 @@ There's also a small menu available which provides some orientation:
         -o execute
         -o gui          // with this method, the javafx gui is launched        
     
-    Optionally you may enter a file path after the option.
+    Optionally you may enter a file path after the mode.
 
-If a file path follows the option, this specific file will be processed. Otherwise, a sample file will be run.  
+If a file path follows the mode, this specific file will be processed. Otherwise, a sample file will be run.  
 Several sample files are available in the directory ``src\main\resources\samples``.
 
 ##### Scan mode
@@ -480,12 +484,12 @@ The scanner will take a file and tokenize its content. The output is verbose, ev
 printed accordingly to the console.
 
     // sample output
-    [...]
     scanning token {NUMTYPE}: found match <number> at line 1, column 0.
     scanning token {VAR}: found match <one> at line 1, column 7.
     scanning token {EQUAL}: found match <=> at line 1, column 11.
     scanning token {NUM}: found match <1> at line 1, column 13.
     scanning token {STOP}: found match <;> at line 1, column 14.
+    [...]
     ...end of file reached at line 1, column 1.
 
 ##### Parse mode
@@ -576,8 +580,7 @@ If the input is validated and turns out to be invalid, the invalid section will 
   
 If code is edited manually and the code ends with two newlines, the code will be processed dynamically while
 you are typing.  
-In this case, the tabs won't switch automatically, so you can observe the tab of your choice.  Also,
-automatic text highlighting is disabled (it would bother very much when typing).  
+In this case, the tabs won't switch automatically, so you can observe the tab of your choice.  
 
 #### Execution
 The secondary area is split up in multiple tabs. It will show the results of the processing of your code in
@@ -587,7 +590,7 @@ the order of processing.
   
 ##### Scanned tokens tab
 In this tab, the scanned tokens are listed in the order of scanning.  
-If the tokens appear, the input code is lexically valid.
+All tokens appearing are valid. If an error occurs, the according token is hinted specifically.
     
 ![scanned tokens](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_scan.png)  
   
@@ -601,7 +604,7 @@ Important is: if the parse tree could be generated, the syntax of the code is va
  
 ##### Parsed code tab
 This tab shows the code as pretty-printed interpretation of the input by the parser. 
-It should match the input, except the comments and excess whitespace is gone.  
+It should match the input, except the comments and excess whitespaces / line breaks are gone.  
 Also here: if the code is visible, the syntax of the code is valid.  
  
 ![parsed code](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_parsedcode.png)  
@@ -615,7 +618,7 @@ it is still possible that runtime errors occur (e.g. stack overflow, division by
 
 ##### Validation tab
 This is the 'annoying' tab, as it will open as soon as something went wrong. It will show a short error message
-and reveal further details about the problem. If the problem is ambiguous, the stack trace is shown additionally.  
+and reveal further details about the problem. The stack trace is printed additionally. 
 With this tab, the toy code can be debugged if needed.
     
 ![validation](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_validation.png)  
@@ -626,11 +629,11 @@ The mini-IDE has also a little 'action area', which should improve usability.
 ![action area](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_actionarea.png) 
 
 The code processing can be triggered at once by pushing the button ``go``. As soon as the input is
-validated, check marks will indicate if the processing was successful, or - if not - where the problem occurred.  
+validated, check marks will indicate if the processing was successful, or - if not - at which step the problem occurred.  
 Additionally, a tab switch is triggered by the ``go`` button. If the code is valid, it will show the execution result, otherwise
 the validation tab.
 
-Additionally, there are minor features:
+Furthermore, there are additional minor features:
 <ul>
 <li>The theme can be switched between dark mode and light mode.</li>
 <li>The orientation of the split pane an be switched (vertical vs. horizontal).</li>

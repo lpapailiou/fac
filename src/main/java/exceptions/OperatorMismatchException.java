@@ -15,14 +15,4 @@ public class OperatorMismatchException extends GrammarException {
         super(message);
     }
 
-    /**
-     * Throws an exception pointing out that the operator is not valid within the context of the present data type(s).
-     *
-     * @param message the exception message.
-     * @param t       the exception to wrap.
-     */
-    public OperatorMismatchException(String message, Throwable t) {
-        super(message, t);
-    }
-
 }

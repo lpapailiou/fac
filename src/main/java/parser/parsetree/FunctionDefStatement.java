@@ -14,11 +14,11 @@ import java.util.List;
 public class FunctionDefStatement extends Component {
 
 
-    private Type type;
-    private String identifier;
-    private List<ParamDeclaration> paramDeclarationList = new ArrayList<>();
-    private List<Component> componentList = new ArrayList<>();
-    private Object returnStatement;
+    private final Type type;
+    private final String identifier;
+    private final List<ParamDeclaration> paramDeclarationList = new ArrayList<>();
+    private final List<Component> componentList = new ArrayList<>();
+    private final Object returnStatement;
 
     /**
      * This constructor will create a wrapper for a function definition.
@@ -89,14 +89,14 @@ public class FunctionDefStatement extends Component {
      * @return the parameter list as string.
      */
     public String paramListAsString() {
-        String out = "";
+        StringBuilder out = new StringBuilder();
         for (int i = 0; i < paramDeclarationList.size(); i++) {
-            out += paramDeclarationList.get(i);
+            out.append(paramDeclarationList.get(i));
             if (i < paramDeclarationList.size() - 1) {
-                out += ", ";
+                out.append(", ");
             }
         }
-        return out;
+        return out.toString();
     }
 
     /**
@@ -105,14 +105,14 @@ public class FunctionDefStatement extends Component {
      * @return the parameter type list as string.
      */
     public String paramTypeListAsString() {
-        String out = "";
+        StringBuilder out = new StringBuilder();
         for (int i = 0; i < paramDeclarationList.size(); i++) {
-            out += paramDeclarationList.get(i).getType().getIdentifier();
+            out.append(paramDeclarationList.get(i).getType().getIdentifier());
             if (i < paramDeclarationList.size() - 1) {
-                out += ", ";
+                out.append(", ");
             }
         }
-        return out;
+        return out.toString();
     }
 
     /**
@@ -138,20 +138,20 @@ public class FunctionDefStatement extends Component {
      */
     @Override
     public String toString() {
-        String out = "\ndef " + type.getIdentifier() + " " + identifier + "(";
-        out += paramListAsString();
-        out += ") {\n";
+        StringBuilder out = new StringBuilder("\ndef " + type.getIdentifier() + " " + identifier + "(");
+        out.append(paramListAsString());
+        out.append(") {\n");
 
         List<String> componentStrings = new ArrayList<>();
         for (Component st : componentList) {
             componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
         }
         for (String str : componentStrings) {
-            out += "\t" + str + "\n";
+            out.append("\t").append(str).append("\n");
         }
 
-        out += "\treturn " + returnStatement + ";\n}\n\n";
-        return out;
+        out.append("\treturn ").append(returnStatement).append(";\n}\n\n");
+        return out.toString();
     }
 
     /**
@@ -161,34 +161,34 @@ public class FunctionDefStatement extends Component {
      */
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
-        out += "\t+ " + "DEF" + "\n";
-        out += "\t+ " + "TYPE" + "\n";
-        out += "\t+ " + "IDENTIFIER" + "\n";
-        out += "\t+ " + "PARAMETER" + "\n";
+        StringBuilder out = new StringBuilder(this.getClass().getName());
+        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
+        out.append("\t+ " + "DEF" + "\n");
+        out.append("\t+ " + "TYPE" + "\n");
+        out.append("\t+ " + "IDENTIFIER" + "\n");
+        out.append("\t+ " + "PARAMETER" + "\n");
         for (Component c : paramDeclarationList) {
             String[] components = (c).getParseTree().split("\n");
             for (String str : components) {
-                out += "\t\t " + str + "\n";
+                out.append("\t\t ").append(str).append("\n");
             }
         }
         if (!componentList.isEmpty()) {
-            out += "\t+ " + "BODY" + "\n";
+            out.append("\t+ " + "BODY" + "\n");
             for (Component c : componentList) {
                 String[] components = (c).getParseTree().split("\n");
                 for (String str : components) {
-                    out += "\t\t " + str + "\n";
+                    out.append("\t\t ").append(str).append("\n");
                 }
             }
         }
 
-        out += "\t+ " + "RETURN" + "\n";
+        out.append("\t+ " + "RETURN" + "\n");
         String[] returnStat = (((Component) returnStatement)).getParseTree().split("\n");
         for (String str : returnStat) {
-            out += "\t\t " + str + "\n";
+            out.append("\t\t ").append(str).append("\n");
         }
-        return out;
+        return out.toString();
     }
 
     /**

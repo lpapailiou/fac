@@ -6,7 +6,23 @@
 
     <groupId>fac</groupId>
     <artifactId>fac</artifactId>
-    <version>1.8</version>
+    <version>1.9</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>java-cup-11b</groupId>
+            <artifactId>java-cup-11b</artifactId>
+            <version>11b</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/java-cup-11b-runtime.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <pluginManagement>
@@ -81,13 +97,5 @@
             </plugins>
         </pluginManagement>
     </build>
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
 </project>

@@ -17,7 +17,7 @@ import java.util.*;
 %line
 %column
 
-// ************* CUSTOM SCANANER CODE *************
+// ************* CUSTOM SCANNER CODE *************
 
 %{
     private ComplexSymbolFactory symbolFactory;
@@ -36,16 +36,12 @@ import java.util.*;
 
     private Symbol collectToken(int token, String description) {
       Symbol symbol = symbol(yytext(), token, yytext());
+      String out = "scanning token {" + description + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".";
+      output.add(out);
       if (verbose) {
-        consolePrint(description);
+        System.out.println(out);
       }
       return symbol;
-    }
-
-    private void consolePrint(String value) {
-      String out = "scanning token {" + value + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".";
-      output.add(out);
-      System.out.println(out);
     }
 
     private Symbol symbol(String name, int sym, Object val) {

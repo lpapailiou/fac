@@ -9,10 +9,10 @@ import parser.parsetree.interfaces.Visitor;
  */
 public class ParamDeclaration extends Component implements Declaration {
 
-    private Type type;
-    private String identifier;
+    private final Type type;
+    private final String identifier;
+    private final Object initValue;
     private Object value;
-    private Object initValue;
     private ParamDeclaration next;
 
     /**

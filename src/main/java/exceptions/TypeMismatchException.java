@@ -16,14 +16,4 @@ public class TypeMismatchException extends GrammarException {
         super(message);
     }
 
-    /**
-     * Throws an exception pointing out that the data types are not valid in the context of the current expression.
-     *
-     * @param message the exception message.
-     * @param t       the exception to wrap.
-     */
-    public TypeMismatchException(String message, Throwable t) {
-        super(message, t);
-    }
-
 }

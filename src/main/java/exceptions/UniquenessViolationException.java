@@ -15,14 +15,4 @@ public class UniquenessViolationException extends GrammarException {
         super(message);
     }
 
-    /**
-     * Throws an exception pointing out that a variable was already declared, thus not valid in this context.
-     *
-     * @param message the exception message.
-     * @param t       the exception to wrap.
-     */
-    public UniquenessViolationException(String message, Throwable t) {
-        super(message, t);
-    }
-
 }

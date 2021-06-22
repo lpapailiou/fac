@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class NestedStatement extends Component {
 
-    private Component component;
+    private final Component component;
     private NestedStatement next;
 
     /**

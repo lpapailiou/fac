@@ -1,12 +1,13 @@
-package main;
+package execution;
 
 /**
- * This enum is used to define the available options of this program.
+ * This enum is used to define the available modes of this program.
  * The user can choose if a code should be just scanned, parsed, validated or executed.
  * The execution can be done at once or step by step within the console.
  * The steps build on each other, every option will include all preceding options.
+ * Additionally, the option 'GUI' allows to start up the gui from the terminal.
  */
-public enum Option {
+public enum Mode {
 
     /**
      * Will scan a code and omit further processing.
@@ -36,6 +37,6 @@ public enum Option {
     /**
      * Will start up the gui from the terminal, while leaving the terminal open.
      */
-    GUI;
+    GUI
 
 }

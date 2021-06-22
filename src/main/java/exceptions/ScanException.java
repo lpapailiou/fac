@@ -11,15 +11,6 @@ public class ScanException extends RuntimeException {
      * Throws an exception pointing out that an error occurred during the scanning process.
      *
      * @param message the exception message.
-     */
-    public ScanException(String message) {
-        super(message);
-    }
-
-    /**
-     * Throws an exception pointing out that an error occurred during the scanning process.
-     *
-     * @param message the exception message.
      * @param t       the error to wrap.
      */
     public ScanException(String message, Throwable t) {

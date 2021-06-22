@@ -22,9 +22,9 @@ import java.util.List;
  */
 public class Validator implements Visitor {
 
-    private List<List<Declaration>> declarationScope = new ArrayList<>();   // variable declaration context
-    private List<FunctionDefStatement> functionScope = new ArrayList<>();   // function declaration context
-    private int whileDepth = 0;                                             // control counter for break statement check
+    private final List<List<Declaration>> declarationScope = new ArrayList<>();   // variable declaration context
+    private final List<FunctionDefStatement> functionScope = new ArrayList<>();   // function declaration context
+    private int whileDepth = 0;                                                   // control counter for break statement check
 
     /**
      * This method visits an assignment statement.
@@ -313,7 +313,7 @@ public class Validator implements Visitor {
      * or the result of a function call).
      * If the object to evaluate is more complex, this method will follow the component chain until the final result is found.
      *
-     * @param parent     the parent parse tree component.
+     * @param parent  the parent parse tree component.
      * @param operand the operand of which the data type should be evaluated.
      * @return the data type of the operand.
      */
@@ -346,7 +346,7 @@ public class Validator implements Visitor {
     /**
      * This method evaluates the return type of the declaration of the called function.
      *
-     * @param parent     the parent parse tree component.
+     * @param parent  the parent parse tree component.
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
@@ -361,7 +361,7 @@ public class Validator implements Visitor {
      * If one of both operands is a string type, the result will evaluate to a string, otherwise it will be numeric.
      * Additionally, the operators must match (i.e. only a plus is allowed for string operations).
      *
-     * @param parent     the parent parse tree component.
+     * @param parent  the parent parse tree component.
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
@@ -387,7 +387,7 @@ public class Validator implements Visitor {
     /**
      * This methods validates the operand of a unary arithmetic expression and validates if the operator matches.
      *
-     * @param parent     the parent parse tree component.
+     * @param parent  the parent parse tree component.
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
@@ -403,7 +403,7 @@ public class Validator implements Visitor {
     /**
      * This method returns the data type of the contained value of a constant.
      *
-     * @param parent     the parent parse tree component.
+     * @param parent  the parent parse tree component.
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
@@ -415,7 +415,7 @@ public class Validator implements Visitor {
      * This method returns the data type of a binary conditional expression. It must evaluate to a boolean value.
      * Operators are validated as well (e.g. 'less' can be used in numeric context only).
      *
-     * @param parent     the parent parse tree component.
+     * @param parent  the parent parse tree component.
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
@@ -439,7 +439,7 @@ public class Validator implements Visitor {
     /**
      * This method returns the data type of a unary conditional expression. It must evaluate to a boolean value.
      *
-     * @param parent     the parent parse tree component.
+     * @param parent  the parent parse tree component.
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
@@ -533,7 +533,7 @@ public class Validator implements Visitor {
     /**
      * This method looks for a fitting function definition which matches a given identifier and the parameter count.
      *
-     * @param parent     the parent parse tree component.
+     * @param parent         the parent parse tree component.
      * @param identifier     the identifier of the function.
      * @param parameterCount the parameter count of the function.
      * @return the function definition of the found function.

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class IfThenElseStatement extends IfThenStatement {
 
-    private List<Component> componentListElse = new ArrayList<>();
+    private final List<Component> componentListElse = new ArrayList<>();
 
     /**
      * This constructor will wrap the contents of an if-then-else statement. It will initialize the
@@ -75,38 +75,38 @@ public class IfThenElseStatement extends IfThenStatement {
      */
     @Override
     public String toString() {
-        String out = "\nif ";
+        StringBuilder out = new StringBuilder("\nif ");
         boolean isCond = condition instanceof ConditionalExpression;
         if (!isCond) {
-            out += "(";
+            out.append("(");
         }
-        out += condition;
+        out.append(condition);
         if (!isCond) {
-            out += ")";
+            out.append(")");
         }
-        out += " {\n";
+        out.append(" {\n");
         if (!componentListIf.isEmpty()) {
             List<String> componentStrings = new ArrayList<>();
             for (Component st : componentListIf) {
                 componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
             }
             for (String str : componentStrings) {
-                out += "\t" + str + "\n";
+                out.append("\t").append(str).append("\n");
             }
         }
 
         if (!componentListElse.isEmpty()) {
-            out += "} else { \n";
+            out.append("} else { \n");
             List<String> componentStrings = new ArrayList<>();
             for (Component st : componentListElse) {
                 componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
             }
             for (String str : componentStrings) {
-                out += "\t" + str + "\n";
+                out.append("\t").append(str).append("\n");
             }
         }
-        out += "}\n\n";
-        return out;
+        out.append("}\n\n");
+        return out.toString();
     }
 
     /**
@@ -116,34 +116,34 @@ public class IfThenElseStatement extends IfThenStatement {
      */
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
-        out += "\t+ " + "IF" + "\n";
-        out += "\t\t+ " + "CONDITION" + "\n";
-        List<String> conditionComponents = Arrays.asList((((Component) condition)).getParseTree().split("\n"));
+        StringBuilder out = new StringBuilder(this.getClass().getName());
+        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
+        out.append("\t+ " + "IF" + "\n");
+        out.append("\t\t+ " + "CONDITION" + "\n");
+        String[] conditionComponents = (((Component) condition)).getParseTree().split("\n");
         for (String str : conditionComponents) {
-            out += "\t\t\t " + str + "\n";
+            out.append("\t\t\t ").append(str).append("\n");
         }
         if (!componentListIf.isEmpty()) {
-            out += "\t\t+ " + "BODY" + "\n";
+            out.append("\t\t+ " + "BODY" + "\n");
             for (Component c : componentListIf) {
-                List<String> components = Arrays.asList((c).getParseTree().split("\n"));
+                String[] components = (c).getParseTree().split("\n");
                 for (String str : components) {
-                    out += "\t\t\t " + str + "\n";
+                    out.append("\t\t\t ").append(str).append("\n");
                 }
             }
         }
-        out += "\t+ " + "ELSE" + "\n";
+        out.append("\t+ " + "ELSE" + "\n");
         if (!componentListElse.isEmpty()) {
-            out += "\t\t+ " + "BODY" + "\n";
+            out.append("\t\t+ " + "BODY" + "\n");
             for (Component c : componentListElse) {
-                List<String> components = Arrays.asList((c).getParseTree().split("\n"));
+                String[] components = (c).getParseTree().split("\n");
                 for (String str : components) {
-                    out += "\t\t\t " + str + "\n";
+                    out.append("\t\t\t ").append(str).append("\n");
                 }
             }
         }
-        return out;
+        return out.toString();
     }
 
     /**

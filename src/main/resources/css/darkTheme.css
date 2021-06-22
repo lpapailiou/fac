@@ -18,11 +18,7 @@
     -fx-focused-base: #c71585; /* not sure about this */
 }
 
-.label {
-    -fx-text-fill: -fx-text-fill;
-}
-
-.dialog-pane .label {
+.dialog-pane .label, .label, .tab .tab-label {
     -fx-text-fill: rgba(186, 186, 186, 1);
 }
 
@@ -45,6 +41,10 @@
 
 .tab .tab-label {
     -fx-text-fill: #828282;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #484848;
 }
 
 .tab:selected .tab-label {

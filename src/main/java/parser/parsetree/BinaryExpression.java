@@ -1,18 +1,15 @@
 package parser.parsetree;
 
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * This is a wrapper class for binary arithmetic expressions.
  * Its instances will hold an assignment operator and two operands.
  */
 public class BinaryExpression extends ArithmeticExpression {
 
-    private BinOp op;
-    private Object operand1;
-    private Object operand2;
+    private final BinOp op;
+    private final Object operand1;
+    private final Object operand2;
 
     /**
      * This constructor will instantiate a wrapper for a binary expression.
@@ -77,30 +74,30 @@ public class BinaryExpression extends ArithmeticExpression {
 
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+        StringBuilder out = new StringBuilder(this.getClass().getName());
+        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
 
         if (operand1 instanceof Component) {
-            List<String> components = Arrays.asList(((Component) operand1).getParseTree().split("\n"));
+            String[] components = ((Component) operand1).getParseTree().split("\n");
             for (String str : components) {
-                out += "\t" + str + "\n";
+                out.append("\t").append(str).append("\n");
             }
         } else {
-            out += "\t+ " + Type.getTypeForValue(operand1) + "\n";
+            out.append("\t+ ").append(Type.getTypeForValue(operand1)).append("\n");
         }
 
-        out += "\t+ " + "OPERATOR" + "\n";
+        out.append("\t+ " + "OPERATOR" + "\n");
 
         if (operand2 instanceof Component) {
-            List<String> components = Arrays.asList(((Component) operand2).getParseTree().split("\n"));
+            String[] components = ((Component) operand2).getParseTree().split("\n");
             for (String str : components) {
-                out += "\t" + str + "\n";
+                out.append("\t").append(str).append("\n");
             }
         } else {
-            out += "\t+ " + Type.getTypeForValue(operand2) + "\n";
+            out.append("\t+ ").append(Type.getTypeForValue(operand2)).append("\n");
         }
 
-        return out;
+        return out.toString();
     }
 
 }

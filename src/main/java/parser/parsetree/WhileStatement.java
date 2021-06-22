@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class WhileStatement extends Component {
 
-    private Object condition;
+    private final Object condition;
     private List<Component> componentList = new ArrayList<>();
 
     /**
@@ -58,27 +58,27 @@ public class WhileStatement extends Component {
      */
     @Override
     public String toString() {
-        String out = "\nwhile ";
+        StringBuilder out = new StringBuilder("\nwhile ");
         boolean isCond = condition instanceof ConditionalExpression;
         if (!isCond) {
-            out += "(";
+            out.append("(");
         }
-        out += condition;
+        out.append(condition);
         if (!isCond) {
-            out += ")";
+            out.append(")");
         }
-        out += " {\n";
+        out.append(" {\n");
 
         List<String> componentStrings = new ArrayList<>();
         for (Component st : componentList) {
             componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
         }
         for (String str : componentStrings) {
-            out += "\t" + str + "\n";
+            out.append("\t").append(str).append("\n");
         }
-        out += "}\n";
+        out.append("}\n");
 
-        return out;
+        return out.toString();
     }
 
     /**
@@ -88,24 +88,24 @@ public class WhileStatement extends Component {
      */
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
-        out += "\t+ " + "WHILE" + "\n";
-        out += "\t\t+ " + "CONDITION" + "\n";
-        List<String> conditionComponents = Arrays.asList((((Component) condition)).getParseTree().split("\n"));
+        StringBuilder out = new StringBuilder(this.getClass().getName());
+        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
+        out.append("\t+ " + "WHILE" + "\n");
+        out.append("\t\t+ " + "CONDITION" + "\n");
+        String[] conditionComponents = (((Component) condition)).getParseTree().split("\n");
         for (String str : conditionComponents) {
-            out += "\t\t\t " + str + "\n";
+            out.append("\t\t\t ").append(str).append("\n");
         }
         if (!componentList.isEmpty()) {
-            out += "\t\t+ " + "BODY" + "\n";
+            out.append("\t\t+ " + "BODY" + "\n");
             for (Component c : componentList) {
-                List<String> components = Arrays.asList((c).getParseTree().split("\n"));
+                String[] components = (c).getParseTree().split("\n");
                 for (String str : components) {
-                    out += "\t\t\t " + str + "\n";
+                    out.append("\t\t\t ").append(str).append("\n");
                 }
             }
         }
-        return out;
+        return out.toString();
     }
 
     /**

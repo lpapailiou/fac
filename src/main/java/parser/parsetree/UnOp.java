@@ -26,8 +26,8 @@ public enum UnOp {
      */
     EXCL("!", (e) -> !Boolean.parseBoolean(e.toString()));
 
-    private String operator;
-    private Function<Object, Object> function;
+    private final String operator;
+    private final Function<Object, Object> function;
 
     /**
      * This constructor initializes the enum for unary operators.

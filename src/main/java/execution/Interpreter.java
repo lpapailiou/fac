@@ -21,11 +21,11 @@ import java.util.List;
  */
 public class Interpreter extends Validator {
 
+    private final List<String> output = new ArrayList<>();
     private boolean execute = true;         // to be switched off if validation only is required (e.g. for dead if-then-else branches)
     private boolean scriptMode = false;     // allows to change behavior for script mode vs. all-at-once-execution
     private boolean printActive = false;    // indicator to switch off execution for print statements (used in script mode)
     private int breakEvent = 0;             // counts the break statements found to be executed
-    private List<String> output = new ArrayList<>();
 
     /**
      * This method will trigger the validation for the assignment statement first.
@@ -208,7 +208,7 @@ public class Interpreter extends Validator {
      *
      * @param scriptMode indicates if script mode should be turned on or off.
      */
-    public void setScriptMode(boolean scriptMode) {
+    void setScriptMode(boolean scriptMode) {
         this.scriptMode = scriptMode;
     }
 
@@ -323,7 +323,7 @@ public class Interpreter extends Validator {
      * or the result of a function call).
      * If the object to evaluate is more complex, this method will follow the component chain until the final result is found.
      *
-     * @param parent     the parent parse tree component.
+     * @param parent  the parent parse tree component.
      * @param operand the operand of which the value should be evaluated.
      * @return the value of the operand.
      */

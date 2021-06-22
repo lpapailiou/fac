@@ -23,15 +23,12 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
      * This character denotes the end of file.
      */
     public static final int YYEOF = -1;
-
+    // Lexical states.
+    public static final int YYINITIAL = 0;
     /**
      * Initial size of the lookahead buffer.
      */
     private static final int ZZ_BUFFERSIZE = 16384;
-
-    // Lexical states.
-    public static final int YYINITIAL = 0;
-
     /**
      * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
      * ZZ_LEXSTATE[l+1] is the state in the DFA for the lexical state l
@@ -41,12 +38,6 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     private static final int ZZ_LEXSTATE[] = {
             0, 0
     };
-
-    /**
-     * Top-level table for translating characters to character classes
-     */
-    private static final int[] ZZ_CMAP_TOP = zzUnpackcmap_top();
-
     private static final String ZZ_CMAP_TOP_PACKED_0 =
             "\1\0\5\u0100\1\u0200\1\u0300\1\u0100\5\u0400\1\u0500\1\u0600" +
                     "\1\u0700\5\u0100\1\u0800\1\u0900\1\u0a00\1\u0b00\1\u0c00\1\u0d00" +
@@ -56,32 +47,10 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
                     "\1\u0100\1\u1900\1\u1600\1\u0900\3\u0100\1\u1300\1\u1a00\114\u0100" +
                     "\1\u1b00\1\u1300\153\u0100\1\u1c00\11\u0100\1\u1d00\1\u1400\6\u0100" +
                     "\1\u1300\u0f16\u0100";
-
-    private static int[] zzUnpackcmap_top() {
-        int[] result = new int[4352];
-        int offset = 0;
-        offset = zzUnpackcmap_top(ZZ_CMAP_TOP_PACKED_0, offset, result);
-        return result;
-    }
-
-    private static int zzUnpackcmap_top(String packed, int offset, int[] result) {
-        int i = 0;       /* index in packed string  */
-        int j = offset;  /* index in unpacked array */
-        int l = packed.length();
-        while (i < l) {
-            int count = packed.charAt(i++);
-            int value = packed.charAt(i++);
-            do result[j++] = value; while (--count > 0);
-        }
-        return j;
-    }
-
-
     /**
-     * Second-level tables for translating characters to character classes
+     * Top-level table for translating characters to character classes
      */
-    private static final int[] ZZ_CMAP_BLOCKS = zzUnpackcmap_blocks();
-
+    private static final int[] ZZ_CMAP_TOP = zzUnpackcmap_top();
     private static final String ZZ_CMAP_BLOCKS_PACKED_0 =
             "\11\0\1\1\1\2\1\3\1\1\1\4\22\0\1\1" +
                     "\1\5\3\0\1\6\1\7\1\10\1\11\1\12\1\13" +
@@ -102,31 +71,10 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
                     "\12\55\u012c\0\12\55\200\0\12\55\74\0\12\55\220\0" +
                     "\12\55\166\0\12\55\146\0\12\55\206\0\12\55\106\0" +
                     "\12\55\266\0\12\55\u0164\0\62\55\100\0\12\55\266\0";
-
-    private static int[] zzUnpackcmap_blocks() {
-        int[] result = new int[7680];
-        int offset = 0;
-        offset = zzUnpackcmap_blocks(ZZ_CMAP_BLOCKS_PACKED_0, offset, result);
-        return result;
-    }
-
-    private static int zzUnpackcmap_blocks(String packed, int offset, int[] result) {
-        int i = 0;       /* index in packed string  */
-        int j = offset;  /* index in unpacked array */
-        int l = packed.length();
-        while (i < l) {
-            int count = packed.charAt(i++);
-            int value = packed.charAt(i++);
-            do result[j++] = value; while (--count > 0);
-        }
-        return j;
-    }
-
     /**
-     * Translates DFA states to action switch labels.
+     * Second-level tables for translating characters to character classes
      */
-    private static final int[] ZZ_ACTION = zzUnpackAction();
-
+    private static final int[] ZZ_CMAP_BLOCKS = zzUnpackcmap_blocks();
     private static final String ZZ_ACTION_PACKED_0 =
             "\1\0\1\1\1\2\1\3\1\4\2\1\1\5\1\6" +
                     "\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16" +
@@ -137,32 +85,10 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
                     "\1\0\1\2\2\21\1\44\4\21\1\45\2\21\1\46" +
                     "\1\21\1\47\2\21\1\50\1\21\1\51\1\52\1\53" +
                     "\1\54";
-
-    private static int[] zzUnpackAction() {
-        int[] result = new int[103];
-        int offset = 0;
-        offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
-        return result;
-    }
-
-    private static int zzUnpackAction(String packed, int offset, int[] result) {
-        int i = 0;       /* index in packed string  */
-        int j = offset;  /* index in unpacked array */
-        int l = packed.length();
-        while (i < l) {
-            int count = packed.charAt(i++);
-            int value = packed.charAt(i++);
-            do result[j++] = value; while (--count > 0);
-        }
-        return j;
-    }
-
-
     /**
-     * Translates a state to a row index in the transition table
+     * Translates DFA states to action switch labels.
      */
-    private static final int[] ZZ_ROWMAP = zzUnpackRowMap();
-
+    private static final int[] ZZ_ACTION = zzUnpackAction();
     private static final String ZZ_ROWMAP_PACKED_0 =
             "\0\0\0\56\0\134\0\212\0\270\0\346\0\u0114\0\56" +
                     "\0\56\0\u0142\0\u0170\0\56\0\u019e\0\u01cc\0\u01fa\0\56" +
@@ -177,30 +103,10 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
                     "\0\u09e2\0\u07ba\0\u0a10\0\u0a3e\0\u02b2\0\u0a6c\0\u0a9a\0\u0ac8" +
                     "\0\u0af6\0\u02b2\0\u0b24\0\u0b52\0\u02b2\0\u0b80\0\u02b2\0\u0bae" +
                     "\0\u0bdc\0\u02b2\0\u0c0a\0\u02b2\0\u02b2\0\u02b2\0\u02b2";
-
-    private static int[] zzUnpackRowMap() {
-        int[] result = new int[103];
-        int offset = 0;
-        offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
-        return result;
-    }
-
-    private static int zzUnpackRowMap(String packed, int offset, int[] result) {
-        int i = 0;  /* index in packed string  */
-        int j = offset;  /* index in unpacked array */
-        int l = packed.length();
-        while (i < l) {
-            int high = packed.charAt(i++) << 16;
-            result[j++] = high | packed.charAt(i++);
-        }
-        return j;
-    }
-
     /**
-     * The transition table of the DFA
+     * Translates a state to a row index in the transition table
      */
-    private static final int[] ZZ_TRANS = zzUnpackTrans();
-
+    private static final int[] ZZ_ROWMAP = zzUnpackRowMap();
     private static final String ZZ_TRANS_PACKED_0 =
             "\1\2\2\3\1\2\1\3\1\4\1\5\1\6\1\7" +
                     "\1\10\1\11\1\12\1\13\1\14\1\15\1\2\1\16" +
@@ -251,6 +157,207 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
                     "\17\24\1\144\4\24\25\0\1\64\4\0\14\24\1\145" +
                     "\7\24\25\0\1\64\4\0\6\24\1\146\15\24\25\0" +
                     "\1\64\4\0\14\24\1\147\7\24\4\0";
+    /**
+     * The transition table of the DFA
+     */
+    private static final int[] ZZ_TRANS = zzUnpackTrans();
+    /**
+     * Error code for "Unknown internal scanner error".
+     */
+    private static final int ZZ_UNKNOWN_ERROR = 0;
+    /**
+     * Error code for "could not match input".
+     */
+    private static final int ZZ_NO_MATCH = 1;
+    /**
+     * Error code for "pushback value was too large".
+     */
+    private static final int ZZ_PUSHBACK_2BIG = 2;
+    /**
+     * Error messages for {@link #ZZ_UNKNOWN_ERROR}, {@link #ZZ_NO_MATCH}, and
+     * {@link #ZZ_PUSHBACK_2BIG} respectively.
+     */
+    private static final String ZZ_ERROR_MSG[] = {
+            "Unknown internal scanner error",
+            "Error: could not match input",
+            "Error: pushback value was too large"
+    };
+    private static final String ZZ_ATTRIBUTE_PACKED_0 =
+            "\1\0\1\11\5\1\2\11\2\1\1\11\3\1\1\11" +
+                    "\17\1\1\11\1\1\4\11\1\0\6\11\2\0\1\11" +
+                    "\1\0\3\11\15\1\1\11\2\0\1\11\14\1\1\0" +
+                    "\26\1";
+    /**
+     * ZZ_ATTRIBUTE[aState] contains the attributes of state {@code aState}
+     */
+    private static final int[] ZZ_ATTRIBUTE = zzUnpackAttribute();
+    /**
+     * Input device.
+     */
+    private java.io.Reader zzReader;
+    /**
+     * Current state of the DFA.
+     */
+    private int zzState;
+    /**
+     * Current lexical state.
+     */
+    private int zzLexicalState = YYINITIAL;
+    /**
+     * This buffer contains the current text to be matched and is the source of the {@link #yytext()}
+     * string.
+     */
+    private char zzBuffer[] = new char[ZZ_BUFFERSIZE];
+    /**
+     * Text position at the last accepting state.
+     */
+    private int zzMarkedPos;
+    /**
+     * Current text position in the buffer.
+     */
+    private int zzCurrentPos;
+    /**
+     * Marks the beginning of the {@link #yytext()} string in the buffer.
+     */
+    private int zzStartRead;
+    /**
+     * Marks the last character in the buffer, that has been read from input.
+     */
+    private int zzEndRead;
+    /**
+     * Whether the scanner is at the end of file.
+     *
+     * @see #yyatEOF
+     */
+    private boolean zzAtEOF;
+    /**
+     * The number of occupied positions in {@link #zzBuffer} beyond {@link #zzEndRead}.
+     *
+     * <p>When a lead/high surrogate has been read from the input stream into the final
+     * {@link #zzBuffer} position, this will have a value of 1; otherwise, it will have a value of 0.
+     */
+    private int zzFinalHighSurrogate = 0;
+    /**
+     * Number of newlines encountered up to the start of the matched text.
+     */
+    private int yyline;
+    /**
+     * Number of characters from the last newline up to the start of the matched text.
+     */
+    private int yycolumn;
+    /**
+     * Number of characters up to the start of the matched text.
+     */
+    private long yychar;
+    /**
+     * Whether the scanner is currently at the beginning of a line.
+     */
+    @SuppressWarnings("unused")
+    private boolean zzAtBOL = true;
+    /**
+     * Whether the user-EOF-code has already been executed.
+     */
+    private boolean zzEOFDone;
+    /* user code: */
+    private ComplexSymbolFactory symbolFactory;
+    private boolean verbose = true;
+    private List<String> output = new ArrayList();
+
+    /**
+     * Custom constructor to pass the verbose attribute.
+     *
+     * @param in      the java.io.Reader to pass.
+     * @param verbose the verbose attribute. If true, the scanned tokens will be printed to the console.
+     */
+    public JScanner(java.io.Reader in, boolean verbose) {
+        this(in);
+        this.verbose = verbose;
+    }
+
+    /**
+     * Creates a new scanner
+     *
+     * @param in the java.io.Reader to read input from.
+     */
+    public JScanner(java.io.Reader in) {
+        symbolFactory = new ComplexSymbolFactory();
+        this.zzReader = in;
+    }
+
+    private static int[] zzUnpackcmap_top() {
+        int[] result = new int[4352];
+        int offset = 0;
+        offset = zzUnpackcmap_top(ZZ_CMAP_TOP_PACKED_0, offset, result);
+        return result;
+    }
+
+    private static int zzUnpackcmap_top(String packed, int offset, int[] result) {
+        int i = 0;       /* index in packed string  */
+        int j = offset;  /* index in unpacked array */
+        int l = packed.length();
+        while (i < l) {
+            int count = packed.charAt(i++);
+            int value = packed.charAt(i++);
+            do result[j++] = value; while (--count > 0);
+        }
+        return j;
+    }
+
+    private static int[] zzUnpackcmap_blocks() {
+        int[] result = new int[7680];
+        int offset = 0;
+        offset = zzUnpackcmap_blocks(ZZ_CMAP_BLOCKS_PACKED_0, offset, result);
+        return result;
+    }
+
+    private static int zzUnpackcmap_blocks(String packed, int offset, int[] result) {
+        int i = 0;       /* index in packed string  */
+        int j = offset;  /* index in unpacked array */
+        int l = packed.length();
+        while (i < l) {
+            int count = packed.charAt(i++);
+            int value = packed.charAt(i++);
+            do result[j++] = value; while (--count > 0);
+        }
+        return j;
+    }
+
+    private static int[] zzUnpackAction() {
+        int[] result = new int[103];
+        int offset = 0;
+        offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
+        return result;
+    }
+
+    private static int zzUnpackAction(String packed, int offset, int[] result) {
+        int i = 0;       /* index in packed string  */
+        int j = offset;  /* index in unpacked array */
+        int l = packed.length();
+        while (i < l) {
+            int count = packed.charAt(i++);
+            int value = packed.charAt(i++);
+            do result[j++] = value; while (--count > 0);
+        }
+        return j;
+    }
+
+    private static int[] zzUnpackRowMap() {
+        int[] result = new int[103];
+        int offset = 0;
+        offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
+        return result;
+    }
+
+    private static int zzUnpackRowMap(String packed, int offset, int[] result) {
+        int i = 0;  /* index in packed string  */
+        int j = offset;  /* index in unpacked array */
+        int l = packed.length();
+        while (i < l) {
+            int high = packed.charAt(i++) << 16;
+            result[j++] = high | packed.charAt(i++);
+        }
+        return j;
+    }
 
     private static int[] zzUnpackTrans() {
         int[] result = new int[3128];
@@ -272,41 +379,6 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
         return j;
     }
 
-
-    /**
-     * Error code for "Unknown internal scanner error".
-     */
-    private static final int ZZ_UNKNOWN_ERROR = 0;
-    /**
-     * Error code for "could not match input".
-     */
-    private static final int ZZ_NO_MATCH = 1;
-    /**
-     * Error code for "pushback value was too large".
-     */
-    private static final int ZZ_PUSHBACK_2BIG = 2;
-
-    /**
-     * Error messages for {@link #ZZ_UNKNOWN_ERROR}, {@link #ZZ_NO_MATCH}, and
-     * {@link #ZZ_PUSHBACK_2BIG} respectively.
-     */
-    private static final String ZZ_ERROR_MSG[] = {
-            "Unknown internal scanner error",
-            "Error: could not match input",
-            "Error: pushback value was too large"
-    };
-
-    /**
-     * ZZ_ATTRIBUTE[aState] contains the attributes of state {@code aState}
-     */
-    private static final int[] ZZ_ATTRIBUTE = zzUnpackAttribute();
-
-    private static final String ZZ_ATTRIBUTE_PACKED_0 =
-            "\1\0\1\11\5\1\2\11\2\1\1\11\3\1\1\11" +
-                    "\17\1\1\11\1\1\4\11\1\0\6\11\2\0\1\11" +
-                    "\1\0\3\11\15\1\1\11\2\0\1\11\14\1\1\0" +
-                    "\26\1";
-
     private static int[] zzUnpackAttribute() {
         int[] result = new int[103];
         int offset = 0;
@@ -327,119 +399,51 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     }
 
     /**
-     * Input device.
+     * Translates raw input code points to DFA table row
      */
-    private java.io.Reader zzReader;
+    private static int zzCMap(int input) {
+        int offset = input & 255;
+        return offset == input ? ZZ_CMAP_BLOCKS[offset] : ZZ_CMAP_BLOCKS[ZZ_CMAP_TOP[input >> 8] | offset];
+    }
 
     /**
-     * Current state of the DFA.
-     */
-    private int zzState;
-
-    /**
-     * Current lexical state.
-     */
-    private int zzLexicalState = YYINITIAL;
-
-    /**
-     * This buffer contains the current text to be matched and is the source of the {@link #yytext()}
-     * string.
-     */
-    private char zzBuffer[] = new char[ZZ_BUFFERSIZE];
-
-    /**
-     * Text position at the last accepting state.
-     */
-    private int zzMarkedPos;
-
-    /**
-     * Current text position in the buffer.
-     */
-    private int zzCurrentPos;
-
-    /**
-     * Marks the beginning of the {@link #yytext()} string in the buffer.
-     */
-    private int zzStartRead;
-
-    /**
-     * Marks the last character in the buffer, that has been read from input.
-     */
-    private int zzEndRead;
-
-    /**
-     * Whether the scanner is at the end of file.
+     * Reports an error that occurred while scanning.
      *
-     * @see #yyatEOF
-     */
-    private boolean zzAtEOF;
-
-    /**
-     * The number of occupied positions in {@link #zzBuffer} beyond {@link #zzEndRead}.
+     * <p>In a well-formed scanner (no or only correct usage of {@code yypushback(int)} and a
+     * match-all fallback rule) this method will only be called with things that
+     * "Can't Possibly Happen".
      *
-     * <p>When a lead/high surrogate has been read from the input stream into the final
-     * {@link #zzBuffer} position, this will have a value of 1; otherwise, it will have a value of 0.
+     * <p>If this method is called, something is seriously wrong (e.g. a JFlex bug producing a faulty
+     * scanner etc.).
+     *
+     * <p>Usual syntax/scanner level error handling should be done in error fallback rules.
+     *
+     * @param errorCode the code of the error message to display.
      */
-    private int zzFinalHighSurrogate = 0;
+    private static void zzScanError(int errorCode) {
+        String message;
+        try {
+            message = ZZ_ERROR_MSG[errorCode];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            message = ZZ_ERROR_MSG[ZZ_UNKNOWN_ERROR];
+        }
 
-    /**
-     * Number of newlines encountered up to the start of the matched text.
-     */
-    private int yyline;
-
-    /**
-     * Number of characters from the last newline up to the start of the matched text.
-     */
-    private int yycolumn;
-
-    /**
-     * Number of characters up to the start of the matched text.
-     */
-    private long yychar;
-
-    /**
-     * Whether the scanner is currently at the beginning of a line.
-     */
-    @SuppressWarnings("unused")
-    private boolean zzAtBOL = true;
-
-    /**
-     * Whether the user-EOF-code has already been executed.
-     */
-    private boolean zzEOFDone;
-
-    /* user code: */
-    private ComplexSymbolFactory symbolFactory;
-    private boolean verbose = true;
-    private List<String> output = new ArrayList();
-
-    /**
-   * Custom constructor to pass the verbose attribute.
-   * @param in the java.io.Reader to pass.
-   * @param verbose the verbose attribute. If true, the scanned tokens will be printed to the console.
-     */
-    public JScanner(java.io.Reader in, boolean verbose) {
-        this(in);
-        this.verbose = verbose;
+        throw new Error(message);
     }
 
     private Symbol collectToken(int token, String description) {
         Symbol symbol = symbol(yytext(), token, yytext());
+        String out = "scanning token {" + description + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".";
+        output.add(out);
         if (verbose) {
-            consolePrint(description);
+            System.out.println(out);
         }
         return symbol;
     }
 
-    private void consolePrint(String value) {
-        String out = "scanning token {" + value + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".";
-        output.add(out);
-        System.out.println(out);
-    }
-
     private Symbol symbol(String name, int sym, Object val) {
         Location left = new Location(yyline + 1, (int) yycolumn + 1, (int) yychar);
-        Location right = new Location(yyline + 1, (int) (yycolumn + yylength()), (int)(yychar+yylength()));
+        Location right = new Location(yyline + 1, (int) (yycolumn + yylength()), (int) (yychar + yylength()));
         return symbolFactory.newSymbol(name, sym, left, right, val);
     }
 
@@ -449,25 +453,6 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
 
     public List<String> getOutput() {
         return output;
-    }
-
-
-    /**
-     * Creates a new scanner
-     *
-     * @param in the java.io.Reader to read input from.
-     */
-    public JScanner(java.io.Reader in) {
-        symbolFactory = new ComplexSymbolFactory();
-        this.zzReader = in;
-    }
-
-    /**
-     * Translates raw input code points to DFA table row
-     */
-    private static int zzCMap(int input) {
-        int offset = input & 255;
-        return offset == input ? ZZ_CMAP_BLOCKS[offset] : ZZ_CMAP_BLOCKS[ZZ_CMAP_TOP[input >> 8] | offset];
     }
 
     /**
@@ -535,7 +520,6 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
         return true;
     }
 
-
     /**
      * Closes the input reader.
      *
@@ -549,7 +533,6 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
             zzReader.close();
         }
     }
-
 
     /**
      * Resets the scanner to read from a new input stream.
@@ -589,7 +572,6 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
         yychar = 0L;
     }
 
-
     /**
      * Returns whether the scanner has reached the end of the reader it reads from.
      *
@@ -598,7 +580,6 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     public final boolean yyatEOF() {
         return zzAtEOF;
     }
-
 
     /**
      * Returns the current lexical state.
@@ -609,7 +590,6 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
         return zzLexicalState;
     }
 
-
     /**
      * Enters a new lexical state.
      *
@@ -619,7 +599,6 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
         zzLexicalState = newState;
     }
 
-
     /**
      * Returns the text matched by the current regular expression.
      *
@@ -628,7 +607,6 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     public final String yytext() {
         return new String(zzBuffer, zzStartRead, zzMarkedPos - zzStartRead);
     }
-
 
     /**
      * Returns the character at the given position from the matched text.
@@ -642,7 +620,6 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
         return zzBuffer[zzStartRead + position];
     }
 
-
     /**
      * How many characters were matched.
      *
@@ -651,33 +628,6 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     public final int yylength() {
         return zzMarkedPos - zzStartRead;
     }
-
-
-    /**
-     * Reports an error that occurred while scanning.
-     *
-     * <p>In a well-formed scanner (no or only correct usage of {@code yypushback(int)} and a
-     * match-all fallback rule) this method will only be called with things that
-     * "Can't Possibly Happen".
-     *
-     * <p>If this method is called, something is seriously wrong (e.g. a JFlex bug producing a faulty
-     * scanner etc.).
-     *
-     * <p>Usual syntax/scanner level error handling should be done in error fallback rules.
-     *
-     * @param errorCode the code of the error message to display.
-     */
-    private static void zzScanError(int errorCode) {
-        String message;
-        try {
-            message = ZZ_ERROR_MSG[errorCode];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            message = ZZ_ERROR_MSG[ZZ_UNKNOWN_ERROR];
-        }
-
-        throw new Error(message);
-    }
-
 
     /**
      * Pushes the specified amount of characters back into the input stream.
@@ -1106,27 +1056,30 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
                     // fall through
                     case 85:
                         break;
-          case 42:
-            { return collectToken(RETURN, "RETURN");
+                    case 42: {
+                        return collectToken(RETURN, "RETURN");
+                    }
+                    // fall through
+                    case 86:
+                        break;
+                    case 43: {
+                        return collectToken(STRTYPE, "STRTYPE");
+                    }
+                    // fall through
+                    case 87:
+                        break;
+                    case 44: {
+                        return collectToken(BOOLTYPE, "BOOLTYPE");
+                    }
+                    // fall through
+                    case 88:
+                        break;
+                    default:
+                        zzScanError(ZZ_NO_MATCH);
+                }
             }
-            // fall through
-          case 86: break;
-          case 43:
-            { return collectToken(STRTYPE, "STRTYPE");
-            }
-            // fall through
-          case 87: break;
-          case 44:
-            { return collectToken(BOOLTYPE, "BOOLTYPE");
-            }
-            // fall through
-          case 88: break;
-          default:
-            zzScanError(ZZ_NO_MATCH);
         }
-      }
     }
-  }
 
 
 }

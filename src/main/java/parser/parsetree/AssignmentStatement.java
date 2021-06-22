@@ -8,9 +8,9 @@ import parser.parsetree.interfaces.Visitor;
  */
 public class AssignmentStatement extends Component {
 
-    private BinOp op;
-    private String identifier;
-    private Object value;
+    private final BinOp op;
+    private final String identifier;
+    private final Object value;
 
     /**
      * This constructor will instantiate a wrapper for an assignment statement.
@@ -72,18 +72,18 @@ public class AssignmentStatement extends Component {
      */
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
-        out += "\t+ " + "IDENTIFIER" + "\n\t+ " + "OPERATOR" + "\n";
+        StringBuilder out = new StringBuilder(this.getClass().getName());
+        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
+        out.append("\t+ " + "IDENTIFIER" + "\n\t+ " + "OPERATOR" + "\n");
         if (value instanceof Component) {
             String[] components = ((Component) value).getParseTree().split("\n");
             for (String str : components) {
-                out += "\t" + str + "\n";
+                out.append("\t").append(str).append("\n");
             }
         } else {
-            out += "\t+ " + Type.getTypeForValue(value) + "\n";
+            out.append("\t+ ").append(Type.getTypeForValue(value)).append("\n");
         }
-        return out;
+        return out.toString();
     }
 
     /**

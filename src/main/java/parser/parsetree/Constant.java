@@ -1,14 +1,11 @@
 package parser.parsetree;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * This is a wrapper class for constants. A constant may be an expression or a value of any type.
  */
 public class Constant extends Component {
 
-    private Object obj;
+    private final Object obj;
 
     /**
      * This constructor will create a wrapper for one single object.
@@ -48,17 +45,17 @@ public class Constant extends Component {
      */
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
+        StringBuilder out = new StringBuilder(this.getClass().getName());
+        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
         if (obj instanceof Component) {
-            List<String> components = Arrays.asList(((Component) obj).getParseTree().split("\n"));
+            String[] components = ((Component) obj).getParseTree().split("\n");
             for (String str : components) {
-                out += "\t " + str + "\n";
+                out.append("\t ").append(str).append("\n");
             }
         } else {
-            out += "\t+ " + Type.getTypeForValue(obj) + "\n";
+            out.append("\t+ ").append(Type.getTypeForValue(obj)).append("\n");
         }
-        return out;
+        return out.toString();
     }
 
 }

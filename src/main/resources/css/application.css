@@ -60,13 +60,17 @@
     -fx-alignment: CENTER;
 }
 
+.scroll-bar {
+    -fx-border-width: 0px;
+}
+
+.scroll-bar .track {
+    -fx-background-color: -fx-base;
+}
+
 .radio-button .dot {
     -fx-background-radius: 10px;
     -fx-padding: 6px;
-}
-
-.text-field, .combo-box {
-
 }
 
 .combo-box .list-cell {
@@ -76,11 +80,6 @@
 
 .tooltip {
     -fx-font-size: 12pt;
-}
-
-
-#baseControlsLabel:disabled, #neuralNetworkControlsLabel:disabled, #actionControlsLabel:disabled, #statisticControlsLabel:disabled {
-    -fx-opacity: 1.0;
 }
 
 .button {
@@ -125,7 +124,6 @@
 
 .check-box:selected > .box > .mark,
 .check-box:indeterminate > .box > .mark {
-    /* modify mark color */
     -fx-background-color: -fx-focus-color;
 }
 

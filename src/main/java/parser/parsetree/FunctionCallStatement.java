@@ -13,7 +13,7 @@ import java.util.List;
 public class FunctionCallStatement extends Component {
 
 
-    private String identifier;
+    private final String identifier;
     private List<Component> argumentList = new ArrayList<>();
 
     /**
@@ -75,20 +75,20 @@ public class FunctionCallStatement extends Component {
      */
     @Override
     public String toString() {
-        String out = identifier + "(";
+        StringBuilder out = new StringBuilder(identifier + "(");
         for (int i = 0; i < argumentList.size(); i++) {
             Component arg = argumentList.get(i);
-            out += arg;
+            out.append(arg);
             if (arg instanceof FunctionCallStatement) {
-                out = out.substring(0, out.length() - 2);
+                out = new StringBuilder(out.substring(0, out.length() - 2));
             }
             if (i != argumentList.size() - 1) {
-                out += ", ";
+                out.append(", ");
             }
         }
-        out += ");\n";
+        out.append(");\n");
 
-        return out;
+        return out.toString();
     }
 
     /**
@@ -98,20 +98,20 @@ public class FunctionCallStatement extends Component {
      */
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
-        out += "\t+ " + "IDENTIFIER" + "\n";
+        StringBuilder out = new StringBuilder(this.getClass().getName());
+        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
+        out.append("\t+ " + "IDENTIFIER" + "\n");
         if (!argumentList.isEmpty()) {
-            out += "\t+ " + "ARGUMENTS" + "\n";
+            out.append("\t+ " + "ARGUMENTS" + "\n");
             List<String> components = new ArrayList<>();
             for (Component c : argumentList) {
                 components.addAll(Arrays.asList(c.getParseTree().split("\n")));
             }
             for (String str : components) {
-                out += "\t\t " + str + "\n";
+                out.append("\t\t ").append(str).append("\n");
             }
         }
-        return out;
+        return out.toString();
     }
 
     /**

@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class Argument extends Component {
 
-    private Component arg;
+    private final Component arg;
     private Argument next;
 
     /**
