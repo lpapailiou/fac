@@ -44,7 +44,7 @@
 }
 
 .scroll-bar .thumb {
-    -fx-background-color: #dcdcdc;
+    -fx-background-color: #f1f1f1;
 }
 
 .tab:selected .tab-label {

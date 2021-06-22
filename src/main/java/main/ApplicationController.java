@@ -209,7 +209,10 @@ public class ApplicationController implements Initializable {
         executeOut.setEditable(false);
         validationOut.setEditable(false);
 
-        setCheckResultHintSelected(true);
+        lexCheck.setDisable(true);
+        parseCheck.setDisable(true);
+        validationCheck.setDisable(true);
+        runtimeCheck.setDisable(true);
 
         input.textProperty().addListener((o, nv, ov) -> {
             input.deselect();

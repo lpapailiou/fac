@@ -62,6 +62,7 @@
 
 .scroll-bar {
     -fx-border-width: 0px;
+    -fx-cursor: hand;
 }
 
 .scroll-bar .track {
