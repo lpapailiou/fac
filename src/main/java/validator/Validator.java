@@ -114,6 +114,7 @@ public class Validator implements Visitor {
     public void visit(IfThenElseStatement acceptor) {
         checkBreakStatement(acceptor, acceptor.getIfStatements(), true);
         checkBreakStatement(acceptor, acceptor.getElseStatements(), false);
+        getTypeOfOperand(acceptor, acceptor.getCondition());
         closeCurrentScope();
     }
 
@@ -126,6 +127,7 @@ public class Validator implements Visitor {
     @Override
     public void visit(IfThenStatement acceptor) {
         checkBreakStatement(acceptor, acceptor.getStatements(), true);
+        getTypeOfOperand(acceptor, acceptor.getCondition());
         closeCurrentScope();
     }
 
@@ -190,6 +192,7 @@ public class Validator implements Visitor {
     @Override
     public void visit(WhileStatement acceptor) {
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
+        getTypeOfOperand(acceptor, acceptor.getCondition());
         closeCurrentScope();
         if (whileDepth > 0) {
             whileDepth--;
