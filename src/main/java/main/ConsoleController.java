@@ -26,7 +26,7 @@ class ConsoleController {
     private static final String defaultFilePath = "samples/hello_world.txt";
     private static Mode mode = Mode.CONSOLE;
     private static String path;
-    private static String cache;
+    private static String cache = "";
 
     /**
      * The console can be started in different modes. The modes can be passed as arguments.
@@ -135,6 +135,7 @@ class ConsoleController {
             default:
                 break;
         }
+        cache = "";
     }
 
     /**
