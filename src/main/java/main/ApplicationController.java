@@ -115,8 +115,10 @@ public class ApplicationController implements Initializable {
         validationOut.setText(processor.getErrorMessage());
 
         if (processor.isExceptionThrown() || processor.isErrorThrown()) {
-            tabPane.getSelectionModel().select(4);
-            Platform.runLater(() -> validationOut.requestFocus());
+            if (showExecutionResultTab) {
+                tabPane.getSelectionModel().select(4);
+                Platform.runLater(() -> validationOut.requestFocus());
+            }
             if (processor.isExceptionThrown()) {
                 markExceptionText(processor.getCurrentToken(), processor.getLocation());
             } else if (processor.isErrorThrown()) {
