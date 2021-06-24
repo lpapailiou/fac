@@ -22,7 +22,7 @@ public class Main extends Application {
 
     private static boolean isStartedByConsole;
     private static Stage stage;
-    private static String[] args;
+    private static String[] args;       // cache argument for console mode - if used
 
     /**
      * The main method is the entry point for this program. It will take a decision whether the program should be
