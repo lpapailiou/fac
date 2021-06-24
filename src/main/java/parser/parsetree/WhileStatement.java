@@ -21,6 +21,8 @@ public class WhileStatement extends Component {
      *
      * @param condition  the conditional expression.
      * @param statements the statement list of the while body.
+     * @param left       the start index.
+     * @param right      the end index.
      */
     public WhileStatement(Object condition, Object statements, int left, int right) {
         super(left, right);
@@ -74,7 +76,7 @@ public class WhileStatement extends Component {
             componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
         }
         for (String str : componentStrings) {
-            out.append("\t").append(str).append("\n");
+            out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
         }
         out.append("}\n");
 
@@ -88,23 +90,14 @@ public class WhileStatement extends Component {
      */
     @Override
     public String getParseTree() {
-        StringBuilder out = new StringBuilder(this.getClass().getName());
-        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
-        out.append("\t+ " + "WHILE" + "\n");
-        out.append("\t\t+ " + "CONDITION" + "\n");
-        String[] conditionComponents = (((Component) condition)).getParseTree().split("\n");
-        for (String str : conditionComponents) {
-            out.append("\t\t\t ").append(str).append("\n");
+        StringBuilder out = getStringBuilder(this);
+        appendKeyword(out, Keyword.WHILE, 1);
+        appendNestedComponents(out, condition, 1);
+        appendKeyword(out, Keyword.CBL, 1);
+        for (Component c : componentList) {
+            appendNestedComponents(out, c, 1);
         }
-        if (!componentList.isEmpty()) {
-            out.append("\t\t+ " + "BODY" + "\n");
-            for (Component c : componentList) {
-                String[] components = (c).getParseTree().split("\n");
-                for (String str : components) {
-                    out.append("\t\t\t ").append(str).append("\n");
-                }
-            }
-        }
+        appendKeyword(out, Keyword.CBR, 1);
         return out.toString();
     }
 

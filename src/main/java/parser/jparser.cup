@@ -91,7 +91,7 @@ NEST_STMT       ::= STMT:st                                                     
 
 STMT            ::= DECL:st                                                                 {: RESULT = st; :}
                     | ASSIGN:st                                                             {: RESULT = st; :}
-                    | FUNCALL:st STOP                                                       {: RESULT = st; :}
+                    | FUNCALL:st STOP:s                                                     {: RESULT = Component.fun(st, sright); :}
                     | PRINTCALL:st                                                          {: RESULT = st; :}
                     | IFTHEN_STMT:st                                                        {: RESULT = st; :}
                     | WHILE_STMT:st                                                         {: RESULT = st; :}
@@ -111,7 +111,7 @@ IFTHEN_STMT     ::= IF:i COND_VAL:c CBL NEST_STMT:s CBR:st                      
                     ;
 
 COND_VAL        ::= COND:c                                                                  {: RESULT = c; :}
-                    | BL VAL:c BR                                                           {: RESULT = c; :}
+                    | BL:bl VAL:c BR:br                                                     {: RESULT = Component.wrap(c, true, blleft, brright); :}
                     ;
 
 // function definition
@@ -158,7 +158,7 @@ COND_OP         ::= AND:op                                                      
                     ;
 
 // arithmetic expressions. brackets are optional, mul/div has precedence over plus/minus
-EXPR 	        ::=  CALC_MUL:e                                                             {: RESULT = Component.constnt(e, eleft, eright); :}
+EXPR 	        ::=  CALC_MUL:e                                                             {: RESULT = Component.wrap(e, eleft, eright); :}
                     | EXPR:e1 PLUS:op CALC_MUL:e2                                           {: RESULT = Component.expr(op, e1, e2, e1left, e2right); :}
                     | EXPR:e1 MINUS:op CALC_MUL:e2                                          {: RESULT = Component.expr(op, e1, e2, e1left, e2right); :}
                     ;

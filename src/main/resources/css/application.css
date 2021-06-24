@@ -54,6 +54,7 @@
 
 .tab .tab-label {
     -fx-alignment: CENTER;
+    -fx-cursor: hand;
 }
 
 .tab:selected .tab-label {
@@ -140,7 +141,7 @@
 .combo-box-base:focused, .button:focused, .radio-button-base:focused {
     -fx-background-color: -fx-pressed-base;
     -fx-background-radius: 6.4, 4, 5, 3;
-    -fx-background-insets: -1.4, 0, 1, 2;
+    -fx-background-insets: -1, 1, 1, 1;
 }
 
 .radio-button:focused > .radio {

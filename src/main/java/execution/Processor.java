@@ -68,7 +68,7 @@ public class Processor {
                     root = parser.parse();
                     scannerOutput = String.join("\n", parser.getScannerOutput());
                     program = (Program) root.value;
-                    parseTree = program.getParseTree().replaceAll("\t", "  ");
+                    parseTree = program.getParseTree();
                     parseCode = program.toString();
                     if (mode == Mode.VALIDATE) {
                         Validator validator = new Validator();

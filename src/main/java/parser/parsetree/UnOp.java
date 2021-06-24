@@ -43,15 +43,15 @@ public enum UnOp {
     /**
      * This method will look up a defined unary operator by an input string.
      *
-     * @param op the string representation of the unary operator.
+     * @param input the string representation of the unary operator.
      * @return the enum for the searched operator.
      */
-    public static UnOp getName(Object op) {
-        UnOp result = Arrays.stream(UnOp.values()).filter(o -> o.operator.equals(op.toString())).findAny().orElseGet(null);
+    public static UnOp getByLiteral(Object input) {
+        UnOp result = Arrays.stream(UnOp.values()).filter(o -> o.operator.equals(input.toString())).findAny().orElseGet(null);
         if (result != null) {
             return result;
         }
-        throw new IllegalArgumentException("UnOp " + op.toString() + " is not available!");
+        throw new IllegalArgumentException("UnOp " + input.toString() + " is not available!");
     }
 
     /**
@@ -59,7 +59,7 @@ public enum UnOp {
      *
      * @return the string representation of the operator.
      */
-    public String asString() {
+    public String getLiteral() {
         return operator;
     }
 

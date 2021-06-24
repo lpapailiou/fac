@@ -158,7 +158,7 @@ class ConsoleController {
             tmpCache = SCANNER.nextLine();
             if (tmpCache.startsWith("-h") || tmpCache.startsWith("-q")) {
                 cache = tmpCache;
-                break  LOOP;
+                break LOOP;
             } else if (!tmpCache.replaceAll("\\[ \\s \t\n\r]", "").equals("")) {
                 if (!tmpCache.startsWith("//")) {
                     cache += tmpCache;

@@ -25,15 +25,22 @@ import java.util.*;
     private List<String> output = new ArrayList();
 
     /**
-   * Custom constructor to pass the verbose attribute.
-   * @param in the java.io.Reader to pass.
-   * @param verbose the verbose attribute. If true, the scanned tokens will be printed to the console.
-   */
+    * Custom constructor to pass the verbose attribute.
+    * @param in the java.io.Reader to pass.
+    * @param verbose the verbose attribute. If true, the scanned tokens will be printed to the console.
+    */
     public JScanner(java.io.Reader in, boolean verbose) {
         this(in);
         this.verbose = verbose;
     }
 
+    /**
+    * This method collects a token while scanning and creates a Symbol for it.
+    * Additionally, a log-like string is created and saved.
+    * @param token the scanned token.
+    * @param description the token name as string.
+    * @return the symbol for the token.
+    */
     private Symbol collectToken(int token, String description) {
       Symbol symbol = symbol(yytext(), token, yytext());
       String out = "scanning token {" + description + "}: found match <" + yytext() + "> at line " + yyline + ", column " + yycolumn + ".";
@@ -44,16 +51,23 @@ import java.util.*;
       return symbol;
     }
 
+    /**
+    * This method creates a Symbol from a token. It will add additional metadata to the Symbol (e.g. location and value).
+    * @param name the name of the symbol.
+    * @param sym the scanned token.
+    * @param val the value of the symbol.
+    * @return the symbol for the token.
+    */
     private Symbol symbol(String name, int sym, Object val) {
         Location left = new Location(yyline+1,(int)yycolumn+1,(int)yychar);
         Location right= new Location(yyline+1,(int)(yycolumn+yylength()), (int)(yychar+yylength()));
         return symbolFactory.newSymbol(name, sym, left, right, val);
     }
 
-    private void error(String message) {
-      System.out.println("Error at line " + (yyline+1) + ", column "+ (yycolumn+1) + " : "+message);
-    }
-
+    /**
+    * This method allows to get a log-like string list of scanned tokens.
+    * @return a string list of scanned tokens and metadata.
+    */
     public List<String> getOutput() {
         return output;
     }

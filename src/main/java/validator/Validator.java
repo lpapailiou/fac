@@ -42,13 +42,13 @@ public class Validator implements Visitor {
         BinOp binOp = acceptor.getOperator();
         if (expectedType != effectiveType) {
             if (expectedType != Type.STRING || binOp == BinOp.EQUAL) {
-                throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getIdentifier() + "> and cannot assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
+                throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getLiteral() + "> and cannot assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
             }
         } else if (expectedType != Type.NUMERIC && binOp != BinOp.EQUAL) {
             if (expectedType == Type.STRING && binOp == BinOp.PLUSEQ) {
                 return;
             }
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the binOp <" + acceptor.getOperator().asString() + "> to assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the binOp <" + acceptor.getOperator().getLiteral() + "> to assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
         }
     }
 
@@ -76,7 +76,7 @@ public class Validator implements Visitor {
         List<String> functionParams = Arrays.asList(function.paramTypeListAsString().split(", "));
         for (int i = 0; i < callArgs.size(); i++) {
             Type caller = getTypeOfOperand(acceptor, callArgs.get(i));
-            Type callee = Type.getByName(functionParams.get(i));
+            Type callee = Type.getByLiteral(functionParams.get(i));
             if (caller != callee) {
                 throw new GrammarException("Function parameters do not match with function <" + function.getIdentifier() + "(" + function.paramTypeListAsString() + ") at location " + Arrays.toString(acceptor.getLocation()) + "!");
             }
@@ -98,7 +98,7 @@ public class Validator implements Visitor {
         Object returnValue = acceptor.getReturnStatement();
         Type retType = getTypeOfOperand(acceptor, returnValue);
         if (defType != retType) {
-            throw new TypeMismatchException("Return type <" + retType.getIdentifier() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.paramTypeListAsString() + ")> does not match defined type <" + defType.getIdentifier() + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
+            throw new TypeMismatchException("Return type <" + retType.getLiteral() + "> of function <" + acceptor.getIdentifier() + "(" + acceptor.paramTypeListAsString() + ")> does not match defined type <" + defType.getLiteral() + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
         }
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
         closeCurrentScope();
@@ -176,7 +176,7 @@ public class Validator implements Visitor {
         Type expectedType = acceptor.getType();
         Type effectiveType = getTypeOfOperand(acceptor, acceptor.getValue());
         if (expectedType != effectiveType) {
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getIdentifier() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[", "").replaceAll("]", "") + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getLiteral() + "> and cannot assign value <" + acceptor.getStatements().toString().replaceAll("\\[", "").replaceAll("]", "") + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
         }
     }
 
@@ -328,14 +328,14 @@ public class Validator implements Visitor {
             type = getType(parent, (BinaryExpression) operand);
         } else if (operand instanceof UnaryExpression) {
             type = getType(parent, (UnaryExpression) operand);
-        } else if (operand instanceof Constant) {
-            type = getType(parent, (Constant) operand);
+        } else if (operand instanceof ValueWrapper) {
+            type = getType(parent, (ValueWrapper) operand);
         } else if (operand instanceof BinaryCondition) {
             type = getType(parent, (BinaryCondition) operand);
         } else if (operand instanceof UnaryCondition) {
             type = getType(parent, (UnaryCondition) operand);
         } else {
-            type = Type.getTypeForValue(operand);
+            type = Type.getByInput(operand);
             if (type == Type.VARIABLE) {
                 type = getDeclaration(parent, operand.toString()).getType();
             }
@@ -371,7 +371,7 @@ public class Validator implements Visitor {
         BinOp binOp = operand.getOperator();
         if (type == Type.STRING || type2 == Type.STRING) {
             if (binOp != BinOp.PLUS) {
-                throw new OperatorMismatchException("BinOp of expression <" + operand.getOperator().asString() + "> may not be used in context <" + operand.toString().replaceAll("\n", "") + "> at location " + Arrays.toString(parent.getLocation()) + "!");
+                throw new OperatorMismatchException("BinOp of expression <" + operand.getOperator().getLiteral() + "> may not be used in context <" + operand.toString().replaceAll("\n", "") + "> at location " + Arrays.toString(parent.getLocation()) + "!");
             }
             return Type.STRING;
         }
@@ -379,7 +379,7 @@ public class Validator implements Visitor {
             throw new TypeMismatchException("Types of expression <" + operand.toString().replaceAll("\n", "") + "> do not match at location " + Arrays.toString(parent.getLocation()) + "!");
         }
         if (type == Type.BOOLEAN) {
-            throw new TypeMismatchException("Types of expression <" + operand.toString().replaceAll("\n", "") + "> do not match with binOp <" + binOp.asString() + "> at location " + Arrays.toString(parent.getLocation()) + "!");
+            throw new TypeMismatchException("Types of expression <" + operand.toString().replaceAll("\n", "") + "> do not match with binOp <" + binOp.getLiteral() + "> at location " + Arrays.toString(parent.getLocation()) + "!");
         }
         return type;
     }
@@ -395,7 +395,7 @@ public class Validator implements Visitor {
         Type type = getTypeOfOperand(parent, operand.getOperand());
         UnOp op = operand.getOperator();
         if ((op == UnOp.EXCL && type != Type.BOOLEAN) || ((op == UnOp.MINUS || op == UnOp.INC || op == UnOp.DEC) && type != Type.NUMERIC)) {
-            throw new OperatorMismatchException("UnOp of expression <" + operand.getOperator().asString() + "> may not be used in context <" + operand.toString().replaceAll("\n", "") + "> at location " + Arrays.toString(parent.getLocation()) + "!");
+            throw new OperatorMismatchException("UnOp of expression <" + operand.getOperator().getLiteral() + "> may not be used in context <" + operand.toString().replaceAll("\n", "") + "> at location " + Arrays.toString(parent.getLocation()) + "!");
         }
         return type;
     }
@@ -407,7 +407,7 @@ public class Validator implements Visitor {
      * @param operand the operand to be evaluated.
      * @return the type of the operand.
      */
-    private Type getType(Traversable parent, Constant operand) {
+    private Type getType(Traversable parent, ValueWrapper operand) {
         return getTypeOfOperand(parent, operand.getValue());
     }
 
@@ -428,9 +428,9 @@ public class Validator implements Visitor {
         }
         BinOp binOp = operand.getOperator();
         if (type1 != Type.NUMERIC && (binOp == BinOp.GREATER || binOp == BinOp.GREQ || binOp == BinOp.LEQ || binOp == BinOp.LESS)) {
-            throw new OperatorMismatchException("BinOp <" + binOp.asString() + "> must not be used for non-numeric statement at location " + Arrays.toString(parent.getLocation()) + "!");
+            throw new OperatorMismatchException("BinOp <" + binOp.getLiteral() + "> must not be used for non-numeric statement at location " + Arrays.toString(parent.getLocation()) + "!");
         } else if (type1 != Type.BOOLEAN && (binOp == BinOp.AND || binOp == BinOp.OR)) {
-            throw new OperatorMismatchException("BinOp <" + binOp.asString() + "> must not be used for non-boolean statement at location " + Arrays.toString(parent.getLocation()) + "!");
+            throw new OperatorMismatchException("BinOp <" + binOp.getLiteral() + "> must not be used for non-boolean statement at location " + Arrays.toString(parent.getLocation()) + "!");
         }
 
         return Type.BOOLEAN;
@@ -500,9 +500,9 @@ public class Validator implements Visitor {
      */
     private void addFunDeclarationToScope(FunctionDefStatement function) {
         if (isFunctionExisting(function)) {
-            throw new UniquenessViolationException("Function <" + function.getType().getIdentifier() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> at location " + Arrays.toString(function.getLocation()) + " is already defined!");
+            throw new UniquenessViolationException("Function <" + function.getType().getLiteral() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> at location " + Arrays.toString(function.getLocation()) + " is already defined!");
         } else if (!isFunctionDefinable(function)) {
-            throw new GrammarException("Function <" + function.getType().getIdentifier() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> at location " + Arrays.toString(function.getLocation()) + " cannot be defined as it conflicts with similar function!");
+            throw new GrammarException("Function <" + function.getType().getLiteral() + " " + function.getIdentifier() + "(" + function.paramListAsString() + ")" + "> at location " + Arrays.toString(function.getLocation()) + " cannot be defined as it conflicts with similar function!");
         } else {
             functionScope.add(function);
         }

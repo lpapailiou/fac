@@ -13,6 +13,9 @@ public class PrintCallStatement extends Component {
 
     /**
      * This constructor will create an empty wrapper for a print statement.
+     *
+     * @param left  the start index.
+     * @param right the end index.
      */
     public PrintCallStatement(int left, int right) {
         super(left, right);
@@ -23,6 +26,8 @@ public class PrintCallStatement extends Component {
      * This object can be a 'primitive', an expression or a statement, but cannot be multiple statements.
      *
      * @param value the value to print.
+     * @param left  the start index.
+     * @param right the end index.
      */
     public PrintCallStatement(Object value, int left, int right) {
         this(left, right);
@@ -48,12 +53,7 @@ public class PrintCallStatement extends Component {
     @Override
     public String toString() {
         if (value != null) {
-            String out = "print(" + value.toString();
-            if (value instanceof FunctionCallStatement) {
-                out = out.substring(0, out.length() - 2);
-            }
-            out += ");\n";
-            return out;
+            return "print(" + value.toString() + ");\n";
         }
         return "print();\n";
     }
@@ -65,16 +65,12 @@ public class PrintCallStatement extends Component {
      */
     @Override
     public String getParseTree() {
-        StringBuilder out = new StringBuilder(this.getClass().getName());
-        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
-        if (value instanceof Component) {
-            String[] components = ((Component) value).getParseTree().split("\n");
-            for (String str : components) {
-                out.append("\t ").append(str).append("\n");
-            }
-        } else {
-            out.append("\t+ ").append(Type.getTypeForValue(value)).append("\n");
-        }
+        StringBuilder out = getStringBuilder(this);
+        appendKeyword(out, Keyword.PRINT, 1);
+        appendKeyword(out, Keyword.BL, 1);
+        appendNestedComponents(out, value, 1);
+        appendKeyword(out, Keyword.BR, 1);
+        appendKeyword(out, Keyword.STOP, 1);
         return out.toString();
     }
 

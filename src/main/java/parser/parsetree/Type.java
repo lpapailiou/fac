@@ -50,15 +50,15 @@ public enum Type {
     /**
      * This method will look up a defined data type by an input string of the data type identifier.
      *
-     * @param type the data type identifier as string to look for.
+     * @param input the data type identifier as string to look for.
      * @return the enum for the searched data type.
      */
-    public static Type getByName(Object type) {
-        Type result = Arrays.stream(Type.values()).filter(t -> t.identifier.equals(type.toString())).findAny().orElseGet(null);
+    public static Type getByLiteral(Object input) {
+        Type result = Arrays.stream(Type.values()).filter(t -> t.identifier.equals(input.toString())).findAny().orElseGet(null);
         if (result != null) {
             return result;
         }
-        throw new IllegalArgumentException("Type " + type.toString() + " is not available!");
+        throw new IllegalArgumentException("Type " + input.toString() + " is not available!");
     }
 
     /**
@@ -68,7 +68,7 @@ public enum Type {
      * @param obj the value to be tested for a matching type.
      * @return the data type as enum.
      */
-    public static Type getTypeForValue(Object obj) {
+    public static Type getByInput(Object obj) {
         Type[] types = Type.values();
         for (Type type : types) {
             if (type.accepts(obj)) {
@@ -83,7 +83,7 @@ public enum Type {
      *
      * @return the identifier.
      */
-    public String getIdentifier() {
+    public String getLiteral() {
         return identifier;
     }
 

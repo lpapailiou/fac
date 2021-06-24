@@ -17,10 +17,12 @@ public class BinaryExpression extends ArithmeticExpression {
      * @param op       the operator.
      * @param operand1 the first operand.
      * @param operand2 the second operand.
+     * @param left     the start index.
+     * @param right    the end index.
      */
     BinaryExpression(Object op, Object operand1, Object operand2, int left, int right) {
         super(left, right);
-        this.op = BinOp.getName(op);
+        this.op = BinOp.getByLiteral(op);
         this.operand1 = operand1;
         this.operand2 = operand2;
     }
@@ -62,41 +64,21 @@ public class BinaryExpression extends ArithmeticExpression {
     @Override
     public String toString() {
         String out = operand1.toString();
-        if (operand1 instanceof FunctionCallStatement) {
-            out = out.substring(0, out.length() - 2);
-        }
-        out += " " + op.asString() + " " + operand2.toString();
-        if (operand2 instanceof FunctionCallStatement) {
-            out = out.substring(0, out.length() - 2);
-        }
+        out += " " + op.getLiteral() + " " + operand2.toString();
         return out;
     }
 
+    /**
+     * This method returns the binary expression as representation of the parse tree.
+     *
+     * @return a snipped of the parse tree.
+     */
     @Override
     public String getParseTree() {
-        StringBuilder out = new StringBuilder(this.getClass().getName());
-        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
-
-        if (operand1 instanceof Component) {
-            String[] components = ((Component) operand1).getParseTree().split("\n");
-            for (String str : components) {
-                out.append("\t").append(str).append("\n");
-            }
-        } else {
-            out.append("\t+ ").append(Type.getTypeForValue(operand1)).append("\n");
-        }
-
-        out.append("\t+ " + "OPERATOR" + "\n");
-
-        if (operand2 instanceof Component) {
-            String[] components = ((Component) operand2).getParseTree().split("\n");
-            for (String str : components) {
-                out.append("\t").append(str).append("\n");
-            }
-        } else {
-            out.append("\t+ ").append(Type.getTypeForValue(operand2)).append("\n");
-        }
-
+        StringBuilder out = getStringBuilder(this);
+        appendNestedComponents(out, operand1, 1);
+        appendBinOp(out, op, 1);
+        appendNestedComponents(out, operand2, 1);
         return out.toString();
     }
 

@@ -14,10 +14,12 @@ public class UnaryExpression extends ArithmeticExpression {
      *
      * @param op      the operator.
      * @param operand the operand.
+     * @param left    the start index.
+     * @param right   the end index.
      */
     UnaryExpression(Object op, Object operand, int left, int right) {
         super(left, right);
-        this.op = UnOp.getName(op);
+        this.op = UnOp.getByLiteral(op);
         this.operand = operand;
     }
 
@@ -50,12 +52,9 @@ public class UnaryExpression extends ArithmeticExpression {
     public String toString() {
         String out = operand.toString();
         if (op == UnOp.DEC || op == UnOp.INC) {
-            out += op.asString();
+            out += op.getLiteral();
         } else {
-            out = op.asString() + out;
-        }
-        if (operand instanceof FunctionCallStatement) {
-            out = out.substring(0, out.length() - 2);
+            out = op.getLiteral() + out;
         }
         return out;
     }
@@ -67,24 +66,13 @@ public class UnaryExpression extends ArithmeticExpression {
      */
     @Override
     public String getParseTree() {
-        StringBuilder out = new StringBuilder(this.getClass().getName());
-        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
-
+        StringBuilder out = getStringBuilder(this);
         if (op != UnOp.DEC && op != UnOp.INC) {
-            out.append("\t+ " + "OPERATOR\n");
+            appendUnOp(out, op, 1);
         }
-
-        if (operand instanceof Component) {
-            String[] components = ((Component) operand).getParseTree().split("\n");
-            for (String str : components) {
-                out.append("\t").append(str).append("\n");
-            }
-        } else {
-            out.append("\t+ ").append(Type.getTypeForValue(operand)).append("\n");
-        }
-
+        appendNestedComponents(out, operand, 1);
         if (op == UnOp.DEC || op == UnOp.INC) {
-            out.append("\t+ " + "OPERATOR\n");
+            appendUnOp(out, op, 1);
         }
         return out.toString();
     }

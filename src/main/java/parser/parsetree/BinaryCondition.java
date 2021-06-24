@@ -13,15 +13,17 @@ public class BinaryCondition extends ConditionalExpression {
     /**
      * This constructor will instantiate a wrapper for a binary conditional expression.
      *
-     * @param op the operator.
-     * @param o1 the first operand.
-     * @param o2 the second operand.
+     * @param op    the operator.
+     * @param o1    the first operand.
+     * @param o2    the second operand.
+     * @param left  the start index.
+     * @param right the end index.
      */
     BinaryCondition(Object op, Object o1, Object o2, int left, int right) {
         super(left, right);
         this.operand1 = o1;
         this.operand2 = o2;
-        this.op = BinOp.getName(op.toString());
+        this.op = BinOp.getByLiteral(op.toString());
     }
 
     /**
@@ -61,7 +63,7 @@ public class BinaryCondition extends ConditionalExpression {
     @Override
     public String toString() {
         if (op != null) {
-            return "(" + operand1.toString() + " " + op.asString() + " " + operand2.toString() + ")";
+            return "(" + operand1.toString() + " " + op.getLiteral() + " " + operand2.toString() + ")";
         }
         return "(" + operand1.toString() + ")";
     }
@@ -73,29 +75,12 @@ public class BinaryCondition extends ConditionalExpression {
      */
     @Override
     public String getParseTree() {
-        StringBuilder out = new StringBuilder(this.getClass().getName());
-        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
-
-        if (operand1 instanceof Component) {
-            String[] components = ((Component) operand1).getParseTree().split("\n");
-            for (String str : components) {
-                out.append("\t").append(str).append("\n");
-            }
-        } else {
-            out.append("\t+ ").append(Type.getTypeForValue(operand1)).append("\n");
-        }
-
-        out.append("\t+ " + "OPERATOR" + "\n");
-
-        if (operand2 instanceof Component) {
-            String[] components = ((Component) operand2).getParseTree().split("\n");
-            for (String str : components) {
-                out.append("\t").append(str).append("\n");
-            }
-        } else {
-            out.append("\t+ ").append(Type.getTypeForValue(operand2)).append("\n");
-        }
-
+        StringBuilder out = getStringBuilder(this);
+        appendKeyword(out, Keyword.BL, 1);
+        appendNestedComponents(out, operand1, 1);
+        appendBinOp(out, op, 1);
+        appendNestedComponents(out, operand2, 1);
+        appendKeyword(out, Keyword.BR, 1);
         return out.toString();
     }
 

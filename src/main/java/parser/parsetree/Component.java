@@ -13,6 +13,8 @@ import java.util.List;
  */
 public abstract class Component implements Traversable {
 
+    protected static final String PARSE_TREE_PREFIX = "$ ";
+    protected static final String PRETTY_PRINT_INDENT = "    ";
     private final int[] location;
 
     /**
@@ -118,18 +120,15 @@ public abstract class Component implements Traversable {
     }
 
     /**
-     * Returns a constant wrapper if the passed object is not already a wrapped component.
+     * Returns a re-packed function call wrapper, which contains the stop token.
+     * This indicates that this component is used as independent statement.
      *
-     * @param object the constant to wrap.
-     * @param left   the start index of the location of the code fragment.
-     * @param right  the end index of the location of the code fragment.
-     * @return a program component.
+     * @param funCall an existing function call instance.
+     * @param right   the end index of the location of the code fragment.
+     * @return the function call wrapper.
      */
-    public static Component constnt(Object object, int left, int right) {
-        if (object instanceof Component) {
-            return (Component) object;
-        }
-        return new Constant(object, left, right);
+    public static FunctionCallStatement fun(FunctionCallStatement funCall, int right) {
+        return new FunctionCallStatement(funCall, right);
     }
 
     /**
@@ -233,7 +232,7 @@ public abstract class Component implements Traversable {
      */
     public static IfThenStatement ifThen(Object condition, Object statements, int left, int right, int cleft, int cright) {
         if (!(condition instanceof ConditionalExpression)) {
-            condition = new Constant(condition, cleft, cright);
+            condition = new ValueWrapper(condition, cleft, cright);
         }
         return new IfThenStatement(condition, statements, left, right);
     }
@@ -252,7 +251,7 @@ public abstract class Component implements Traversable {
      */
     public static IfThenStatement ifThen(Object condition, Object ifStatements, Object elseStatements, int left, int right, int cleft, int cright) {
         if (!(condition instanceof ConditionalExpression)) {
-            condition = new Constant(condition, cleft, cright);
+            condition = new ValueWrapper(condition, cleft, cright);
         }
         return new IfThenElseStatement(condition, ifStatements, elseStatements, left, right);
     }
@@ -367,6 +366,34 @@ public abstract class Component implements Traversable {
     }
 
     /**
+     * Returns a constant wrapper if the passed object is not already a wrapped component.
+     *
+     * @param object the constant to wrap.
+     * @param left   the start index of the location of the code fragment.
+     * @param right  the end index of the location of the code fragment.
+     * @return a wrapped primitive.
+     */
+    public static Component wrap(Object object, int left, int right) {
+        if (object instanceof Component) {
+            return (Component) object;
+        }
+        return new ValueWrapper(object, false, left, right);
+    }
+
+    /**
+     * Returns a constant wrapper for primitives used in conditional statements.
+     *
+     * @param object      the constant to wrap.
+     * @param hasBrackets indicates if the wrapped object has brackets around.
+     * @param left        the start index of the location of the code fragment.
+     * @param right       the end index of the location of the code fragment.
+     * @return a wrapped primitive.
+     */
+    public static Component wrap(Object object, boolean hasBrackets, int left, int right) {
+        return new ValueWrapper(object, hasBrackets, left, right);
+    }
+
+    /**
      * Returns a variable declaration wrapper.
      *
      * @param type       the data type of the declaration.
@@ -406,7 +433,7 @@ public abstract class Component implements Traversable {
      */
     public static WhileStatement loop(Object condition, Object statements, int left, int right, int cleft, int cright) {
         if (!(condition instanceof ConditionalExpression)) {
-            condition = new Constant(condition, cleft, cright);
+            condition = new ValueWrapper(condition, cleft, cright);
         }
         return new WhileStatement(condition, statements, left, right);
     }
@@ -419,6 +446,129 @@ public abstract class Component implements Traversable {
      */
     public static LinkedList<Component> stmtList() {
         return new LinkedList<>();
+    }
+
+    /**
+     * Returns the isolated class name of an object as string.
+     *
+     * @param object the object to extract the class name from.
+     * @return the class name as string.
+     */
+    protected static String getClassName(Object object) {
+        String name = object.getClass().getName();
+        return name.substring(name.lastIndexOf(".") + 1);
+    }
+
+    /**
+     * Returns a string builder with the class name of a class and the parse tree prefix.
+     * This content will be the head of a parse tree output for a program component.
+     *
+     * @param node the node to create a string builder for.
+     * @return the string builder which contains the class name.
+     */
+    protected static StringBuilder getStringBuilder(Traversable node) {
+        return new StringBuilder(PARSE_TREE_PREFIX + getClassName(node) + "\n");
+    }
+
+    /**
+     * With this method, a parse tree section is constructed by appending an object.
+     *
+     * @param out          the string builder used to construct the parse tree.
+     * @param obj          the object to append.
+     * @param nestingDepth the nesting depth of the parse tree.
+     */
+    protected static void appendLine(StringBuilder out, Object obj, int nestingDepth) {
+        for (int i = 0; i < nestingDepth; i++) {
+            out.append(PRETTY_PRINT_INDENT);
+        }
+        out.append(PARSE_TREE_PREFIX).append(obj).append("\n");
+    }
+
+    // ------------------------------------------ output helper methods ------------------------------------------
+
+    /**
+     * With this method, a parse tree section is constructed by appending a keyword.
+     *
+     * @param out          the string builder used to construct the parse tree.
+     * @param keyword      the keyword to append.
+     * @param nestingDepth the nesting depth of the parse tree.
+     */
+    protected static void appendKeyword(StringBuilder out, Keyword keyword, int nestingDepth) {
+        appendLine(out, keyword.name(), nestingDepth);
+        appendLine(out, keyword.getLiteral(), nestingDepth + 1);
+    }
+
+    /**
+     * With this method, a parse tree section is constructed by appending a type.
+     *
+     * @param out          the string builder used to construct the parse tree.
+     * @param type         the type to append.
+     * @param nestingDepth the nesting depth of the parse tree.
+     */
+    protected static void appendType(StringBuilder out, Type type, int nestingDepth) {
+        appendLine(out, getClassName(type), nestingDepth);
+        appendLine(out, type.getLiteral(), nestingDepth + 1);
+    }
+
+    /**
+     * With this method, a parse tree section is constructed by appending a binary operator.
+     *
+     * @param out          the string builder used to construct the parse tree.
+     * @param op           the binary operator to append.
+     * @param nestingDepth the nesting depth of the parse tree.
+     */
+    protected static void appendBinOp(StringBuilder out, BinOp op, int nestingDepth) {
+        appendLine(out, getClassName(op), nestingDepth);
+        appendLine(out, op.getLiteral(), nestingDepth + 1);
+    }
+
+    /**
+     * With this method, a parse tree section is constructed by appending a unary operator.
+     *
+     * @param out          the string builder used to construct the parse tree.
+     * @param op           the unary operator to append.
+     * @param nestingDepth the nesting depth of the parse tree.
+     */
+    protected static void appendUnOp(StringBuilder out, UnOp op, int nestingDepth) {
+        appendLine(out, getClassName(op), nestingDepth);
+        appendLine(out, op.getLiteral(), nestingDepth + 1);
+    }
+
+    /**
+     * With this method, a parse tree section is constructed by appending an identifier.
+     *
+     * @param out          the string builder used to construct the parse tree.
+     * @param identifier   the identifier to append.
+     * @param nestingDepth the nesting depth of the parse tree.
+     */
+    protected static void appendIdentifier(StringBuilder out, String identifier, int nestingDepth) {
+        appendLine(out, "Identifier", nestingDepth);
+        appendLine(out, identifier, nestingDepth + 1);
+    }
+
+    /**
+     * With this method, a parse tree section is constructed by appending a complex component or primitive.
+     *
+     * @param out          the string builder used to construct the parse tree.
+     * @param obj          the complex component to append.
+     * @param nestingDepth the nesting depth of the parse tree.
+     */
+    protected static void appendNestedComponents(StringBuilder out, Object obj, int nestingDepth) {
+        if (obj == null) {
+            return;
+        }
+        if (obj instanceof Component) {
+            String[] components = ((Component) obj).getParseTree().split("\n");
+            for (String str : components) {
+                for (int i = 0; i < nestingDepth; i++) {
+                    out.append(PRETTY_PRINT_INDENT);
+                }
+                out.append(str).append("\n");
+            }
+        } else {
+            appendLine(out, Type.getByInput(obj), nestingDepth);
+            appendLine(out, obj.toString(), nestingDepth + 1);
+        }
     }
 
     /**
@@ -454,5 +604,4 @@ public abstract class Component implements Traversable {
     public int[] getLocation() {
         return location;
     }
-
 }

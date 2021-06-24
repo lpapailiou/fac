@@ -21,12 +21,14 @@ public class ParamDeclaration extends Component implements Declaration {
      *
      * @param type       the data type of the declared parameter.
      * @param identifier the identifier of the parameter.
+     * @param left       the start index.
+     * @param right      the end index.
      */
     ParamDeclaration(Object type, Object identifier, int left, int right) {
         super(left, right);
-        this.type = Type.getByName(type);
+        this.type = Type.getByLiteral(type);
         this.identifier = identifier.toString();
-        value = Type.getByName(type).getDefaultValue();
+        value = Type.getByLiteral(type).getDefaultValue();
         initValue = value;
     }
 
@@ -109,7 +111,7 @@ public class ParamDeclaration extends Component implements Declaration {
      */
     @Override
     public String toString() {
-        return type.getIdentifier() + " " + identifier;
+        return type.getLiteral() + " " + identifier;
     }
 
     /**
@@ -119,10 +121,10 @@ public class ParamDeclaration extends Component implements Declaration {
      */
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
-        out += "\t+ " + "TYPE" + "\n\t+ " + "IDENTIFIER" + "\n";
-        return out;
+        StringBuilder out = getStringBuilder(this);
+        appendType(out, type, 1);
+        appendIdentifier(out, identifier, 1);
+        return out.toString();
     }
 
     /**

@@ -22,12 +22,14 @@ public class VariableDeclaration extends Component implements Declaration {
      *
      * @param type       the data type.
      * @param identifier the identifier.
+     * @param left       the start index.
+     * @param right      the end index.
      */
     public VariableDeclaration(Object type, String identifier, int left, int right) {
         super(left, right);
-        this.type = Type.getByName(type);
+        this.type = Type.getByLiteral(type);
         this.identifier = identifier;
-        this.value = Type.getByName(type).getDefaultValue();
+        this.value = Type.getByLiteral(type).getDefaultValue();
         this.initValue = value;
     }
 
@@ -37,6 +39,8 @@ public class VariableDeclaration extends Component implements Declaration {
      * @param type       the data type.
      * @param identifier the identifier.
      * @param value      the value to be assigned initially.
+     * @param left       the start index.
+     * @param right      the end index.
      */
     public VariableDeclaration(Object type, String identifier, Object value, int left, int right) {
         this(type, identifier, left, right);
@@ -100,10 +104,7 @@ public class VariableDeclaration extends Component implements Declaration {
      */
     @Override
     public String toString() {
-        String out = type.getIdentifier() + " " + identifier + " = " + value;
-        if (value instanceof FunctionCallStatement) {
-            out = out.substring(0, out.length() - 2);
-        }
+        String out = type.getLiteral() + " " + identifier + " = " + value;
         return out + ";\n";
     }
 
@@ -114,17 +115,12 @@ public class VariableDeclaration extends Component implements Declaration {
      */
     @Override
     public String getParseTree() {
-        StringBuilder out = new StringBuilder(this.getClass().getName());
-        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
-        out.append("\t+ " + "TYPE" + "\n\t+ " + "IDENTIFIER" + "\n");
-        if (value instanceof Component) {
-            String[] components = ((Component) value).getParseTree().split("\n");
-            for (String str : components) {
-                out.append("\t ").append(str).append("\n");
-            }
-        } else {
-            out.append("\t+ ").append(Type.getTypeForValue(value)).append("\n");
-        }
+        StringBuilder out = getStringBuilder(this);
+        appendType(out, type, 1);
+        appendIdentifier(out, identifier, 1);
+        appendBinOp(out, BinOp.EQUAL, 1);
+        appendNestedComponents(out, value, 1);
+        appendKeyword(out, Keyword.STOP, 1);
         return out.toString();
     }
 

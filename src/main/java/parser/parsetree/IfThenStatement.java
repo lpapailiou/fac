@@ -21,6 +21,8 @@ public class IfThenStatement extends Component {
      *
      * @param condition      the conditional expression.
      * @param statementList1 the statement list for the if-then body.
+     * @param left           the start index.
+     * @param right          the end index.
      */
     public IfThenStatement(Object condition, Object statementList1, int left, int right) {
         super(left, right);
@@ -78,7 +80,7 @@ public class IfThenStatement extends Component {
                 componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
             }
             for (String str : componentStrings) {
-                out.append("\t").append(str).append("\n");
+                out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
             }
         }
 
@@ -93,23 +95,14 @@ public class IfThenStatement extends Component {
      */
     @Override
     public String getParseTree() {
-        StringBuilder out = new StringBuilder(this.getClass().getName());
-        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
-        out.append("\t+ " + "IF" + "\n");
-        out.append("\t\t+ " + "CONDITION" + "\n");
-        String[] conditionComponents = (((Component) condition)).getParseTree().split("\n");
-        for (String str : conditionComponents) {
-            out.append("\t\t\t ").append(str).append("\n");
+        StringBuilder out = getStringBuilder(this);
+        appendKeyword(out, Keyword.IF, 1);
+        appendNestedComponents(out, condition, 1);
+        appendKeyword(out, Keyword.CBL, 1);
+        for (Component c : componentListIf) {
+            appendNestedComponents(out, c, 2);
         }
-        if (!componentListIf.isEmpty()) {
-            out.append("\t\t+ " + "BODY" + "\n");
-            for (Component c : componentListIf) {
-                String[] components = (c).getParseTree().split("\n");
-                for (String str : components) {
-                    out.append("\t\t\t ").append(str).append("\n");
-                }
-            }
-        }
+        appendKeyword(out, Keyword.CBR, 1);
         return out.toString();
     }
 

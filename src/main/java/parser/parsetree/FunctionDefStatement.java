@@ -28,10 +28,12 @@ public class FunctionDefStatement extends Component {
      * @param params          the declared parameters.
      * @param statements      the nested statements.
      * @param returnStatement the return statement.
+     * @param left            the start index.
+     * @param right           the end index.
      */
     public FunctionDefStatement(Object type, Object identifier, Object params, Object statements, Object returnStatement, int left, int right) {
         super(left, right);
-        this.type = Type.getByName(type);
+        this.type = Type.getByLiteral(type);
         this.identifier = identifier.toString();
         if (params != null) {
             ParamDeclaration decl = (ParamDeclaration) params;
@@ -107,7 +109,7 @@ public class FunctionDefStatement extends Component {
     public String paramTypeListAsString() {
         StringBuilder out = new StringBuilder();
         for (int i = 0; i < paramDeclarationList.size(); i++) {
-            out.append(paramDeclarationList.get(i).getType().getIdentifier());
+            out.append(paramDeclarationList.get(i).getType().getLiteral());
             if (i < paramDeclarationList.size() - 1) {
                 out.append(", ");
             }
@@ -138,7 +140,7 @@ public class FunctionDefStatement extends Component {
      */
     @Override
     public String toString() {
-        StringBuilder out = new StringBuilder("\ndef " + type.getIdentifier() + " " + identifier + "(");
+        StringBuilder out = new StringBuilder("\ndef " + type.getLiteral() + " " + identifier + "(");
         out.append(paramListAsString());
         out.append(") {\n");
 
@@ -147,10 +149,10 @@ public class FunctionDefStatement extends Component {
             componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
         }
         for (String str : componentStrings) {
-            out.append("\t").append(str).append("\n");
+            out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
         }
 
-        out.append("\treturn ").append(returnStatement).append(";\n}\n\n");
+        out.append(PRETTY_PRINT_INDENT + "return ").append(returnStatement).append(";\n}\n\n");
         return out.toString();
     }
 
@@ -161,33 +163,26 @@ public class FunctionDefStatement extends Component {
      */
     @Override
     public String getParseTree() {
-        StringBuilder out = new StringBuilder(this.getClass().getName());
-        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
-        out.append("\t+ " + "DEF" + "\n");
-        out.append("\t+ " + "TYPE" + "\n");
-        out.append("\t+ " + "IDENTIFIER" + "\n");
-        out.append("\t+ " + "PARAMETER" + "\n");
-        for (Component c : paramDeclarationList) {
-            String[] components = (c).getParseTree().split("\n");
-            for (String str : components) {
-                out.append("\t\t ").append(str).append("\n");
+        StringBuilder out = getStringBuilder(this);
+        appendKeyword(out, Keyword.DEF, 1);
+        appendType(out, type, 1);
+        appendIdentifier(out, identifier, 1);
+        appendKeyword(out, Keyword.BL, 1);
+        for (int i = 0; i < paramDeclarationList.size(); i++) {
+            appendNestedComponents(out, paramDeclarationList.get(i), 2);
+            if (i < paramDeclarationList.size() - 1) {
+                appendKeyword(out, Keyword.COMMA, 2);
             }
         }
-        if (!componentList.isEmpty()) {
-            out.append("\t+ " + "BODY" + "\n");
-            for (Component c : componentList) {
-                String[] components = (c).getParseTree().split("\n");
-                for (String str : components) {
-                    out.append("\t\t ").append(str).append("\n");
-                }
-            }
+        appendKeyword(out, Keyword.BR, 1);
+        appendKeyword(out, Keyword.CBL, 1);
+        for (Component c : componentList) {
+            appendNestedComponents(out, c, 2);
         }
-
-        out.append("\t+ " + "RETURN" + "\n");
-        String[] returnStat = (((Component) returnStatement)).getParseTree().split("\n");
-        for (String str : returnStat) {
-            out.append("\t\t ").append(str).append("\n");
-        }
+        appendKeyword(out, Keyword.RETURN, 2);
+        appendNestedComponents(out, returnStatement, 2);
+        appendKeyword(out, Keyword.STOP, 2);
+        appendKeyword(out, Keyword.CBR, 1);
         return out.toString();
     }
 

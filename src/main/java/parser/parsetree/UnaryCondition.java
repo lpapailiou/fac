@@ -12,12 +12,14 @@ public class UnaryCondition extends ConditionalExpression {
     /**
      * This constructor will instantiate a wrapper for a unary conditional expression.
      *
-     * @param op the operator.
-     * @param o  the operand.
+     * @param op    the operator.
+     * @param o     the operand.
+     * @param left  the start index.
+     * @param right the end index.
      */
     UnaryCondition(Object op, Object o, int left, int right) {
         super(left, right);
-        this.op = UnOp.getName(op.toString());
+        this.op = UnOp.getByLiteral(op.toString());
         this.operand = o;
     }
 
@@ -48,7 +50,7 @@ public class UnaryCondition extends ConditionalExpression {
      */
     @Override
     public String toString() {
-        return "(" + op.asString() + operand.toString() + ")";
+        return "(" + op.getLiteral() + operand.toString() + ")";
     }
 
     /**
@@ -58,25 +60,9 @@ public class UnaryCondition extends ConditionalExpression {
      */
     @Override
     public String getParseTree() {
-        StringBuilder out = new StringBuilder(this.getClass().getName());
-        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
-
-        if (op != UnOp.DEC && op != UnOp.INC) {
-            out.append("\t+ " + "OPERATOR\n");
-        }
-
-        if (operand instanceof Component) {
-            String[] components = ((Component) operand).getParseTree().split("\n");
-            for (String str : components) {
-                out.append("\t").append(str).append("\n");
-            }
-        } else {
-            out.append("\t+ ").append(Type.getTypeForValue(operand)).append("\n");
-        }
-
-        if (op == UnOp.DEC || op == UnOp.INC) {
-            out.append("\t+ " + "OPERATOR\n");
-        }
+        StringBuilder out = getStringBuilder(this);
+        appendUnOp(out, op, 1);
+        appendNestedComponents(out, operand, 1);
         return out.toString();
     }
 

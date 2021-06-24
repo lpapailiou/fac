@@ -66,7 +66,7 @@ public class Interpreter extends Validator {
     @Override
     public void visit(FunctionCallStatement acceptor) {
         super.visit(acceptor);
-        if (execute) {
+        if (execute && acceptor.isStatement()) {
             getValueOfOperand(acceptor, acceptor);
         }
     }
@@ -335,14 +335,14 @@ public class Interpreter extends Validator {
             value = getValue((BinaryExpression) operand);
         } else if (operand instanceof UnaryExpression) {
             value = getValue((UnaryExpression) operand);
-        } else if (operand instanceof Constant) {
-            value = getValue((Constant) operand);
+        } else if (operand instanceof ValueWrapper) {
+            value = getValue((ValueWrapper) operand);
         } else if (operand instanceof BinaryCondition) {
             value = getValue((BinaryCondition) operand);
         } else if (operand instanceof UnaryCondition) {
             value = getValue((UnaryCondition) operand);
         } else {
-            if (Type.getTypeForValue(operand) == Type.VARIABLE) {
+            if (Type.getByInput(operand) == Type.VARIABLE) {
                 value = getDeclaration(parent, operand.toString()).getValue();
             } else {
                 value = operand;
@@ -408,7 +408,7 @@ public class Interpreter extends Validator {
      * @param operand the operand to evaluate.
      * @return the value of the operand.
      */
-    private Object getValue(Constant operand) {
+    private Object getValue(ValueWrapper operand) {
         Type type = getTypeOfOperand(operand, operand.getValue());
         Object value = getValueOfOperand(operand, operand.getValue());
         if (type == Type.BOOLEAN) {

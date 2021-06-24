@@ -128,7 +128,6 @@ public class ApplicationController implements Initializable {
                 Platform.runLater(() -> executeOut.requestFocus());
             }
         }
-
     }
 
     /**
@@ -180,6 +179,7 @@ public class ApplicationController implements Initializable {
                 }
                 Platform.runLater(() -> input.setText(text.toString()));
             } catch (IOException e) {
+                launchDialog("Oh no!", "This file could not be accessed. Please try a different file.");
                 e.printStackTrace();
             }
         }
@@ -246,7 +246,6 @@ public class ApplicationController implements Initializable {
             }
             splitPane.setDividerPositions(0.5);
         });
-
     }
 
     /**

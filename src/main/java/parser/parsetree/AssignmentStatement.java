@@ -18,10 +18,12 @@ public class AssignmentStatement extends Component {
      * @param op         the binary operator.
      * @param identifier the identifier of the variable.
      * @param value      the value to be assigned.
+     * @param left       the start index.
+     * @param right      the end index.
      */
     public AssignmentStatement(Object op, Object identifier, Object value, int left, int right) {
         super(left, right);
-        this.op = BinOp.getName(op.toString());
+        this.op = BinOp.getByLiteral(op.toString());
         this.identifier = identifier.toString();
         this.value = value;
     }
@@ -62,7 +64,7 @@ public class AssignmentStatement extends Component {
      */
     @Override
     public String toString() {
-        return identifier + " " + op.asString() + " " + value + ";\n";
+        return identifier + " " + op.getLiteral() + " " + value + ";\n";
     }
 
     /**
@@ -72,17 +74,11 @@ public class AssignmentStatement extends Component {
      */
     @Override
     public String getParseTree() {
-        StringBuilder out = new StringBuilder(this.getClass().getName());
-        out = new StringBuilder("+ " + out.substring(out.lastIndexOf(".") + 1) + "\n");
-        out.append("\t+ " + "IDENTIFIER" + "\n\t+ " + "OPERATOR" + "\n");
-        if (value instanceof Component) {
-            String[] components = ((Component) value).getParseTree().split("\n");
-            for (String str : components) {
-                out.append("\t").append(str).append("\n");
-            }
-        } else {
-            out.append("\t+ ").append(Type.getTypeForValue(value)).append("\n");
-        }
+        StringBuilder out = getStringBuilder(this);
+        appendIdentifier(out, identifier, 1);
+        appendBinOp(out, op, 1);
+        appendNestedComponents(out, value, 1);
+        appendKeyword(out, Keyword.STOP, 1);
         return out.toString();
     }
 

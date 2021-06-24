@@ -35,9 +35,10 @@ public class BreakStatement extends Component {
      */
     @Override
     public String getParseTree() {
-        String out = this.getClass().getName();
-        out = "+ " + out.substring(out.lastIndexOf(".") + 1) + "\n";
-        return out;
+        StringBuilder out = getStringBuilder(this);
+        appendKeyword(out, Keyword.BREAK, 1);
+        appendKeyword(out, Keyword.STOP, 1);
+        return out.toString();
     }
 
 

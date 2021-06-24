@@ -20,7 +20,7 @@ public enum BinOp {
      * or perform an arithmetic addition.
      */
     PLUSEQ("+=", (a, b) -> {
-        if (Type.getTypeForValue(a) == Type.STRING || Type.getTypeForValue(b) == Type.STRING) {
+        if (Type.getByInput(a) == Type.STRING || Type.getByInput(b) == Type.STRING) {
             return "'" + (a.toString() + (b.toString())).replaceAll("'", "") + "'";
         } else {
             return Double.parseDouble(a.toString()) + Double.parseDouble(b.toString());
@@ -55,7 +55,7 @@ public enum BinOp {
      * as usual in Java with the equal method.
      */
     EQ("==", (a, b) -> {
-        Type type = Type.getTypeForValue(a);
+        Type type = Type.getByInput(a);
         if (type == Type.BOOLEAN) {
             return Boolean.parseBoolean(a.toString()) == Boolean.parseBoolean(a.toString());
         } else if (type == Type.NUMERIC) {
@@ -69,7 +69,7 @@ public enum BinOp {
      * as usual in Java with the !equal method.
      */
     NEQ("!=", (a, b) -> {
-        Type type = Type.getTypeForValue(a);
+        Type type = Type.getByInput(a);
         if (type == Type.BOOLEAN) {
             return Boolean.parseBoolean(a.toString()) != Boolean.parseBoolean(a.toString());
         } else if (type == Type.NUMERIC) {
@@ -99,7 +99,7 @@ public enum BinOp {
      * or perform an arithmetic addition.
      */
     PLUS("+", (a, b) -> {
-        if (Type.getTypeForValue(a) == Type.STRING || Type.getTypeForValue(b) == Type.STRING) {
+        if (Type.getByInput(a) == Type.STRING || Type.getByInput(b) == Type.STRING) {
             return "'" + (a.toString() + (b.toString())).replaceAll("'", "") + "'";
         } else {
             return Double.parseDouble(a.toString()) + Double.parseDouble(b.toString());
@@ -139,15 +139,15 @@ public enum BinOp {
     /**
      * This method will look up a defined binary operator by an input string.
      *
-     * @param op the string representation of the binary operator.
+     * @param input the string representation of the binary operator.
      * @return the enum for the searched operator.
      */
-    public static BinOp getName(Object op) {
-        BinOp result = Arrays.stream(BinOp.values()).filter(o -> o.operator.equals(op.toString())).findAny().orElseGet(null);
+    public static BinOp getByLiteral(Object input) {
+        BinOp result = Arrays.stream(BinOp.values()).filter(o -> o.operator.equals(input.toString())).findAny().orElseGet(null);
         if (result != null) {
             return result;
         }
-        throw new IllegalArgumentException("BinOp " + op.toString() + " is not available!");
+        throw new IllegalArgumentException("BinOp " + input.toString() + " is not available!");
     }
 
     /**
@@ -155,7 +155,7 @@ public enum BinOp {
      *
      * @return the string representation of the operator.
      */
-    public String asString() {
+    public String getLiteral() {
         return operator;
     }
 
