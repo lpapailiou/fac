@@ -61,16 +61,8 @@ public class WhileStatement extends Component {
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder("\nwhile ");
-        boolean isCond = condition instanceof ConditionalExpression;
-        if (!isCond) {
-            out.append("(");
-        }
         out.append(condition);
-        if (!isCond) {
-            out.append(")");
-        }
         out.append(" {\n");
-
         List<String> componentStrings = new ArrayList<>();
         for (Component st : componentList) {
             componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
@@ -79,7 +71,6 @@ public class WhileStatement extends Component {
             out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
         }
         out.append("}\n");
-
         return out.toString();
     }
 
