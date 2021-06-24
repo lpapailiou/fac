@@ -53,6 +53,9 @@ public class PrintCallStatement extends Component {
     @Override
     public String toString() {
         if (value != null) {
+            if (value instanceof ValueWrapper && ((ValueWrapper) value).hasBrackets()) {
+                return "print" + value.toString() + ";\n";
+            }
             return "print(" + value.toString() + ");\n";
         }
         return "print();\n";

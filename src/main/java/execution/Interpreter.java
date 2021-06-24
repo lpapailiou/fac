@@ -292,7 +292,12 @@ public class Interpreter extends Validator {
      */
     private void processStatements(Traversable node, List<Component> components) {
         if (node instanceof WhileStatement && execute) {
+            int counter = 0;
             while ((Boolean) getValueOfOperand(node, ((WhileStatement) node).getCondition())) {   // while loop execution
+                counter++;
+                if (counter > 10000) {
+                    throw new StackOverflowError();
+                }
                 openNewScope();
                 if (breakEvent > 0) {                       // break statement execution
                     breakEvent--;

@@ -50,7 +50,7 @@ public class UnaryCondition extends ConditionalExpression {
      */
     @Override
     public String toString() {
-        return "(" + op.getLiteral() + operand.toString() + ")";
+        return op.getLiteral() + operand.toString();
     }
 
     /**

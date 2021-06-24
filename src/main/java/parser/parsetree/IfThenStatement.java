@@ -65,25 +65,15 @@ public class IfThenStatement extends Component {
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder("\nif ");
-        boolean isCond = condition instanceof ConditionalExpression;
-        if (!isCond) {
-            out.append("(");
-        }
         out.append(condition);
-        if (!isCond) {
-            out.append(")");
-        }
         out.append(" {\n");
-        if (!componentListIf.isEmpty()) {
-            List<String> componentStrings = new ArrayList<>();
-            for (Component st : componentListIf) {
-                componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
-            }
-            for (String str : componentStrings) {
-                out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
-            }
+        List<String> componentStrings = new ArrayList<>();
+        for (Component st : componentListIf) {
+            componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
         }
-
+        for (String str : componentStrings) {
+            out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
+        }
         out.append("}\n\n");
         return out.toString();
     }
