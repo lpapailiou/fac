@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -31,15 +30,11 @@ public class Main extends Application {
      * @param args the passed arguments for starting
      */
     public static void main(String... args) {
-        try {
-            if (System.console() != null || (args != null && args.length > 0)) {
-                isStartedByConsole = true;
-                Main.args = args;
-            }
-            launch(args);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (System.console() != null || (args != null && args.length > 0)) {
+            isStartedByConsole = true;
+            Main.args = args;
         }
+        launch(args);
     }
 
     /**
