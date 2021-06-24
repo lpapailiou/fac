@@ -15,6 +15,7 @@ public class VariableDeclaration extends Component implements Declaration {
     private final String identifier;
     private Object value;
     private Object initValue;
+    private boolean initializedWithValue;
 
     /**
      * This constructor will create a wrapper for a variable declaration without initial value.
@@ -46,6 +47,7 @@ public class VariableDeclaration extends Component implements Declaration {
         this(type, identifier, left, right);
         this.value = value;
         this.initValue = value;
+        this.initializedWithValue = true;
     }
 
     /**
@@ -104,7 +106,12 @@ public class VariableDeclaration extends Component implements Declaration {
      */
     @Override
     public String toString() {
-        String out = type.getLiteral() + " " + identifier + " = " + value;
+        String out = type.getLiteral() + " " + identifier;
+        if (initializedWithValue) {
+            out += " = " + value;
+        } else {
+            out += ";";
+        }
         return out + ";\n";
     }
 
@@ -118,8 +125,12 @@ public class VariableDeclaration extends Component implements Declaration {
         StringBuilder out = getStringBuilder(this);
         appendType(out, type, 1);
         appendIdentifier(out, identifier, 1);
-        appendBinOp(out, BinOp.EQUAL, 1);
-        appendNestedComponents(out, value, 1);
+        if (initializedWithValue) {
+            appendBinOp(out, BinOp.EQUAL, 1);
+            appendLine(out, "Expression", 1);
+            appendLine(out, evaluateExpression(value), 2);
+            appendNestedComponents(out, value, 3);
+        }
         appendKeyword(out, Keyword.STOP, 1);
         return out.toString();
     }

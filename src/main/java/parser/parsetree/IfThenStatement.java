@@ -87,10 +87,16 @@ public class IfThenStatement extends Component {
     public String getParseTree() {
         StringBuilder out = getStringBuilder(this);
         appendKeyword(out, Keyword.IF, 1);
-        appendNestedComponents(out, condition, 1);
+        appendLine(out, "Condition", 1);
+        appendNestedComponents(out, condition, 2);
         appendKeyword(out, Keyword.CBL, 1);
-        for (Component c : componentListIf) {
-            appendNestedComponents(out, c, 2);
+        int ifOffset = 0;
+        for (int i = 0; i < componentListIf.size(); i++) {
+            Component comp = componentListIf.get(i);
+            appendLine(out, "NestedStatement", 1 + ifOffset);
+            appendLine(out, "Statement", 2 + ifOffset);
+            appendNestedComponents(out, comp, 3 + ifOffset);
+            ifOffset++;
         }
         appendKeyword(out, Keyword.CBR, 1);
         return out.toString();

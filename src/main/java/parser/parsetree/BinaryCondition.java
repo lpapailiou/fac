@@ -77,9 +77,14 @@ public class BinaryCondition extends ConditionalExpression {
     public String getParseTree() {
         StringBuilder out = getStringBuilder(this);
         appendKeyword(out, Keyword.BL, 1);
-        appendNestedComponents(out, operand1, 1);
-        appendBinOp(out, op, 1);
-        appendNestedComponents(out, operand2, 1);
+        appendLine(out, "Expression", 1);
+        appendLine(out, evaluateExpression(operand1), 2);
+        appendNestedComponents(out, operand1, 3);
+        appendLine(out, "ConditionalOperator", 1);
+        appendBinOp(out, op, 2);
+        appendLine(out, "Expression", 1);
+        appendLine(out, evaluateExpression(operand2), 2);
+        appendNestedComponents(out, operand2, 3);
         appendKeyword(out, Keyword.BR, 1);
         return out.toString();
     }

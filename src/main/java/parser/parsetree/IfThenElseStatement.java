@@ -80,20 +80,25 @@ public class IfThenElseStatement extends IfThenStatement {
         StringBuilder out = new StringBuilder("\nif ");
         out.append(condition);
         out.append(" {\n");
-        List<String> componentStrings1 = new ArrayList<>();
-        for (Component st : componentListIf) {
-            componentStrings1.addAll(Arrays.asList(st.toString().split("\n")));
+        if (!componentListIf.isEmpty()) {
+            List<String> componentStrings = new ArrayList<>();
+            for (Component st : componentListIf) {
+                componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
+            }
+            for (String str : componentStrings) {
+                out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
+            }
         }
-        for (String str : componentStrings1) {
-            out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
-        }
-        out.append("} else { \n");
-        List<String> componentStrings2 = new ArrayList<>();
-        for (Component st : componentListElse) {
-            componentStrings2.addAll(Arrays.asList(st.toString().split("\n")));
-        }
-        for (String str : componentStrings2) {
-            out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
+
+        if (!componentListElse.isEmpty()) {
+            out.append("} else { \n");
+            List<String> componentStrings = new ArrayList<>();
+            for (Component st : componentListElse) {
+                componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
+            }
+            for (String str : componentStrings) {
+                out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
+            }
         }
         out.append("}\n\n");
         return out.toString();
@@ -108,16 +113,26 @@ public class IfThenElseStatement extends IfThenStatement {
     public String getParseTree() {
         StringBuilder out = getStringBuilder(this);
         appendKeyword(out, Keyword.IF, 1);
-        appendNestedComponents(out, condition, 1);
+        appendLine(out, "Condition", 1);
+        appendNestedComponents(out, condition, 2);
         appendKeyword(out, Keyword.CBL, 1);
-        for (Component c : componentListIf) {
-            appendNestedComponents(out, c, 2);
+        int ifOffset = 0;
+        for (int i = 0; i < componentListIf.size(); i++) {
+            Component comp = componentListIf.get(i);
+            appendLine(out, "NestedStatement", 1 + ifOffset);
+            appendLine(out, "Statement", 2 + ifOffset);
+            appendNestedComponents(out, comp, 3 + ifOffset);
+            ifOffset++;
         }
         appendKeyword(out, Keyword.CBR, 1);
-        appendKeyword(out, Keyword.ELSE, 1);
         appendKeyword(out, Keyword.CBL, 1);
-        for (Component c : componentListElse) {
-            appendNestedComponents(out, c, 2);
+        int elseOffset = 0;
+        for (int i = 0; i < componentListElse.size(); i++) {
+            Component comp = componentListElse.get(i);
+            appendLine(out, "NestedStatement", 1 + elseOffset);
+            appendLine(out, "Statement", 2 + elseOffset);
+            appendNestedComponents(out, comp, 3 + elseOffset);
+            elseOffset++;
         }
         appendKeyword(out, Keyword.CBR, 1);
         return out.toString();

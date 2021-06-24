@@ -62,8 +62,18 @@ public class Program implements Traversable {
     @Override
     public String getParseTree() {
         StringBuilder out = Component.getStringBuilder(this);
-        for (Component st : componentList) {
-            Component.appendNestedComponents(out, st, 1);
+        if (componentList.size() > 0) {
+            Component.appendLine(out, "StatementList", 1);
+        }
+        for (int i = 0; i < componentList.size(); i++) {
+            Component comp = componentList.get(i);
+            Component.appendLine(out, "ProgramStatement", 2);
+            if (comp instanceof FunctionDefStatement) {
+                Component.appendNestedComponents(out, comp, 3);
+            } else {
+                Component.appendLine(out, "Statement", 3);
+                Component.appendNestedComponents(out, comp, 4);
+            }
         }
         Component.appendLine(out, "EOF", 0);
         return out.toString();

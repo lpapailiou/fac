@@ -168,17 +168,26 @@ public class FunctionDefStatement extends Component {
         appendType(out, type, 1);
         appendIdentifier(out, identifier, 1);
         appendKeyword(out, Keyword.BL, 1);
+        int pOffset = 0;
         for (int i = 0; i < paramDeclarationList.size(); i++) {
-            appendNestedComponents(out, paramDeclarationList.get(i), 2);
+            Component decl = paramDeclarationList.get(i);
+            appendNestedComponents(out, decl, 1 + pOffset);
             if (i < paramDeclarationList.size() - 1) {
-                appendKeyword(out, Keyword.COMMA, 2);
+                appendKeyword(out, Keyword.COMMA, 2 + pOffset);
             }
+            pOffset++;
         }
         appendKeyword(out, Keyword.BR, 1);
         appendKeyword(out, Keyword.CBL, 1);
-        for (Component c : componentList) {
-            appendNestedComponents(out, c, 2);
+        int sOffset = 0;
+        for (int i = 0; i < componentList.size(); i++) {
+            Component comp = componentList.get(i);
+            appendLine(out, "NestedStatement", 1 + sOffset);
+            appendLine(out, "Statement", 2 + sOffset);
+            appendNestedComponents(out, comp, 3 + sOffset);
+            sOffset++;
         }
+        appendLine(out, "ReturnStatement", 1);
         appendKeyword(out, Keyword.RETURN, 2);
         appendNestedComponents(out, returnStatement, 2);
         appendKeyword(out, Keyword.STOP, 2);

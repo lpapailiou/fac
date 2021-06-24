@@ -83,10 +83,16 @@ public class WhileStatement extends Component {
     public String getParseTree() {
         StringBuilder out = getStringBuilder(this);
         appendKeyword(out, Keyword.WHILE, 1);
-        appendNestedComponents(out, condition, 1);
+        appendLine(out, "Condition", 1);
+        appendNestedComponents(out, condition, 2);
         appendKeyword(out, Keyword.CBL, 1);
-        for (Component c : componentList) {
-            appendNestedComponents(out, c, 1);
+        int offset = 0;
+        for (int i = 0; i < componentList.size(); i++) {
+            Component comp = componentList.get(i);
+            appendLine(out, "NestedStatement", 1 + offset);
+            appendLine(out, "Statement", 2 + offset);
+            appendNestedComponents(out, comp, 3 + offset);
+            offset++;
         }
         appendKeyword(out, Keyword.CBR, 1);
         return out.toString();

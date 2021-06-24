@@ -70,9 +70,18 @@ public class PrintCallStatement extends Component {
     public String getParseTree() {
         StringBuilder out = getStringBuilder(this);
         appendKeyword(out, Keyword.PRINT, 1);
-        appendKeyword(out, Keyword.BL, 1);
-        appendNestedComponents(out, value, 1);
-        appendKeyword(out, Keyword.BR, 1);
+        if (value == null) {
+            appendKeyword(out, Keyword.BL, 1);
+            appendKeyword(out, Keyword.BR, 1);
+        } else if (value instanceof BinaryCondition) {
+            appendNestedComponents(out, value, 1);
+        } else {
+            appendKeyword(out, Keyword.BL, 1);
+            appendLine(out, "Expression", 1);
+            appendLine(out, evaluateExpression(value), 2);
+            appendNestedComponents(out, value, 3);
+            appendKeyword(out, Keyword.BR, 1);
+        }
         appendKeyword(out, Keyword.STOP, 1);
         return out.toString();
     }

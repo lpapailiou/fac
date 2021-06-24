@@ -571,6 +571,17 @@ public abstract class Component implements Traversable {
         }
     }
 
+    protected String evaluateExpression(Object object) {
+        if (object instanceof BinaryExpression) {
+            BinOp op = ((BinaryExpression) object).getOperator();
+            if (op == BinOp.MUL || op == BinOp.DIV || op == BinOp.MOD) {
+                return "ExpressionWithPrecedence";
+            }
+            return "ExpressionWithoutPrecedence";
+        }
+        return "ComponentWithValue";
+    }
+
     /**
      * This method will return an empty list, as no nested statements are expected or
      * the nested statements will be validated otherwise.

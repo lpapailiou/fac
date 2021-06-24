@@ -76,13 +76,13 @@ public class ValueWrapper extends Component {
      */
     @Override
     public String getParseTree() {
-        StringBuilder out = getStringBuilder(this);
+        StringBuilder out = new StringBuilder();
         if (hasBrackets) {
-            appendKeyword(out, Keyword.BL, 1);
+            appendKeyword(out, Keyword.BL, 0);
         }
-        appendNestedComponents(out, obj, 1);
+        appendNestedComponents(out, obj, 0);
         if (hasBrackets) {
-            appendKeyword(out, Keyword.BR, 1);
+            appendKeyword(out, Keyword.BR, 0);
         }
         return out.toString();
     }

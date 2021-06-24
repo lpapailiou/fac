@@ -130,14 +130,25 @@ public class FunctionCallStatement extends Component {
     public String getParseTree() {
         StringBuilder out = getStringBuilder(this);
         appendIdentifier(out, identifier, 1);
-        appendKeyword(out, Keyword.BL, 1);
-        for (int i = 0; i < argumentList.size(); i++) {
-            appendNestedComponents(out, argumentList.get(i), 2);
-            if (i != argumentList.size() - 1) {
-                appendKeyword(out, Keyword.COMMA, 2);
+
+        if (argumentList.size() == 1 && argumentList.get(0) instanceof BinaryCondition) {
+            appendNestedComponents(out, argumentList.get(0), 1);
+        } else {
+            appendKeyword(out, Keyword.BL, 1);
+            int offset = 0;
+            for (int i = 0; i < argumentList.size(); i++) {
+                Component arg = argumentList.get(i);
+                appendLine(out, "Argument", 1 + offset);
+                appendLine(out, "Expression", 2 + offset);
+                appendLine(out, evaluateExpression(arg), 3 + offset);
+                appendNestedComponents(out, arg, 4 + offset);
+                if (i != argumentList.size() - 1) {
+                    appendKeyword(out, Keyword.COMMA, 2 + offset);
+                }
+                offset++;
             }
+            appendKeyword(out, Keyword.BR, 1);
         }
-        appendKeyword(out, Keyword.BR, 1);
         if (isStatement) {
             appendKeyword(out, Keyword.STOP, 1);
         }

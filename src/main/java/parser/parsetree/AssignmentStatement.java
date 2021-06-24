@@ -76,8 +76,12 @@ public class AssignmentStatement extends Component {
     public String getParseTree() {
         StringBuilder out = getStringBuilder(this);
         appendIdentifier(out, identifier, 1);
-        appendBinOp(out, op, 1);
-        appendNestedComponents(out, value, 1);
+        appendLine(out, "AssignmentOperator", 1);
+        appendBinOp(out, op, 2);
+        appendBinOp(out, BinOp.EQUAL, 1);
+        appendLine(out, "Expression", 1);
+        appendLine(out, evaluateExpression(value), 2);
+        appendNestedComponents(out, value, 3);
         appendKeyword(out, Keyword.STOP, 1);
         return out.toString();
     }
