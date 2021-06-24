@@ -134,6 +134,7 @@ public class Interpreter extends Validator {
                 output.add(out);
                 System.out.println(">>>>  " + out);
             } else {
+                output.add("\n");
                 System.out.println(">>>>  ");
             }
         }
