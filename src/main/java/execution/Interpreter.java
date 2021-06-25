@@ -152,9 +152,6 @@ public class Interpreter extends Validator {
         traverse(acceptor);
     }
 
-    {
-    }
-
     /**
      * This method triggers the validation of this variable declaration. If the code is executable, the
      * declaration is set to it's original value (in case the code was executed already) and then set the
