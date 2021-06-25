@@ -129,8 +129,8 @@ The syntactical rules are designed in the form of the Backus-Naur-notation, whic
 - The variable declaration must end with a semicolon.
 - As the parser is context free, the data types of variable and assigned value cannot be evaluated further at this step.     
     
+Sample code:    
         
-    // examples
     string x1 = 1;                      // valid (no type safety yet)
     number y;                           // valid (variable will get default value)
     number y7 = (true && false);        // valid (conditional expressions can be assigned)
@@ -145,8 +145,8 @@ The syntactical rules are designed in the form of the Backus-Naur-notation, whic
 - arithmetic assignment operators are additionally allowed.
 - incrementing or decrementing (``++`` or ``--``) is allowed at this place only.        
 
+Sample code:    
 
-    // examples
     x1 = 1 + true;                  // valid (no type safety yet)
     y;                              // parser fails, as a value must be assigned
     x1++;                           // valid 
@@ -164,8 +164,8 @@ The syntactical rules are designed in the form of the Backus-Naur-notation, whic
 - As arithmetic expressions (for simplicity are abused to) group all possible values and expressions, they can be potentially assigned anywhere.
 - Also here, data types are not evaluated any further.   
 
+Sample code:    
 
-    // examples
     1 + 2                               // parser fails as expression cannot be isolated
     x = 1 + 2 - 3;                      // valid, interpreted as ((1 + 2) - 3)
     x = 2 * 4 + 2 / 3;                  // valid, interpreted as ((2 * 4) + (2 / 3))
