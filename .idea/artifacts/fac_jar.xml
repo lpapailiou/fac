@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="fac:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/fac_jar</output-path>
-    <root id="archive" name="fac.jar">
-      <element id="module-output" name="fac" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/src/main/resources/lib/java-cup-11b-runtime.jar" path-in-jar="/" />
-    </root>
-  </artifact>
-</component>
