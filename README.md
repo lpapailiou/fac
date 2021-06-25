@@ -127,9 +127,9 @@ The syntactical rules are designed in the form of the Backus-Naur-notation, whic
     - a function call.
     - omitted. in this case, the equal character is omitted as well and the variable would get its default value (``''``, ``0.0`` or ``false``).
 - The variable declaration must end with a semicolon.
-- As the parser is context free, the data types of variable and assigned value cannot be evaluated further at this step.    
-
-
+- As the parser is context free, the data types of variable and assigned value cannot be evaluated further at this step.     
+    
+        
     // examples
     string x1 = 1;                      // valid (no type safety yet)
     number y;                           // valid (variable will get default value)
@@ -143,7 +143,7 @@ The syntactical rules are designed in the form of the Backus-Naur-notation, whic
 - the preceding data type must be omitted.
 - a value must be assigned.
 - arithmetic assignment operators are additionally allowed.
-- incrementing or decrementing (``++`` or ``--``) is allowed at this place only.
+- incrementing or decrementing (``++`` or ``--``) is allowed at this place only.        
 
 
     // examples
@@ -162,7 +162,7 @@ The syntactical rules are designed in the form of the Backus-Naur-notation, whic
 - Arithmetic expressions can be nested. They are - after precedence - evaluated from left to right.
 - Arithmetic expressions must not have brackets.
 - As arithmetic expressions (for simplicity are abused to) group all possible values and expressions, they can be potentially assigned anywhere.
-- Also here, data types are not evaluated any further.
+- Also here, data types are not evaluated any further.   
 
 
     // examples
