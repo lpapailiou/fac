@@ -547,7 +547,7 @@ The mini-IDE is implemented with javafx, which may be a restriction depending on
 #### Code input
 There are multiple options to input code.  
 You may enter code directly to the primary text area. Alternatively, you may upload
-a file or choose a simple file provided by the according combobox. The available demo files are the ones from the directory ``src\main\resources\samples``.  
+a file or choose a demo file provided by the according combobox. The available demo files are the ones from the directory ``src\main\resources\samples``.  
   
 ![input](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_input.png)  
   
