@@ -179,14 +179,7 @@ public class FunctionDefStatement extends Component {
         }
         appendKeyword(out, Keyword.BR, 1);
         appendKeyword(out, Keyword.CBL, 1);
-        int sOffset = 0;
-        for (int i = 0; i < componentList.size(); i++) {
-            Component comp = componentList.get(i);
-            appendLine(out, "NestedStatement", 1 + sOffset);
-            appendLine(out, "Statement", 2 + sOffset);
-            appendNestedComponents(out, comp, 3 + sOffset);
-            sOffset++;
-        }
+        appendNestedComponents(out, componentList, 1);
         appendLine(out, "ReturnStatement", 1);
         appendKeyword(out, Keyword.RETURN, 2);
         appendNestedComponents(out, returnStatement, 2);

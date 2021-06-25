@@ -116,24 +116,10 @@ public class IfThenElseStatement extends IfThenStatement {
         appendLine(out, "Condition", 1);
         appendNestedComponents(out, condition, 2);
         appendKeyword(out, Keyword.CBL, 1);
-        int ifOffset = 0;
-        for (int i = 0; i < componentListIf.size(); i++) {
-            Component comp = componentListIf.get(i);
-            appendLine(out, "NestedStatement", 1 + ifOffset);
-            appendLine(out, "Statement", 2 + ifOffset);
-            appendNestedComponents(out, comp, 3 + ifOffset);
-            ifOffset++;
-        }
+        appendNestedComponents(out, componentListIf, 1);
         appendKeyword(out, Keyword.CBR, 1);
         appendKeyword(out, Keyword.CBL, 1);
-        int elseOffset = 0;
-        for (int i = 0; i < componentListElse.size(); i++) {
-            Component comp = componentListElse.get(i);
-            appendLine(out, "NestedStatement", 1 + elseOffset);
-            appendLine(out, "Statement", 2 + elseOffset);
-            appendNestedComponents(out, comp, 3 + elseOffset);
-            elseOffset++;
-        }
+        appendNestedComponents(out, componentListElse, 1);
         appendKeyword(out, Keyword.CBR, 1);
         return out.toString();
     }

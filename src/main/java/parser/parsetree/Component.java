@@ -571,6 +571,30 @@ public abstract class Component implements Traversable {
         }
     }
 
+    /**
+     * With this method, a parse tree section is constructed by appending nested statements.
+     *
+     * @param out           the string builder used to construct the parse tree.
+     * @param componentList the list of nested statements to append
+     * @param nestingDepth  the nesting depth of the parse tree.
+     */
+    protected void appendNestedStatements(StringBuilder out, List<Component> componentList, int nestingDepth) {
+        int offset = 0;
+        for (int i = 0; i < componentList.size(); i++) {
+            Component comp = componentList.get(i);
+            appendLine(out, "NestedStatement", nestingDepth + offset);
+            appendLine(out, "Statement", nestingDepth + 1 + offset);
+            appendNestedComponents(out, comp, nestingDepth + 2 + offset);
+            offset++;
+        }
+    }
+
+    /**
+     * With this method, the source of an 'expression' within the parse tree is reconstructed.
+     *
+     * @param object the object to evaluate.
+     * @return the name of the parser token as string.
+     */
     protected String evaluateExpression(Object object) {
         if (object instanceof BinaryExpression) {
             BinOp op = ((BinaryExpression) object).getOperator();

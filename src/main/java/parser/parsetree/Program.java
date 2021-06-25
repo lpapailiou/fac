@@ -53,9 +53,8 @@ public class Program implements Traversable {
 
     /**
      * This method returns the program components as a string of the parse tree.
-     * The parse tree returned will not match the 'real' parse tree completely.
-     * Some changes were made to make it more human-readable. Another reason is, that the classes generated
-     * from the parse tree do not match the technical parse tree anymore.
+     * The parse tree returned will not match the 'real' parse tree completely. It is reconstructed
+     * as close as possible to the original parse tree though.
      *
      * @return the complete parse tree represented as a string.
      */
