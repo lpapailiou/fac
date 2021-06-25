@@ -181,8 +181,8 @@ Sample code:
 - Conditional expressions or boolean values can be switched by exclamation marks. The exclamation marks
 cannot be placed before the outer brackets if a conditional expression is used in a if-then or while statement.
 
+Sample code:    
 
-    // examples
     x = (true || false);                // valid
     x = (1 < 2);                        // valid
     x = true && true;                   // parser fails, as brackets are missing
@@ -193,8 +193,8 @@ cannot be placed before the outer brackets if a conditional expression is used i
 - Arguments can be zero, one or multiple (comma separated) expressions.
 - Without the semicolon, a function call can be used as value within an expression, as it is expected to always have a return value.
      
+Sample code:    
      
-    // examples
     fun1();                             // valid (no parameter)
     //fun()                             // parser fails, as semicolon is missing
     fun2(1 + 2 + 4);                    // valid (expression as one parameter)    
@@ -207,8 +207,8 @@ Print calls work the same way as function calls, except:
 - they cannot have multiple parameters.
 - they do not have any return value. Therefore, they cannot be assigned to variables or be used in expressions.
 
+Sample code:    
 
-    // examples
     print();                            // valid (no parameter)
     print(1 + 2 + 4);                   // valid (expression as one parameter)    
     print(1 + 2 + 4, 'x');              // parser fails, as multiple parameters are not allowed
@@ -225,8 +225,8 @@ Print calls work the same way as function calls, except:
 - Just before the curly brackets are closed, a return statement must be placed. 
 - The return statement consists of the return keyword, a return value (an expression) and a semicolon.
 
+Sample code:    
 
-    // examples
     def number fun() { return 1; }      // valid (minimal example)
     boolean fun() { return x; }         // parser fails, as def keyword is missing
     def fun() { return 1 + 1; }         // parser fails, as data type is missing
@@ -241,8 +241,8 @@ Print calls work the same way as function calls, except:
 - Then, a body in curly brackets follows, which can contain zero, one or more statements.
 - Optionally, an else keyword may follow, with another body as above.
 
+Sample code:    
 
-    // examples
     if (true) {}                        // valid
     if (1 < 2) {};                      // parser fails, as no semicolon is allowed at end
     if (false) {                        // valid
@@ -253,8 +253,8 @@ Print calls work the same way as function calls, except:
 - while loops must start with the while keyword and a conditional expression (in round brackets).
 - Then, a body in curly braces follows, which can contain zero, one or more statements.
 
+Sample code:    
 
-    // examples
     while (true) {}                     // valid (but maybe not smart)
     while false {}                      // parser fails, as conditional brackets are missing
     while (false) {                     // parser fails, as body is not closed
@@ -298,8 +298,8 @@ The validator will receive the parse tree from the parser and traverse it depth-
 Within nested scope, they can be overwritten by local variables.
 - Identifiers must be unique within their scope, except for function identifiers, which can be overloaded.
 
+Sample code:    
 
-    // examples
     number x = 1;                       // valid
     y = x;                              // validator fails as y was not instantiated
     def string fun(string z) {          // valid
@@ -314,8 +314,8 @@ Within nested scope, they can be overwritten by local variables.
 - If a segment of an expression is a string, the resulting type will be cast to a string, if possible.
 - String casting will not work within subtractions, multiplications, divisions and conditional expressions.
 
+Sample code:    
 
-    // examples
     string x = 1 + 2 + 'a';             // valid (nesting & string casting)
     number y = true;                    // validator fails, as boolean is assigned to number type
     x += true;                          // valid (string casting)
@@ -329,14 +329,13 @@ Within nested scope, they can be overwritten by local variables.
 - In conditional expressions, ``==`` and != may be used for all types, ``!``, ``&&`` and ``||`` may used for boolean values only, comparing operators (``<``, ``<=``, ``>=``, ``>``) can be used for numeric values only.
 - In arithmetic expressions, ``+`` is valid for numeric values or if at least one of the components is a string. All other available operators (``-``, ``*``, ``/``, ``%``) are for numeric values only.
 
+Sample code:    
 
-    // examples
     string x = 'x' + 'b';               // valid
     x = 'x' - 'b';                      // validator fails, as minus cannot be used for string concatenation
     boolean y = (true && 1);            // validator fails, as the binOp && can be used for booleans only
     boolean z = (1 < 2);                // valid
     x = 1 * 'x';                        // validator fails, multiplication binOp is not valid for strings
-
 
 #### Expressions
 - In general, both operands of a binary expression must have the same type.
@@ -350,8 +349,8 @@ Within nested scope, they can be overwritten by local variables.
 - If a caller calls a function, the callee must have according parameter count, parameter types and return type.
 - A function can call itself, thus, recursion is allowed.
 
+Sample code:    
 
-    // examples
         def number x() {                // validator fails, as 'seven' is a string
             return 'seven'; }
         def number y() {                // valid
@@ -369,8 +368,8 @@ Within nested scope, they can be overwritten by local variables.
 - A break must be the last statement of a statement list, but can be nested within other statement lists. Thus, a simple validation for
 unreachable code occurs at this place.
 
+Sample code:    
 
-    // examples
     break;                              // validator fails, as break statement is dangling outside loop
     while(true) {                       // validator fails, as there is unreachable code
         break; number x = 1; }
