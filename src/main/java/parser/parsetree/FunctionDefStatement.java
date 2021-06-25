@@ -179,7 +179,7 @@ public class FunctionDefStatement extends Component {
         }
         appendKeyword(out, Keyword.BR, 1);
         appendKeyword(out, Keyword.CBL, 1);
-        appendNestedComponents(out, componentList, 1);
+        appendNestedStatements(out, componentList, 1);
         appendLine(out, "ReturnStatement", 1);
         appendKeyword(out, Keyword.RETURN, 2);
         appendNestedComponents(out, returnStatement, 2);

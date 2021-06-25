@@ -86,7 +86,7 @@ public class WhileStatement extends Component {
         appendLine(out, "Condition", 1);
         appendNestedComponents(out, condition, 2);
         appendKeyword(out, Keyword.CBL, 1);
-        appendNestedComponents(out, componentList, 1);
+        appendNestedStatements(out, componentList, 1);
         appendKeyword(out, Keyword.CBR, 1);
         return out.toString();
     }

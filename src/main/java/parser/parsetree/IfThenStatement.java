@@ -90,7 +90,7 @@ public class IfThenStatement extends Component {
         appendLine(out, "Condition", 1);
         appendNestedComponents(out, condition, 2);
         appendKeyword(out, Keyword.CBL, 1);
-        appendNestedComponents(out, componentListIf, 1);
+        appendNestedStatements(out, componentListIf, 1);
         appendKeyword(out, Keyword.CBR, 1);
         return out.toString();
     }

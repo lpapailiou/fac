@@ -566,7 +566,7 @@ public abstract class Component implements Traversable {
                 out.append(str).append("\n");
             }
         } else {
-            appendLine(out, Type.getByInput(obj), nestingDepth);
+            appendLine(out, Type.getByInput(obj.toString().replaceAll("\\[", "").replaceAll("]", "")), nestingDepth);
             appendLine(out, obj.toString(), nestingDepth + 1);
         }
     }
