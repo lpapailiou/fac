@@ -234,7 +234,7 @@ public class Validator implements Visitor {
                 whileDepth++;
                 condition = ((WhileStatement) node).getCondition();
             } else if (node instanceof IfThenStatement) {
-                condition = ((WhileStatement) node).getCondition();
+                condition = ((IfThenStatement) node).getCondition();
             } else if (node instanceof FunctionDefStatement) {
                 addFunDeclarationToScope((FunctionDefStatement) node);
             }
