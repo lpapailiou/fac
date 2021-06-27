@@ -139,9 +139,7 @@ public class FunctionCallStatement extends Component {
             for (int i = 0; i < argumentList.size(); i++) {
                 Component arg = argumentList.get(i);
                 appendLine(out, "Argument", 1 + offset);
-                appendLine(out, "Expression", 2 + offset);
-                appendLine(out, evaluateExpression(arg), 3 + offset);
-                appendNestedComponents(out, arg, 4 + offset);
+                evaluateExpression(out, arg, offset + 2);
                 if (i != argumentList.size() - 1) {
                     appendKeyword(out, Keyword.COMMA, 2 + offset);
                 }

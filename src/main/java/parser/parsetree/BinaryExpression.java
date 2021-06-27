@@ -76,13 +76,9 @@ public class BinaryExpression extends ArithmeticExpression {
     @Override
     public String getParseTree() {
         StringBuilder out = getStringBuilder(this);
-        appendLine(out, "Expression", 1);
-        appendLine(out, evaluateExpression(operand1), 2);
-        appendNestedComponents(out, operand1, 3);
+        evaluateExpression(out, operand1, 1);
         appendBinOp(out, op, 1);
-        appendLine(out, "Expression", 1);
-        appendLine(out, evaluateExpression(operand2), 2);
-        appendNestedComponents(out, operand2, 3);
+        evaluateExpression(out, operand2, 1);
         return out.toString();
     }
 

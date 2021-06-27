@@ -114,7 +114,6 @@ public class Validator implements Visitor {
     public void visit(IfThenElseStatement acceptor) {
         checkBreakStatement(acceptor, acceptor.getIfStatements(), true);
         checkBreakStatement(acceptor, acceptor.getElseStatements(), false);
-        getTypeOfOperand(acceptor, acceptor.getCondition());
         closeCurrentScope();
     }
 
@@ -127,7 +126,6 @@ public class Validator implements Visitor {
     @Override
     public void visit(IfThenStatement acceptor) {
         checkBreakStatement(acceptor, acceptor.getStatements(), true);
-        getTypeOfOperand(acceptor, acceptor.getCondition());
         closeCurrentScope();
     }
 
@@ -192,7 +190,6 @@ public class Validator implements Visitor {
     @Override
     public void visit(WhileStatement acceptor) {
         checkBreakStatement(acceptor, acceptor.getStatements(), false);
-        getTypeOfOperand(acceptor, acceptor.getCondition());
         closeCurrentScope();
         if (whileDepth > 0) {
             whileDepth--;
@@ -224,7 +221,7 @@ public class Validator implements Visitor {
     /**
      * This methods takes care about the pre-validations before the content of a node and then the node itself are visited.
      * Entering a while loop will increase the whileDepth counter (e.g. one nested break statement is allowed). Entering
-     * a function definition will add its declaration to scope.
+     * a function definition will add its declaration to scope. Additionally, the type of a condition is checked.
      *
      * @param node the parse tree node to pre-validate.
      */
@@ -232,10 +229,21 @@ public class Validator implements Visitor {
         if (node instanceof FunctionCallStatement || node instanceof FunctionDefStatement || node instanceof IfThenStatement || node instanceof Program || node instanceof WhileStatement) {
             openNewScope();
 
+            Component condition = null;
             if (node instanceof WhileStatement) {
                 whileDepth++;
+                condition = ((WhileStatement) node).getCondition();
+            } else if (node instanceof IfThenStatement) {
+                condition = ((WhileStatement) node).getCondition();
             } else if (node instanceof FunctionDefStatement) {
                 addFunDeclarationToScope((FunctionDefStatement) node);
+            }
+
+            if (condition != null) {
+                Type type = getTypeOfOperand(condition, condition);
+                if (type != Type.BOOLEAN) {
+                    throw new TypeMismatchException("Type <" + type + "> is not valid at location " + Arrays.toString(condition.getLocation()) + "!");
+                }
             }
         }
     }

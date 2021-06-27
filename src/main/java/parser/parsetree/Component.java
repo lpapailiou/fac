@@ -234,7 +234,7 @@ public abstract class Component implements Traversable {
         if (!(condition instanceof ConditionalExpression)) {
             condition = new ValueWrapper(condition, cleft, cright);
         }
-        return new IfThenStatement(condition, statements, left, right);
+        return new IfThenStatement((Component) condition, statements, left, right);
     }
 
     /**
@@ -253,7 +253,7 @@ public abstract class Component implements Traversable {
         if (!(condition instanceof ConditionalExpression)) {
             condition = new ValueWrapper(condition, cleft, cright);
         }
-        return new IfThenElseStatement(condition, ifStatements, elseStatements, left, right);
+        return new IfThenElseStatement((Component) condition, ifStatements, elseStatements, left, right);
     }
 
     /**
@@ -435,7 +435,7 @@ public abstract class Component implements Traversable {
         if (!(condition instanceof ConditionalExpression)) {
             condition = new ValueWrapper(condition, cleft, cright);
         }
-        return new WhileStatement(condition, statements, left, right);
+        return new WhileStatement((Component) condition, statements, left, right);
     }
 
     /**
@@ -580,8 +580,7 @@ public abstract class Component implements Traversable {
      */
     protected void appendNestedStatements(StringBuilder out, List<Component> componentList, int nestingDepth) {
         int offset = 0;
-        for (int i = 0; i < componentList.size(); i++) {
-            Component comp = componentList.get(i);
+        for (Component comp : componentList) {
             appendLine(out, "NestedStatement", nestingDepth + offset);
             appendLine(out, "Statement", nestingDepth + 1 + offset);
             appendNestedComponents(out, comp, nestingDepth + 2 + offset);
@@ -592,18 +591,26 @@ public abstract class Component implements Traversable {
     /**
      * With this method, the source of an 'expression' within the parse tree is reconstructed.
      *
+     * @param out the string builder used to construct the parse tree.
      * @param object the object to evaluate.
-     * @return the name of the parser token as string.
+     * @param nestingDepth the nesting depth of the parse tree.
      */
-    protected String evaluateExpression(Object object) {
+    protected void evaluateExpression(StringBuilder out, Object object, int nestingDepth) {
+        appendLine(out, "Expression", nestingDepth);
         if (object instanceof BinaryExpression) {
             BinOp op = ((BinaryExpression) object).getOperator();
             if (op == BinOp.MUL || op == BinOp.DIV || op == BinOp.MOD) {
-                return "ExpressionWithPrecedence";
+                nestingDepth++;
+                appendLine(out, "ExpressionWithPrecedence", nestingDepth);
             }
-            return "ExpressionWithoutPrecedence";
+        } else {
+            nestingDepth++;
+            appendLine(out, "ExpressionWithPrecedence", nestingDepth);
+            nestingDepth++;
+            appendLine(out, "ComponentWithValue", nestingDepth);
         }
-        return "ComponentWithValue";
+        nestingDepth++;
+        appendNestedComponents(out, object, nestingDepth);
     }
 
     /**

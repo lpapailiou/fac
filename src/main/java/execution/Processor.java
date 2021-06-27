@@ -89,7 +89,7 @@ public class Processor {
                     if (message.contains("Infinity") || message.contains("NaN")) {
                         errorMessage = "During runtime, an arithmetic operation resulted in an invalid numeric value!";
                     } else {
-                        errorMessage = "Parsed code semantically not valid (" + message + ")!";
+                        errorMessage = "Parsed code semantically not valid!\n" + message;
                         validationCheck = false;
                     }
                     runtimeCheck = false;
@@ -116,7 +116,7 @@ public class Processor {
                         executionResult = String.join("\n", interpreter.getOutput());
                     }
                 } else {
-                    errorMessage = "Scanned code not valid (" + message + ")!";
+                    errorMessage = "Scanned code not valid!\n" + message;
                     lexCheck = false;
                     validationCheck = false;
                     parseCheck = false;

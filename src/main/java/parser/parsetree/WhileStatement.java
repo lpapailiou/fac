@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class WhileStatement extends Component {
 
-    private final Object condition;
+    private final Component condition;
     private List<Component> componentList = new ArrayList<>();
 
     /**
@@ -24,7 +24,7 @@ public class WhileStatement extends Component {
      * @param left       the start index.
      * @param right      the end index.
      */
-    public WhileStatement(Object condition, Object statements, int left, int right) {
+    public WhileStatement(Component condition, Object statements, int left, int right) {
         super(left, right);
         this.condition = condition;
         if (statements != null) {
@@ -37,7 +37,7 @@ public class WhileStatement extends Component {
      *
      * @return the conditional expression.
      */
-    public Object getCondition() {
+    public Component getCondition() {
         return condition;
     }
 

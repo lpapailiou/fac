@@ -77,9 +77,7 @@ public class PrintCallStatement extends Component {
             appendNestedComponents(out, value, 1);
         } else {
             appendKeyword(out, Keyword.BL, 1);
-            appendLine(out, "Expression", 1);
-            appendLine(out, evaluateExpression(value), 2);
-            appendNestedComponents(out, value, 3);
+            evaluateExpression(out, value, 1);
             appendKeyword(out, Keyword.BR, 1);
         }
         appendKeyword(out, Keyword.STOP, 1);

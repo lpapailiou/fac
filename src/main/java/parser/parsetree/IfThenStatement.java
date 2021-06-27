@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class IfThenStatement extends Component {
 
-    protected Object condition;
+    protected Component condition;
     protected List<Component> componentListIf = new ArrayList<>();
 
     /**
@@ -24,7 +24,7 @@ public class IfThenStatement extends Component {
      * @param left           the start index.
      * @param right          the end index.
      */
-    public IfThenStatement(Object condition, Object statementList1, int left, int right) {
+    public IfThenStatement(Component condition, Object statementList1, int left, int right) {
         super(left, right);
         this.condition = condition;
         if (statementList1 != null) {
@@ -37,7 +37,7 @@ public class IfThenStatement extends Component {
      *
      * @return the conditional expression.
      */
-    public Object getCondition() {
+    public Component getCondition() {
         return condition;
     }
 

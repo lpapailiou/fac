@@ -127,9 +127,7 @@ public class VariableDeclaration extends Component implements Declaration {
         appendIdentifier(out, identifier, 1);
         if (initializedWithValue) {
             appendBinOp(out, BinOp.EQUAL, 1);
-            appendLine(out, "Expression", 1);
-            appendLine(out, evaluateExpression(value), 2);
-            appendNestedComponents(out, value, 3);
+            evaluateExpression(out, value, 1);
         }
         appendKeyword(out, Keyword.STOP, 1);
         return out.toString();
