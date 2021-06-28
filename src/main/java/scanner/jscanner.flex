@@ -91,7 +91,7 @@ import java.util.*;
 // ************* MACRO DEFINITION *************
 
 // comment
-COMMENT = "/*" [^*] ~"*/" | "/*" "*"+ "/" | "//" [^\r\n]* \r|\n|\r\n? | "/**" ( [^*] | \*+ [^/*] )* "*"+ "/"
+COMMENT = \/*[^\*]~\*\/ | \/\*(\*)+\/ | \/\/[^\r\n]*(\r|\n|\r\n)? | \/(\*)+[^\*]*(\*)+\/
 
 // reserved words
 BOOL = true | false

@@ -1,3 +1,4 @@
+// fail 1 syntax check
 number x = 123;
 boolean boo = true;
 

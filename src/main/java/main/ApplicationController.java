@@ -100,8 +100,7 @@ public class ApplicationController implements Initializable {
      * @param showExecutionResultTab determines, if the execution result tab will be opened and focused or not.
      */
     private void process(boolean showExecutionResultTab) {
-        String cleansedCode = cleanse(input.getText(), true);
-        Processor processor = new Processor(Mode.GUI, cleansedCode);
+        Processor processor = new Processor(Mode.GUI, input.getText());
 
         lexCheck.setSelected(processor.isLexCheckSuccessful());
         parseCheck.setSelected(processor.isParseCheckSuccessful());
@@ -130,21 +129,6 @@ public class ApplicationController implements Initializable {
                 Platform.runLater(() -> executeOut.requestFocus());
             }
         }
-    }
-
-    /**
-     * This method will pre-process the code-to-validate by removing comments.
-     * This is useful to reconstruct error locations, as the scanner will skip comments as well (i.e.
-     * the error location will not match with the source file without this processing step).
-     *
-     * @return the cleansed code ready to process.
-     */
-    private String cleanse(String code, boolean all) {
-        String pattern = "//.*|(\"(?:\\\\[^\"]|\\\\\"|.)*?\")|(?s)/\\*.*?\\*/";
-        if (all) {
-            return code.replaceAll(pattern, "$1 ");
-        }
-        return code.replaceFirst(pattern, "$1 ");
     }
 
     /**
@@ -407,17 +391,7 @@ public class ApplicationController implements Initializable {
             return;
         }
         Platform.runLater(() -> {
-            int fromIndex = Math.max(startIndex, 0);
-            String text = input.getText();
-            String cleansedText = cleanse(text, true);
-            int skipped = 0;
-            while (!text.substring(0, fromIndex).equals(cleansedText.substring(0, fromIndex))) {
-                int length = text.length();
-                text = cleanse(text, false);
-                skipped += length - text.length();
-            }
-            fromIndex = fromIndex + skipped;
-            input.selectRange(fromIndex, Math.min(input.getText().indexOf(" ", fromIndex), input.getText().indexOf("\n", fromIndex)));
+            input.selectRange(startIndex, Math.min(input.getText().indexOf(" ", startIndex), input.getText().indexOf("\n", startIndex)));
         });
     }
 
@@ -432,24 +406,7 @@ public class ApplicationController implements Initializable {
             return;
         }
         Platform.runLater(() -> {
-            int fromIndex = Math.max(startIndex, 0);
-            int toIndex = Math.max(endIndex, 0);
-            String text = input.getText();
-            String cleansedText = cleanse(text, true);
-            int skipped = 0;
-            while (!text.substring(0, fromIndex).equals(cleansedText.substring(0, fromIndex))) {
-                int length = text.length();
-                text = cleanse(text, false);
-                skipped += length - text.length();
-            }
-            fromIndex = fromIndex + skipped;
-            while (!text.substring(0, toIndex).equals(cleansedText.substring(0, toIndex))) {
-                int length = text.length();
-                text = cleanse(text, false);
-                skipped += length - text.length();
-            }
-            toIndex = toIndex + skipped;
-            input.selectRange(fromIndex, toIndex);
+            input.selectRange(startIndex, endIndex);
         });
     }
 

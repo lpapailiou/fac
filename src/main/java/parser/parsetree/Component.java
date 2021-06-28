@@ -591,8 +591,8 @@ public abstract class Component implements Traversable {
     /**
      * With this method, the source of an 'expression' within the parse tree is reconstructed.
      *
-     * @param out the string builder used to construct the parse tree.
-     * @param object the object to evaluate.
+     * @param out          the string builder used to construct the parse tree.
+     * @param object       the object to evaluate.
      * @param nestingDepth the nesting depth of the parse tree.
      */
     protected void evaluateExpression(StringBuilder out, Object object, int nestingDepth) {

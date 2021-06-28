@@ -1,5 +1,6 @@
-number one = 1;
-while (one < 5) {
-    one += 1;
+// hello world demo
+number one = 1;      // comment 1
+while (one < 5) {       /* comment 2 */
+    one++;
     print('hello world');
 }

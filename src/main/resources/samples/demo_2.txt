@@ -1,3 +1,4 @@
+// demo 2
 string h = 'o';     // string value
 number e = 2;       // number value
 

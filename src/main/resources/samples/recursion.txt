@@ -1,7 +1,10 @@
+// recursion demo
 def string fun(number x) {
     x += 1;
     print(x);
-    fun(x);
+    //if (x < 100) {	// comment in to avoid stack overflow error
+        fun(x);
+    //}			        // comment in to avoid stack overflow error
     return '' + x;
 }
 

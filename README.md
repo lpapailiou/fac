@@ -279,6 +279,16 @@ will not perform any further syntactical validations in this case.
 - Function definitions must be 'top level' components (e.g. it is not possible to nest them in a while loop).
 - ll 'top level' statements and function definitions will finally be added to the program statements list.
 
+Sample code:
+    
+    x;                                  // parser fails, as this is not a statement
+    number x = 1                        // parser fails, as semicolon is missing
+    if (true) {
+        def number x() {                // parser fails, as function definitions may not be nested
+            return 0;
+        }
+    }
+
 #### Program
 - The program is a container for the 'top level' list of program statements.
 - If the parser finishes without error, the program will be the root of the generated parse tree.
@@ -342,6 +352,15 @@ Sample code:
 - The only exception is string casting.
 - The resulting value of a conditional expression must always be a boolean, arithmetic expressions can evaluate to strings or numeric values.
 
+Sample code:
+    
+    string a = '1' + 'abc' + '2';       // valid
+    string b = a + true;                // valid (string casting)
+    number c = 1 + true;                // validator fails, as not both operands are of type numeric
+    number d = 1 + 2 * 3 % 5;           // valid
+    boolean e = (true && !false);       // valid
+    boolean f = (true || 2);            // validator fails, as second operand is numeric
+    
 #### Function calls and function definitions
 - The declared return type must match the effective return type.
 - A function is identified by its identifier, return type, parameter count and parameter types. This means, overloading is possible.
@@ -351,12 +370,12 @@ Sample code:
 
 Sample code:    
 
-        def number x() {                // validator fails, as 'seven' is a string
-            return 'seven'; }
-        def number y() {                // valid
-            return 0; }
-        def number y() {                // validator fails, as function y() is already defined with 0 params and same return type
-            return 1; }
+    def number x() {                // validator fails, as 'seven' is a string
+        return 'seven'; }
+    def number y() {                // valid
+        return 0; }
+    def number y() {                // validator fails, as function y() is already defined with 0 params and same return type
+        return 1; }
 
 #### Conditional statements and while loops
 - part from the break statement validation, no additional semantic validation is required in this case, as the syntactical checks are sufficient.
@@ -386,15 +405,16 @@ Please note that global variables and function definitions must be declared alwa
 placed always before callers (not like Java, where global variables and functions may be defined anywhere in a file).  
   
 #### Behavior
-In the ``execute``-mode, code will be processed character by character, in one go.  
+In the ``execute mode``, code will be processed character by character, in one go.  
   
-In the console, entered code will be validated after pressing ``ENTER`` on a blank input line. This means, multiple lines
+In the ``console mode``, entered code will be validated after pressing ``ENTER`` on a blank input line. This means, multiple lines
 can be entered before validating (e.g. line breaks are allowed in between complex statements).  
-If an entry is not valid, it will be rejected, the user may then try again (so far valid code will remain in memory).  
+If an entry is not valid, it will be rejected, the user may then try again (so far valid code will remain in memory). 
+After every ``ENTER``, the whole so-far-valid code is validated, which means the parse tree may be built multiple times.  
+Also, only the last print statement may be actually printed, to give the user a scripting-like experience. 
   
-In the gui, code can be executed at once by pressing on the button ``go``, or by editing the input, if the input ends with two newline characters.  
-  
-In the console, a specific processing mode can be chosen (e.g. sacnning only), where in the gui all processing steps will be started always.  
+In the ``gui mode``, code can be executed at once by pressing on the button ``go``, or by editing the input, if the input ends with two newline characters.  
+If the ``go`` button is used, the mini-IDE may open the execution or validation tab, and - in case of errors - select the faulty input section (if possible).  
 
 ## Repository handling
 This section contains a few technical notes about this repository.
