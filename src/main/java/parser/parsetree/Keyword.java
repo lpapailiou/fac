@@ -1,7 +1,7 @@
 package parser.parsetree;
 
 /**
- * This enom is a helper structure to generate parse tree output easier.
+ * This enum is a helper structure to generate parse tree output easier.
  * It contains keys for reserved words, but also special characters like brackets.
  */
 public enum Keyword {

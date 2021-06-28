@@ -118,6 +118,7 @@ public class IfThenElseStatement extends IfThenStatement {
         appendKeyword(out, Keyword.CBL, 1);
         appendNestedStatements(out, componentListIf, 1);
         appendKeyword(out, Keyword.CBR, 1);
+        appendKeyword(out, Keyword.ELSE, 1);
         appendKeyword(out, Keyword.CBL, 1);
         appendNestedStatements(out, componentListElse, 1);
         appendKeyword(out, Keyword.CBR, 1);
