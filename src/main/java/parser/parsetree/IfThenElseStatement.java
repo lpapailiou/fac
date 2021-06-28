@@ -89,9 +89,9 @@ public class IfThenElseStatement extends IfThenStatement {
                 out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
             }
         }
-
+        out.append("} else { \n");
         if (!componentListElse.isEmpty()) {
-            out.append("} else { \n");
+
             List<String> componentStrings = new ArrayList<>();
             for (Component st : componentListElse) {
                 componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
