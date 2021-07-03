@@ -153,15 +153,15 @@ Sample code:
     y7 = (true && false);           // valid (conditional expressions can be assigned)
     x8 = fun1()                     // parser fails, as semicolon is missing
 
-#### Arithmetic expressions
+#### Expressions
+- Expressions in general cannot exist as isolated statement. They need to be part of a declaration or be assigned.
 - Arithmetic expressions are meant to perform numeric calculations and string concatenation. Therefore, they use specific operators (``+``, ``-``, ``*``, ``/``, ``%``).
-- Arithmetic expressions cannot exist as isolated statement. They need to be part of a declaration or be assigned.
 - By default, their components can be either 'raw' values, conditional expressions or function calls.
 - Multiplication and division have precedence over addition and subtraction.
 - Unary expressions have highest precedence.
-- Arithmetic expressions can be nested. They are - after precedence - evaluated from left to right.
-- Arithmetic expressions must not have brackets.
-- As arithmetic expressions (for simplicity are abused to) group all possible values and expressions, they can be potentially assigned anywhere.
+- Expressions can be nested. They are - after precedence - evaluated from left to right.
+- Expressions must not have brackets, except they are conditional expressions.
+- As expressions can be potentially assigned anywhere.
 - Also here, data types are not evaluated any further.   
 
 Sample code:    
@@ -350,7 +350,7 @@ Sample code:
 #### Expressions
 - In general, both operands of a binary expression must have the same type.
 - The only exception is string casting.
-- The resulting value of a conditional expression must always be a boolean, arithmetic expressions can evaluate to strings or numeric values.
+- The resulting value of a conditional expression must always be a boolean, generic expressions can evaluate to all data types.
 
 Sample code:
     

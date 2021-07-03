@@ -1,10 +1,10 @@
 package parser.parsetree;
 
 /**
- * This is a wrapper class for unary arithmetic expressions.
+ * This is a wrapper class for unary expressions.
  * Its instances will hold an assignment operator and an operand.
  */
-public class UnaryExpression extends ArithmeticExpression {
+public class UnaryExpression extends Expression {
 
     private final UnOp op;
     private final Object operand;

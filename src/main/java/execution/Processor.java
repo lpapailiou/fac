@@ -86,12 +86,12 @@ public class Processor {
                 exceptionThrown = true;
                 String message = e.getMessage();
                 if (e instanceof GrammarException) {
-                    if (message.contains("Infinity") || message.contains("NaN")) {
-                        errorMessage = "During runtime, an arithmetic operation resulted in an invalid numeric value!";
-                    } else {
-                        errorMessage = "Parsed code semantically not valid!\n" + message;
-                        validationCheck = false;
-                    }
+                    errorMessage = "Parsed code semantically not valid!\n" + message;
+                    validationCheck = false;
+                    runtimeCheck = false;
+                    setLocation(message);
+                } else if (e instanceof ArithmeticException) {
+                    errorMessage = "During runtime, an arithmetic operation resulted in an invalid numeric value!";
                     runtimeCheck = false;
                     setLocation(message);
                 } else {
@@ -109,9 +109,12 @@ public class Processor {
                 errorThrown = true;
                 Throwable t = new ScanException(e.getMessage(), e);
                 String message = t.getMessage();
-                if (message == null) {
+                if (message == null || e instanceof StackOverflowError) {
                     errorMessage = "StackOverflowError during execution occurred!";
                     runtimeCheck = false;
+                    if (message != null) {
+                        setLocation(message);
+                    }
                     if (interpreter != null) {
                         executionResult = String.join("\n", interpreter.getOutput());
                     }

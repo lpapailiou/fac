@@ -1,6 +1,5 @@
 package parser.parsetree;
 
-import exceptions.GrammarException;
 import exceptions.TypeMismatchException;
 
 import java.util.Arrays;
@@ -75,6 +74,12 @@ public enum Type {
                 return type;
             }
         }
+        String result = obj.toString();
+        if (result.equals("Infinity")) {
+            throw new ArithmeticException("Invalid arithmetic operation! Result evaluated to Infinity!");
+        } else if (result.equals("NaN")) {
+            throw new ArithmeticException("Invalid arithmetic operation! Result is not a number!");
+        }
         throw new TypeMismatchException("Unknown type for <" + obj + ">!");
     }
 
@@ -102,11 +107,12 @@ public enum Type {
      * @param obj the value to be tested for a matching type.
      * @return true if the test succeeded.
      */
-    public boolean accepts(Object obj) {
+    private boolean accepts(Object obj) {
         try {
             return obj.toString().matches(pattern);
         } catch (RuntimeException e) {
-            throw new GrammarException("No valid type for <" + obj + "> found!", e);
+            e.printStackTrace();
         }
+        return false;
     }
 }

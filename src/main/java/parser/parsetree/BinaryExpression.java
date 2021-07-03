@@ -2,10 +2,10 @@ package parser.parsetree;
 
 
 /**
- * This is a wrapper class for binary arithmetic expressions.
+ * This is a wrapper class for binary expressions.
  * Its instances will hold an assignment operator and two operands.
  */
-public class BinaryExpression extends ArithmeticExpression {
+public class BinaryExpression extends Expression {
 
     private final BinOp op;
     private final Object operand1;

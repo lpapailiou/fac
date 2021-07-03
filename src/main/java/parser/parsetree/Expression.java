@@ -5,7 +5,7 @@ package parser.parsetree;
  * It is meant to be used for arithmetic expressions, but is also used as container for
  * all types of values expressions and function calls.
  */
-abstract class ArithmeticExpression extends Component {
+abstract class Expression extends Component {
 
     /**
      * This constructor is used to pass the location of the code fragment.
@@ -13,7 +13,7 @@ abstract class ArithmeticExpression extends Component {
      * @param left  the start index.
      * @param right the end index.
      */
-    ArithmeticExpression(int left, int right) {
+    Expression(int left, int right) {
         super(left, right);
     }
 }

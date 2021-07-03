@@ -6,6 +6,7 @@ import parser.parsetree.interfaces.Traversable;
 import validator.Validator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,7 +41,11 @@ public class Interpreter extends Validator {
             Declaration declaration = getDeclaration(acceptor, acceptor.getIdentifier());
             Object value1 = declaration.getValue();
             Object value2 = getValueOfOperand(acceptor, acceptor.getValue());
-            declaration.setValue(acceptor.getOperator().apply(value1, value2));
+            Object resultValue = acceptor.getOperator().apply(value1, value2);
+            if (declaration.getType() == Type.NUMERIC) {    // validate for runtime exception
+                getTypeOfOperand(acceptor, resultValue);
+            }
+            declaration.setValue(resultValue);
         }
     }
 
@@ -165,6 +170,9 @@ public class Interpreter extends Validator {
         if (execute) {
             acceptor.reset();
             Object value = getValueOfOperand(acceptor, acceptor.getValue());
+            if (acceptor.getType() == Type.NUMERIC) {    // validate for runtime exception
+                getTypeOfOperand(acceptor, value);
+            }
             acceptor.setValue(value);
         }
     }
@@ -265,6 +273,12 @@ public class Interpreter extends Validator {
         } else if (node instanceof FunctionDefStatement) {
             validateOnlyComponents = executableComponents;
             executableComponents = new ArrayList<>();           // function definitions are executed only by callers, not when parsed
+        } else if (node instanceof WhileStatement) {
+            condition = (Boolean) getValueOfOperand(node, ((WhileStatement) node).getCondition());
+            if (!condition) {
+                validateOnlyComponents = executableComponents;
+                executableComponents = new ArrayList<>();       // make sure content of dead if-else structure is validated
+            }
         }
 
         execute = false;
@@ -296,7 +310,7 @@ public class Interpreter extends Validator {
             while ((Boolean) getValueOfOperand(node, ((WhileStatement) node).getCondition())) {   // while loop execution
                 counter++;
                 if (counter > 10000) {
-                    throw new StackOverflowError();
+                    throw new StackOverflowError("StackoverflowError at location " + Arrays.toString(node.getLocation()) + " occurred!");
                 }
                 openNewScope();
                 if (breakEvent > 0) {                       // break statement execution
@@ -386,7 +400,7 @@ public class Interpreter extends Validator {
     }
 
     /**
-     * This method will evaluate the value of a binary arithmetic expression.
+     * This method will evaluate the value of a binary expression.
      *
      * @param operand the operand to evaluate.
      * @return the value of the operand.
@@ -394,7 +408,17 @@ public class Interpreter extends Validator {
     private Object getValue(BinaryExpression operand) {
         Object value1 = getValueOfOperand(operand, operand.getOperand1());
         Object value2 = getValueOfOperand(operand, operand.getOperand2());
-        return operand.getOperator().apply(value1, value2);
+        Object resultValue = operand.getOperator().apply(value1, value2);
+        try {
+            Type.getByInput(resultValue);
+        } catch (Exception e) {
+            if (e instanceof ArithmeticException) {
+                throw new ArithmeticException("Arithmetic exception at location " + Arrays.toString(operand.getLocation()) + " occurred!\n" + e.getMessage());
+            } else {
+                throw e;
+            }
+        }
+        return resultValue;
     }
 
     /**

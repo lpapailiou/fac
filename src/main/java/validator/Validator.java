@@ -308,7 +308,7 @@ public class Validator implements Visitor {
         for (int i = 0; i < components.size(); i++) {
             if (components.get(i) instanceof BreakStatement) {
                 if (whileDepth <= 0) {
-                    throw new GrammarException("Not in loop! Break statement is not possible at position <" + parent + "> at location " + Arrays.toString(parent.getLocation()) + "!");
+                    throw new GrammarException("Misplaced break statement! Break statement is not possible at position <" + parent + "> at location " + Arrays.toString(parent.getLocation()) + "!");
                 } else if (i < components.size() - 1) {
                     throw new GrammarException("Unreachable code! Break statement is not possible at position <" + parent + "> at location " + Arrays.toString(parent.getLocation()) + "!");
                 }
@@ -368,7 +368,7 @@ public class Validator implements Visitor {
     }
 
     /**
-     * This method evaluates the data type of a binary arithmetic expression.
+     * This method evaluates the data type of a binary expression.
      * If one of both operands is a string type, the result will evaluate to a string, otherwise it will be numeric.
      * Additionally, the operators must match (i.e. only a plus is allowed for string operations).
      *
