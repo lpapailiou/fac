@@ -86,7 +86,6 @@ public class AssignmentStatement extends Component {
         appendIdentifier(out, identifier, 1);
         appendLine(out, "AssignmentOperator", 1);
         appendBinOp(out, op, 2);
-        appendBinOp(out, BinaryOperator.EQUAL, 1);
         evaluateExpression(out, value, 1);
         appendKeyword(out, Keyword.STOP, 1);
         return out.toString();
