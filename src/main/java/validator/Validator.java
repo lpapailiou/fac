@@ -2,9 +2,11 @@ package validator;
 
 import exceptions.*;
 import parser.parsetree.*;
+import parser.parsetree.instructions.*;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Traversable;
 import parser.parsetree.interfaces.Visitor;
+import parser.parsetree.statements.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,16 +41,16 @@ public class Validator implements Visitor {
         Declaration declaration = getDeclaration(acceptor, acceptor.getIdentifier());
         Type expectedType = declaration.getType();
         Type effectiveType = getTypeOfOperand(acceptor, acceptor.getValue());
-        BinOp binOp = acceptor.getOperator();
+        BinaryOperator binaryOperator = acceptor.getOperator();
         if (expectedType != effectiveType) {
-            if (expectedType != Type.STRING || binOp == BinOp.EQUAL) {
+            if (expectedType != Type.STRING || binaryOperator == BinaryOperator.EQUAL) {
                 throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> is <" + expectedType.getLiteral() + "> and cannot assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
             }
-        } else if (expectedType != Type.NUMERIC && binOp != BinOp.EQUAL) {
-            if (expectedType == Type.STRING && binOp == BinOp.PLUSEQ) {
+        } else if (expectedType != Type.NUMERIC && binaryOperator != BinaryOperator.EQUAL) {
+            if (expectedType == Type.STRING && binaryOperator == BinaryOperator.PLUSEQ) {
                 return;
             }
-            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the binOp <" + acceptor.getOperator().getLiteral() + "> to assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
+            throw new TypeMismatchException("Type of variable <" + acceptor.getIdentifier() + "> does not allow the use of the binaryOperator <" + acceptor.getOperator().getLiteral() + "> to assign value <" + acceptor.getValue().toString().replaceAll("\\[", "").replaceAll("]", "") + "> at location " + Arrays.toString(acceptor.getLocation()) + "!");
         }
     }
 
@@ -379,10 +381,10 @@ public class Validator implements Visitor {
     private Type getType(Traversable parent, BinaryExpression operand) {
         Type type = getTypeOfOperand(parent, operand.getOperand1());
         Type type2 = getTypeOfOperand(parent, operand.getOperand2());
-        BinOp binOp = operand.getOperator();
+        BinaryOperator binaryOperator = operand.getOperator();
         if (type == Type.STRING || type2 == Type.STRING) {
-            if (binOp != BinOp.PLUS) {
-                throw new OperatorMismatchException("BinOp of expression <" + operand.getOperator().getLiteral() + "> may not be used in context <" + operand.toString().replaceAll("\n", "") + "> at location " + Arrays.toString(parent.getLocation()) + "!");
+            if (binaryOperator != BinaryOperator.PLUS) {
+                throw new OperatorMismatchException("BinaryOperator of expression <" + operand.getOperator().getLiteral() + "> may not be used in context <" + operand.toString().replaceAll("\n", "") + "> at location " + Arrays.toString(parent.getLocation()) + "!");
             }
             return Type.STRING;
         }
@@ -390,7 +392,7 @@ public class Validator implements Visitor {
             throw new TypeMismatchException("Types of expression <" + operand.toString().replaceAll("\n", "") + "> do not match at location " + Arrays.toString(parent.getLocation()) + "!");
         }
         if (type == Type.BOOLEAN) {
-            throw new TypeMismatchException("Types of expression <" + operand.toString().replaceAll("\n", "") + "> do not match with binOp <" + binOp.getLiteral() + "> at location " + Arrays.toString(parent.getLocation()) + "!");
+            throw new TypeMismatchException("Types of expression <" + operand.toString().replaceAll("\n", "") + "> do not match with binaryOperator <" + binaryOperator.getLiteral() + "> at location " + Arrays.toString(parent.getLocation()) + "!");
         }
         return type;
     }
@@ -404,9 +406,9 @@ public class Validator implements Visitor {
      */
     private Type getType(Traversable parent, UnaryExpression operand) {
         Type type = getTypeOfOperand(parent, operand.getOperand());
-        UnOp op = operand.getOperator();
-        if ((op == UnOp.EXCL && type != Type.BOOLEAN) || ((op == UnOp.MINUS || op == UnOp.INC || op == UnOp.DEC) && type != Type.NUMERIC)) {
-            throw new OperatorMismatchException("UnOp of expression <" + operand.getOperator().getLiteral() + "> may not be used in context <" + operand.toString().replaceAll("\n", "") + "> at location " + Arrays.toString(parent.getLocation()) + "!");
+        UnaryOperator op = operand.getOperator();
+        if ((op == UnaryOperator.EXCL && type != Type.BOOLEAN) || ((op == UnaryOperator.MINUS || op == UnaryOperator.INC || op == UnaryOperator.DEC) && type != Type.NUMERIC)) {
+            throw new OperatorMismatchException("UnaryOperator of expression <" + operand.getOperator().getLiteral() + "> may not be used in context <" + operand.toString().replaceAll("\n", "") + "> at location " + Arrays.toString(parent.getLocation()) + "!");
         }
         return type;
     }
@@ -437,11 +439,11 @@ public class Validator implements Visitor {
         if (type1 != type2) {
             throw new TypeMismatchException("Types of conditional statement <" + operand.toString().replaceAll("\n", "") + "> do not match at location " + Arrays.toString(parent.getLocation()) + "!");
         }
-        BinOp binOp = operand.getOperator();
-        if (type1 != Type.NUMERIC && (binOp == BinOp.GREATER || binOp == BinOp.GREQ || binOp == BinOp.LEQ || binOp == BinOp.LESS)) {
-            throw new OperatorMismatchException("BinOp <" + binOp.getLiteral() + "> must not be used for non-numeric statement at location " + Arrays.toString(parent.getLocation()) + "!");
-        } else if (type1 != Type.BOOLEAN && (binOp == BinOp.AND || binOp == BinOp.OR)) {
-            throw new OperatorMismatchException("BinOp <" + binOp.getLiteral() + "> must not be used for non-boolean statement at location " + Arrays.toString(parent.getLocation()) + "!");
+        BinaryOperator binaryOperator = operand.getOperator();
+        if (type1 != Type.NUMERIC && (binaryOperator == BinaryOperator.GREATER || binaryOperator == BinaryOperator.GREQ || binaryOperator == BinaryOperator.LEQ || binaryOperator == BinaryOperator.LESS)) {
+            throw new OperatorMismatchException("BinaryOperator <" + binaryOperator.getLiteral() + "> must not be used for non-numeric statement at location " + Arrays.toString(parent.getLocation()) + "!");
+        } else if (type1 != Type.BOOLEAN && (binaryOperator == BinaryOperator.AND || binaryOperator == BinaryOperator.OR)) {
+            throw new OperatorMismatchException("BinaryOperator <" + binaryOperator.getLiteral() + "> must not be used for non-boolean statement at location " + Arrays.toString(parent.getLocation()) + "!");
         }
 
         return Type.BOOLEAN;

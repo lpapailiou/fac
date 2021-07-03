@@ -212,10 +212,7 @@ public class Processor {
      * @return the scanner output.
      */
     public String getScannerOutput() {
-        if (scannerOutput == null) {
-            return "";
-        }
-        return scannerOutput;
+        return scannerOutput == null ? "" : scannerOutput;
     }
 
     /**
@@ -224,10 +221,7 @@ public class Processor {
      * @return the parse tree as text.
      */
     public String getParseTree() {
-        if (parseTree == null) {
-            return "";
-        }
-        return parseTree;
+        return parseTree == null ? "" : parseTree;
     }
 
     /**
@@ -236,10 +230,7 @@ public class Processor {
      * @return the pretty-printed code which was parsed.
      */
     public String getParseCode() {
-        if (parseCode == null) {
-            return "";
-        }
-        return parseCode;
+        return parseCode == null ? "" : parseCode;
     }
 
     /**
@@ -248,10 +239,7 @@ public class Processor {
      * @return the execution result.
      */
     public String getExecutionResult() {
-        if (executionResult == null) {
-            return "";
-        }
-        return executionResult;
+        return executionResult == null ? "" : executionResult;
     }
 
     /**

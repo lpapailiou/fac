@@ -1,5 +1,9 @@
-package parser.parsetree;
+package parser.parsetree.statements;
 
+import parser.parsetree.BinaryOperator;
+import parser.parsetree.Component;
+import parser.parsetree.Keyword;
+import parser.parsetree.Type;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Visitor;
 
@@ -126,7 +130,7 @@ public class VariableDeclaration extends Component implements Declaration {
         appendType(out, type, 1);
         appendIdentifier(out, identifier, 1);
         if (initializedWithValue) {
-            appendBinOp(out, BinOp.EQUAL, 1);
+            appendBinOp(out, BinaryOperator.EQUAL, 1);
             evaluateExpression(out, value, 1);
         }
         appendKeyword(out, Keyword.STOP, 1);

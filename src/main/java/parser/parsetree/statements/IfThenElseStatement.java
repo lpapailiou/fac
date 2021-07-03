@@ -1,5 +1,7 @@
-package parser.parsetree;
+package parser.parsetree.statements;
 
+import parser.parsetree.Component;
+import parser.parsetree.Keyword;
 import parser.parsetree.interfaces.Visitor;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class IfThenElseStatement extends IfThenStatement {
      * @param left           the start index.
      * @param right          the end index.
      */
-    IfThenElseStatement(Component condition, Object statementList1, Object statementList2, int left, int right) {
+    public IfThenElseStatement(Component condition, Object statementList1, Object statementList2, int left, int right) {
         super(condition, statementList1, left, right);
         if (statementList2 != null) {
             this.componentListElse.addAll(((Component) statementList2).getStatements());
@@ -86,7 +88,7 @@ public class IfThenElseStatement extends IfThenStatement {
                 componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
             }
             for (String str : componentStrings) {
-                out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
+                out.append(Component.PRETTY_PRINT_INDENT).append(str).append("\n");
             }
         }
         out.append("} else { \n");
@@ -97,7 +99,7 @@ public class IfThenElseStatement extends IfThenStatement {
                 componentStrings.addAll(Arrays.asList(st.toString().split("\n")));
             }
             for (String str : componentStrings) {
-                out.append(PRETTY_PRINT_INDENT).append(str).append("\n");
+                out.append(Component.PRETTY_PRINT_INDENT).append(str).append("\n");
             }
         }
         out.append("}\n\n");
@@ -111,13 +113,7 @@ public class IfThenElseStatement extends IfThenStatement {
      */
     @Override
     public String getParseTree() {
-        StringBuilder out = getStringBuilder(this);
-        appendKeyword(out, Keyword.IF, 1);
-        appendLine(out, "Condition", 1);
-        appendNestedComponents(out, condition, 2);
-        appendKeyword(out, Keyword.CBL, 1);
-        appendNestedStatements(out, componentListIf, 1);
-        appendKeyword(out, Keyword.CBR, 1);
+        StringBuilder out = new StringBuilder(super.getParseTree());
         appendKeyword(out, Keyword.ELSE, 1);
         appendKeyword(out, Keyword.CBL, 1);
         appendNestedStatements(out, componentListElse, 1);

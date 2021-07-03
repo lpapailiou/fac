@@ -1,6 +1,8 @@
 package parser.parsetree.interfaces;
 
-import parser.parsetree.*;
+import parser.parsetree.Component;
+import parser.parsetree.Program;
+import parser.parsetree.statements.*;
 
 /**
  * This interface allows to interact easily with the whole parse tree by visiting the parse tree components,

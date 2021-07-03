@@ -1,4 +1,6 @@
-package parser.parsetree;
+package parser.parsetree.statements;
+
+import parser.parsetree.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ public class Argument extends Component {
      * @param left  the start index.
      * @param right the end index.
      */
-    Argument(Object arg, int left, int right) {
+    public Argument(Object arg, int left, int right) {
         super(left, right);
         this.arg = (Component) arg;
     }
@@ -34,7 +36,7 @@ public class Argument extends Component {
      * @param left    the start index.
      * @param right   the end index.
      */
-    Argument(Object arg, Object nextArg, int left, int right) {
+    public Argument(Object arg, Object nextArg, int left, int right) {
         this(arg, left, right);
         next = (Argument) nextArg;
     }

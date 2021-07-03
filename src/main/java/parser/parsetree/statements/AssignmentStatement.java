@@ -1,5 +1,10 @@
-package parser.parsetree;
+package parser.parsetree.statements;
 
+import parser.parsetree.BinaryOperator;
+import parser.parsetree.Component;
+import parser.parsetree.Keyword;
+import parser.parsetree.UnaryOperator;
+import parser.parsetree.instructions.UnaryExpression;
 import parser.parsetree.interfaces.Visitor;
 
 /**
@@ -8,7 +13,7 @@ import parser.parsetree.interfaces.Visitor;
  */
 public class AssignmentStatement extends Component {
 
-    private final BinOp op;
+    private final BinaryOperator op;
     private final String identifier;
     private final Object value;
 
@@ -23,7 +28,7 @@ public class AssignmentStatement extends Component {
      */
     public AssignmentStatement(Object op, Object identifier, Object value, int left, int right) {
         super(left, right);
-        this.op = BinOp.getByLiteral(op.toString());
+        this.op = BinaryOperator.getByLiteral(op.toString());
         this.identifier = identifier.toString();
         this.value = value;
     }
@@ -42,7 +47,7 @@ public class AssignmentStatement extends Component {
      *
      * @return the operator.
      */
-    public BinOp getOperator() {
+    public BinaryOperator getOperator() {
         return op;
     }
 
@@ -64,6 +69,9 @@ public class AssignmentStatement extends Component {
      */
     @Override
     public String toString() {
+        if (value instanceof UnaryExpression && (((UnaryExpression) value).getOperator() == UnaryOperator.INC || ((UnaryExpression) value).getOperator() == UnaryOperator.DEC)) {
+            return value.toString() + ";\n";
+        }
         return identifier + " " + op.getLiteral() + " " + value + ";\n";
     }
 
@@ -78,7 +86,7 @@ public class AssignmentStatement extends Component {
         appendIdentifier(out, identifier, 1);
         appendLine(out, "AssignmentOperator", 1);
         appendBinOp(out, op, 2);
-        appendBinOp(out, BinOp.EQUAL, 1);
+        appendBinOp(out, BinaryOperator.EQUAL, 1);
         evaluateExpression(out, value, 1);
         appendKeyword(out, Keyword.STOP, 1);
         return out.toString();

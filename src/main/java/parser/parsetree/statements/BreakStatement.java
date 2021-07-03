@@ -1,5 +1,8 @@
-package parser.parsetree;
+package parser.parsetree.statements;
 
+
+import parser.parsetree.Component;
+import parser.parsetree.Keyword;
 
 /**
  * This is a wrapper for a break statement. It is basically used as marker.
@@ -12,7 +15,7 @@ public class BreakStatement extends Component {
      * @param left  the start index.
      * @param right the end index.
      */
-    BreakStatement(int left, int right) {
+    public BreakStatement(int left, int right) {
         super(left, right);
     }
 

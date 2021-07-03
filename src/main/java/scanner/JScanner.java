@@ -279,13 +279,10 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     private boolean zzEOFDone;
     /* user code: */
     private ComplexSymbolFactory symbolFactory;
-    private boolean verbose = true;
-    private List<String> output = new ArrayList();
 
     /**
-     * Custom constructor to pass the verbose attribute.
-     *
-     * @param in      the java.io.Reader to pass.
+    * Custom constructor to pass the verbose attribute.
+    * @param in the java.io.Reader to pass.
      * @param verbose the verbose attribute. If true, the scanned tokens will be printed to the console.
      */
     public JScanner(java.io.Reader in, boolean verbose) {
@@ -398,6 +395,9 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
         return j;
     }
 
+    private boolean verbose = true;
+    private List<String> output = new ArrayList();
+
     private static int[] zzUnpackAttribute() {
         int[] result = new int[112];
         int offset = 0;
@@ -448,13 +448,12 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
         }
 
         throw new Error(message);
-    }
+  }
 
     /**
-     * This method collects a token while scanning and creates a Symbol for it.
+    * This method collects a token while scanning and creates a Symbol for it.
      * Additionally, a log-like string is created and saved.
-     *
-     * @param token       the scanned token.
+     * @param token the scanned token.
      * @param description the token name as string.
      * @return the symbol for the token.
      */
@@ -469,16 +468,15 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
     }
 
     /**
-     * This method creates a Symbol from a token. It will add additional metadata to the Symbol (e.g. location and value).
-     *
+    * This method creates a Symbol from a token. It will add additional metadata to the Symbol (e.g. location and value).
      * @param name the name of the symbol.
-     * @param sym  the scanned token.
-     * @param val  the value of the symbol.
-     * @return the symbol for the token.
-     */
+     * @param sym the scanned token.
+     * @param val the value of the symbol.
+    * @return the symbol for the token.
+    */
     private Symbol symbol(String name, int sym, Object val) {
         Location left = new Location(yyline + 1, (int) yycolumn + 1, (int) yychar);
-        Location right = new Location(yyline + 1, (int) (yycolumn + yylength()), (int) (yychar + yylength()));
+        Location right = new Location(yyline+1,(int)(yycolumn+yylength()), (int)(yychar+yylength()));
         return symbolFactory.newSymbol(name, sym, left, right, val);
     }
 
@@ -1101,21 +1099,19 @@ public class JScanner implements java_cup.runtime.Scanner, JSymbol {
                     case 43: {
                         return collectToken(STRTYPE, "STRTYPE");
                     }
-                    // fall through
-                    case 87:
-                        break;
-                    case 44: {
-                        return collectToken(BOOLTYPE, "BOOLTYPE");
-                    }
-                    // fall through
-                    case 88:
-                        break;
-                    default:
-                        zzScanError(ZZ_NO_MATCH);
-                }
+            // fall through
+          case 87: break;
+          case 44:
+            { return collectToken(BOOLTYPE, "BOOLTYPE");
             }
+            // fall through
+          case 88: break;
+          default:
+            zzScanError(ZZ_NO_MATCH);
         }
+      }
     }
+  }
 
 
 }

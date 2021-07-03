@@ -1,8 +1,12 @@
 package execution;
 
-import parser.parsetree.*;
+import parser.parsetree.Component;
+import parser.parsetree.Program;
+import parser.parsetree.Type;
+import parser.parsetree.instructions.*;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Traversable;
+import parser.parsetree.statements.*;
 import validator.Validator;
 
 import java.util.ArrayList;
@@ -199,13 +203,21 @@ public class Interpreter extends Validator {
      */
     private void traverse(Traversable node) {
         if (node != null) {
-            preValidate(node);
+            try {
+                preValidate(node);
 
-            List<Component> components = getStatements(node);   // select executable child components
-            processStatements(node, components);                // process child components accordingly
+                List<Component> components = getStatements(node);   // select executable child components
+                processStatements(node, components);                // process child components accordingly
 
-            if (!(node instanceof Program)) {   // the program node starts the traversal and does not have to be visited again
-                node.accept(this);
+                if (!(node instanceof Program)) {   // the program node starts the traversal and does not have to be visited again
+                    node.accept(this);
+                }
+            } catch (StackOverflowError e) {
+                if (e.getMessage() != null) {
+                    throw e;
+                } else {
+                    throw new StackOverflowError("StackoverflowError at location " + Arrays.toString(node.getLocation()) + " occurred!");
+                }
             }
         }
     }
@@ -309,8 +321,8 @@ public class Interpreter extends Validator {
             int counter = 0;
             while ((Boolean) getValueOfOperand(node, ((WhileStatement) node).getCondition())) {   // while loop execution
                 counter++;
-                if (counter > 10000) {
-                    throw new StackOverflowError("StackoverflowError at location " + Arrays.toString(node.getLocation()) + " occurred!");
+                if (counter > 100000) {
+                    throw new StackOverflowError();
                 }
                 openNewScope();
                 if (breakEvent > 0) {                       // break statement execution

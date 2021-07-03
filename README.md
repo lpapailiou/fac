@@ -65,11 +65,11 @@ The token identification is implemented with regular expressions.
 
 #### Comments
 Java-like comments are allowed. They will be ignored in further processing of the code.  
-Pattern: ``"/*" [^*] ~"*/" | "/*" "*"+ "/" | "//" [^\r\n]* \r|\n|\r\n? | "/**" ( [^*] | \*+ [^/*] )* "*"+ "/"``  
+Pattern: ``\/*[^\*]~\*\/ | \/\*(\*)+\/ | \/\/[^\r\n]*(\r|\n|\r\n)? | \/(\*)+[^\*]*(\*)+\/``  
 #### Whitespace
 Whitespace may consist of spaces and newlines. It will be ignored in further processing steps, but
 is initially useful to separate tokens from each other.  
-Pattern: ``[ \t\f\r\n]*`` 
+Pattern: ``[ \t\f\r\n]+`` 
 #### Reserved words
 Reserved words are: ``string``, ``number``, ``boolean`` (for data types), ``while``, ``break``,
 ``if``, ``else``, ``def``, ``return`` (for statements) and ``print`` (for printing to the console).  
@@ -343,9 +343,9 @@ Sample code:
 
     string x = 'x' + 'b';               // valid
     x = 'x' - 'b';                      // validator fails, as minus cannot be used for string concatenation
-    boolean y = (true && 1);            // validator fails, as the binOp && can be used for booleans only
+    boolean y = (true && 1);            // validator fails, as the binaryOperator && can be used for booleans only
     boolean z = (1 < 2);                // valid
-    x = 1 * 'x';                        // validator fails, multiplication binOp is not valid for strings
+    x = 1 * 'x';                        // validator fails, multiplication binaryOperator is not valid for strings
 
 #### Expressions
 - In general, both operands of a binary expression must have the same type.
@@ -440,10 +440,9 @@ Below, the structure of the package tree is listed for better overview.
                 + main                      // --> starts program
                 + parser                    // syntactical analysis              
                     + parsetree                 // parse tree components
-                        + interfaces
                 + scanner                   // lexical analysis & token generation
                 + validator                 // semantic validation                
-            + resources                     
+            + resources                  
                 + lib                       // external dependecies (jflex & cup)
                 + samples                   // code sample files
 

@@ -1,5 +1,7 @@
-package parser.parsetree;
+package parser.parsetree.statements;
 
+import parser.parsetree.Component;
+import parser.parsetree.Type;
 import parser.parsetree.interfaces.Declaration;
 import parser.parsetree.interfaces.Visitor;
 
@@ -24,7 +26,7 @@ public class ParamDeclaration extends Component implements Declaration {
      * @param left       the start index.
      * @param right      the end index.
      */
-    ParamDeclaration(Object type, Object identifier, int left, int right) {
+    public ParamDeclaration(Object type, Object identifier, int left, int right) {
         super(left, right);
         this.type = Type.getByLiteral(type);
         this.identifier = identifier.toString();
@@ -41,7 +43,7 @@ public class ParamDeclaration extends Component implements Declaration {
      * @param identifier the identifier of the parameter.
      * @param nextParam  the following parameter to be set as pointer.
      */
-    ParamDeclaration(Object type, Object identifier, Object nextParam, int left, int right) {
+    public ParamDeclaration(Object type, Object identifier, Object nextParam, int left, int right) {
         this(type, identifier, left, right);
         next = (ParamDeclaration) nextParam;
     }
@@ -91,7 +93,7 @@ public class ParamDeclaration extends Component implements Declaration {
      *
      * @return the following parameter.
      */
-    ParamDeclaration getNext() {
+    public ParamDeclaration getNext() {
         return next;
     }
 

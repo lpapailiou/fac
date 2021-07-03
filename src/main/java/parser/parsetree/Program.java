@@ -1,7 +1,7 @@
 package parser.parsetree;
 
-import parser.parsetree.interfaces.Traversable;
 import parser.parsetree.interfaces.Visitor;
+import parser.parsetree.statements.FunctionDefStatement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * It will hold all first-level components of the program as statement list. Potentially,
  * every statement can have nested statements.
  */
-public class Program implements Traversable {
+public class Program extends Component {
 
     private final List<Component> componentList = new ArrayList<>();
 
@@ -22,6 +22,7 @@ public class Program implements Traversable {
      * @param componentList the list of all top-level statements.
      */
     public Program(List<Component> componentList) {
+        super(0, 0);
         this.componentList.addAll(componentList);
     }
 
@@ -60,21 +61,20 @@ public class Program implements Traversable {
      */
     @Override
     public String getParseTree() {
-        StringBuilder out = Component.getStringBuilder(this);
+        StringBuilder out = getStringBuilder(this);
         if (componentList.size() > 0) {
-            Component.appendLine(out, "StatementList", 1);
+            appendLine(out, "StatementList", 1);
         }
-        for (int i = 0; i < componentList.size(); i++) {
-            Component comp = componentList.get(i);
-            Component.appendLine(out, "ProgramStatement", 2);
+        for (Component comp : componentList) {
+            appendLine(out, "ProgramStatement", 2);
             if (comp instanceof FunctionDefStatement) {
-                Component.appendNestedComponents(out, comp, 3);
+                appendNestedComponents(out, comp, 3);
             } else {
-                Component.appendLine(out, "Statement", 3);
-                Component.appendNestedComponents(out, comp, 4);
+                appendLine(out, "Statement", 3);
+                appendNestedComponents(out, comp, 4);
             }
         }
-        Component.appendLine(out, "EOF", 0);
+        appendLine(out, "EOF", 0);
         return out.toString();
     }
 

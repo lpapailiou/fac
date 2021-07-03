@@ -1,5 +1,8 @@
 package parser;
 import parser.parsetree.*;
+import parser.parsetree.instructions.*;
+import parser.parsetree.interfaces.*;
+import parser.parsetree.statements.*;
 import java_cup.runtime.Symbol;
 import scanner.JScanner;
 import java.util.*;

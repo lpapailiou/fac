@@ -1,7 +1,10 @@
 package parser.parsetree;
 
+import parser.parsetree.instructions.*;
+import parser.parsetree.interfaces.ConditionalExpression;
 import parser.parsetree.interfaces.Traversable;
 import parser.parsetree.interfaces.Visitor;
+import parser.parsetree.statements.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -13,7 +16,7 @@ import java.util.List;
  */
 public abstract class Component implements Traversable {
 
-    protected static final String PARSE_TREE_PREFIX = "$ ";
+    private static final String PARSE_TREE_PREFIX = "$ ";
     protected static final String PRETTY_PRINT_INDENT = "    ";
     private final int[] location;
 
@@ -23,7 +26,7 @@ public abstract class Component implements Traversable {
      * @param left  the start index.
      * @param right the end index.
      */
-    Component(int left, int right) {
+    protected Component(int left, int right) {
         this.location = new int[]{left, right};
     }
 
@@ -449,12 +452,48 @@ public abstract class Component implements Traversable {
     }
 
     /**
+     * This method will return an empty list, as no nested statements are expected or
+     * the nested statements will be validated otherwise.
+     * If statements are expected, this method will be overridden by the according sub class.
+     *
+     * @return an empty statement list.
+     */
+    @Override
+    public List<Component> getStatements() {
+        return new ArrayList<>();
+    }
+
+    /**
+     * This method accepts a visitor. The visitor will then have access to this instance
+     * for code validation and execution. The relevant sub classes will overwrite this
+     * method, the other sub classes will be processed indirectly.
+     *
+     * @param visitor the visitor to accept.
+     */
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    /**
+     * Returns the location from the source file of this code fragment.
+     *
+     * @return the location of this code fragment.
+     */
+    @Override
+    public int[] getLocation() {
+        return location;
+    }
+
+    // ------------------------------------------ parse tree helper methods ------------------------------------------
+
+    /**
      * Returns the isolated class name of an object as string.
      *
      * @param object the object to extract the class name from.
      * @return the class name as string.
      */
-    protected static String getClassName(Object object) {
+    private String getClassName(Object object) {
         String name = object.getClass().getName();
         return name.substring(name.lastIndexOf(".") + 1);
     }
@@ -466,7 +505,7 @@ public abstract class Component implements Traversable {
      * @param node the node to create a string builder for.
      * @return the string builder which contains the class name.
      */
-    protected static StringBuilder getStringBuilder(Traversable node) {
+    protected StringBuilder getStringBuilder(Traversable node) {
         return new StringBuilder(PARSE_TREE_PREFIX + getClassName(node) + "\n");
     }
 
@@ -477,14 +516,12 @@ public abstract class Component implements Traversable {
      * @param obj          the object to append.
      * @param nestingDepth the nesting depth of the parse tree.
      */
-    protected static void appendLine(StringBuilder out, Object obj, int nestingDepth) {
+    protected void appendLine(StringBuilder out, Object obj, int nestingDepth) {
         for (int i = 0; i < nestingDepth; i++) {
             out.append(PRETTY_PRINT_INDENT);
         }
         out.append(PARSE_TREE_PREFIX).append(obj).append("\n");
     }
-
-    // ------------------------------------------ output helper methods ------------------------------------------
 
     /**
      * With this method, a parse tree section is constructed by appending a keyword.
@@ -493,7 +530,7 @@ public abstract class Component implements Traversable {
      * @param keyword      the keyword to append.
      * @param nestingDepth the nesting depth of the parse tree.
      */
-    protected static void appendKeyword(StringBuilder out, Keyword keyword, int nestingDepth) {
+    protected void appendKeyword(StringBuilder out, Keyword keyword, int nestingDepth) {
         appendLine(out, keyword.name(), nestingDepth);
         appendLine(out, keyword.getLiteral(), nestingDepth + 1);
     }
@@ -505,7 +542,7 @@ public abstract class Component implements Traversable {
      * @param type         the type to append.
      * @param nestingDepth the nesting depth of the parse tree.
      */
-    protected static void appendType(StringBuilder out, Type type, int nestingDepth) {
+    protected void appendType(StringBuilder out, Type type, int nestingDepth) {
         appendLine(out, getClassName(type), nestingDepth);
         appendLine(out, type.getLiteral(), nestingDepth + 1);
     }
@@ -517,7 +554,7 @@ public abstract class Component implements Traversable {
      * @param op           the binary operator to append.
      * @param nestingDepth the nesting depth of the parse tree.
      */
-    protected static void appendBinOp(StringBuilder out, BinOp op, int nestingDepth) {
+    protected void appendBinOp(StringBuilder out, BinaryOperator op, int nestingDepth) {
         appendLine(out, getClassName(op), nestingDepth);
         appendLine(out, op.getLiteral(), nestingDepth + 1);
     }
@@ -529,7 +566,7 @@ public abstract class Component implements Traversable {
      * @param op           the unary operator to append.
      * @param nestingDepth the nesting depth of the parse tree.
      */
-    protected static void appendUnOp(StringBuilder out, UnOp op, int nestingDepth) {
+    protected void appendUnOp(StringBuilder out, UnaryOperator op, int nestingDepth) {
         appendLine(out, getClassName(op), nestingDepth);
         appendLine(out, op.getLiteral(), nestingDepth + 1);
     }
@@ -541,7 +578,7 @@ public abstract class Component implements Traversable {
      * @param identifier   the identifier to append.
      * @param nestingDepth the nesting depth of the parse tree.
      */
-    protected static void appendIdentifier(StringBuilder out, String identifier, int nestingDepth) {
+    protected void appendIdentifier(StringBuilder out, String identifier, int nestingDepth) {
         appendLine(out, "Identifier", nestingDepth);
         appendLine(out, identifier, nestingDepth + 1);
     }
@@ -553,7 +590,7 @@ public abstract class Component implements Traversable {
      * @param obj          the complex component to append.
      * @param nestingDepth the nesting depth of the parse tree.
      */
-    protected static void appendNestedComponents(StringBuilder out, Object obj, int nestingDepth) {
+    protected void appendNestedComponents(StringBuilder out, Object obj, int nestingDepth) {
         if (obj == null) {
             return;
         }
@@ -598,8 +635,8 @@ public abstract class Component implements Traversable {
     protected void evaluateExpression(StringBuilder out, Object object, int nestingDepth) {
         appendLine(out, "Expression", nestingDepth);
         if (object instanceof BinaryExpression) {
-            BinOp op = ((BinaryExpression) object).getOperator();
-            if (op == BinOp.MUL || op == BinOp.DIV || op == BinOp.MOD) {
+            BinaryOperator op = ((BinaryExpression) object).getOperator();
+            if (op == BinaryOperator.MUL || op == BinaryOperator.DIV || op == BinaryOperator.MOD) {
                 nestingDepth++;
                 appendLine(out, "ExpressionWithPrecedence", nestingDepth);
             }
@@ -613,37 +650,5 @@ public abstract class Component implements Traversable {
         appendNestedComponents(out, object, nestingDepth);
     }
 
-    /**
-     * This method will return an empty list, as no nested statements are expected or
-     * the nested statements will be validated otherwise.
-     * If statements are expected, this method will be overridden by the according sub class.
-     *
-     * @return an empty statement list.
-     */
-    @Override
-    public List<Component> getStatements() {
-        return new ArrayList<>();
-    }
 
-    /**
-     * This method accepts a visitor. The visitor will then have access to this instance
-     * for code validation and execution. The relevant sub classes will overwrite this
-     * method, the other sub classes will be processed indirectly.
-     *
-     * @param visitor the visitor to accept.
-     */
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    /**
-     * Returns the location from the source file of this code fragment.
-     *
-     * @return the location of this code fragment.
-     */
-    @Override
-    public int[] getLocation() {
-        return location;
-    }
 }

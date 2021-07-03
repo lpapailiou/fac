@@ -75,9 +75,9 @@ public enum Type {
             }
         }
         String result = obj.toString();
-        if (result.equals("Infinity")) {
+        if (result.contains("Infinity")) {
             throw new ArithmeticException("Invalid arithmetic operation! Result evaluated to Infinity!");
-        } else if (result.equals("NaN")) {
+        } else if (result.contains("NaN")) {
             throw new ArithmeticException("Invalid arithmetic operation! Result is not a number!");
         }
         throw new TypeMismatchException("Unknown type for <" + obj + ">!");

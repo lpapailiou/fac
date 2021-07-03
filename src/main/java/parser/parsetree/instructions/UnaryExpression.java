@@ -1,44 +1,23 @@
-package parser.parsetree;
+package parser.parsetree.instructions;
+
+import parser.parsetree.UnaryOperator;
 
 /**
  * This is a wrapper class for unary expressions.
  * Its instances will hold an assignment operator and an operand.
  */
-public class UnaryExpression extends Expression {
-
-    private final UnOp op;
-    private final Object operand;
+public class UnaryExpression extends UnaryExpr {
 
     /**
      * This constructor will instantiate a wrapper for a binary expression.
      *
-     * @param op      the operator.
-     * @param operand the operand.
-     * @param left    the start index.
-     * @param right   the end index.
+     * @param operator the operator.
+     * @param operand  the operand.
+     * @param left     the start index.
+     * @param right    the end index.
      */
-    UnaryExpression(Object op, Object operand, int left, int right) {
-        super(left, right);
-        this.op = UnOp.getByLiteral(op);
-        this.operand = operand;
-    }
-
-    /**
-     * Returns the unary operator.
-     *
-     * @return the operator.
-     */
-    public UnOp getOperator() {
-        return op;
-    }
-
-    /**
-     * Returns the operand.
-     *
-     * @return the operand.
-     */
-    public Object getOperand() {
-        return operand;
+    public UnaryExpression(Object operator, Object operand, int left, int right) {
+        super(operator, operand, left, right);
     }
 
     /**
@@ -50,8 +29,9 @@ public class UnaryExpression extends Expression {
      */
     @Override
     public String toString() {
-        String out = operand.toString();
-        if (op == UnOp.DEC || op == UnOp.INC) {
+        String out = getOperand().toString();
+        UnaryOperator op = getOperator();
+        if (op == UnaryOperator.DEC || op == UnaryOperator.INC) {
             out += op.getLiteral();
         } else {
             out = op.getLiteral() + out;
@@ -67,11 +47,12 @@ public class UnaryExpression extends Expression {
     @Override
     public String getParseTree() {
         StringBuilder out = getStringBuilder(this);
-        if (op != UnOp.DEC && op != UnOp.INC) {
+        UnaryOperator op = getOperator();
+        if (op != UnaryOperator.DEC && op != UnaryOperator.INC) {
             appendUnOp(out, op, 1);
         }
-        appendNestedComponents(out, operand, 1);
-        if (op == UnOp.DEC || op == UnOp.INC) {
+        appendNestedComponents(out, getOperand(), 1);
+        if (op == UnaryOperator.DEC || op == UnaryOperator.INC) {
             appendUnOp(out, op, 1);
         }
         return out.toString();

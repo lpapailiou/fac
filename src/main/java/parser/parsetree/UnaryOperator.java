@@ -7,7 +7,7 @@ import java.util.function.Function;
  * This enum holds all available operators for unary expressions.
  * As expressions can be executed, every operator will provide its own execution method.
  */
-public enum UnOp {
+public enum UnaryOperator {
 
     /**
      * With this operator, a subtraction is performed.
@@ -35,7 +35,7 @@ public enum UnOp {
      * @param operator the operator.
      * @param function the Function to be applied to the operand.
      */
-    UnOp(String operator, Function<Object, Object> function) {
+    UnaryOperator(String operator, Function<Object, Object> function) {
         this.operator = operator;
         this.function = function;
     }
@@ -46,12 +46,12 @@ public enum UnOp {
      * @param input the string representation of the unary operator.
      * @return the enum for the searched operator.
      */
-    public static UnOp getByLiteral(Object input) {
-        UnOp result = Arrays.stream(UnOp.values()).filter(o -> o.operator.equals(input.toString())).findAny().orElseGet(null);
+    public static UnaryOperator getByLiteral(Object input) {
+        UnaryOperator result = Arrays.stream(UnaryOperator.values()).filter(o -> o.operator.equals(input.toString())).findAny().orElseGet(null);
         if (result != null) {
             return result;
         }
-        throw new IllegalArgumentException("UnOp " + input.toString() + " is not available!");
+        throw new IllegalArgumentException("UnaryOperator " + input.toString() + " is not available!");
     }
 
     /**

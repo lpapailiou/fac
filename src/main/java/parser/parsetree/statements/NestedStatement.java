@@ -1,4 +1,6 @@
-package parser.parsetree;
+package parser.parsetree.statements;
+
+import parser.parsetree.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ public class NestedStatement extends Component {
      *
      * @param st the component to wrap.
      */
-    NestedStatement(Object st) {
+    public NestedStatement(Object st) {
         super(0, 0);
         component = (Component) st;
     }
@@ -30,7 +32,7 @@ public class NestedStatement extends Component {
      * @param st     the component to wrap.
      * @param nextSt the next component to point to.
      */
-    NestedStatement(Object st, Object nextSt) {
+    public NestedStatement(Object st, Object nextSt) {
         this(st);
         next = (NestedStatement) nextSt;
     }

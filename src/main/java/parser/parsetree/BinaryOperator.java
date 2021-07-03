@@ -7,7 +7,7 @@ import java.util.function.BiFunction;
  * This enum holds all available operators for binary expressions.
  * As expressions can be executed, every operator will provide its own execution method.
  */
-public enum BinOp {
+public enum BinaryOperator {
 
     /**
      * The equal operator is technically not a binary operation, but is included in this enum for easier
@@ -131,7 +131,7 @@ public enum BinOp {
      * @param operator the operator.
      * @param function the BiFunction to be applied to two operands.
      */
-    BinOp(String operator, BiFunction<Object, Object, Object> function) {
+    BinaryOperator(String operator, BiFunction<Object, Object, Object> function) {
         this.operator = operator;
         this.function = function;
     }
@@ -142,12 +142,12 @@ public enum BinOp {
      * @param input the string representation of the binary operator.
      * @return the enum for the searched operator.
      */
-    public static BinOp getByLiteral(Object input) {
-        BinOp result = Arrays.stream(BinOp.values()).filter(o -> o.operator.equals(input.toString())).findAny().orElseGet(null);
+    public static BinaryOperator getByLiteral(Object input) {
+        BinaryOperator result = Arrays.stream(BinaryOperator.values()).filter(o -> o.operator.equals(input.toString())).findAny().orElseGet(null);
         if (result != null) {
             return result;
         }
-        throw new IllegalArgumentException("BinOp " + input.toString() + " is not available!");
+        throw new IllegalArgumentException("BinaryOperator " + input.toString() + " is not available!");
     }
 
     /**

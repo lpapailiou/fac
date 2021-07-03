@@ -1,5 +1,8 @@
-package parser.parsetree;
+package parser.parsetree.statements;
 
+import parser.parsetree.Component;
+import parser.parsetree.Keyword;
+import parser.parsetree.Type;
 import parser.parsetree.interfaces.Visitor;
 
 import java.util.ArrayList;

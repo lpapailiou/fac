@@ -1,5 +1,9 @@
-package parser.parsetree;
+package parser.parsetree.statements;
 
+import parser.parsetree.Component;
+import parser.parsetree.Keyword;
+import parser.parsetree.instructions.BinaryCondition;
+import parser.parsetree.instructions.ValueWrapper;
 import parser.parsetree.interfaces.Visitor;
 
 /**

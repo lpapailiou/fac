@@ -1,4 +1,7 @@
-package parser.parsetree;
+package parser.parsetree.instructions;
+
+import parser.parsetree.Component;
+import parser.parsetree.Keyword;
 
 /**
  * This is a wrapper class for constants. A constant may be an expression or a value of any type.
@@ -15,7 +18,7 @@ public class ValueWrapper extends Component {
      * @param left  the start index.
      * @param right the end index.
      */
-    ValueWrapper(Object o, int left, int right) {
+    public ValueWrapper(Object o, int left, int right) {
         super(left, right);
         this.obj = o;
     }
@@ -30,7 +33,7 @@ public class ValueWrapper extends Component {
      * @param left        the start index.
      * @param right       the end index.
      */
-    ValueWrapper(Object o, boolean hasBrackets, int left, int right) {
+    public ValueWrapper(Object o, boolean hasBrackets, int left, int right) {
         this(o, left, right);
         this.hasBrackets = hasBrackets;
     }
