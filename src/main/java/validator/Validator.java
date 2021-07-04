@@ -310,9 +310,9 @@ public class Validator implements Visitor {
         for (int i = 0; i < components.size(); i++) {
             if (components.get(i) instanceof BreakStatement) {
                 if (whileDepth <= 0) {
-                    throw new GrammarException("Misplaced break statement! Break statement is not possible at position <" + parent + "> at location " + Arrays.toString(parent.getLocation()) + "!");
+                    throw new GrammarException("Misplaced break statement! Break statement is not possible at position <" + parent + "> at location " + Arrays.toString(components.get(i).getLocation()) + "!");
                 } else if (i < components.size() - 1) {
-                    throw new GrammarException("Unreachable code! Break statement is not possible at position <" + parent + "> at location " + Arrays.toString(parent.getLocation()) + "!");
+                    throw new GrammarException("Unreachable code! Break statement is not possible at position <" + parent + "> at location " + Arrays.toString(components.get(i).getLocation()) + "!");
                 }
                 if (!hold) {
                     whileDepth--;

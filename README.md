@@ -3,7 +3,7 @@ This repository connects the two theoretical computer science disciplines ``form
 the rather technical discipline of ``compiler construction`` (<b>F.A.C.</b>).  
 The goal is to specify a new programming language, which is deterministic and executable.  
   
-This project contains the language specification, as well as possibilities to execute the toy-language from
+It contains the language specification, as well as possibilities to execute the toy-language from
 the terminal or from a mini-IDE (implemented with ``javafx``).
 
 ![jlang](https://raw.githubusercontent.com/lpapailiou/fac/master/src/main/resources/img/jlang_gui.png)
@@ -87,11 +87,11 @@ Variable identifiers may consist of lowercase letters, underscores and optional 
 Pattern: ``[a-z_]+([0-9])*``. 
 #### Operators
 Additionally, there is a set of basic operators.  
-Arithmetic operators: ``+``, ``-``, ``*``, ``/``, ``%``.  
-Conditional operators: ``==``, ``!=``, ``<``, ``>``, ``<=``, ``>=``.  
-Assignment operators: ``=``, ``+=``, ``-=``, ``*=``, ``/=``, ``%=``.  
-Evaluation operators: ``&&``, ``||``.  
-Unary operators: ``-``, ``++``, ``--``, ``!``.
+- Arithmetic operators: ``+``, ``-``, ``*``, ``/``, ``%``.  
+- Conditional operators: ``==``, ``!=``, ``<``, ``>``, ``<=``, ``>=``.  
+- Assignment operators: ``=``, ``+=``, ``-=``, ``*=``, ``/=``, ``%=``.  
+- Evaluation operators: ``&&``, ``||``.  
+- Unary operators: ``-``, ``++``, ``--``, ``!``.
 #### Special characters
 Finally, there are two types of brackets: ``(``, ``)``, ``{``, ``}``, as well as the comma ``,`` 
 and the infamous semicolon ``;``. 
@@ -124,6 +124,7 @@ The syntactical rules are designed in the form of the Backus-Naur-notation, whic
     - a string, number or boolean value according to lexical definition.
     - another variable identifier.
     - an arithmetic or conditional expression.
+    - a string concatenation.
     - a function call.
     - omitted. in this case, the equal character is omitted as well and the variable would get its default value (``''``, ``0.0`` or ``false``).
 - The variable declaration must end with a semicolon.
@@ -155,12 +156,17 @@ Sample code:
 
 #### Expressions
 - Expressions in general cannot exist as isolated statement. They need to be part of a declaration or be assigned.
-- Arithmetic expressions are meant to perform numeric calculations and string concatenation. Therefore, they use specific operators (``+``, ``-``, ``*``, ``/``, ``%``).
-- By default, their components can be either 'raw' values, conditional expressions or function calls.
-- Multiplication and division have precedence over addition and subtraction.
-- Unary expressions have highest precedence.
-- Expressions can be nested. They are - after precedence - evaluated from left to right.
-- Expressions must not have brackets, except they are conditional expressions.
+- Arithmetic expressions are meant to perform numeric calculations. Therefore, they use specific operators (``+``, ``-``, ``*``, ``/``, ``%``).
+- For string concatenation, the ``+`` operator is allowed.
+- By default, their components can be either 'raw' values, expressions or function calls.
+- Precedence is handled as follows:
+    - unary expressions have highest precedence.
+    - multiplications, divisions and modulo operations follow.
+    - then, addition, subtraction follow.
+    - conditional expressions will always be in brackets, thus precedence must not be handled specifically.
+    - assignments have least precedence.
+    - if not handled otherwise, precedence applies left to right.
+- Expressions must never have brackets, except they are conditional expressions.
 - As expressions can be potentially assigned anywhere.
 - Also here, data types are not evaluated any further.   
 
@@ -176,8 +182,9 @@ Sample code:
 
 
 #### Conditional expressions
-- Conditional expressions are quite similar to arithmetic expressions, except they must be enclosed in (round) brackets.
+- Conditional expressions are quite similar to generic expressions, except they must be enclosed in (round) brackets.
 - Conditional expressions use comparing (``<``, ``<=``, ``==``, ...) or evaluating (``&&``, ``||``) operators.
+- Strings can be compared with ``==``.
 - Conditional expressions or boolean values can be switched by exclamation marks. The exclamation marks
 cannot be placed before the outer brackets if a conditional expression is used in a if-then or while statement.
 
@@ -216,7 +223,7 @@ Sample code:
     x = print();                        // parser fails, as print calls cannot be used in assignments
 
 #### Function definitions
-- Function definitions must start with the def keyword, a data type and an identifier.
+- Function definitions must start with the ``def`` keyword, a data type and an identifier.
 - After the identifier, a parameter declaration list (which must be enclosed in round brackets) follows.
 - This declaration list can be empty or consist of one or multiple declarations.
 - A parameter declaration consists of a data type and an identifier.
@@ -239,7 +246,7 @@ Sample code:
 #### Conditional statements
 - Conditional statements must start with the ``if`` keyword and a conditional expression (in round brackets).
 - Then, a body in curly brackets follows, which can contain zero, one or more statements.
-- Optionally, an else keyword may follow, with another body as above.
+- Optionally, an ``else`` keyword may follow, with another body as above.
 
 Sample code:    
 
@@ -337,7 +344,7 @@ Sample code:
 #### Operator validation
 - In assignments, the operator ``=`` can be used for all data types, ``+=`` for numeric and string values, other operators (``-=``, ``*=``, ``/=``, ``%=``) for numeric values only.
 - In conditional expressions, ``==`` and != may be used for all types, ``!``, ``&&`` and ``||`` may used for boolean values only, comparing operators (``<``, ``<=``, ``>=``, ``>``) can be used for numeric values only.
-- In arithmetic expressions, ``+`` is valid for numeric values or if at least one of the components is a string. All other available operators (``-``, ``*``, ``/``, ``%``) are for numeric values only.
+- In expressions, ``+`` is valid for numeric values or if at least one of the components is a string. All other available operators (``-``, ``*``, ``/``, ``%``) are for numeric values only.
 
 Sample code:    
 
@@ -415,6 +422,18 @@ Also, only the last print statement may be actually printed, to give the user a 
   
 In the ``gui mode``, code can be executed at once by pressing on the button ``go``, or by editing the input, if the input ends with two newline characters.  
 If the ``go`` button is used, the mini-IDE may open the execution or validation tab, and - in case of errors - select the faulty input section (if possible).  
+
+#### Exception and error handling
+In general, exceptions and errors are supposed to be catched by the application. The purpose is to allow the user to apply
+corrections for the next run. In case an exception or error occurs, an according message (if possible) and the stack trace
+will be visualized. Following incidents are taken to account:
+- Unknown tokens will throw errors during scanning.
+- The parser may throw an exception if the parse tree cannot be build.
+- Semantic validation may throw more specific exceptions.
+- During runtime, arithmetic exceptions and stack overflow exceptions may occur.
+
+One edge case is an infinite while loop. If discovered, a stack overflow error will be thrown to avoid 
+the program to hang.  
 
 ## Repository handling
 This section contains a few technical notes about this repository.
