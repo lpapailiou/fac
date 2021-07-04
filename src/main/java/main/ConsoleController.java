@@ -172,7 +172,7 @@ class ConsoleController {
             }
 
             Processor processor = new Processor(mode, code + cache);
-            if (!processor.isErrorThrown() && !processor.isErrorThrown()) {
+            if (!processor.isErrorThrown() && !processor.isExceptionThrown()) {
                 code.append(cache);
             }
             cache = "";

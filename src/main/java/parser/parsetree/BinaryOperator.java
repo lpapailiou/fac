@@ -21,6 +21,21 @@ public enum BinaryOperator {
      */
     PLUSEQ("+=", (a, b) -> {
         if (Type.getByInput(a) == Type.STRING || Type.getByInput(b) == Type.STRING) {
+            if (Type.getByInput(a) == Type.NUMERIC) {
+                double doubleValue = Double.parseDouble(a.toString());
+                String result = doubleValue + "";
+                if (doubleValue == Math.floor(doubleValue)) {
+                    result = ((int) doubleValue) + "";
+                }
+                return "'" + (result + (b.toString())).replaceAll("'", "") + "'";
+            } else if (Type.getByInput(b) == Type.NUMERIC) {
+                double doubleValue = Double.parseDouble(b.toString());
+                String result = doubleValue + "";
+                if (doubleValue == Math.floor(doubleValue)) {
+                    result = ((int) doubleValue) + "";
+                }
+                return "'" + (a.toString() + (result)).replaceAll("'", "") + "'";
+            }
             return "'" + (a.toString() + (b.toString())).replaceAll("'", "") + "'";
         } else {
             return Double.parseDouble(a.toString()) + Double.parseDouble(b.toString());
