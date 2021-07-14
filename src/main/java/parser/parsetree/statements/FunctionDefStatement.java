@@ -34,10 +34,10 @@ public class FunctionDefStatement extends Component {
      * @param left            the start index.
      * @param right           the end index.
      */
-    public FunctionDefStatement(Object type, Object identifier, Object params, Object statements, Object returnStatement, int left, int right) {
+    public FunctionDefStatement(Object type, String identifier, Object params, Object statements, Object returnStatement, int left, int right) {
         super(left, right);
         this.type = Type.getByLiteral(type);
-        this.identifier = identifier.toString();
+        this.identifier = identifier;
         if (params != null) {
             ParamDeclaration decl = (ParamDeclaration) params;
             while (decl != null) {

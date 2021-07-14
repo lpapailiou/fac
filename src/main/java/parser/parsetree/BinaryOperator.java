@@ -20,15 +20,8 @@ public enum BinaryOperator {
      * or perform an arithmetic addition.
      */
     PLUSEQ("+=", (a, b) -> {
-        if (Type.getByInput(a) == Type.STRING || Type.getByInput(b) == Type.STRING) {
-            if (Type.getByInput(a) == Type.NUMERIC) {
-                double doubleValue = Double.parseDouble(a.toString());
-                String result = doubleValue + "";
-                if (doubleValue == Math.floor(doubleValue)) {
-                    result = ((int) doubleValue) + "";
-                }
-                return "'" + (result + (b.toString())).replaceAll("'", "") + "'";
-            } else if (Type.getByInput(b) == Type.NUMERIC) {
+        if (Type.getByInput(a) == Type.STRING) {
+            if (Type.getByInput(b) == Type.NUMERIC) {
                 double doubleValue = Double.parseDouble(b.toString());
                 String result = doubleValue + "";
                 if (doubleValue == Math.floor(doubleValue)) {
@@ -72,7 +65,7 @@ public enum BinaryOperator {
     EQ("==", (a, b) -> {
         Type type = Type.getByInput(a);
         if (type == Type.BOOLEAN) {
-            return Boolean.parseBoolean(a.toString()) == Boolean.parseBoolean(a.toString());
+            return Boolean.parseBoolean(a.toString()) == Boolean.parseBoolean(b.toString());
         } else if (type == Type.NUMERIC) {
             return Double.parseDouble(a.toString()) == Double.parseDouble(b.toString());
         } else {
@@ -86,7 +79,7 @@ public enum BinaryOperator {
     NEQ("!=", (a, b) -> {
         Type type = Type.getByInput(a);
         if (type == Type.BOOLEAN) {
-            return Boolean.parseBoolean(a.toString()) != Boolean.parseBoolean(a.toString());
+            return Boolean.parseBoolean(a.toString()) != Boolean.parseBoolean(b.toString());
         } else if (type == Type.NUMERIC) {
             return Double.parseDouble(a.toString()) != Double.parseDouble(b.toString());
         } else {

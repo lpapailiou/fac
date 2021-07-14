@@ -30,7 +30,7 @@ public class Main extends Application {
      * @param args the passed arguments for starting
      */
     public static void main(String... args) {
-        if (System.console() != null || (args != null && args.length > 0)) {
+        if (System.console() == null || (args != null && args.length > 0)) {
             isStartedByConsole = true;
             Main.args = args;
         }

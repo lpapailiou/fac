@@ -65,7 +65,7 @@ public abstract class Component implements Traversable {
      * @param right      the end index of the location of the code fragment.
      * @return the assignment statement wrapper.
      */
-    public static AssignmentStatement assgn(Object op, Object identifier, int left, int right) {
+    public static AssignmentStatement assgn(Object op, String identifier, int left, int right) {
         return new AssignmentStatement("=", identifier, new UnaryExpression(op, identifier, left, right), left, right);
     }
 
@@ -79,7 +79,7 @@ public abstract class Component implements Traversable {
      * @param right      the end index of the location of the code fragment.
      * @return the assignment statement wrapper.
      */
-    public static AssignmentStatement assgn(Object op, Object identifier, Object value, int left, int right) {
+    public static AssignmentStatement assgn(Object op, String identifier, Object value, int left, int right) {
         return new AssignmentStatement(op, identifier, value, left, right);
     }
 
@@ -142,7 +142,7 @@ public abstract class Component implements Traversable {
      * @param right      the end index of the location of the code fragment.
      * @return the function call wrapper.
      */
-    public static FunctionCallStatement fun(Object identifier, int left, int right) {
+    public static FunctionCallStatement fun(String identifier, int left, int right) {
         return new FunctionCallStatement(identifier, left, right);
     }
 
@@ -155,7 +155,7 @@ public abstract class Component implements Traversable {
      * @param right      the end index of the location of the code fragment.
      * @return the function call wrapper.
      */
-    public static FunctionCallStatement fun(Object identifier, Object arg, int left, int right) {
+    public static FunctionCallStatement fun(String identifier, Object arg, int left, int right) {
         if (arg instanceof ConditionalExpression) {
             return new FunctionCallStatement(identifier, new Argument(arg, ((ConditionalExpression) arg).getLocation()[0], ((ConditionalExpression) arg).getLocation()[1]), left, right);
         }
@@ -172,7 +172,7 @@ public abstract class Component implements Traversable {
      * @param right           the end index of the location of the code fragment.
      * @return the function definition wrapper.
      */
-    public static FunctionDefStatement funDefEmpty(Object type, Object identifier, Object returnStatement, int left, int right) {
+    public static FunctionDefStatement funDefEmpty(Object type, String identifier, Object returnStatement, int left, int right) {
         return new FunctionDefStatement(type, identifier, null, null, returnStatement, left, right);
     }
 
@@ -187,7 +187,7 @@ public abstract class Component implements Traversable {
      * @param right           the end index of the location of the code fragment.
      * @return the function definition wrapper.
      */
-    public static FunctionDefStatement funDef(Object type, Object identifier, Object statements, Object returnStatement, int left, int right) {
+    public static FunctionDefStatement funDef(Object type, String identifier, Object statements, Object returnStatement, int left, int right) {
         return new FunctionDefStatement(type, identifier, null, statements, returnStatement, left, right);
     }
 
@@ -202,7 +202,7 @@ public abstract class Component implements Traversable {
      * @param right           the end index of the location of the code fragment.
      * @return the function definition wrapper.
      */
-    public static FunctionDefStatement funDefEmpty(Object type, Object identifier, Object params, Object returnStatement, int left, int right) {
+    public static FunctionDefStatement funDefEmpty(Object type, String identifier, Object params, Object returnStatement, int left, int right) {
         return new FunctionDefStatement(type, identifier, params, null, returnStatement, left, right);
     }
 
@@ -218,7 +218,7 @@ public abstract class Component implements Traversable {
      * @param right           the end index of the location of the code fragment.
      * @return the function definition wrapper.
      */
-    public static FunctionDefStatement funDef(Object type, Object identifier, Object params, Object statements, Object returnStatement, int left, int right) {
+    public static FunctionDefStatement funDef(Object type, String identifier, Object params, Object statements, Object returnStatement, int left, int right) {
         return new FunctionDefStatement(type, identifier, params, statements, returnStatement, left, right);
     }
 
@@ -291,7 +291,7 @@ public abstract class Component implements Traversable {
      * @param right      the end index of the location of the code fragment.
      * @return the parameter declaration wrapper.
      */
-    public static ParamDeclaration paramDecl(Object type, Object identifier, int left, int right) {
+    public static ParamDeclaration paramDecl(Object type, String identifier, int left, int right) {
         return new ParamDeclaration(type, identifier, left, right);
     }
 
@@ -305,7 +305,7 @@ public abstract class Component implements Traversable {
      * @param right         the end index of the location of the code fragment.
      * @return the parameter declaration wrapper.
      */
-    public static ParamDeclaration paramDecl(Object type, Object identifier, Object nextParameter, int left, int right) {
+    public static ParamDeclaration paramDecl(Object type, String identifier, Object nextParameter, int left, int right) {
         return new ParamDeclaration(type, identifier, nextParameter, left, right);
     }
 

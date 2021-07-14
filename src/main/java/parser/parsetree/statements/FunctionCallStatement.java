@@ -26,9 +26,9 @@ public class FunctionCallStatement extends Component {
      * @param left       the start index.
      * @param right      the end index.
      */
-    public FunctionCallStatement(Object identifier, int left, int right) {
+    public FunctionCallStatement(String identifier, int left, int right) {
         super(left, right);
-        this.identifier = identifier.toString();
+        this.identifier = identifier;
     }
 
     /**
@@ -39,7 +39,7 @@ public class FunctionCallStatement extends Component {
      * @param left       the start index.
      * @param right      the end index.
      */
-    public FunctionCallStatement(Object identifier, Object args, int left, int right) {
+    public FunctionCallStatement(String identifier, Object args, int left, int right) {
         this(identifier, left, right);
         if (args != null) {
             if (args instanceof List) {

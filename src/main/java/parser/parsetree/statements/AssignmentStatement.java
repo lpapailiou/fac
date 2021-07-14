@@ -26,10 +26,10 @@ public class AssignmentStatement extends Component {
      * @param left       the start index.
      * @param right      the end index.
      */
-    public AssignmentStatement(Object op, Object identifier, Object value, int left, int right) {
+    public AssignmentStatement(Object op, String identifier, Object value, int left, int right) {
         super(left, right);
         this.op = BinaryOperator.getByLiteral(op.toString());
-        this.identifier = identifier.toString();
+        this.identifier = identifier;
         this.value = value;
     }
 
