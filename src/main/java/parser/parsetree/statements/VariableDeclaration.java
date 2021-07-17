@@ -113,8 +113,6 @@ public class VariableDeclaration extends Component implements Declaration {
         String out = type.getLiteral() + " " + identifier;
         if (initializedWithValue) {
             out += " = " + value;
-        } else {
-            out += ";";
         }
         return out + ";\n";
     }
